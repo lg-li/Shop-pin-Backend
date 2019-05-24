@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class PinApplication {
 
+    // LLG is very niubi
     public static void main(String[] args) {
         SpringApplication.run(PinApplication.class, args);
     }

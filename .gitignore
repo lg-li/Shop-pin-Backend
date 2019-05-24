@@ -32,3 +32,6 @@ HELP.md
 mvnw
 mvnw.cmd
 !/.gitignore
+
+### Mac OS X ###
+.DS_Store
