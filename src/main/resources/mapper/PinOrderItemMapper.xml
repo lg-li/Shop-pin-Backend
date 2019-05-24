@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.neu.shop.pin.mapper.PinOrderItemMapper">
+  <resultMap id="BaseResultMap" type="cn.edu.neu.shop.pin.model.PinOrderItem">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="amount" jdbcType="INTEGER" property="amount" />
+    <result column="total_price" jdbcType="DECIMAL" property="totalPrice" />
+    <result column="total_cost" jdbcType="DECIMAL" property="totalCost" />
+    <result column="order_individual_id" jdbcType="INTEGER" property="orderIndividualId" />
+    <result column="is_submitted" jdbcType="BIT" property="isSubmitted" />
+  </resultMap>
+</mapper>

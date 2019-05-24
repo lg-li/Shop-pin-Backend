@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.neu.shop.pin.mapper.PinOrderIndividualMapper">
+  <resultMap id="BaseResultMap" type="cn.edu.neu.shop.pin.model.PinOrderIndividual">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_group_id" jdbcType="INTEGER" property="orderGroupId" />
+    <result column="store_id" jdbcType="INTEGER" property="storeId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="receiver_name" jdbcType="VARCHAR" property="receiverName" />
+    <result column="receiver_phone" jdbcType="VARCHAR" property="receiverPhone" />
+    <result column="delivery_address" jdbcType="VARCHAR" property="deliveryAddress" />
+    <result column="total_product_number" jdbcType="INTEGER" property="totalProductNumber" />
+    <result column="total_price" jdbcType="DECIMAL" property="totalPrice" />
+    <result column="postage" jdbcType="DECIMAL" property="postage" />
+    <result column="pay_price" jdbcType="DECIMAL" property="payPrice" />
+    <result column="pay_postage" jdbcType="DECIMAL" property="payPostage" />
+    <result column="balance_paid_price" jdbcType="DECIMAL" property="balancePaidPrice" />
+    <result column="pay_time" jdbcType="TIMESTAMP" property="payTime" />
+    <result column="paid" jdbcType="BIT" property="paid" />
+    <result column="pay_type" jdbcType="VARCHAR" property="payType" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="status" jdbcType="BIT" property="status" />
+    <result column="refund_status" jdbcType="BIT" property="refundStatus" />
+    <result column="refund_reason_image" jdbcType="VARCHAR" property="refundReasonImage" />
+    <result column="refund_reason_explain" jdbcType="VARCHAR" property="refundReasonExplain" />
+    <result column="refund_apply_time" jdbcType="TIMESTAMP" property="refundApplyTime" />
+    <result column="refund_refuse_reason" jdbcType="VARCHAR" property="refundRefuseReason" />
+    <result column="refund_price" jdbcType="DECIMAL" property="refundPrice" />
+    <result column="delivery_name" jdbcType="VARCHAR" property="deliveryName" />
+    <result column="delivery_type" jdbcType="VARCHAR" property="deliveryType" />
+    <result column="delivery_id" jdbcType="VARCHAR" property="deliveryId" />
+    <result column="gained_credit" jdbcType="INTEGER" property="gainedCredit" />
+    <result column="merchant_remark" jdbcType="VARCHAR" property="merchantRemark" />
+    <result column="user_remark" jdbcType="VARCHAR" property="userRemark" />
+    <result column="is_group" jdbcType="BIT" property="isGroup" />
+    <result column="total_cost" jdbcType="DECIMAL" property="totalCost" />
+  </resultMap>
+</mapper>
