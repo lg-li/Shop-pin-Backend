@@ -11,9 +11,15 @@ public class ProductInfoService {
     @Autowired
     private PinProductMapper pinProductMapper;
 
-    public PinProduct getProInfo(Integer productId){
+    public PinProduct getProInfoByProId(Integer productId){
 
-        PinProduct pinProduct = pinProductMapper.getProductInfo(productId);
+        PinProduct pinProduct = pinProductMapper.getProductInfoByProductId(productId);
+        return pinProduct;
+    }
+
+    public PinProduct getProInfoByStoreId(Integer storeId){
+
+        PinProduct pinProduct = pinProductMapper.getProductInfoByStoreId(storeId);
         return pinProduct;
     }
 }

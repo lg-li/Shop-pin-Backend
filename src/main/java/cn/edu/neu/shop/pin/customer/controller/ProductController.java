@@ -36,10 +36,10 @@ public class ProductController {
     }
 
     @GetMapping("/{product}")
-    public JSONObject getProductInfo(JSONObject requestJSON){
+    public JSONObject getProductInfoByProductId(JSONObject requestJSON){
         try{
             Integer productId = requestJSON.getInteger("productId");
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productInfoService.getProInfo(productId));
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productInfoService.getProInfoByProId(productId));
         }catch(Exception e){
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);

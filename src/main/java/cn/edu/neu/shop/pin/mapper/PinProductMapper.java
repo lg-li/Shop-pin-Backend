@@ -7,6 +7,8 @@ import io.lettuce.core.dynamic.annotation.Param;
 public interface PinProductMapper extends BaseMapper<PinProduct> {
 
     //根据商品ID获取商品详情
-    PinProduct getProductInfo(@Param("productId") int productId);
+    PinProduct getProductInfoByProductId(@Param("productId") int productId);
 
+    //根据店铺ID获取其在售商品详情
+    PinProduct getProductInfoByStoreId(@Param("storeId") int storeId);
 }
