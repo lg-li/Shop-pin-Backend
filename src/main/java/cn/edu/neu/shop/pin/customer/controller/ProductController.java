@@ -1,11 +1,11 @@
 package cn.edu.neu.shop.pin.customer.controller;
 
 import cn.edu.neu.shop.pin.customer.service.ProductCategoryService;
+import cn.edu.neu.shop.pin.customer.service.ProductCommentService;
 import cn.edu.neu.shop.pin.customer.service.ProductInfoService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
-import netscape.javascript.JSObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +21,8 @@ public class ProductController {
     @Autowired
     private ProductInfoService productInfoService;
 
+    @Autowired
+    private ProductCommentService productCommentService;
 
     @PostMapping("/category/get-all-by-layer")
     public JSONObject getCategoryByLayer(@RequestBody JSONObject requestJSON) {
@@ -35,7 +37,7 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/{product}")
+    @GetMapping("/{productId}")
     public JSONObject getProductInfoByProductId(JSONObject requestJSON){
         try{
             Integer productId = requestJSON.getInteger("productId");
@@ -43,6 +45,19 @@ public class ProductController {
         }catch(Exception e){
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
+    @GetMapping("/{productId}/user-comment")
+    public JSONObject getCommentByProductId(JSONObject requestJSON){
+        try{
+            Integer productId = requestJSON.getInteger("productId");
+            JSONObject data = new JSONObject();
+            data.put("list", productCommentService.getCommentByProductId(productId));
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
+        }catch(Exception e){
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, e.getMessage(), null);
         }
     }
 }
