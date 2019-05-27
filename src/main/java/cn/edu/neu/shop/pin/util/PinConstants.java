@@ -7,4 +7,8 @@ public class PinConstants {
         public static final int PERMISSION_DENIED = 403;
         public static final int INTERNAL_ERROR = 500;
     }
+
+    public class ResponseMessage {
+        public static final String SUCCESS = "请求成功";
+    }
 }
