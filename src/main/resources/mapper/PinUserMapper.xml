@@ -15,6 +15,7 @@
     <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
     <result column="nickname" jdbcType="VARCHAR" property="nickname" />
     <result column="balance" jdbcType="DECIMAL" property="balance" />
+    <result column="credit" jdbcType="INTEGER" property="credit" />
     <result column="last_login_ip" jdbcType="VARCHAR" property="lastLoginIp" />
     <result column="create_ip" jdbcType="VARCHAR" property="createIp" />
     <result column="gender" jdbcType="BIT" property="gender" />

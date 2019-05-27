@@ -67,7 +67,7 @@ public class PinUserProductComment {
      * 商家回复时间
      */
     @Column(name = "merchant_comment_time")
-    private Integer merchantCommentTime;
+    private Date merchantCommentTime;
 
     /**
      * 0未删除；1已删除
@@ -266,7 +266,7 @@ public class PinUserProductComment {
      *
      * @return merchant_comment_time - 商家回复时间
      */
-    public Integer getMerchantCommentTime() {
+    public Date getMerchantCommentTime() {
         return merchantCommentTime;
     }
 
@@ -275,7 +275,7 @@ public class PinUserProductComment {
      *
      * @param merchantCommentTime 商家回复时间
      */
-    public void setMerchantCommentTime(Integer merchantCommentTime) {
+    public void setMerchantCommentTime(Date merchantCommentTime) {
         this.merchantCommentTime = merchantCommentTime;
     }
 

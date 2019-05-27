@@ -2,8 +2,8 @@ package cn.edu.neu.shop.pin.model;
 
 import javax.persistence.*;
 
-@Table(name = "pin_settings_merchant_category")
-public class PinSettingsMerchantCategory {
+@Table(name = "pin_settings_store_category")
+public class PinSettingsStoreCategory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
@@ -12,6 +12,9 @@ public class PinSettingsMerchantCategory {
      */
     @Column(name = "category_name")
     private String categoryName;
+
+    @Column(name = "image_url")
+    private String imageUrl;
 
     /**
      * @return id
@@ -43,5 +46,19 @@ public class PinSettingsMerchantCategory {
      */
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+
+    /**
+     * @return image_url
+     */
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    /**
+     * @param imageUrl
+     */
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

@@ -19,6 +19,12 @@ public class PinProduct {
     private Integer storeId;
 
     /**
+     * 分类id
+     */
+    @Column(name = "category_id")
+    private Integer categoryId;
+
+    /**
      * 商品图片（可以多个）
      */
     @Column(name = "image_urls")
@@ -38,12 +44,6 @@ public class PinProduct {
      * 关键字
      */
     private String keyword;
-
-    /**
-     * 分类id
-     */
-    @Column(name = "category_id")
-    private String categoryId;
 
     /**
      * 商品价格
@@ -169,6 +169,24 @@ public class PinProduct {
     }
 
     /**
+     * 获取分类id
+     *
+     * @return category_id - 分类id
+     */
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    /**
+     * 设置分类id
+     *
+     * @param categoryId 分类id
+     */
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    /**
      * 获取商品图片（可以多个）
      *
      * @return image_urls - 商品图片（可以多个）
@@ -238,24 +256,6 @@ public class PinProduct {
      */
     public void setKeyword(String keyword) {
         this.keyword = keyword;
-    }
-
-    /**
-     * 获取分类id
-     *
-     * @return category_id - 分类id
-     */
-    public String getCategoryId() {
-        return categoryId;
-    }
-
-    /**
-     * 设置分类id
-     *
-     * @param categoryId 分类id
-     */
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
     }
 
     /**

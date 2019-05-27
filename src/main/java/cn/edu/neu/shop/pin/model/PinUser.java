@@ -38,6 +38,11 @@ public class PinUser {
 
     private BigDecimal balance;
 
+    /**
+     * 用户积分(通过签到和购买获得)
+     */
+    private Integer credit;
+
     @Column(name = "last_login_ip")
     private String lastLoginIp;
 
@@ -195,6 +200,24 @@ public class PinUser {
      */
     public void setBalance(BigDecimal balance) {
         this.balance = balance;
+    }
+
+    /**
+     * 获取用户积分(通过签到和购买获得)
+     *
+     * @return credit - 用户积分(通过签到和购买获得)
+     */
+    public Integer getCredit() {
+        return credit;
+    }
+
+    /**
+     * 设置用户积分(通过签到和购买获得)
+     *
+     * @param credit 用户积分(通过签到和购买获得)
+     */
+    public void setCredit(Integer credit) {
+        this.credit = credit;
     }
 
     /**

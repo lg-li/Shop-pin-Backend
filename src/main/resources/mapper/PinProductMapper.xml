@@ -7,11 +7,11 @@
     -->
     <result column="id" jdbcType="INTEGER" property="id" />
     <result column="store_id" jdbcType="INTEGER" property="storeId" />
+    <result column="category_id" jdbcType="INTEGER" property="categoryId" />
     <result column="image_urls" jdbcType="VARCHAR" property="imageUrls" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="info" jdbcType="VARCHAR" property="info" />
     <result column="keyword" jdbcType="VARCHAR" property="keyword" />
-    <result column="category_id" jdbcType="VARCHAR" property="categoryId" />
     <result column="price" jdbcType="DECIMAL" property="price" />
     <result column="price_before_discount" jdbcType="DECIMAL" property="priceBeforeDiscount" />
     <result column="unit_name" jdbcType="VARCHAR" property="unitName" />

@@ -15,7 +15,7 @@
     <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="merchant_comment_content" jdbcType="VARCHAR" property="merchantCommentContent" />
-    <result column="merchant_comment_time" jdbcType="INTEGER" property="merchantCommentTime" />
+    <result column="merchant_comment_time" jdbcType="TIMESTAMP" property="merchantCommentTime" />
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
     <result column="images_urls" jdbcType="LONGVARCHAR" property="imagesUrls" />
   </resultMap>
