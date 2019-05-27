@@ -8,6 +8,7 @@ public class PinMiniProgramFormIdRecord {
     /**
      * Log ID
      */
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

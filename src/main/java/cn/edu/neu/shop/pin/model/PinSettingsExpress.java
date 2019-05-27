@@ -7,6 +7,7 @@ public class PinSettingsExpress {
     /**
      * 快递公司id
      */
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

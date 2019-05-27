@@ -8,6 +8,7 @@ public class PinUserProductComment {
     /**
      * 评论ID
      */
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

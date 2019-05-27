@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <result column="id" jdbcType="INTEGER" property="id" />
+    <id column="id" jdbcType="INTEGER" property="id" />
     <result column="template_key" jdbcType="CHAR" property="templateKey" />
     <result column="name" jdbcType="CHAR" property="name" />
     <result column="content" jdbcType="VARCHAR" property="content" />

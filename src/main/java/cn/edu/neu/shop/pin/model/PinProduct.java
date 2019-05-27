@@ -9,6 +9,7 @@ public class PinProduct {
     /**
      * 商品id
      */
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

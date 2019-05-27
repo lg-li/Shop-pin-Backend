@@ -9,6 +9,7 @@ public class PinOrderGroup {
     /**
      * 拼团单ID
      */
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

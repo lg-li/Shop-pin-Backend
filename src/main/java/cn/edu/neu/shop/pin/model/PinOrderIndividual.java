@@ -9,6 +9,7 @@ public class PinOrderIndividual {
     /**
      * 订单ID
      */
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

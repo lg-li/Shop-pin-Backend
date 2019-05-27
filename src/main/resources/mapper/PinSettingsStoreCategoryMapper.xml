@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <result column="id" jdbcType="INTEGER" property="id" />
+    <id column="id" jdbcType="INTEGER" property="id" />
     <result column="category_name" jdbcType="VARCHAR" property="categoryName" />
     <result column="image_url" jdbcType="VARCHAR" property="imageUrl" />
   </resultMap>

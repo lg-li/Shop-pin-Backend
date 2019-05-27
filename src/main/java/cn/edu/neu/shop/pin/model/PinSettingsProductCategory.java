@@ -8,6 +8,7 @@ public class PinSettingsProductCategory {
     /**
      * 商品分类表ID
      */
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

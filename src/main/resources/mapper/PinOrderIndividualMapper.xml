@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <result column="id" jdbcType="INTEGER" property="id" />
+    <id column="id" jdbcType="INTEGER" property="id" />
     <result column="order_group_id" jdbcType="INTEGER" property="orderGroupId" />
     <result column="store_id" jdbcType="INTEGER" property="storeId" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />

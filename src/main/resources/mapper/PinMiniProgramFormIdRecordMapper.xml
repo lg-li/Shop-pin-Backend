@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <result column="id" jdbcType="INTEGER" property="id" />
+    <id column="id" jdbcType="INTEGER" property="id" />
     <result column="wechat_user_id" jdbcType="INTEGER" property="wechatUserId" />
     <result column="form_id" jdbcType="CHAR" property="formId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />

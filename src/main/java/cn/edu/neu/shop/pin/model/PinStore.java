@@ -8,6 +8,7 @@ public class PinStore {
     /**
      * 店铺id
      */
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
