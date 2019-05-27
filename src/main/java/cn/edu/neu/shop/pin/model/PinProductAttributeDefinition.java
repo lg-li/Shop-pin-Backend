@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 @Table(name = "pin_product_attribute_definition")
 public class PinProductAttributeDefinition {
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

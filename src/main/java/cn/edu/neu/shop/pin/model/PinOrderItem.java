@@ -8,6 +8,7 @@ public class PinOrderItem {
     /**
      * 订单已选品ID
      */
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

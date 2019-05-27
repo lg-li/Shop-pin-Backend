@@ -5,14 +5,13 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <result column="id" jdbcType="INTEGER" property="id" />
+    <id column="id" jdbcType="INTEGER" property="id" />
     <result column="parent_category_id" jdbcType="INTEGER" property="parentCategoryId" />
     <result column="category_name" jdbcType="VARCHAR" property="categoryName" />
     <result column="sort" jdbcType="INTEGER" property="sort" />
     <result column="image_url" jdbcType="VARCHAR" property="imageUrl" />
     <result column="is_activated" jdbcType="BIT" property="isActivated" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-
   </resultMap>
 
   <!-- 获得所有一级商品种类 -->

@@ -7,6 +7,7 @@ public class PinMiniProgramMessageTemplate {
     /**
      * 模板id
      */
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

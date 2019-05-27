@@ -5,6 +5,7 @@ import javax.persistence.*;
 
 @Table(name = "pin_user_product_visit_record")
 public class PinUserProductVisitRecord {
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

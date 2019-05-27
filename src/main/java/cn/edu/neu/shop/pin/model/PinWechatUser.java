@@ -8,6 +8,7 @@ public class PinWechatUser {
     /**
      * 微信用户id
      */
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

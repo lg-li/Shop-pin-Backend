@@ -8,6 +8,7 @@ public class PinSystemAdmin {
     /**
      * 后台管理员表ID
      */
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

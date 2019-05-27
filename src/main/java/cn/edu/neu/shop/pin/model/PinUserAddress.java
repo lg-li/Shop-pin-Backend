@@ -8,6 +8,7 @@ public class PinUserAddress {
     /**
      * 用户地址id
      */
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
