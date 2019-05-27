@@ -28,4 +28,8 @@
     <result column="visit_count" jdbcType="INTEGER" property="visitCount" />
     <result column="description" jdbcType="LONGVARCHAR" property="description" />
   </resultMap>
+  
+  <select id="getProductInfo">
+    select * from pin_product where id = #{productId}
+  </select>
 </mapper>
