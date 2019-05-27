@@ -12,5 +12,17 @@
     <result column="image_url" jdbcType="VARCHAR" property="imageUrl" />
     <result column="is_activated" jdbcType="BIT" property="isActivated" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+
   </resultMap>
+
+  <!-- 获得所有一级商品种类 -->
+  <select id="getAllParentProductCategory">
+      select * from pin_settings_product_category where parent_category_id is NULL
+  </select>
+
+  <!-- 获得所有二级商品种类 -->
+  <select id="getAllSubProductCategory">
+    select * from pin_settings_product_category where parent_category_id is not NULL
+  </select>
+
 </mapper>
