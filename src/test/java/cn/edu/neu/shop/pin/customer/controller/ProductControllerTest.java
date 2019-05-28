@@ -2,6 +2,7 @@ package cn.edu.neu.shop.pin.customer.controller;
 
 import cn.edu.neu.shop.pin.PinApplication;
 import cn.edu.neu.shop.pin.mapper.PinUserMapper;
+import cn.edu.neu.shop.pin.mapper.PinUserProductCollectionMapper;
 import com.alibaba.fastjson.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
@@ -29,6 +30,9 @@ public class ProductControllerTest {
     PinUserMapper pinUserMapper;
 
     @Autowired
+    PinUserProductCollectionMapper pinUserProductCollectionMapper;
+
+    @Autowired
     private WebApplicationContext context;
 
     private MockMvc mvc;
@@ -42,13 +46,6 @@ public class ProductControllerTest {
     @Test
     public void testGetCategoryByLayer() throws Exception {
 
-        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/commons/product/category/get-all-by-layer")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andReturn();
-
-        System.out.println(result.getResponse().getContentAsString());
     }
 
     @Test
@@ -64,7 +61,7 @@ public class ProductControllerTest {
         assert (jsonObject.getInteger("code").equals(200));
         JSONObject data = jsonObject.getJSONObject("data");
         // 数据部分
-        assert data.getString("name").equals("文胸");
+        assert data.getString("name").equals("NikeAirForce1");
     }
 
     @Test

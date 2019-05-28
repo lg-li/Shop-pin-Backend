@@ -21,18 +21,23 @@
         <result column="gender" jdbcType="BIT" property="gender"/>
     </resultMap>
 
-    <select id="findByEmail" resultMap="BaseResultMap">
+    <!--<select id="findByEmail" resultMap="_findByEmail">
         select pin_user.id, email, roles
         from pin_user,
              pin_user_role
         where email = #{email}
           and pin_user.id = pin_user_role.user_id
     </select>
-    <!--<resultMap id="_findByEmail" type="PinUser">-->
-        <!--<id property="id" column="id"/>-->
-        <!--<result property="email" column="email"/>-->
-        <!--<collection property="roles" ofType="string">-->
-            <!--<result column="role" />-->
-        <!--</collection>-->
-    <!--</resultMap>-->
+    <resultMap id="_findByEmail" type="PinUser">
+        <id property="id" column="id"/>
+        <result property="email" column="email"/>
+        <collection property="roles" ofType="string">
+            <result column="role" />
+        </collection>
+    </resultMap>-->
+    <select id="findByEmail" resultType="PinUser">
+        select *
+        from pin_user
+        where email = #{email}
+    </select>
 </mapper>
