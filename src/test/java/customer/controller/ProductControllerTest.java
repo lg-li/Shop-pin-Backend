@@ -19,11 +19,6 @@ public class ProductControllerTest {
     @Autowired
     PinUserMapper pinUserMapper;
 
-    @Test
-    public void MyTest(){
-        System.out.println(pinUserMapper.findByEmail("liyifei_1999@163.com"));
-    }
-
     @Autowired
     private WebApplicationContext context;
     private MockMvc mvc;
