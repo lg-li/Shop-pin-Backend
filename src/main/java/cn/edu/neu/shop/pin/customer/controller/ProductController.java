@@ -9,6 +9,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+@RestController
 @RequestMapping("/commons/product")
 public class ProductController {
 
@@ -45,7 +46,7 @@ public class ProductController {
      * @return JSONObject
      */
     @GetMapping("/{productId}")
-    public JSONObject getProductInfoByProductId(@PathVariable Integer productId){
+    public JSONObject getProductInfoByProductId(@PathVariable(value = "productId") Integer productId){
         try{
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productInfoService.getProInfoByProId(productId));
         }catch(Exception e){
