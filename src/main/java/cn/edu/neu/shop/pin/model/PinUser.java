@@ -2,6 +2,7 @@ package cn.edu.neu.shop.pin.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.*;
 
 @Table(name = "pin_user")
@@ -28,6 +29,8 @@ public class PinUser {
 
     @Column(name = "last_pasword_edit_time")
     private Date lastPaswordEditTime;
+
+    private List<PinRole> roles;
 
     /**
      * 头像链接（若微信有则复制微信的数据）
@@ -265,5 +268,30 @@ public class PinUser {
      */
     public void setGender(Boolean gender) {
         this.gender = gender;
+    }
+
+    public List<PinRole> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(List<PinRole> roles) {
+        this.roles = roles;
+    }
+
+    public PinUser(String email, String passwordHash, List<PinRole> roles) {
+//        this.phone = phone;
+        this.email = email;
+        this.passwordHash = passwordHash;
+//        this.createTime = createTime;
+//        this.lastLoginTime = lastLoginTime;
+//        this.lastPaswordEditTime = lastPaswordEditTime;
+        this.roles = roles;
+//        this.avatarUrl = avatarUrl;
+//        this.nickname = nickname;
+//        this.balance = balance;
+//        this.credit = credit;
+//        this.lastLoginIp = lastLoginIp;
+//        this.createIp = createIp;
+//        this.gender = gender;
     }
 }

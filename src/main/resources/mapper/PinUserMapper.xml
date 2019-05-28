@@ -1,23 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.edu.neu.shop.pin.mapper.PinUserMapper">
-  <resultMap id="BaseResultMap" type="cn.edu.neu.shop.pin.model.PinUser">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="phone" jdbcType="VARCHAR" property="phone" />
-    <result column="email" jdbcType="VARCHAR" property="email" />
-    <result column="password_hash" jdbcType="VARCHAR" property="passwordHash" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime" />
-    <result column="last_pasword_edit_time" jdbcType="TIMESTAMP" property="lastPaswordEditTime" />
-    <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl" />
-    <result column="nickname" jdbcType="VARCHAR" property="nickname" />
-    <result column="balance" jdbcType="DECIMAL" property="balance" />
-    <result column="credit" jdbcType="INTEGER" property="credit" />
-    <result column="last_login_ip" jdbcType="VARCHAR" property="lastLoginIp" />
-    <result column="create_ip" jdbcType="VARCHAR" property="createIp" />
-    <result column="gender" jdbcType="BIT" property="gender" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="cn.edu.neu.shop.pin.model.PinUser">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="password_hash" jdbcType="VARCHAR" property="passwordHash"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime"/>
+        <result column="last_pasword_edit_time" jdbcType="TIMESTAMP" property="lastPaswordEditTime"/>
+        <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl"/>
+        <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
+        <result column="balance" jdbcType="DECIMAL" property="balance"/>
+        <result column="credit" jdbcType="INTEGER" property="credit"/>
+        <result column="last_login_ip" jdbcType="VARCHAR" property="lastLoginIp"/>
+        <result column="create_ip" jdbcType="VARCHAR" property="createIp"/>
+        <result column="gender" jdbcType="BIT" property="gender"/>
+    </resultMap>
+
+    <select id="findByEmail" resultType="_findByEmail">
+        select pin_user.id, email, roles
+        from pin_user,
+             pin_user_role
+        where email = #{email}
+          and pin_user.id = pin_user_role.user_id
+    </select>
+    <resultMap id="_findByEmail" type="PinUser">
+        <id property="id" column="id"/>
+        <result property="email" column="email"/>
+        <collection property="roles" ofType="string">
+            <result column="role" />
+        </collection>
+    </resultMap>
 </mapper>
