@@ -24,6 +24,8 @@ public class PinUserProductCollection {
     @Column(name = "create_time")
     private Date createTime;
 
+    private PinProduct pinProduct;
+
     /**
      * @return id
      */
@@ -86,5 +88,13 @@ public class PinUserProductCollection {
      */
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public PinProduct getPinProduct() {
+        return pinProduct;
+    }
+
+    public void setPinProduct(PinProduct pinProduct) {
+        this.pinProduct = pinProduct;
     }
 }
