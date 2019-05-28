@@ -1,4 +1,4 @@
-package cn.edu.neu.shop.pin.controller;
+package cn.edu.neu.shop.pin.customer.controller;
 
 import cn.edu.neu.shop.pin.mapper.PinUserMapper;
 import org.junit.Before;
