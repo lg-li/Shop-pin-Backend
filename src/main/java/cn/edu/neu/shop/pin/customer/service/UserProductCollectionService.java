@@ -13,7 +13,13 @@ public class UserProductCollectionService {
     @Autowired
     private PinUserProductCollectionMapper pinUserProductCollectionMapper;
 
+    /**
+     *
+     * @param userId
+     * @return
+     */
     public List<PinUserProductCollection> getUserProductCollection(Integer userId) {
+        System.out.println("Service called");
         return pinUserProductCollectionMapper.getUserProductCollection(userId);
     }
 }

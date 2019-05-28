@@ -2,6 +2,7 @@ package cn.edu.neu.shop.pin.customer.controller;
 
 import cn.edu.neu.shop.pin.PinApplication;
 import cn.edu.neu.shop.pin.mapper.PinUserMapper;
+import cn.edu.neu.shop.pin.mapper.PinUserProductCollectionMapper;
 import com.alibaba.fastjson.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;
@@ -27,6 +28,9 @@ import org.springframework.web.context.WebApplicationContext;
 public class ProductControllerTest {
     @Autowired
     PinUserMapper pinUserMapper;
+
+    @Autowired
+    PinUserProductCollectionMapper pinUserProductCollectionMapper;
 
     @Autowired
     private WebApplicationContext context;
@@ -65,6 +69,21 @@ public class ProductControllerTest {
         JSONObject data = jsonObject.getJSONObject("data");
         // 数据部分
         assert data.getString("name").equals("文胸");
+    }
+
+    @Test
+    public void testGetUserProductCollection() throws Exception {
+        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/collection/user-product-collection/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn().getResponse().getContentAsString();
+        System.out.println("返回的json=" + result);
+        JSONObject jsonObject = (JSONObject) JSONObject.parse(result);
+        assert (jsonObject.getInteger("code").equals(200));
+        JSONObject data = jsonObject.getJSONObject("data");
+        // 数据部分
+        assert data.getString("store_name").equals("奇峰文胸旗舰店");
     }
 
     @Test
