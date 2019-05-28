@@ -61,7 +61,7 @@ public class ProductController {
      * @return JSONObject
      */
     @GetMapping("/{productId}/user-comment")
-    public JSONObject getCommentByProductId(@PathVariable Integer productId){
+    public JSONObject getCommentByProductId(@PathVariable(value = "productId") Integer productId){
         try{
             JSONObject data = new JSONObject();
             data.put("list", productCommentService.getCommentByProductId(productId));

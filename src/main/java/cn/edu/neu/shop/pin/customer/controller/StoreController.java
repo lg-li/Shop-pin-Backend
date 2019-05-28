@@ -2,6 +2,7 @@ package cn.edu.neu.shop.pin.customer.controller;
 
 
 import cn.edu.neu.shop.pin.customer.service.ProductInfoService;
+import cn.edu.neu.shop.pin.customer.service.StoreService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
@@ -18,16 +19,34 @@ public class StoreController {
     @Autowired
     private ProductInfoService productInfoService;
 
+    @Autowired
+    private StoreService storeService;
+
     /**
      * 根据店铺Id 获取该店铺的所有在售商品信息
      * @param storeId
      * @return JSONObject
      */
     @GetMapping("/{storeId}/products")
-    public JSONObject getProductInfoByStoreId(@PathVariable Integer storeId){
+    public JSONObject getProductInfoByStoreId(@PathVariable(value = "storeId") Integer storeId){
         try{
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productInfoService.getProInfoByStoreId(storeId));
         }catch(Exception e){
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
+    /**
+     * 根据店铺ID 获取该店铺的详细信息
+     * @param storeId
+     * @return JSONObject
+     */
+    @GetMapping("/{storeId}")
+    public JSONObject getStoreInfoByStoreId(@PathVariable(value = "storeId") Integer storeId) {
+        try{
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, storeService.getStoreInfo(storeId));
+        } catch(Exception e){
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }

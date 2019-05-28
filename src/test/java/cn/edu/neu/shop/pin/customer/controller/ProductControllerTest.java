@@ -46,13 +46,6 @@ public class ProductControllerTest {
     @Test
     public void testGetCategoryByLayer() throws Exception {
 
-        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/commons/product/category/get-all-by-layer")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andReturn();
-
-        System.out.println(result.getResponse().getContentAsString());
     }
 
     @Test
@@ -68,7 +61,7 @@ public class ProductControllerTest {
         assert (jsonObject.getInteger("code").equals(200));
         JSONObject data = jsonObject.getJSONObject("data");
         // 数据部分
-        assert data.getString("name").equals("文胸");
+        assert data.getString("name").equals("NikeAirForce1");
     }
 
     @Test
