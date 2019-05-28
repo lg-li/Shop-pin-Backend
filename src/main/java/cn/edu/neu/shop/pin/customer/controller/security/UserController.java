@@ -45,7 +45,7 @@ public class UserController {
   public String signup(@ApiParam("Signup User") @RequestBody UserDataDTO user) {
 //    PinUser pinUser = new PinUser(user.getEmail(),user.getPassword(),user.getRoles());
 //    return userService.signup(pinUser);
-    return null;
+      return null;
   }
 
   //

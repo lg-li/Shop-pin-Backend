@@ -3,7 +3,7 @@ package cn.edu.neu.shop.pin.mapper;
 import static org.junit.Assert.*;
 
 import cn.edu.neu.shop.pin.model.PinUser;
-import cn.edu.neu.shop.pin.model.PinUserProductCollection;
+import com.alibaba.fastjson.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 
@@ -23,22 +25,18 @@ public class PinUserMapperTest {
 
     @Test
     public void findByEmail() {
-        System.out.println();
-        System.out.println("##################################################");
-        System.out.println();
-        PinUser p = pinUserMapper.findByEmail("liyifei_1999@163.com");
-        System.out.println("id: " + p.getId());
-        System.out.println("nickname: " + p.getNickname());
-        System.out.println("gender: " + p.getGender());
-        System.out.println("Email: " + p.getEmail());
-        System.out.println("createTime: " + p.getCreateTime());
-        System.out.println();
-        System.out.println("##################################################");
-        System.out.println();
+        PinUser pinUser = pinUserMapper.findByEmailA("liyifei_1999@163.com");
+        System.out.println(pinUser);
     }
 
     @Test
     public void existsByEmail() {
+        List<Integer> list = new LinkedList<>();
+        list.add(1);
+        list.add(1);
+        list.add(1);
+        list.add(1);
+        System.out.println(list.size());
     }
 
     @Test
