@@ -1,6 +1,5 @@
 package customer.controller;
 
-
 import cn.edu.neu.shop.pin.PinApplication;
 import cn.edu.neu.shop.pin.model.PinProduct;
 import cn.edu.neu.shop.pin.model.PinSettingsProductCategory;
@@ -11,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -36,18 +36,18 @@ public class ProductControllerTest {
     @Test
     public void testGetCategoryByLayer() throws Exception {
 
-        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/commons/product/category/get-all-by-layer")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                .andReturn();
-
-        System.out.println(result.getResponse().getContentAsString());
     }
 
     @Test
     public void testGetProductInfoByProductId() throws Exception {
 
+        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/product/1")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn().getResponse().getContentAsString();
+
+        System.out.println("返回的json=" + result);
     }
 
     @Test
