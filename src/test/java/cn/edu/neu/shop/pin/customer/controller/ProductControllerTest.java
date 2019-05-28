@@ -62,11 +62,6 @@ public class ProductControllerTest {
 
     @Test
     public void testGetCommentByProductId() throws Exception {
-        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/product/1/user-comment")
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
-                .andDo(MockMvcResultHandlers.print())
-                .andReturn().getResponse().getContentAsString();
-        System.out.println("返回的json=" + result);
+
     }
 }
