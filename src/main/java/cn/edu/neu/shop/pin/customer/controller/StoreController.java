@@ -16,6 +16,11 @@ public class StoreController {
     @Autowired
     private ProductInfoService productInfoService;
 
+    /**
+     * 根据店铺Id 获取该店铺的所有在售商品信息
+     * @param storeId
+     * @return JSONObject
+     */
     @GetMapping("/{storeId}/products")
     public JSONObject getProductInfoByStoreId(@PathVariable Integer storeId){
         try{

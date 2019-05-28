@@ -11,12 +11,22 @@ public class ProductInfoService {
     @Autowired
     private PinProductMapper pinProductMapper;
 
+    /**
+     * 根据商品Id 获取商品详情信息
+     * @param productId
+     * @return
+     */
     public PinProduct getProInfoByProId(Integer productId){
 
         PinProduct pinProduct = pinProductMapper.getProductInfoByProductId(productId);
         return pinProduct;
     }
 
+    /**
+     * 根据店铺Id，获取该店铺所有在售商品信息
+     * @param storeId
+     * @return
+     */
     public PinProduct getProInfoByStoreId(Integer storeId){
 
         PinProduct pinProduct = pinProductMapper.getProductInfoByStoreId(storeId);

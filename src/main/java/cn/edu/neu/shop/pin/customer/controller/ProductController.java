@@ -21,6 +21,11 @@ public class ProductController {
     @Autowired
     private ProductCommentService productCommentService;
 
+    /**
+     * 层级获取商品分类表
+     * @param requestJSON
+     * @return JSONObject
+     */
     @PostMapping("/category/get-all-by-layer")
     public JSONObject getCategoryByLayer(@RequestBody JSONObject requestJSON) {
         try{
@@ -34,6 +39,11 @@ public class ProductController {
         }
     }
 
+    /**
+     * 通过商品Id 获取商品详情
+     * @param productId
+     * @return JSONObject
+     */
     @GetMapping("/{productId}")
     public JSONObject getProductInfoByProductId(@PathVariable Integer productId){
         try{
@@ -44,6 +54,11 @@ public class ProductController {
         }
     }
 
+    /**
+     * 根据商品Id 获取该商品评论信息
+     * @param productId
+     * @return JSONObject
+     */
     @GetMapping("/{productId}/user-comment")
     public JSONObject getCommentByProductId(@PathVariable Integer productId){
         try{

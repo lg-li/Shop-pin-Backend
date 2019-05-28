@@ -15,6 +15,11 @@ public class ProductCategoryService {
     @Autowired
     private PinSettingsProductCategoryMapper pinSettingsProductCategoryMapper;
 
+    /**
+     * 层级获取商品分类表
+     * @param layer
+     * @return List
+     */
     public List<PinSettingsProductCategory> getProductCategoryByLayer(Integer layer) {
         if(layer == null || layer.equals(0)) {
             return pinSettingsProductCategoryMapper.getAllParentProductCategory();

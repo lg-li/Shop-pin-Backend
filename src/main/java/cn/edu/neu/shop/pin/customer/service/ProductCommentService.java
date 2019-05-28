@@ -13,6 +13,11 @@ public class ProductCommentService {
     @Autowired
     private PinUserProductCommentMapper pinUserProductCommentMapper;
 
+    /**
+     * 根据商品ID 获取该商品评论信息
+     * @param productId
+     * @return List
+     */
     public List<PinUserProductComment> getCommentByProductId(Integer productId){
         return pinUserProductCommentMapper.getCommentByProductId(productId);
     }
