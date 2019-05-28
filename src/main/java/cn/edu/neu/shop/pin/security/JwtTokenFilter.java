@@ -1,6 +1,5 @@
 package cn.edu.neu.shop.pin.security;
 
-//import murraco.exception.CustomException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -38,5 +37,4 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     filterChain.doFilter(httpServletRequest, httpServletResponse);
   }
-
 }

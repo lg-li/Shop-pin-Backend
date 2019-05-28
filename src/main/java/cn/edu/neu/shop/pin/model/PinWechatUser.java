@@ -44,7 +44,7 @@ public class PinWechatUser {
     /**
      * 用户的性别，值为1时是男性，值为2时是女性，值为0时是未知
      */
-    private Boolean gender;
+    private Integer gender;
 
     /**
      * 用户所在城市
@@ -191,7 +191,7 @@ public class PinWechatUser {
      *
      * @return gender - 用户的性别，值为1时是男性，值为2时是女性，值为0时是未知
      */
-    public Boolean getGender() {
+    public Integer getGender() {
         return gender;
     }
 
@@ -200,7 +200,7 @@ public class PinWechatUser {
      *
      * @param gender 用户的性别，值为1时是男性，值为2时是女性，值为0时是未知
      */
-    public void setGender(Boolean gender) {
+    public void setGender(Integer gender) {
         this.gender = gender;
     }
 
