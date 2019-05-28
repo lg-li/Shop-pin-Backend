@@ -7,10 +7,7 @@ import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @RequestMapping("/commons/product")
 public class ProductController {
@@ -38,9 +35,8 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}")
-    public JSONObject getProductInfoByProductId(JSONObject requestJSON){
+    public JSONObject getProductInfoByProductId(@PathVariable Integer productId){
         try{
-            Integer productId = requestJSON.getInteger("productId");
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productInfoService.getProInfoByProId(productId));
         }catch(Exception e){
             e.printStackTrace();
@@ -49,9 +45,8 @@ public class ProductController {
     }
 
     @GetMapping("/{productId}/user-comment")
-    public JSONObject getCommentByProductId(JSONObject requestJSON){
+    public JSONObject getCommentByProductId(@PathVariable Integer productId){
         try{
-            Integer productId = requestJSON.getInteger("productId");
             JSONObject data = new JSONObject();
             data.put("list", productCommentService.getCommentByProductId(productId));
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
