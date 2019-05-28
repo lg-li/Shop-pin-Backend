@@ -1,4 +1,4 @@
-package customer.controller;
+package cn.edu.neu.shop.pin.controller;
 
 
 import cn.edu.neu.shop.pin.PinApplication;
