@@ -1,6 +1,7 @@
 package cn.edu.neu.shop.pin.model;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
@@ -278,7 +279,23 @@ public class PinUser {
         this.roles = roles;
     }
 
-    public PinUser(String email, String passwordHash, List<PinRole> roles) {
+    public PinUser(Long id, String phone, String email, String passwordHash, Timestamp createTime, Timestamp lastLoginTime, Timestamp lastPaswordEditTime, String avatarUrl, String nickname, BigDecimal balance, Integer credit, String lastLoginIp, String createIp, Boolean gender) {
+        this.phone = phone;
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.createTime = createTime;
+        this.lastLoginTime = lastLoginTime;
+        this.lastPaswordEditTime = lastPaswordEditTime;
+        this.avatarUrl = avatarUrl;
+        this.nickname = nickname;
+        this.balance = balance;
+        this.credit = credit;
+        this.lastLoginIp = lastLoginIp;
+        this.createIp = createIp;
+        this.gender = gender;
+    }
+
+    /* public PinUser(String email, String passwordHash, List<PinRole> roles) {
 //        this.phone = phone;
         this.email = email;
         this.passwordHash = passwordHash;
@@ -293,5 +310,25 @@ public class PinUser {
 //        this.lastLoginIp = lastLoginIp;
 //        this.createIp = createIp;
 //        this.gender = gender;
+    }*/
+
+    @Override
+    public String toString() {
+        return "PinUser{" +
+                "id=" + id +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", passwordHash='" + passwordHash + '\'' +
+                ", createTime=" + createTime +
+                ", lastLoginTime=" + lastLoginTime +
+                ", lastPaswordEditTime=" + lastPaswordEditTime +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", balance=" + balance +
+                ", credit=" + credit +
+                ", lastLoginIp='" + lastLoginIp + '\'' +
+                ", createIp='" + createIp + '\'' +
+                ", gender=" + gender +
+                '}';
     }
 }
