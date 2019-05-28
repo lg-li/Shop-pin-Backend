@@ -2,13 +2,39 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.edu.neu.shop.pin.mapper.PinUserStoreCollectionMapper">
 
+<!-- written by: flyhero -->
+
   <resultMap id="BaseResultMap" type="PinUserStoreCollection">
     <!--
       WARNING - @mbg.generated
     -->
-    <id column="id" jdbcType="INTEGER" property="id" />
+    <id column="collection_id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="store_id" jdbcType="INTEGER" property="storeId" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <association property="store" column="store_id" javaType="PinStore" resultMap="storeResult" />
   </resultMap>
+
+
+  <resultMap id="storeResult" type="PinStore">
+    <id column="id" property="id" />
+    <result column="store_name" property="name" />
+    <result column="logo_url" property="logoUrl" />
+  </resultMap>
+
+  <select id="getUserStoreCollection" resultMap="BaseResultMap">
+    select
+      col.id            as collection_id,
+      col.user_id       as user_id,
+      sto.id            as store_id,
+      sto.name          as store_name,
+      sto.logo_url      as logo_url,
+      col.create_time   as create_time
+    from
+      pin_user_store_collection col
+      left outer join pin_store sto on col.store_id = sto.id
+    where
+      col.user_id = #{userId}
+  </select>
+
 </mapper>

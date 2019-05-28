@@ -13,7 +13,7 @@ import java.util.List;
 public abstract class AbstractService<T> {
 
     @Autowired
-    protected MyMapper<T> mapper;
+    protected BaseMapper<T> mapper;
 
     private Class<T> modelClass;    // 当前泛型真实类型的Class
 

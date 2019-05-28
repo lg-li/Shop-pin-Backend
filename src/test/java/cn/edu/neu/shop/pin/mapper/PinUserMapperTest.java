@@ -2,8 +2,10 @@ package cn.edu.neu.shop.pin.mapper;
 
 import static org.junit.Assert.*;
 
+import cn.edu.neu.shop.pin.model.PinRole;
 import cn.edu.neu.shop.pin.model.PinUser;
 import com.alibaba.fastjson.JSONObject;
+import io.swagger.models.auth.In;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -25,8 +27,18 @@ public class PinUserMapperTest {
 
     @Test
     public void findByEmail() {
-        PinUser pinUser = pinUserMapper.findByEmailA("liyifei_1999@163.com");
-        System.out.println(pinUser);
+        PinUser p = pinUserMapper.findByEmailA("liyifei_1999@163.com");
+        System.out.println();
+        System.out.println("##################################################");
+        System.out.println();
+        System.out.println("id: " + p.getId());
+        System.out.println("email: " + p.getNickname());
+//        for(Integer pr : p.getRoles()) {
+//            System.out.println("PinRole: " + pr);
+//        }
+        System.out.println();
+        System.out.println("##################################################");
+        System.out.println();
     }
 
     @Test

@@ -3,6 +3,7 @@ package cn.edu.neu.shop.pin.customer.controller;
 import cn.edu.neu.shop.pin.PinApplication;
 import cn.edu.neu.shop.pin.mapper.PinUserMapper;
 import cn.edu.neu.shop.pin.mapper.PinUserProductCollectionMapper;
+import cn.edu.neu.shop.pin.mapper.PinUserStoreCollectionMapper;
 import cn.edu.neu.shop.pin.model.PinUserProductCollection;
 import com.alibaba.fastjson.JSONObject;
 import org.junit.Assert;
@@ -28,10 +29,13 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = PinApplication.class)
 @WebAppConfiguration
-public class UserProductCollectionTest {
+public class CollectionControllerTest {
 
     @Autowired
     PinUserProductCollectionMapper pinUserProductCollectionMapper;
+
+    @Autowired
+    PinUserStoreCollectionMapper pinUserStoreCollectionMapper;
 
     @Autowired
     private WebApplicationContext context;
@@ -52,31 +56,16 @@ public class UserProductCollectionTest {
                 .andReturn().getResponse().getContentAsString();
 
         System.out.println("返回的json=" + result);
-//        JSONObject jsonObject = (JSONObject) JSONObject.parse(result);
-//        assert (jsonObject.getInteger("code").equals(200));
-//        JSONObject data = jsonObject.getJSONObject("data");
-//        // 数据部分
-//        assert data.getString("name").equals("NikeAirForce1");
-//        System.out.println();
-//        System.out.println("##################################################");
-//        System.out.println();
-//        List<PinUserProductCollection> list = pinUserProductCollectionMapper.getUserProductCollection(1);
-//        for(PinUserProductCollection p : list) {
-//            System.out.println("id: " + p.getId());
-//            System.out.println("userId: " + p.getUserId());
-//            System.out.println("productId: " + p.getProductId());
-//            System.out.println("product: ");
-//            System.out.println("--prouctName: " + p.getProduct().getName());
-//            System.out.println("--imageUrls: " + p.getProduct().getImageUrls());
-//            System.out.println("--price: " + p.getProduct().getPrice());
-//            System.out.println("storeId: " + p.getProduct().getStore().getId());
-//            System.out.println("store: ");
-//            System.out.println("--storeName: " + p.getProduct().getStore().getName());
-//            System.out.println("--logoUrl: " + p.getProduct().getStore().getLogoUrl());
-//            System.out.println("createTime: " + p.getCreateTime());
-//        }
-//        System.out.println();
-//        System.out.println("##################################################");
-//        System.out.println();
+    }
+
+    @Test
+    public void testGetUserStoreCollection() throws Exception {
+        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/collection/user-store-collection/2")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn().getResponse().getContentAsString();
+
+        System.out.println("返回的json=" + result);
     }
 }
