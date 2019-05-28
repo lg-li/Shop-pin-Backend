@@ -19,7 +19,6 @@ public class UserProductCollectionService {
      * @return
      */
     public List<PinUserProductCollection> getUserProductCollection(Integer userId) {
-        System.out.println("Service called");
         return pinUserProductCollectionMapper.getUserProductCollection(userId);
     }
 }

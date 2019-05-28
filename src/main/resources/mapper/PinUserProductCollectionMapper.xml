@@ -1,25 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.edu.neu.shop.pin.mapper.PinUserProductCollectionMapper">
-  <resultMap id="BaseResultMap" type="cn.edu.neu.shop.pin.model.PinUserProductCollection">
+
+  <resultMap id="BaseResultMap" type="PinUserProductCollection">
     <!--
       WARNING - @mbg.generated
     -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-<!--    <result column="product_id" jdbcType="INTEGER" property="productId" />-->
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <association property="pin_product" javaType="cn.edu.neu.shop.pin.model.PinProduct">
-      <id column="id" property="productId" />
-      <result column="name" property="name" />
+      <id column="collection_id" jdbcType="INTEGER" property="id" />
+      <result column="user_id" jdbcType="INTEGER" property="userId" />
+      <result column="product_id" jdbcType="INTEGER" property="productId" />
+      <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+      <association property="product" column="product_id" javaType="PinProduct" resultMap="productResult" />
+  </resultMap>
+
+
+  <resultMap id="productResult" type="PinProduct">
+      <id column="product_id" property="id" />
+      <result column="product_name" property="name" />
       <result column="image_urls" property="imageUrls" />
       <result column="price" property="price" />
-      <association property="pin_store" javaType="cn.edu.neu.shop.pin.model.PinStore">
-        <id column="id" property="storeId" />
-        <result column="name" property="storeName" />
-        <result column="logo_url" property="logoUrl" />
-      </association>
-    </association>
+      <association property="store" column="store_id" javaType="PinStore" resultMap="storeResult" />
+  </resultMap>
+
+
+  <resultMap id="storeResult" type="PinStore">
+      <id column="store_id" property="id" />
+      <result column="store_name" property="name" />
+      <result column="logo_url" property="logoUrl" />
   </resultMap>
 
   <select id="getUserProductCollection" resultMap="BaseResultMap">
