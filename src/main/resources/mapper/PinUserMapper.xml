@@ -31,7 +31,6 @@
     <resultMap id="_findByEmail"  type="PinUser">
         <id property="id" column="id" />
         <collection property="roles" javaType="ArrayList" ofType="Integer">
-            <id property="id" column="id"/>
             <result property="role" column="roless" />
         </collection>
     </resultMap>
