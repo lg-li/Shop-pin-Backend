@@ -17,7 +17,7 @@
 
 
   <resultMap id="storeResult" type="PinStore">
-    <id column="id" property="id" />
+    <id column="store_id" property="id" />
     <result column="store_name" property="name" />
     <result column="logo_url" property="logoUrl" />
   </resultMap>
