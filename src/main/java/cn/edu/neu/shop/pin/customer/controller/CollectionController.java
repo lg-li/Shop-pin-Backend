@@ -5,10 +5,7 @@ import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/commons/collection")
@@ -18,9 +15,8 @@ public class CollectionController {
     private UserProductCollectionService userProductCollectionService;
 
     @GetMapping("/user-product-collection/{userId}")
-    public JSONObject getUserProductCollection(@RequestBody JSONObject requestJSON) {
+    public JSONObject getUserProductCollection(@PathVariable(value = "userId") Integer userId) {
         try {
-            Integer userId = requestJSON.getInteger("userId");
             JSONObject data = new JSONObject();
             data.put("list", userProductCollectionService.getUserProductCollection(userId));
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);

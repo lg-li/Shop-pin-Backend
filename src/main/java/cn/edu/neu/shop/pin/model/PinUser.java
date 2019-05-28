@@ -28,7 +28,7 @@ public class PinUser {
     @Column(name = "last_login_time")
     private Date lastLoginTime;
 
-    @Column(name = "last_pasword_edit_time")
+    @Column(name = "last_password_edit_time")
     private Date lastPaswordEditTime;
 
     private List<PinRole> roles;
@@ -148,7 +148,7 @@ public class PinUser {
     }
 
     /**
-     * @return last_pasword_edit_time
+     * @return last_password_edit_time
      */
     public Date getLastPaswordEditTime() {
         return lastPaswordEditTime;

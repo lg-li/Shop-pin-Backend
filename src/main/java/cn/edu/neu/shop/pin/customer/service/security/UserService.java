@@ -31,8 +31,6 @@ public class UserService {
   @Autowired
   private AuthenticationManager authenticationManager;
 
-
-
   public String signin(String email, String password) {
     try {
       authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
