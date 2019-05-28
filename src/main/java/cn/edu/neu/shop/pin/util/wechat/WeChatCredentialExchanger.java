@@ -1,5 +1,6 @@
 package cn.edu.neu.shop.pin.util.wechat;
 
+import cn.edu.neu.shop.pin.util.PinConstants;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.web.client.RestTemplate;
 
@@ -18,8 +19,8 @@ public class WeChatCredentialExchanger {
         WeChatCredential sessionData = new WeChatCredential();
         RestTemplate restTemplate = new RestTemplate();
         Map<String, String> vars = new HashMap<String, String>();
-        vars.put("appId", Constants.WECHAT_APP_ID);
-        vars.put("secretKey", Constants.WECHAT_SECRET_KEY);
+        vars.put("appId", PinConstants.WECHAT_APP_ID);
+        vars.put("secretKey", PinConstants.WECHAT_SECRET_KEY);
         vars.put("code", code);
         String s = restTemplate.getForObject("https://api.weixin.qq.com/sns/jscode2session?appid={appId}&secret={secretKey}&js_code={code}&grant_type=authorization_code", String.class, vars);
         JSONObject result = JSONObject.parseObject(s);
