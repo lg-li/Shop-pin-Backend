@@ -6,5 +6,5 @@ import cn.edu.neu.shop.pin.util.base.BaseMapper;
 import java.util.List;
 
 public interface PinUserProductCollectionMapper extends BaseMapper<PinUserProductCollection> {
-    List<PinUserProductCollection> getUserProductCollection();
+    List<PinUserProductCollection> getUserProductCollection(Integer userId);
 }

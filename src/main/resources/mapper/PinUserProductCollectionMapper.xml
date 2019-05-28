@@ -24,15 +24,15 @@
 
   <select id="getUserProductCollection" resultMap="BaseResultMap">
     select
-      col.id            as collection_id
-      col.user_id       as user_id
-      col.product_id    as product_id
-      pro.name          as product_name
-      pro.image_urls    as image_urls
-      pro.price         as price
-      pro.store_id      as store_id
-      sto.name          as store_name
-      sto.logo_url      as logo_url
+      col.id            as collection_id,
+      col.user_id       as user_id,
+      col.product_id    as product_id,
+      pro.name          as product_name,
+      pro.image_urls    as image_urls,
+      pro.price         as price,
+      pro.store_id      as store_id,
+      sto.name          as store_name,
+      sto.logo_url      as logo_url,
       col.create_time   as create_time
     from
       pin_user_product_collection col
