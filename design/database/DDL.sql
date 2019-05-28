@@ -246,7 +246,7 @@ CREATE TABLE `pin_user`
   `password_hash`          varchar(128)              DEFAULT NULL,
   `create_time`            timestamp        NULL     DEFAULT NULL,
   `last_login_time`        timestamp        NULL     DEFAULT NULL,
-  `last_pasword_edit_time` timestamp        NULL     DEFAULT NULL,
+  `last_password_edit_time` timestamp        NULL     DEFAULT NULL,
   `avatar_url`             varchar(255)              DEFAULT NULL COMMENT '头像链接（若微信有则复制微信的数据）',
   `nickname`               varchar(24)      NOT NULL,
   `balance`                decimal(9, 2)    NOT NULL DEFAULT '0.00',

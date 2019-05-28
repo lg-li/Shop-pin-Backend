@@ -11,7 +11,7 @@
         <result column="password_hash" jdbcType="VARCHAR" property="passwordHash"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="last_login_time" jdbcType="TIMESTAMP" property="lastLoginTime"/>
-        <result column="last_pasword_edit_time" jdbcType="TIMESTAMP" property="lastPaswordEditTime"/>
+        <result column="last_password_edit_time" jdbcType="TIMESTAMP" property="lastPaswordEditTime"/>
         <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl"/>
         <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
         <result column="balance" jdbcType="DECIMAL" property="balance"/>
