@@ -133,6 +133,8 @@ public class PinProduct {
      */
     private String description;
 
+    private PinStore store;
+
     /**
      * 获取商品id
      *
@@ -527,5 +529,13 @@ public class PinProduct {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public PinStore getStore() {
+        return store;
+    }
+
+    public void setStore(PinStore store) {
+        this.store = store;
     }
 }
