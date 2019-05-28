@@ -1,5 +1,7 @@
 package cn.edu.neu.shop.pin.model;
 
+import io.swagger.models.auth.In;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -296,14 +298,14 @@ public class PinUser {
         this.gender = gender;
     }
 
-    public PinUser(Long id,String phone, String email, String passwordHash, Timestamp createTime, Timestamp lastLoginTime, Timestamp lastPaswordEditTime, String avatarUrl, String nickname, BigDecimal balance, Integer credit, String lastLoginIp, String createIp, Boolean gender, List<Integer> roles) {
+    public PinUser(Long id,String phone, String email, String passwordHash, Timestamp createTime, Timestamp lastLoginTime, Timestamp lastPaswordEditTime, String avatarUrl, String nickname, BigDecimal balance, Integer credit, String lastLoginIp, String createIp, Boolean gender, Integer roles) {
         this.phone = phone;
         this.email = email;
         this.passwordHash = passwordHash;
         this.createTime = createTime;
         this.lastLoginTime = lastLoginTime;
         this.lastPaswordEditTime = lastPaswordEditTime;
-        this.roles = transfer(roles);
+//        this.roles = transfer(roles);
         this.avatarUrl = avatarUrl;
         this.nickname = nickname;
         this.balance = balance;
