@@ -3,13 +3,14 @@ package cn.edu.neu.shop.pin.customer.service;
 
 import cn.edu.neu.shop.pin.mapper.PinSettingsProductCategoryMapper;
 import cn.edu.neu.shop.pin.model.PinSettingsProductCategory;
+import cn.edu.neu.shop.pin.util.base.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class ProductCategoryService {
+public class ProductCategoryService extends AbstractService<PinSettingsProductCategory> {
 
     @Autowired
     private PinSettingsProductCategoryMapper pinSettingsProductCategoryMapper;

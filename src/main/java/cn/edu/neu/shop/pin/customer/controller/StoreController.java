@@ -1,7 +1,7 @@
 package cn.edu.neu.shop.pin.customer.controller;
 
 
-import cn.edu.neu.shop.pin.customer.service.ProductInfoService;
+import cn.edu.neu.shop.pin.customer.service.ProductService;
 import cn.edu.neu.shop.pin.customer.service.StoreService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class StoreController {
 
     @Autowired
-    private ProductInfoService productInfoService;
+    private ProductService productService;
 
     @Autowired
     private StoreService storeService;
@@ -30,7 +30,7 @@ public class StoreController {
     @GetMapping("/{storeId}/products")
     public JSONObject getProductInfoByStoreId(@PathVariable(value = "storeId") Integer storeId){
         try{
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productInfoService.getProInfoByStoreId(storeId));
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productService.getProInfoByStoreId(storeId));
         }catch(Exception e){
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);

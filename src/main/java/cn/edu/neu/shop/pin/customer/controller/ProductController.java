@@ -2,7 +2,7 @@ package cn.edu.neu.shop.pin.customer.controller;
 
 import cn.edu.neu.shop.pin.customer.service.ProductCategoryService;
 import cn.edu.neu.shop.pin.customer.service.ProductCommentService;
-import cn.edu.neu.shop.pin.customer.service.ProductInfoService;
+import cn.edu.neu.shop.pin.customer.service.ProductService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
@@ -17,7 +17,7 @@ public class ProductController {
     private ProductCategoryService productCategoryService;
 
     @Autowired
-    private ProductInfoService productInfoService;
+    private ProductService productService;
 
     @Autowired
     private ProductCommentService productCommentService;
@@ -48,7 +48,7 @@ public class ProductController {
     @GetMapping("/{productId}")
     public JSONObject getProductInfoByProductId(@PathVariable(value = "productId") Integer productId){
         try{
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productInfoService.getProInfoByProId(productId));
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productService.getProInfoByProId(productId));
         }catch(Exception e){
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
