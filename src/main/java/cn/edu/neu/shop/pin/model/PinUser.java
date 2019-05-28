@@ -298,6 +298,7 @@ public class PinUser {
         this.gender = gender;
     }
 
+    //为了解决Mapper返回的时候想要的构造函数
     public PinUser(Long id,String phone, String email, String passwordHash, Timestamp createTime, Timestamp lastLoginTime, Timestamp lastPaswordEditTime, String avatarUrl, String nickname, BigDecimal balance, Integer credit, String lastLoginIp, String createIp, Boolean gender, Integer roles) {
         this.phone = phone;
         this.email = email;
@@ -336,10 +337,10 @@ public class PinUser {
                 '}';
     }
 
-    public List<PinRole> transfer(List<Integer> list){
+    public static List<PinRole> transfer(List<PinRole> list){
         ArrayList<PinRole> roleList = new ArrayList<>();
-        for (Integer integer : list) {
-            roleList.add(PinRole.values()[integer]);
+        for (Object integer : list) {
+            roleList.add(PinRole.values()[(Integer) integer]);
         }
         return roleList;
     }
