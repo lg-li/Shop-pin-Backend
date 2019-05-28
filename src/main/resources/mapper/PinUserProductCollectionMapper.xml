@@ -7,7 +7,39 @@
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="product_id" jdbcType="INTEGER" property="productId" />
+<!--    <result column="product_id" jdbcType="INTEGER" property="productId" />-->
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <association property="pin_product" javaType="cn.edu.neu.shop.pin.model.PinProduct">
+      <id column="id" property="productId" />
+      <result column="name" property="name" />
+      <result column="image_urls" property="imageUrls" />
+      <result column="price" property="price" />
+      <association property="pin_store" javaType="cn.edu.neu.shop.pin.model.PinStore">
+        <id column="id" property="storeId" />
+        <result column="name" property="storeName" />
+        <result column="logo_url" property="logoUrl" />
+      </association>
+    </association>
   </resultMap>
+
+  <select id="getUserProductCollection" resultMap="BaseResultMap">
+    select
+      col.id            as collection_id
+      col.user_id       as user_id
+      col.product_id    as product_id
+      pro.name          as product_name
+      pro.image_urls    as image_urls
+      pro.price         as price
+      pro.store_id      as store_id
+      sto.name          as store_name
+      sto.logo_url      as logo_url
+      col.create_time   as create_time
+    from
+      pin_user_product_collection col
+      left outer join pin_product pro on col.product_id = pro.id
+      left outer join pin_store sto on pro.store_id = sto.id
+    where
+      col.user_id = #{userId}
+  </select>
+
 </mapper>
