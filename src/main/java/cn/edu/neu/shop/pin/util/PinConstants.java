@@ -2,6 +2,9 @@ package cn.edu.neu.shop.pin.util;
 
 public class PinConstants {
 
+    public static final String WECHAT_APP_ID = "";
+    public static final String WECHAT_SECRET_KEY = "";
+
     public class StatusCode {
         public static final int SUCCESS = 200;
         public static final int PERMISSION_DENIED = 403;
