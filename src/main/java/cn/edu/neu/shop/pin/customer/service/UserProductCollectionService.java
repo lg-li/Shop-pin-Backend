@@ -13,6 +13,11 @@ public class UserProductCollectionService {
     @Autowired
     private PinUserProductCollectionMapper pinUserProductCollectionMapper;
 
+    /**
+     *
+     * @param userId
+     * @return
+     */
     public List<PinUserProductCollection> getUserProductCollection(Integer userId) {
         return pinUserProductCollectionMapper.getUserProductCollection(userId);
     }
