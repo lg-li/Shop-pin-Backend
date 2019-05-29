@@ -25,18 +25,7 @@ import org.springframework.web.context.WebApplicationContext;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = PinApplication.class)
 @WebAppConfiguration
-public class ProductControllerTest {
-
-    @Autowired
-    private WebApplicationContext context;
-
-    private MockMvc mvc;
-
-    @Before
-    public void setUp() throws Exception {
-        this.mvc = MockMvcBuilders.webAppContextSetup(this.context).build();
-    }
-
+public class ProductControllerTest extends UserCredentialNeededTest{
 
     @Test
     public void testGetCategoryByLayer() throws Exception {
