@@ -25,28 +25,25 @@ public class PinUserMapperTest {
     PinUserMapper pinUserMapper;
 
     @Test
-    public void findByEmail() {
-        PinUser pinUser = pinUserMapper.findByEmailA("liyifei_1999@163.com");
+    public void findById() {
+        PinUser pinUser = pinUserMapper.findById("1");
         List<PinRole> roles = PinUser.transfer(pinUser.getRoles());
         pinUser.setRoles(roles);
         System.out.println(pinUser);
     }
 
     @Test
-    public void existsByEmail() {
-        List<Integer> list = new LinkedList<>();
-        list.add(1);
-        list.add(1);
-        list.add(1);
-        list.add(1);
-        System.out.println(list.size());
+    public void existsById() {
+        System.out.println(pinUserMapper.existsById("2"));
     }
 
     @Test
     public void save() {
+
     }
 
     @Test
     public void deleteByEmail() {
+
     }
 }

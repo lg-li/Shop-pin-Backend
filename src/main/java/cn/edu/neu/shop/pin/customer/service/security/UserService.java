@@ -19,55 +19,57 @@ import javax.servlet.http.HttpServletRequest;
 @Service
 public class UserService {
 
-  @Autowired
-  private PinUserMapper userMapper;
+    @Autowired
+    private PinUserMapper userMapper;
 
-  @Autowired
-  private PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-  @Autowired
-  private JwtTokenProvider jwtTokenProvider;
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
 
-  @Autowired
-  private AuthenticationManager authenticationManager;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
-  public String signin(String email, String password) {
-    try {
-      authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(email, password));
-      return jwtTokenProvider.createToken(email, userMapper.findByEmail(email).getRoles());
-    } catch (AuthenticationException e) {
-      throw new CustomException("Invalid email/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
+    //登陆
+    public String signin(String id, String password) {
+        try {
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(id, password));
+            return jwtTokenProvider.createToken(id, userMapper.findById(id).getRoles());
+        } catch (AuthenticationException e) {
+            throw new CustomException("Invalid id/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
+        }
     }
-  }
 
-  public String signup(PinUser user) {
-    if (!userMapper.existsByEmail(user.getEmail())) {
-      user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
-      userMapper.save(user);
-      return jwtTokenProvider.createToken(user.getEmail(), user.getRoles());
-    } else {
-      throw new CustomException("Email is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
+    //注册
+    public String signup(PinUser user) {
+        if (!userMapper.existsById(user.getId().toString())) {
+            user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
+            userMapper.save(user);
+            return jwtTokenProvider.createToken(user.getId().toString(), user.getRoles());
+        } else {
+            throw new CustomException("Id is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
+        }
     }
-  }
 
-  public void delete(String email) {
-    userMapper.deleteByEmail(email);
-  }
-
-  public PinUser search(String email) {
-    PinUser user = userMapper.findByEmail(email);
-    if (user == null) {
-      throw new CustomException("The user doesn't exist", HttpStatus.NOT_FOUND);
+    public void delete(String id) {
+        userMapper.deleteById(id);
     }
-    return user;
-  }
 
-  public PinUser whoami(HttpServletRequest req) {
-    return userMapper.findByEmail(jwtTokenProvider.getEmail(jwtTokenProvider.resolveToken(req)));
-  }
+    public PinUser search(String id) {
+        PinUser user = userMapper.findById(id);
+        if (user == null) {
+            throw new CustomException("The user doesn't exist", HttpStatus.NOT_FOUND);
+        }
+        return user;
+    }
 
-  public String refresh(String email) {
-    return jwtTokenProvider.createToken(email, userMapper.findByEmail(email).getRoles());
-  }
+    public PinUser whoami(HttpServletRequest req) {
+        return userMapper.findById(jwtTokenProvider.getId(jwtTokenProvider.resolveToken(req)));
+    }
+
+    public String refresh(String id) {
+        return jwtTokenProvider.createToken(id, userMapper.findById(id).getRoles());
+    }
 
 }

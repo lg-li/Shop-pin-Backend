@@ -27,11 +27,11 @@ public class UserController {
   @ApiOperation(value = "${UserController.signin}")
   @ApiResponses(value = {//
       @ApiResponse(code = 400, message = "Something went wrong"), //
-      @ApiResponse(code = 422, message = "Invalid email/password supplied")})
+      @ApiResponse(code = 422, message = "Invalid id/password supplied")})
   public String login(//
-                      @ApiParam("Email") @RequestParam String email, //
+                      @ApiParam("Id") @RequestParam String id, //
                       @ApiParam("Password") @RequestParam String password) {
-    return userService.signin(email, password);
+    return userService.signin(id, password);
   }
 
   //这里在注册，保存信息，并且得到token
@@ -40,16 +40,16 @@ public class UserController {
   @ApiResponses(value = {//
       @ApiResponse(code = 400, message = "Something went wrong"), //
       @ApiResponse(code = 403, message = "Access denied"), //
-      @ApiResponse(code = 422, message = "Email is already in use"), //
+      @ApiResponse(code = 422, message = "Id is already in use"), //
       @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
   public String signup(@ApiParam("Signup User") @RequestBody UserDataDTO user) {
-//    PinUser pinUser = new PinUser(user.getEmail(),user.getPassword(),user.getRoles());
+//    PinUser pinUser = new PinUser(user.getId(),user.getPassword(),user.getRoles());
 //    return userService.signup(pinUser);
       return null;
   }
 
   //
-  @DeleteMapping(value = "/{email}")
+  @DeleteMapping(value = "/{id}")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @ApiOperation(value = "${UserController.delete}")
   @ApiResponses(value = {//
@@ -57,12 +57,12 @@ public class UserController {
       @ApiResponse(code = 403, message = "Access denied"), //
       @ApiResponse(code = 404, message = "The user doesn't exist"), //
       @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-  public String delete(@ApiParam("Email") @PathVariable String email) {
-    userService.delete(email);
-    return email;
+  public String delete(@ApiParam("Id") @PathVariable String id) {
+    userService.delete(id);
+    return id;
   }
 
-  @GetMapping(value = "/{email}")
+  @GetMapping(value = "/{id}")
   @PreAuthorize("hasRole('ROLE_ADMIN')")
   @ApiOperation(value = "${UserController.search}", response = /*UserResponseDTO*/PinUser.class)
   @ApiResponses(value = {//
@@ -70,9 +70,9 @@ public class UserController {
       @ApiResponse(code = 403, message = "Access denied"), //
       @ApiResponse(code = 404, message = "The user doesn't exist"), //
       @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-  public /*UserResponseDTO*/PinUser search(@ApiParam("Email") @PathVariable String email) {
+  public /*UserResponseDTO*/PinUser search(@ApiParam("Id") @PathVariable String id) {
 //    return modelMapper.map(userService.search(username), UserResponseDTO.class);
-    return userService.search(email);
+    return userService.search(id);
   }
 
   @GetMapping(value = "/me")

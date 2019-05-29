@@ -1,5 +1,6 @@
 package cn.edu.neu.shop.pin.security;
 
+import cn.edu.neu.shop.pin.exception.CustomException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -27,11 +28,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         Authentication auth = jwtTokenProvider.getAuthentication(token);
         SecurityContextHolder.getContext().setAuthentication(auth);
       }
-    } catch (Exception/*CustomException*/ ex) {
-      //TODO: Solve it
+    } catch (CustomException ex) {
       //this is very important, since it guarantees the user is not authenticated at all
-      /*SecurityContextHolder.clearContext();
-      httpServletResponse.sendError(ex.getHttpStatus().value(), ex.getMessage());*/
+      SecurityContextHolder.clearContext();
+      httpServletResponse.sendError(ex.getHttpStatus().value(), ex.getMessage());
       return;
     }
 

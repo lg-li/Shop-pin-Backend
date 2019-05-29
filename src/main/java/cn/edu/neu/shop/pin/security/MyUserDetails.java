@@ -15,15 +15,15 @@ public class MyUserDetails implements UserDetailsService {
   private PinUserMapper userMapper;
 
   @Override
-  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    final PinUser user = userMapper.findByEmail(email);
+  public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
+    final PinUser user = userMapper.findById(id);
 
     if (user == null) {
-      throw new UsernameNotFoundException("User '" + email + "' not found");
+      throw new UsernameNotFoundException("User '" + id + "' not found");
     }
 
     return org.springframework.security.core.userdetails.User//
-        .withUsername(email)//
+        .withUsername(id)//
         .password(user.getPasswordHash())//
         .authorities(user.getRoles())//
         .accountExpired(false)//
