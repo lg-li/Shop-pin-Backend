@@ -38,7 +38,7 @@ public class UserController {
       @ApiResponse(code = 403, message = "Access denied"), //
       @ApiResponse(code = 422, message = "Id is already in use"), //
       @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-  public String signup(@ApiParam("Sign-up User") @RequestBody UserDataDTO user) {
+  public String signUp(@ApiParam("Sign-up User") @RequestBody UserDataDTO user) {
 //    PinUser pinUser = new PinUser(user.getId(),user.getPassword(),user.getRoles());
 //    return userService.signUp(pinUser);
       return null;
@@ -78,7 +78,7 @@ public class UserController {
       @ApiResponse(code = 400, message = "Something went wrong"),
       @ApiResponse(code = 403, message = "Access denied"),
       @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-  public /*UserResponseDTO*/PinUser whoami(HttpServletRequest req) {
+  public /*UserResponseDTO*/PinUser whoAmI(HttpServletRequest req) {
 //    return modelMapper.map(userService.whoAmI(req), UserResponseDTO.class);
     return userService.whoAmI(req);
   }
