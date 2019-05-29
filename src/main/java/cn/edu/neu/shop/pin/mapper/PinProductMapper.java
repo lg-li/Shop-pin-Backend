@@ -22,5 +22,6 @@ public interface PinProductMapper extends BaseMapper<PinProduct> {
      * @author flyhero
      * @return
      */
+
     List<PinProduct> getHotProducts();
 }
