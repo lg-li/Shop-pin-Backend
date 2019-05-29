@@ -33,9 +33,4 @@
   <select id="getProductInfoByProductId"  parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select * from pin_product where id = #{productId}
   </select>
-
-  <!-- 根据店铺ID 获取该店铺的所有在售商品-->
-  <select id="getProductInfoByStoreId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select * from pin_product where store_id = #{storeId}
-  </select>
 </mapper>
