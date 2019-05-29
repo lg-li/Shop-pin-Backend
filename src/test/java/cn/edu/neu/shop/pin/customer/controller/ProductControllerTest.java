@@ -68,4 +68,20 @@ public class ProductControllerTest {
     public void testGetCommentByProductId() throws Exception {
 
     }
+
+    /**
+     * 测试获取热门商品getHotProducts
+     * @author flyhero
+     * @throws Exception
+     */
+    @Test
+    public void testGetHotProducts() throws Exception {
+        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/product/hot")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn().getResponse().getContentAsString();
+
+        System.out.println("返回的json=" + result);
+    }
 }

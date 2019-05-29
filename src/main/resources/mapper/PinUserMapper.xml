@@ -21,23 +21,22 @@
         <result column="gender" jdbcType="BIT" property="gender"/>
     </resultMap>
 
-    <!--<select id="findByEmail" resultMap="_findByEmail">
-        select pin_user.id, email, roles
+    <select id="findById" resultMap="_findById">
+        select pin_user.*,pin_user_role.role as roless
         from pin_user,
              pin_user_role
-        where email = #{email}
+        where pin_user.id = #{id}
           and pin_user.id = pin_user_role.user_id
     </select>
-    <resultMap id="_findByEmail" type="PinUser">
-        <id property="id" column="id"/>
-        <result property="email" column="email"/>
-        <collection property="roles" ofType="string">
-            <result column="role" />
+    <resultMap id="_findById"  type="PinUser">
+        <id property="id" column="id" />
+        <collection property="roles" javaType="ArrayList" ofType="Integer">
+            <result property="role" column="roless" />
         </collection>
-    </resultMap>-->
-    <select id="findByEmail" resultType="PinUser">
-        select *
-        from pin_user
-        where email = #{email}
+    </resultMap>
+
+    <select id="existsById" resultType="boolean">
+        SELECT EXISTS(SELECT 1 FROM pin_user WHERE id = #{id})
     </select>
+
 </mapper>

@@ -1,7 +1,10 @@
 package cn.edu.neu.shop.pin.model;
 
+import io.swagger.models.auth.In;
+
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
@@ -295,22 +298,23 @@ public class PinUser {
         this.gender = gender;
     }
 
-    /* public PinUser(String email, String passwordHash, List<PinRole> roles) {
-//        this.phone = phone;
+    //为了解决Mapper返回的时候想要的构造函数
+    public PinUser(Long id,String phone, String email, String passwordHash, Timestamp createTime, Timestamp lastLoginTime, Timestamp lastPaswordEditTime, String avatarUrl, String nickname, BigDecimal balance, Integer credit, String lastLoginIp, String createIp, Boolean gender, Integer roles) {
+        this.phone = phone;
         this.email = email;
         this.passwordHash = passwordHash;
-//        this.createTime = createTime;
-//        this.lastLoginTime = lastLoginTime;
-//        this.lastPaswordEditTime = lastPaswordEditTime;
-        this.roles = roles;
-//        this.avatarUrl = avatarUrl;
-//        this.nickname = nickname;
-//        this.balance = balance;
-//        this.credit = credit;
-//        this.lastLoginIp = lastLoginIp;
-//        this.createIp = createIp;
-//        this.gender = gender;
-    }*/
+        this.createTime = createTime;
+        this.lastLoginTime = lastLoginTime;
+        this.lastPaswordEditTime = lastPaswordEditTime;
+//        this.roles = transfer(roles);
+        this.avatarUrl = avatarUrl;
+        this.nickname = nickname;
+        this.balance = balance;
+        this.credit = credit;
+        this.lastLoginIp = lastLoginIp;
+        this.createIp = createIp;
+        this.gender = gender;
+    }
 
     @Override
     public String toString() {
@@ -322,6 +326,7 @@ public class PinUser {
                 ", createTime=" + createTime +
                 ", lastLoginTime=" + lastLoginTime +
                 ", lastPaswordEditTime=" + lastPaswordEditTime +
+                ", roles=" + roles +
                 ", avatarUrl='" + avatarUrl + '\'' +
                 ", nickname='" + nickname + '\'' +
                 ", balance=" + balance +
@@ -330,5 +335,13 @@ public class PinUser {
                 ", createIp='" + createIp + '\'' +
                 ", gender=" + gender +
                 '}';
+    }
+
+    public static List<PinRole> transfer(List<PinRole> list){
+        ArrayList<PinRole> roleList = new ArrayList<>();
+        for (Object integer : list) {
+            roleList.add(PinRole.values()[(Integer) integer]);
+        }
+        return roleList;
     }
 }
