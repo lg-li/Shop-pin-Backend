@@ -31,7 +31,8 @@ public class UserService {
 
     /**
      * 登录接口
-     * @param id 用户 ID
+     *
+     * @param id       用户 ID
      * @param password 密码明文
      * @return 生成的token
      * @throws CustomException 凭据错误异常
@@ -52,6 +53,7 @@ public class UserService {
 
     /**
      * 注册用户
+     *
      * @param user 用户信息
      * @return 登录后 Token
      */

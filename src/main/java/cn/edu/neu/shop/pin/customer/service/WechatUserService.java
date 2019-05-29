@@ -3,6 +3,7 @@ package cn.edu.neu.shop.pin.customer.service;
 import cn.edu.neu.shop.pin.customer.service.security.UserService;
 import cn.edu.neu.shop.pin.mapper.PinUserMapper;
 import cn.edu.neu.shop.pin.mapper.PinWechatUserMapper;
+import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.model.PinWechatUser;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import cn.edu.neu.shop.pin.util.wechat.WeChatCredential;
@@ -23,7 +24,7 @@ public class WechatUserService extends AbstractService<PinWechatUser> {
     @Autowired
     PinWechatUserMapper pinWechatUserMapper;
 
-    public String signInFormWechatMiniProgram(String code, String name, int gender, String avatarUrl, String country, String province, String city, String language) throws WeChatCredentialExchangeException {
+    public PinWechatUser signInFormWechatMiniProgram(String code, String name, int gender, String avatarUrl, String country, String province, String city, String language) throws WeChatCredentialExchangeException {
         final WeChatCredential wechatCredential = WeChatCredentialExchanger.fromMiniProgramCode(code);
         PinWechatUser wechatUser = new PinWechatUser();
         // 根据 OPEN ID 查找客户
@@ -39,11 +40,16 @@ public class WechatUserService extends AbstractService<PinWechatUser> {
             wechatUser = new PinWechatUser();
             assignPropertyToWechatUserAndSave(name, gender, avatarUrl, country, province,city,language,wechatUser);
             // wechatUser.setUserId();
+            // TODO: 创建用户
+//            PinUser newPinUser = new PinUser();
+////            newPinUser.setAvatarUrl(avatarUrl);
+////            newPinUser.setGender(gender);
+////
+////            userService.signUp(newPinUser);
             // 创建基本信息并保存
             save(wechatUser);
         }
-
-        return "";
+        return wechatUser;
     }
 
     private void assignPropertyToWechatUserAndSave(String name, int gender, String avatarUrl, String country, String province, String city, String language, PinWechatUser wechatUserToAssign) {

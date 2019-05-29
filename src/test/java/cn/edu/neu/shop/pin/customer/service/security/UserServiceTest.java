@@ -17,9 +17,13 @@ public class UserServiceTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UserService userService;
+
     @Test
     public void signin() {
-        System.out.println(passwordEncoder.encode("liyifei99"));
+        /*System.out.println(passwordEncoder.encode("liyifei99"));*/
+        String token = userService.signIn(1, "liyifei99");
     }
 
     @Test
