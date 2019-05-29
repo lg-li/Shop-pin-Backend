@@ -23,7 +23,7 @@ public class UserController {
   /*@Autowired
   private ModelMapper modelMapper;*/
   //这里在登陆，得到token
-  @PostMapping("/signin")
+  @GetMapping("/signin")
   @ApiOperation(value = "${UserController.signin}")
   @ApiResponses(value = {//
       @ApiResponse(code = 400, message = "Something went wrong"), //
