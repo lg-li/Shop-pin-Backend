@@ -46,6 +46,10 @@ public class UserService {
         }
     }
 
+    public String signIn(Integer id, String password) throws CustomException {
+        return signIn(String.valueOf(id), password);
+    }
+
     /**
      * 注册用户
      * @param user 用户信息

@@ -26,11 +26,6 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest(classes = PinApplication.class)
 @WebAppConfiguration
 public class ProductControllerTest {
-    @Autowired
-    PinUserMapper pinUserMapper;
-
-    @Autowired
-    PinUserProductCollectionMapper pinUserProductCollectionMapper;
 
     @Autowired
     private WebApplicationContext context;
