@@ -33,7 +33,7 @@ public class UserService {
     private AuthenticationManager authenticationManager;
 
     //登陆
-    public String signin(String id, String password) {
+    public String signIn(String id, String password) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(id, password));
             return jwtTokenProvider.createToken(id, userMapper.findById(id).getRoles());
@@ -44,7 +44,7 @@ public class UserService {
     }
 
     //注册
-    public String signup(PinUser user) {
+    public String signUp(PinUser user) {
         if (!userMapper.existsById(user.getId().toString())) {
             user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
             userMapper.save(user);
@@ -66,7 +66,7 @@ public class UserService {
         return user;
     }
 
-    public PinUser whoami(HttpServletRequest req) {
+    public PinUser whoAmI(HttpServletRequest req) {
         return userMapper.findById(jwtTokenProvider.getId(jwtTokenProvider.resolveToken(req)));
     }
 
