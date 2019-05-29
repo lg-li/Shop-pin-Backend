@@ -10,6 +10,7 @@ import org.junit.runner.RunWith;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import java.util.List;
 public class PinUserMapperTest {
     @Autowired
     PinUserMapper pinUserMapper;
+
 
     @Test
     public void findById() {
@@ -39,6 +41,7 @@ public class PinUserMapperTest {
 
     @Test
     public void save() {
+
 
     }
 
