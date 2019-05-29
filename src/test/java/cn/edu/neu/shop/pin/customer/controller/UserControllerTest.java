@@ -14,9 +14,9 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
-/*@RunWith(SpringJUnit4ClassRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = PinApplication.class)
-@WebAppConfiguration*/
+@WebAppConfiguration
 @EnableAutoConfiguration
 public class UserControllerTest extends UserCredentialNeededTest {
 

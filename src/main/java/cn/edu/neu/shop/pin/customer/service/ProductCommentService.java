@@ -20,6 +20,8 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
      * @return List
      */
     public List<PinUserProductComment> getCommentByProductId(Integer productId){
-        return pinUserProductCommentMapper.getCommentByProductId(productId);
+        PinUserProductComment pinUserProductComment = new PinUserProductComment();
+        pinUserProductComment.setProductId(productId);
+        return pinUserProductCommentMapper.select(pinUserProductComment);
     }
 }
