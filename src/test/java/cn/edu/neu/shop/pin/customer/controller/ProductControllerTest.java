@@ -76,7 +76,7 @@ public class ProductControllerTest {
      */
     @Test
     public void testGetHotProducts() throws Exception {
-        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/product/hot")
+        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/product/hot/1/10")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print())

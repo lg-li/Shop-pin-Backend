@@ -3,6 +3,9 @@ package cn.edu.neu.shop.pin.customer.service;
 import cn.edu.neu.shop.pin.mapper.PinProductMapper;
 import cn.edu.neu.shop.pin.model.PinProduct;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
+import com.github.pagehelper.ISelect;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,7 +26,6 @@ public class ProductService extends AbstractService<PinProduct> {
      * @return PinProduct类
      */
     public PinProduct getProInfoByProId(Integer productId){
-
         PinProduct pinProduct = pinProductMapper.getProductInfoByProductId(productId);
         return pinProduct;
     }
@@ -34,14 +36,15 @@ public class ProductService extends AbstractService<PinProduct> {
      * @return PinProduct类
      */
     public PinProduct getProInfoByStoreId(Integer storeId){
-
         PinProduct pinProduct = pinProductMapper.getProductInfoByStoreId(storeId);
         return pinProduct;
     }
 
-    public List<PinProduct> getHotProducts() {
-        PinProduct pinProduct = new PinProduct();
-        pinProduct.setIsHot(true);
-        return mapper.select(pinProduct);
+    public PageInfo<PinProduct> getHotProductsByPage(int pageNum, int pageSize) {
+        PageHelper.startPage(1, 10);
+        List<PinProduct> list = pinProductMapper.getHotProducts();
+        System.out.println("Size: " + list.size());
+        return new PageInfo<>(list);
+//        return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(()->pinProductMapper.getHotProducts());
     }
 }
