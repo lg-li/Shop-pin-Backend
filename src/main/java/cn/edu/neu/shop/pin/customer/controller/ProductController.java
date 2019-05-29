@@ -1,9 +1,8 @@
 package cn.edu.neu.shop.pin.customer.controller;
 
-import cn.edu.neu.shop.pin.customer.service.HotProductService;
 import cn.edu.neu.shop.pin.customer.service.ProductCategoryService;
 import cn.edu.neu.shop.pin.customer.service.ProductCommentService;
-import cn.edu.neu.shop.pin.customer.service.ProductInfoService;
+import cn.edu.neu.shop.pin.customer.service.ProductService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
@@ -18,13 +17,10 @@ public class ProductController {
     private ProductCategoryService productCategoryService;
 
     @Autowired
-    private ProductInfoService productInfoService;
+    private ProductService productService;
 
     @Autowired
     private ProductCommentService productCommentService;
-
-    @Autowired
-    private HotProductService hotProductService;
 
     /**
      * 层级获取商品分类表
@@ -52,7 +48,7 @@ public class ProductController {
     @GetMapping("/{productId}")
     public JSONObject getProductInfoByProductId(@PathVariable(value = "productId") Integer productId){
         try{
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productInfoService.getProInfoByProId(productId));
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productService.getProInfoByProId(productId));
         }catch(Exception e){
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
@@ -80,7 +76,7 @@ public class ProductController {
     public JSONObject getHotProducts() {
         try {
             JSONObject data = new JSONObject();
-            data.put("list", hotProductService.getHotProducts());
+            data.put("list", productService.getHotProducts());
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
         } catch (Exception e) {
             e.printStackTrace();

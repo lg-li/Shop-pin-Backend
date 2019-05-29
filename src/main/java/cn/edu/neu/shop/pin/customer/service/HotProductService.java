@@ -18,9 +18,5 @@ public class HotProductService extends AbstractService<PinProduct> {
     @Autowired
     private PinProductMapper pinProductMapper;
 
-    public List<PinProduct> getHotProducts() {
-        PinProduct pinProduct = new PinProduct();
-        pinProduct.setIsHot(true);
-        return mapper.select(pinProduct);
-    }
+
 }
