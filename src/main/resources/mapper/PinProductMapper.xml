@@ -39,9 +39,8 @@
     select * from pin_product where store_id = #{storeId}
   </select>
 
-  <select id="getHotProducts" resultMap="BaseResultMap" parameterType="com.github.pagehelper.Page">
-    select * from pin_product
---     where is_hot = 1
+  <select id="getHotProducts" resultMap="BaseResultMap">
+    select * from pin_product where is_hot = 1
   </select>
 
 </mapper>

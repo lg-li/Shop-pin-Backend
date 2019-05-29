@@ -3,7 +3,6 @@ package cn.edu.neu.shop.pin.customer.service;
 import cn.edu.neu.shop.pin.mapper.PinProductMapper;
 import cn.edu.neu.shop.pin.model.PinProduct;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
-import com.github.pagehelper.ISelect;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,10 +41,9 @@ public class ProductService extends AbstractService<PinProduct> {
     }
 
     public PageInfo<PinProduct> getHotProductsByPage(int pageNum, int pageSize) {
-        PageHelper.startPage(1, 10);
+        PageHelper.startPage(pageNum, pageSize);
         List<PinProduct> list = pinProductMapper.getHotProducts();
-        System.out.println("Size: " + list.size());
-        return new PageInfo<>(list);
+        return new PageInfo<>(list, pageSize);
 //        return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(()->pinProductMapper.getHotProducts());
     }
 }

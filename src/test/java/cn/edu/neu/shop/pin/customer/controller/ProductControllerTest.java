@@ -62,7 +62,7 @@ public class ProductControllerTest extends UserCredentialNeededTest{
      */
     @Test
     public void testGetHotProducts() throws Exception {
-        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/product/hot/1/10")
+        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/product/hot/0/10")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print())
