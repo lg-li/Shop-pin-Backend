@@ -40,8 +40,7 @@
   </select>
 
   <select id="getHotProducts" resultMap="BaseResultMap">
-    select * from pin_product
---     where is_hot = 1
+    select * from pin_product where is_hot = 1
   </select>
 
 </mapper>
