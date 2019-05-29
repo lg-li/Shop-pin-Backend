@@ -72,7 +72,7 @@ public class UserController {
   }
 
   @GetMapping(value = "/me")
-  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_DEALER')")
   @ApiOperation(value = "${UserController.me}", response = PinUser.class)
   @ApiResponses(value = {
       @ApiResponse(code = 400, message = "Something went wrong"),
