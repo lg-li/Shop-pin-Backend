@@ -15,78 +15,78 @@ import javax.servlet.http.HttpServletRequest;
 @Api(tags = "user")
 public class UserController {
 
-  @Autowired
-  private UserService userService;
+    @Autowired
+    private UserService userService;
 
-  //这里在登录，得到token
-  @GetMapping("/sign-in")
-  @ApiOperation(value = "${UserController.signIn}")
-  @ApiResponses(value = {//
-      @ApiResponse(code = 400, message = "Something went wrong"), //
-      @ApiResponse(code = 422, message = "Invalid id/password supplied")})
-  public String signIn(//
-                       @ApiParam("Id") @RequestParam String id, //
-                       @ApiParam("Password") @RequestParam String password) {
-    return userService.signIn(id, password);
-  }
+    //这里在登录，得到token
+    @GetMapping("/sign-in")
+    @ApiOperation(value = "${UserController.signIn}")
+    @ApiResponses(value = {//
+            @ApiResponse(code = 400, message = "Something went wrong"), //
+            @ApiResponse(code = 422, message = "Invalid id/password supplied")})
+    public String signIn(//
+                         @ApiParam("Id") @RequestParam String id, //
+                         @ApiParam("Password") @RequestParam String password) {
+        return userService.signIn(id, password);
+    }
 
-  //这里在注册，保存信息，并且得到token
-  @PostMapping("/sign-up")
-  @ApiOperation(value = "${UserController.signUp}")
-  @ApiResponses(value = {//
-      @ApiResponse(code = 400, message = "Something went wrong"), //
-      @ApiResponse(code = 403, message = "Access denied"), //
-      @ApiResponse(code = 422, message = "Id is already in use"), //
-      @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-  public String signUp(@ApiParam("Sign-up User") @RequestBody UserDataDTO user) {
+    //这里在注册，保存信息，并且得到token
+    @PostMapping("/sign-up")
+    @ApiOperation(value = "${UserController.signUp}")
+    @ApiResponses(value = {//
+            @ApiResponse(code = 400, message = "Something went wrong"), //
+            @ApiResponse(code = 403, message = "Access denied"), //
+            @ApiResponse(code = 422, message = "Id is already in use"), //
+            @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+    public String signUp(@ApiParam("Sign-up User") @RequestBody UserDataDTO user) {
 //    PinUser pinUser = new PinUser(user.getId(),user.getPassword(),user.getRoles());
 //    return userService.signUp(pinUser);
-      return null;
-  }
+        return null;
+    }
 
-  //
-  @DeleteMapping(value = "/{id}")
-  @PreAuthorize("hasRole('ROLE_ADMIN')")
-  @ApiOperation(value = "${UserController.delete}")
-  @ApiResponses(value = {//
-      @ApiResponse(code = 400, message = "Something went wrong"), //
-      @ApiResponse(code = 403, message = "Access denied"), //
-      @ApiResponse(code = 404, message = "The user doesn't exist"), //
-      @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-  public String delete(@ApiParam("Id") @PathVariable String id) {
-    userService.delete(id);
-    return id;
-  }
+    //
+    @DeleteMapping(value = "/delete/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @ApiOperation(value = "${UserController.delete}")
+    @ApiResponses(value = {//
+            @ApiResponse(code = 400, message = "Something went wrong"), //
+            @ApiResponse(code = 403, message = "Access denied"), //
+            @ApiResponse(code = 404, message = "The user doesn't exist"), //
+            @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+    public String delete(@ApiParam("Id") @PathVariable String id) {
+        System.out.println("123");
+        userService.delete(id);
+        return id;
+    }
 
-  @GetMapping(value = "/{id}")
-  @PreAuthorize("hasRole('ROLE_ADMIN')")
-  @ApiOperation(value = "${UserController.search}", response = /*UserResponseDTO*/PinUser.class)
-  @ApiResponses(value = {//
-      @ApiResponse(code = 400, message = "Something went wrong"), //
-      @ApiResponse(code = 403, message = "Access denied"), //
-      @ApiResponse(code = 404, message = "The user doesn't exist"), //
-      @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-  public PinUser search(@ApiParam("Id") @PathVariable String id) {
-//    return modelMapper.map(userService.search(username), UserResponseDTO.class);
-    return userService.search(id);
-  }
+    @GetMapping(value = "/get")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @ApiOperation(value = "${UserController.search}", response = PinUser.class)
+    @ApiResponses(value = {//
+            @ApiResponse(code = 400, message = "Something went wrong"), //
+            @ApiResponse(code = 403, message = "Access denied"), //
+            @ApiResponse(code = 404, message = "The user doesn't exist"), //
+            @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+    public PinUser search(@ApiParam("Id") @RequestParam String id) {
+        return userService.search(id);
+    }
 
-  @GetMapping(value = "/me")
-  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_DEALER')")
-  @ApiOperation(value = "${UserController.me}", response = PinUser.class)
-  @ApiResponses(value = {
-      @ApiResponse(code = 400, message = "Something went wrong"),
-      @ApiResponse(code = 403, message = "Access denied"),
-      @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-  public /*UserResponseDTO*/PinUser whoAmI(HttpServletRequest req) {
+    @GetMapping(value = "/me")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER') or hasRole('ROLE_DEALER')")
+    @ApiOperation(value = "${UserController.me}", response = PinUser.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "Something went wrong"),
+            @ApiResponse(code = 403, message = "Access denied"),
+            @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
+    public /*UserResponseDTO*/PinUser whoAmI(HttpServletRequest req) {
 //    return modelMapper.map(userService.whoAmI(req), UserResponseDTO.class);
-    return userService.whoAmI(req);
-  }
+        return userService.whoAmI(req);
+    }
 
-  @GetMapping("/refresh")
-  @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
-  public String refresh(HttpServletRequest req) {
-    return userService.refresh(req.getRemoteUser());
-  }
+    @GetMapping("/refresh")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    public String refresh(HttpServletRequest req) {
+        return userService.refresh(req.getRemoteUser());
+    }
 
 }
