@@ -282,10 +282,6 @@ public class PinUser {
         this.roles = roles;
     }
 
-    public PinUser() {
-        this.createTime = new Date();
-    }
-
     public PinUser(Long id, String phone, String email, String passwordHash, Timestamp createTime, Timestamp lastLoginTime, Timestamp lastPasswordEditTime, String avatarUrl, String nickname, BigDecimal balance, Integer credit, String lastLoginIp, String createIp, Integer gender) {
         this.phone = phone;
         this.email = email;
