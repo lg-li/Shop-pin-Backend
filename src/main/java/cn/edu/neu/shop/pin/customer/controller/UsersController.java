@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/commons/user")
-public class UserController {
+public class UsersController {
 
     @Autowired
     private AddressService addressService;
@@ -24,7 +24,7 @@ public class UserController {
      */
     @GetMapping("/{userId}/user-address")
     public JSONObject getAddressByUserId(@PathVariable(value = "userId") Integer userId){
-        
+
         try{
             JSONObject data = new JSONObject();
             data.put("list", addressService.getAllAddressesByUserId(userId));

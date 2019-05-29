@@ -18,14 +18,6 @@ public interface PinProductMapper extends BaseMapper<PinProduct> {
     PinProduct getProductInfoByProductId(@Param("productId") Integer productId);
 
     /**
-     * 根据店铺ID获取其在售商品详情
-     * @author cqf
-     * @param storeId
-     * @return
-     */
-    PinProduct getProductInfoByStoreId(@Param("storeId") Integer storeId);
-
-    /**
      * 筛选所有is_hot属性为true的商品，显示在"热门商品"中
      * @author flyhero
      * @return
