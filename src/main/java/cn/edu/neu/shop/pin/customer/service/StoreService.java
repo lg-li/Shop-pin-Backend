@@ -2,11 +2,12 @@ package cn.edu.neu.shop.pin.customer.service;
 
 import cn.edu.neu.shop.pin.mapper.PinStoreMapper;
 import cn.edu.neu.shop.pin.model.PinStore;
+import cn.edu.neu.shop.pin.util.base.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class StoreService {
+public class StoreService extends AbstractService<PinStore> {
 
     @Autowired
     private PinStoreMapper pinStoreMapper;
@@ -17,6 +18,8 @@ public class StoreService {
      * @return PinStore类
      */
     public PinStore getStoreInfo(int storeId){
-        return pinStoreMapper.getStoreInfoByStoreId(storeId);
+        PinStore pinStore = new PinStore();
+        pinStore.setId(storeId);
+        return pinStoreMapper.selectOne(pinStore);
     }
 }

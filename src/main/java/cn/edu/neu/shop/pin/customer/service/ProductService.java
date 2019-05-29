@@ -25,7 +25,7 @@ public class ProductService extends AbstractService<PinProduct> {
      * @param productId
      * @return PinProduct类
      */
-    public PinProduct getProInfoByProId(Integer productId){
+    public PinProduct getProductByProductId(Integer productId){
         PinProduct pinProduct = pinProductMapper.getProductInfoByProductId(productId);
         return pinProduct;
     }
@@ -33,11 +33,12 @@ public class ProductService extends AbstractService<PinProduct> {
     /**
      * 根据店铺Id，获取该店铺所有在售商品信息
      * @param storeId
-     * @return PinProduct类
+     * @return list
      */
-    public PinProduct getProInfoByStoreId(Integer storeId){
-        PinProduct pinProduct = pinProductMapper.getProductInfoByStoreId(storeId);
-        return pinProduct;
+    public List<PinProduct> getProductByStoreId(Integer storeId){
+        PinProduct pinProduct = new PinProduct();
+        pinProduct.setStoreId(storeId);
+        return pinProductMapper.select(pinProduct);
     }
 
     public PageInfo<PinProduct> getHotProductsByPage(int pageNum, int pageSize) {

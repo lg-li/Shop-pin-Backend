@@ -2,12 +2,9 @@ package cn.edu.neu.shop.pin.customer.service.security;
 
 import cn.edu.neu.shop.pin.customer.service.UserRoleListTransferService;
 import cn.edu.neu.shop.pin.exception.CustomException;
-import cn.edu.neu.shop.pin.mapper.PinUserMapper;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.security.JwtTokenProvider;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,8 +29,14 @@ public class UserService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    //登陆
-    public String signIn(String id, String password) {
+    /**
+     * 登录接口
+     * @param id 用户 ID
+     * @param password 密码明文
+     * @return 生成的token
+     * @throws CustomException 凭据错误异常
+     */
+    public String signIn(String id, String password) throws CustomException {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(id, password));
             return jwtTokenProvider.createToken(id, userMapper.findById(id).getRoles());
@@ -43,7 +46,15 @@ public class UserService {
         }
     }
 
-    //注册
+    public String signIn(Integer id, String password) throws CustomException {
+        return signIn(String.valueOf(id), password);
+    }
+
+    /**
+     * 注册用户
+     * @param user 用户信息
+     * @return 登录后 Token
+     */
     public String signUp(PinUser user) {
         if (!userMapper.existsById(user.getId().toString())) {
             user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
