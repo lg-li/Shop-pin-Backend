@@ -78,10 +78,12 @@ public class ProductController {
 
     @RequestMapping(value = "/hot/{pageNum}/{pageSize}", method = RequestMethod.GET)
     public JSONObject getHotProducts(@PathVariable(value = "pageNum") int pageNum, @PathVariable(value = "pageSize") int pageSize) {
-        System.out.println();
-        System.out.println("pageNum: " + pageNum + " pageSize: " + pageSize);
-        System.out.println();
-        return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productService.getHotProductsByPage(pageNum, pageSize));
+        try {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productService.getHotProductsByPage(pageNum, pageSize));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
     }
 
 //    @GetMapping("/hot")
