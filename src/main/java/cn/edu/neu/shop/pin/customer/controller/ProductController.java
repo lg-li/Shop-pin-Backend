@@ -1,6 +1,5 @@
 package cn.edu.neu.shop.pin.customer.controller;
 
-import cn.edu.neu.shop.pin.customer.service.HotProductService;
 import cn.edu.neu.shop.pin.customer.service.ProductCategoryService;
 import cn.edu.neu.shop.pin.customer.service.ProductCommentService;
 import cn.edu.neu.shop.pin.customer.service.ProductService;
@@ -22,9 +21,6 @@ public class ProductController {
 
     @Autowired
     private ProductCommentService productCommentService;
-
-    @Autowired
-    private HotProductService hotProductService;
 
     /**
      * 层级获取商品分类表
@@ -80,7 +76,7 @@ public class ProductController {
     public JSONObject getHotProducts() {
         try {
             JSONObject data = new JSONObject();
-            data.put("list", hotProductService.getHotProducts());
+            data.put("list", productService.getHotProducts());
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
         } catch (Exception e) {
             e.printStackTrace();

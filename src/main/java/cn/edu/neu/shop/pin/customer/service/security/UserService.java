@@ -1,5 +1,6 @@
 package cn.edu.neu.shop.pin.customer.service.security;
 
+import cn.edu.neu.shop.pin.customer.service.UserRoleListTransferService;
 import cn.edu.neu.shop.pin.exception.CustomException;
 import cn.edu.neu.shop.pin.mapper.PinUserMapper;
 import cn.edu.neu.shop.pin.model.PinUser;
@@ -20,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 public class UserService {
 
     @Autowired
-    private PinUserMapper userMapper;
+    private UserRoleListTransferService userMapper;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -37,6 +38,7 @@ public class UserService {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(id, password));
             return jwtTokenProvider.createToken(id, userMapper.findById(id).getRoles());
         } catch (AuthenticationException e) {
+            e.printStackTrace();
             throw new CustomException("Invalid id/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
