@@ -18,7 +18,7 @@
         <result column="credit" jdbcType="INTEGER" property="credit"/>
         <result column="last_login_ip" jdbcType="VARCHAR" property="lastLoginIp"/>
         <result column="create_ip" jdbcType="VARCHAR" property="createIp"/>
-        <result column="gender" jdbcType="BIT" property="gender"/>
+        <result column="gender" jdbcType="INTEGER" property="gender"/>
     </resultMap>
 
     <select id="findById" resultMap="_findById">

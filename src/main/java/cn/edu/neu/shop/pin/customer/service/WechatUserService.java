@@ -41,11 +41,11 @@ public class WechatUserService extends AbstractService<PinWechatUser> {
             assignPropertyToWechatUserAndSave(name, gender, avatarUrl, country, province,city,language,wechatUser);
             // wechatUser.setUserId();
             // TODO: 创建用户
-            PinUser newPinUser = new PinUser();
-            newPinUser.setAvatarUrl(avatarUrl);
-            newPinUser.setGender(gender);
-
-            userService.signUp(newPinUser);
+//            PinUser newPinUser = new PinUser();
+////            newPinUser.setAvatarUrl(avatarUrl);
+////            newPinUser.setGender(gender);
+////
+////            userService.signUp(newPinUser);
             // 创建基本信息并保存
             save(wechatUser);
         }
