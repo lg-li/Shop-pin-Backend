@@ -60,7 +60,7 @@ public class PinUser {
     /**
      * 1: 男；2：女；0:未知
      */
-    private Boolean gender;
+    private Integer gender;
 
     /**
      * @return id
@@ -261,7 +261,7 @@ public class PinUser {
      *
      * @return gender - 1: 男；2：女；0:未知
      */
-    public Boolean getGender() {
+    public Integer getGender() {
         return gender;
     }
 
@@ -270,7 +270,7 @@ public class PinUser {
      *
      * @param gender 1: 男；2：女；0:未知
      */
-    public void setGender(Boolean gender) {
+    public void setGender(int gender) {
         this.gender = gender;
     }
 
@@ -282,13 +282,17 @@ public class PinUser {
         this.roles = roles;
     }
 
-    public PinUser(Long id, String phone, String email, String passwordHash, Timestamp createTime, Timestamp lastLoginTime, Timestamp lastPaswordEditTime, String avatarUrl, String nickname, BigDecimal balance, Integer credit, String lastLoginIp, String createIp, Boolean gender) {
+    public PinUser() {
+        this.createTime = new Date();
+    }
+
+    public PinUser(Long id, String phone, String email, String passwordHash, Timestamp createTime, Timestamp lastLoginTime, Timestamp lastPasswordEditTime, String avatarUrl, String nickname, BigDecimal balance, Integer credit, String lastLoginIp, String createIp, Integer gender) {
         this.phone = phone;
         this.email = email;
         this.passwordHash = passwordHash;
         this.createTime = createTime;
         this.lastLoginTime = lastLoginTime;
-        this.lastPaswordEditTime = lastPaswordEditTime;
+        this.lastPaswordEditTime = lastPasswordEditTime;
         this.avatarUrl = avatarUrl;
         this.nickname = nickname;
         this.balance = balance;
@@ -299,13 +303,13 @@ public class PinUser {
     }
 
     //为了解决Mapper返回的时候想要的构造函数
-    public PinUser(Long id,String phone, String email, String passwordHash, Timestamp createTime, Timestamp lastLoginTime, Timestamp lastPaswordEditTime, String avatarUrl, String nickname, BigDecimal balance, Integer credit, String lastLoginIp, String createIp, Boolean gender, Integer roles) {
+    public PinUser(Long id,String phone, String email, String passwordHash, Timestamp createTime, Timestamp lastLoginTime, Timestamp lastPasswordEditTime, String avatarUrl, String nickname, BigDecimal balance, Integer credit, String lastLoginIp, String createIp, Integer gender, Integer roles) {
         this.phone = phone;
         this.email = email;
         this.passwordHash = passwordHash;
         this.createTime = createTime;
         this.lastLoginTime = lastLoginTime;
-        this.lastPaswordEditTime = lastPaswordEditTime;
+        this.lastPaswordEditTime = lastPasswordEditTime;
 //        this.roles = transfer(roles);
         this.avatarUrl = avatarUrl;
         this.nickname = nickname;
