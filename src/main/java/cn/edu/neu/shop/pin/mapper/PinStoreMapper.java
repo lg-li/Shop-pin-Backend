@@ -8,5 +8,4 @@ import org.springframework.stereotype.Component;
 @Component
 public interface PinStoreMapper extends BaseMapper<PinStore> {
 
-    PinStore getStoreInfoByStoreId(@Param("storeId") int storeId);
 }

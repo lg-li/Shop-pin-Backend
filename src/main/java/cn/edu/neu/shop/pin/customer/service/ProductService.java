@@ -31,7 +31,7 @@ public class ProductService extends AbstractService<PinProduct> {
     /**
      * 根据店铺Id，获取该店铺所有在售商品信息
      * @param storeId
-     * @return PinProduct类
+     * @return list
      */
     public List<PinProduct> getProductByStoreId(Integer storeId){
         PinProduct pinProduct = new PinProduct();

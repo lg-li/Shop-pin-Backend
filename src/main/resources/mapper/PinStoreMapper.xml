@@ -14,8 +14,4 @@
     <result column="logo_url" jdbcType="VARCHAR" property="logoUrl" />
     <result column="owner_user_id" jdbcType="INTEGER" property="ownerUserId" />
   </resultMap>
-
-  <select id="getStoreInfoByStoreId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-    select * from pin_store where id = #{storeId}
-  </select>
 </mapper>

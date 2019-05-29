@@ -18,6 +18,8 @@ public class StoreService extends AbstractService<PinStore> {
      * @return PinStore类
      */
     public PinStore getStoreInfo(int storeId){
-        return pinStoreMapper.getStoreInfoByStoreId(storeId);
+        PinStore pinStore = new PinStore();
+        pinStore.setId(storeId);
+        return pinStoreMapper.selectOne(pinStore);
     }
 }
