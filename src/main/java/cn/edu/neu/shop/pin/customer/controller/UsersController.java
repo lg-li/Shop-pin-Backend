@@ -3,6 +3,7 @@ package cn.edu.neu.shop.pin.customer.controller;
 import cn.edu.neu.shop.pin.customer.service.AddressService;
 import cn.edu.neu.shop.pin.customer.service.security.UserService;
 import cn.edu.neu.shop.pin.model.PinUser;
+import cn.edu.neu.shop.pin.model.PinUserAddress;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONArray;
@@ -57,6 +58,41 @@ public class UsersController {
         }
     }
 
+    @DeleteMapping("/address")
+    public JSONObject deleteAddress(HttpServletRequest httpServletRequest, @PathVariable(value = "addressId") int addressId) {
+        try{
+            PinUser user = userService.whoAmI(httpServletRequest);
+            int code = addressService.deleteAddressByUserId(addressId, user.getId());
+            if(code == AddressService.STATUS_DELETE_ADDRESS_SUCCESS){
+                return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
+            } else if(code == AddressService.STATUS_DELETE_ADDRESS_INVALID_ID){
+                return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, "删除失败", null);
+            } else if(code == AddressService.STATUS_DELETE_ADDRESS_PERMISSION_DENIED){
+                return ResponseWrapper.wrap(PinConstants.StatusCode.PERMISSION_DENIED, "无权限删除", null);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+        return null;
+    }
+
+    @PutMapping("/address")
+    public JSONObject updateAddress(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON){
+        try{
+            PinUser user = userService.whoAmI(httpServletRequest);
+            PinUserAddress addressToUpdate = JSONObject.toJavaObject(requestJSON, PinUserAddress.class);
+            if(addressService.updateAddressByUserId(user.getId(), addressToUpdate) == null){
+                // 无权
+                return ResponseWrapper.wrap(PinConstants.StatusCode.PERMISSION_DENIED, "无权限删除", null);
+            }
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
     @PostMapping("/order")
     public JSONObject createOrderIndividual(HttpServletRequest httpServletRequest, @RequestBody JSONArray requestJSON){
 //        JSONArray jsonArray = (JSONArray) requestJSON.get(0);
@@ -65,5 +101,6 @@ public class UsersController {
         for(int i = 0; i < requestJSON.size(); i++) {
             JSONObject obj = requestJSON.getJSONObject(i);
         }
+        return null;
     }
 }
