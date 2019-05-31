@@ -3,11 +3,13 @@ package cn.edu.neu.shop.pin.customer.service;
 import cn.edu.neu.shop.pin.mapper.PinProductMapper;
 import cn.edu.neu.shop.pin.model.PinProduct;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
+import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -21,20 +23,22 @@ public class ProductService extends AbstractService<PinProduct> {
 
     /**
      * 根据商品Id 获取商品详情信息
+     *
      * @param productId
      * @return PinProduct类
      */
-    public PinProduct getProductByProductId(Integer productId){
+    public PinProduct getProductByProductId(Integer productId) {
         PinProduct pinProduct = pinProductMapper.getProductInfoByProductId(productId);
         return pinProduct;
     }
 
     /**
      * 根据店铺Id，获取该店铺所有在售商品信息
+     *
      * @param storeId
      * @return list
      */
-    public List<PinProduct> getProductByStoreId(Integer storeId){
+    public List<PinProduct> getProductByStoreId(Integer storeId) {
         PinProduct pinProduct = new PinProduct();
         pinProduct.setStoreId(storeId);
         return pinProductMapper.select(pinProduct);
@@ -46,4 +50,23 @@ public class ProductService extends AbstractService<PinProduct> {
         return new PageInfo<>(list, pageSize);
 //        return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(()->pinProductMapper.getHotProducts());
     }
+
+    /** TODO:ydy未测试
+     * 判断传入的 order_item 是否属于同一家店铺
+     *
+     * @param itemIdArray 传入的数组，由order_item组成
+     * @return  如果都属于同一家店铺，则返回true
+     */
+    public boolean isBelongSameStore(JSONArray itemIdArray) {
+        boolean isSameStore = true;
+        //判断是否属于一家店铺
+        Integer storeId = getProductByProductId(itemIdArray.getInteger(0)).getStoreId();
+        for (int i = 0; i < itemIdArray.size(); i++) {
+            Integer id = itemIdArray.getInteger(i);
+            if (!storeId.equals(getProductByProductId(id).getStoreId()))
+                isSameStore = false;
+        }
+        return isSameStore;
+    }
+
 }
