@@ -9,7 +9,4 @@ import java.util.List;
 
 @Component
 public interface PinUserProductCommentMapper extends BaseMapper<PinUserProductComment> {
-
-    //根据商品ID 获取该商品评论
-    List<PinUserProductComment> getCommentByProductId(@Param("productId") int productId);
 }

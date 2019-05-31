@@ -19,9 +19,4 @@
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
     <result column="images_urls" jdbcType="LONGVARCHAR" property="imagesUrls" />
   </resultMap>
-
-  <!-- 根据商品ID 获取该商品评论 -->
-  <select id="getCommentByProductId" resultMap="BaseResultMap">
-    select * from pin_user_product_comment where id = #{productId}
-  </select>
 </mapper>

@@ -20,7 +20,7 @@ import org.springframework.web.context.WebApplicationContext;
 public abstract class UserCredentialNeededTest {
 
     @Autowired
-    protected WebApplicationContext context;
+    public WebApplicationContext context;
 
     @Autowired
     protected UserService userService;
