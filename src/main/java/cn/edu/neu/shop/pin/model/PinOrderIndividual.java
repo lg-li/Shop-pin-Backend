@@ -2,6 +2,7 @@ package cn.edu.neu.shop.pin.model;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import javax.persistence.*;
 
 @Table(name = "pin_order_individual")
@@ -195,6 +196,8 @@ public class PinOrderIndividual {
      */
     @Column(name = "total_cost")
     private BigDecimal totalCost;
+
+    List<PinOrderItem> list;
 
     /**
      * 获取订单ID
@@ -770,5 +773,21 @@ public class PinOrderIndividual {
      */
     public void setTotalCost(BigDecimal totalCost) {
         this.totalCost = totalCost;
+    }
+
+    public Boolean getGroup() {
+        return isGroup;
+    }
+
+    public void setGroup(Boolean group) {
+        isGroup = group;
+    }
+
+    public List<PinOrderItem> getList() {
+        return list;
+    }
+
+    public void setList(List<PinOrderItem> list) {
+        this.list = list;
     }
 }

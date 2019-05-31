@@ -24,6 +24,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+/**
+ * @author ydy
+ */
 @Component
 public class JwtTokenProvider {
 
@@ -81,7 +84,7 @@ public class JwtTokenProvider {
     }
 
     //token是否可以解析
-    public boolean validateToken(String token){
+    public boolean validateToken(String token) {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return true;
