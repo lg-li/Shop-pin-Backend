@@ -3,7 +3,6 @@
 <mapper namespace="cn.edu.neu.shop.pin.mapper.PinUserProductCollectionMapper">
 
 <!-- written by: flyhero -->
-
   <resultMap id="BaseResultMap" type="PinUserProductCollection">
     <!--
       WARNING - @mbg.generated
@@ -15,7 +14,6 @@
       <association property="product" column="product_id" javaType="PinProduct" resultMap="productResult" />
   </resultMap>
 
-
   <resultMap id="productResult" type="PinProduct">
       <id column="product_id" property="id" />
       <result column="product_name" property="name" />
@@ -23,7 +21,6 @@
       <result column="price" property="price" />
       <association property="store" column="store_id" javaType="PinStore" resultMap="storeResult" />
   </resultMap>
-
 
   <resultMap id="storeResult" type="PinStore">
       <id column="store_id" property="id" />
