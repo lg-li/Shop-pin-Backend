@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * @author ydy
+ */
+
 @RestController
 @RequestMapping("/user")
 @Api(tags = "user")
