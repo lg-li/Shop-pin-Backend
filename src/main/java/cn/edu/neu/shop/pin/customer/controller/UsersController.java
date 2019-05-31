@@ -5,6 +5,7 @@ import cn.edu.neu.shop.pin.customer.service.security.UserService;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +54,16 @@ public class UsersController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
+    @PostMapping("/order")
+    public JSONObject createOrderIndividual(HttpServletRequest httpServletRequest, @RequestBody JSONArray requestJSON){
+//        JSONArray jsonArray = (JSONArray) requestJSON.get(0);
+        boolean isSameStore = true;
+
+        for(int i = 0; i < requestJSON.size(); i++) {
+            JSONObject obj = requestJSON.getJSONObject(i);
         }
     }
 }
