@@ -20,6 +20,12 @@ public class PinOrderItem {
     /**
      * 商品总价
      */
+    @Column(name = "product_id")
+    private Integer productId;
+
+    /**
+     * 商品总价
+     */
     @Column(name = "total_price")
     private BigDecimal totalPrice;
 
@@ -147,5 +153,13 @@ public class PinOrderItem {
      */
     public void setIsSubmitted(Boolean isSubmitted) {
         this.isSubmitted = isSubmitted;
+    }
+
+    public Integer getProductId() {
+        return productId;
+    }
+
+    public void setProductId(Integer productId) {
+        this.productId = productId;
     }
 }
