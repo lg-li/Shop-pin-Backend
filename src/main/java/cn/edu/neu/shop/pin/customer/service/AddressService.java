@@ -5,6 +5,7 @@ import cn.edu.neu.shop.pin.model.PinUserAddress;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -30,12 +31,14 @@ public class AddressService extends AbstractService<PinUserAddress> {
         return pinUserAddressMapper.select(pinUserAddress);
     }
 
+    @Transactional
     public PinUserAddress createAddressByUserId(Integer userId, String realName, String phone, String province, String city, String district, String detail, Integer postCode) {
         PinUserAddress pinUserAddress = assignAddress(userId, realName, phone, province, city, district, detail, postCode);
         save(pinUserAddress);
         return pinUserAddress;
     }
 
+    @Transactional
     public int deleteAddressByUserId(Integer addressId, Integer currentUserId) {
         PinUserAddress pinUserAddress = findById(addressId);
         if (pinUserAddress == null) {
@@ -50,12 +53,14 @@ public class AddressService extends AbstractService<PinUserAddress> {
         }
     }
 
+    @Transactional
     public PinUserAddress updateAddressByUserId(Integer userId, String realName, String phone, String province, String city, String district, String detail, Integer postCode) {
         PinUserAddress pinUserAddress = assignAddress(userId, realName, phone, province, city, district, detail, postCode);
         update(pinUserAddress);
         return pinUserAddress;
     }
 
+    @Transactional
     public PinUserAddress updateAddressByUserId(Integer currentUserId, PinUserAddress pinUserAddress) {
         if (pinUserAddress.getUserId().equals(currentUserId)) {
             // 有权限
