@@ -18,7 +18,13 @@ public class PinOrderItem {
     private Integer amount;
 
     /**
-     * 商品总价
+     * 用户ID
+     */
+    @Column(name = "user_id")
+    private Integer userId;
+
+    /**
+     * 商品ID
      */
     @Column(name = "product_id")
     private Integer productId;
@@ -161,5 +167,13 @@ public class PinOrderItem {
 
     public void setProductId(Integer productId) {
         this.productId = productId;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }
