@@ -1,9 +1,11 @@
 package cn.edu.neu.shop.pin.customer.controller;
 
 import cn.edu.neu.shop.pin.customer.service.AddressService;
+import cn.edu.neu.shop.pin.customer.service.OrderItemService;
 import cn.edu.neu.shop.pin.customer.service.ProductService;
 import cn.edu.neu.shop.pin.customer.service.security.UserService;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
+import cn.edu.neu.shop.pin.model.PinOrderItem;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
@@ -13,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/commons/user")
@@ -26,6 +29,9 @@ public class UsersController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private OrderItemService orderItemService;
 
     /**
      * 根据用户ID，查询该用户的所有收获地址
@@ -62,19 +68,24 @@ public class UsersController {
         }
     }
 
-    public JSONObject createOrderIndividual(HttpServletRequest httpServletRequest, @RequestBody JSONArray requestArray) {
+    @PostMapping("/order")
+    public JSONObject createOrderIndividual(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestObject) {
         try {
-            boolean isSameStore = productService.isBelongSameStore(requestArray);
+            PinUser user = userService.whoAmI(httpServletRequest);
+            ArrayList<PinOrderItem> list = orderItemService.getItemListByJSONArray(requestObject.getJSONArray("items"));
+            boolean isSameStore = productService.isBelongSameStore(list);
             //如果属于一家店铺
             if (isSameStore) {
-                PinOrderIndividual orderIndividual = new PinOrderIndividual();
+                int storeId = productService.getProductByProductId(list.get(0).getProductId()).getStoreId();
+//                PinOrderIndividual orderIndividual = new PinOrderIndividual(null, storeId, user.getId(), user.getNickname(), user.getPhone(), requestObject.getString("address"), orderItemService.getProductAmount(list), orderItemService.getProductTotalPrice(list),);
+//                return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, orderIndividual);
+                return null;
             }
             //如果不属于一家店铺
             else {
                 //TODO: ydy 返回前端想要的样子
                 return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, "不属于一家店铺");
             }
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);

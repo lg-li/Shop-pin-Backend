@@ -1,6 +1,7 @@
 package cn.edu.neu.shop.pin.customer.service;
 
 import cn.edu.neu.shop.pin.mapper.PinProductMapper;
+import cn.edu.neu.shop.pin.model.PinOrderItem;
 import cn.edu.neu.shop.pin.model.PinProduct;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONArray;
@@ -54,19 +55,18 @@ public class ProductService extends AbstractService<PinProduct> {
     /** TODO:ydy未测试
      * 判断传入的 order_item 是否属于同一家店铺
      *
-     * @param itemIdArray 传入的数组，由order_item组成
+     * @param list 传入的数组，由order_item组成
      * @return  如果都属于同一家店铺，则返回true
      */
-    public boolean isBelongSameStore(JSONArray itemIdArray) {
+    public boolean isBelongSameStore(ArrayList<PinOrderItem> list) {
         boolean isSameStore = true;
         //判断是否属于一家店铺
-        Integer storeId = getProductByProductId(itemIdArray.getInteger(0)).getStoreId();
-        for (int i = 0; i < itemIdArray.size(); i++) {
-            Integer id = itemIdArray.getInteger(i);
+        Integer storeId = getProductByProductId(list.get(0).getProductId()).getStoreId();
+        for (PinOrderItem pinOrderItem : list) {
+            Integer id = pinOrderItem.getProductId();
             if (!storeId.equals(getProductByProductId(id).getStoreId()))
                 isSameStore = false;
         }
         return isSameStore;
     }
-
 }

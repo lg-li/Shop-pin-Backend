@@ -790,4 +790,38 @@ public class PinOrderIndividual {
     public void setList(List<PinOrderItem> list) {
         this.list = list;
     }
+
+    public PinOrderIndividual(Integer orderGroupId, Integer storeId, Integer userId, String receiverName, String receiverPhone, String deliveryAddress, Integer totalProductNumber, BigDecimal totalPrice, BigDecimal postage, BigDecimal payPrice, BigDecimal payPostage, BigDecimal balancePaidPrice, Date payTime, Boolean paid, String payType, Date createTime, Boolean status, Boolean refundStatus, String refundReasonImage, String refundReasonExplain, Date refundApplyTime, String refundRefuseReason, BigDecimal refundPrice, String deliveryName, String deliveryType, String deliveryId, Integer gainedCredit, String merchantRemark, String userRemark, Boolean isGroup, BigDecimal totalCost) {
+        this.orderGroupId = orderGroupId;
+        this.storeId = storeId;
+        this.userId = userId;
+        this.receiverName = receiverName;
+        this.receiverPhone = receiverPhone;
+        this.deliveryAddress = deliveryAddress;
+        this.totalProductNumber = totalProductNumber;
+        this.totalPrice = totalPrice;
+        this.postage = postage;
+        this.payPrice = payPrice;
+        this.payPostage = payPostage;
+        this.balancePaidPrice = balancePaidPrice;
+        this.payTime = payTime;
+        this.paid = paid;
+        this.payType = payType;
+        this.createTime = createTime;
+        this.status = status;
+        this.refundStatus = refundStatus;
+        this.refundReasonImage = refundReasonImage;
+        this.refundReasonExplain = refundReasonExplain;
+        this.refundApplyTime = refundApplyTime;
+        this.refundRefuseReason = refundRefuseReason;
+        this.refundPrice = refundPrice;
+        this.deliveryName = deliveryName;
+        this.deliveryType = deliveryType;
+        this.deliveryId = deliveryId;
+        this.gainedCredit = gainedCredit;
+        this.merchantRemark = merchantRemark;
+        this.userRemark = userRemark;
+        this.isGroup = isGroup;
+        this.totalCost = totalCost;
+    }
 }
