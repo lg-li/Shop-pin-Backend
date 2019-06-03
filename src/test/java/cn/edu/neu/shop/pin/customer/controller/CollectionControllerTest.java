@@ -49,7 +49,7 @@ public class CollectionControllerTest {
 
     @Test
     public void testGetUserProductCollection() throws Exception {
-        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/collection/user-product-collection/1")
+        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/user/user-product-collection/1")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print())
@@ -60,7 +60,7 @@ public class CollectionControllerTest {
 
     @Test
     public void testGetUserStoreCollection() throws Exception {
-        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/collection/user-store-collection/2")
+        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/user/user-store-collection/2")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print())

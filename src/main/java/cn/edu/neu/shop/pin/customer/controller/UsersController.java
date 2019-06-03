@@ -1,9 +1,6 @@
 package cn.edu.neu.shop.pin.customer.controller;
 
-import cn.edu.neu.shop.pin.customer.service.AddressService;
-import cn.edu.neu.shop.pin.customer.service.OrderItemService;
-import cn.edu.neu.shop.pin.customer.service.ProductRecordService;
-import cn.edu.neu.shop.pin.customer.service.ProductService;
+import cn.edu.neu.shop.pin.customer.service.*;
 import cn.edu.neu.shop.pin.customer.service.security.UserService;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.model.PinOrderItem;
@@ -12,6 +9,7 @@ import cn.edu.neu.shop.pin.model.PinUserAddress;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +35,13 @@ public class UsersController {
     private OrderItemService orderItemService;
 
     @Autowired
-    private ProductRecordService productRecordService;
+    private UserProductRecordService userProductRecordService;
+
+    @Autowired
+    private UserStoreCollectionService userStoreCollectionService;
+
+    @Autowired
+    private UserProductCollectionService userProductCollectionService;
 
     @PostMapping("/user-info")
     public JSONObject getUserInfo(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
@@ -161,8 +165,56 @@ public class UsersController {
         try{
             PinUser user = userService.whoAmI(httpServletRequest);
             JSONObject data = new JSONObject();
-            data.put("list", productRecordService.getUserProductVisitRecord(user.getId()));
+            data.put("list", userProductRecordService.getUserProductVisitRecord(user.getId()));
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
+    /**
+     * 获取商品收藏product-collection
+     * @return
+     */
+    @GetMapping("/user-product-collection")
+    public JSONObject getUserProductCollection(HttpServletRequest httpServletRequest) {
+        PinUser user = userService.whoAmI(httpServletRequest);
+        try {
+            JSONObject data = new JSONObject();
+            data.put("list", userProductCollectionService.getUserProductCollection(user.getId()));
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
+    /**
+     * 获取店铺收藏store-collection
+     * @param userId
+     * @return
+     */
+    @GetMapping("/user-store-collection/{userId}")
+    public JSONObject getUserStoreCollection(@PathVariable(value = "userId") Integer userId) {
+        try {
+            JSONObject data = new JSONObject();
+            data.put("list", userStoreCollectionService.getUserStoreCollection(userId));
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
+    @PostMapping("/product-collection")
+    public JSONObject addProductToCollection(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
+        try{
+            PinUser user = userService.whoAmI(httpServletRequest);
+            Integer userId = user.getId();
+            Integer productId = requestJSON.getInteger("productId");
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
+                    userProductCollectionService.addProductToCollection(productId, userId));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);

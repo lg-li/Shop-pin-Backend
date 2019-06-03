@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ProductRecordService extends AbstractService<PinUserProductVisitRecord> {
+public class UserProductRecordService extends AbstractService<PinUserProductVisitRecord> {
 
     @Autowired
     private PinUserProductVisitRecordMapper pinUserProductVisitRecordMapper;
