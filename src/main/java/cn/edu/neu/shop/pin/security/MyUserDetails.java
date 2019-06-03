@@ -24,7 +24,7 @@ public class MyUserDetails implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        final PinUser pinUser = userMapper.findById(id);
+        final PinUser pinUser = userMapper.findById((Integer)Integer.parseInt(id));
 
         if (pinUser == null) {
             throw new UsernameNotFoundException("User '" + id + "' not found");

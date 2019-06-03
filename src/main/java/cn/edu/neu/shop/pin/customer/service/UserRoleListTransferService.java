@@ -14,8 +14,8 @@ public class UserRoleListTransferService {
     @Autowired
     PinUserMapper pinUserMapper;
 
-    //通过Email找用户
-    public PinUser findById(String id) {
+    //通过id找用户
+    public PinUser findById(Integer id) {
         PinUser pinUser = pinUserMapper.findById(id);
         List<PinRole> roles = PinUser.transfer(pinUser.getRoles());
         pinUser.setRoles(roles);
@@ -23,7 +23,7 @@ public class UserRoleListTransferService {
     }
 
     //是否存在有这个Id的用户
-    public Boolean existsById(String id) {
+    public Boolean existsById(Integer id) {
         return pinUserMapper.existsById(id);
     }
 
@@ -32,8 +32,8 @@ public class UserRoleListTransferService {
         pinUserMapper.save(user);
     }
 
-    //通过email删除用户
-    public void deleteById(String id) {
+    //通过id删除用户
+    public void deleteById(Integer id) {
         pinUserMapper.deleteById(id);
     }
 

@@ -282,39 +282,6 @@ public class PinUser {
         this.roles = roles;
     }
 
-    public PinUser(Long id, String phone, String email, String passwordHash, Timestamp createTime, Timestamp lastLoginTime, Timestamp lastPasswordEditTime, String avatarUrl, String nickname, BigDecimal balance, Integer credit, String lastLoginIp, String createIp, Integer gender) {
-        this.phone = phone;
-        this.email = email;
-        this.passwordHash = passwordHash;
-        this.createTime = createTime;
-        this.lastLoginTime = lastLoginTime;
-        this.lastPaswordEditTime = lastPasswordEditTime;
-        this.avatarUrl = avatarUrl;
-        this.nickname = nickname;
-        this.balance = balance;
-        this.credit = credit;
-        this.lastLoginIp = lastLoginIp;
-        this.createIp = createIp;
-        this.gender = gender;
-    }
-
-    //为了解决Mapper返回的时候想要的构造函数
-    public PinUser(Long id,String phone, String email, String passwordHash, Timestamp createTime, Timestamp lastLoginTime, Timestamp lastPasswordEditTime, String avatarUrl, String nickname, BigDecimal balance, Integer credit, String lastLoginIp, String createIp, Integer gender, Integer roles) {
-        this.phone = phone;
-        this.email = email;
-        this.passwordHash = passwordHash;
-        this.createTime = createTime;
-        this.lastLoginTime = lastLoginTime;
-        this.lastPaswordEditTime = lastPasswordEditTime;
-//        this.roles = transfer(roles);
-        this.avatarUrl = avatarUrl;
-        this.nickname = nickname;
-        this.balance = balance;
-        this.credit = credit;
-        this.lastLoginIp = lastLoginIp;
-        this.createIp = createIp;
-        this.gender = gender;
-    }
 
     @Override
     public String toString() {

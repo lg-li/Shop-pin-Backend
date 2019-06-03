@@ -19,21 +19,23 @@
         <result column="last_login_ip" jdbcType="VARCHAR" property="lastLoginIp"/>
         <result column="create_ip" jdbcType="VARCHAR" property="createIp"/>
         <result column="gender" jdbcType="INTEGER" property="gender"/>
+        <collection property="roles" javaType="ArrayList" ofType="Integer">
+            <result property="role" column="roless" />
+        </collection>
     </resultMap>
 
-    <select id="findById" resultMap="_findById">
+    <select id="findById" resultMap="BaseResultMap">
         select pin_user.*,pin_user_role.role as roless
         from pin_user,
              pin_user_role
         where pin_user.id = #{id}
           and pin_user.id = pin_user_role.user_id
     </select>
-    <resultMap id="_findById"  type="PinUser">
-        <id property="id" column="id" />
+    <!--<resultMap id="_findById"  type="PinUser">
         <collection property="roles" javaType="ArrayList" ofType="Integer">
             <result property="role" column="roless" />
         </collection>
-    </resultMap>
+    </resultMap>-->
 
     <select id="existsById" resultType="boolean">
         SELECT EXISTS(SELECT 1 FROM pin_user WHERE id = #{id})

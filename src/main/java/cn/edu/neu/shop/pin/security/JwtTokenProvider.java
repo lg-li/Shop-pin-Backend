@@ -48,9 +48,9 @@ public class JwtTokenProvider {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    public String createToken(String Id, List<PinRole> roles) {
+    public String createToken(Integer id, List<PinRole> roles) {
 
-        Claims claims = Jwts.claims().setSubject(Id);
+        Claims claims = Jwts.claims().setSubject(id.toString());
         claims.put("auth", roles.stream().map(s -> new SimpleGrantedAuthority(s.getAuthority())).filter(Objects::nonNull).collect(Collectors.toList()));
 
         Date now = new Date();
@@ -65,13 +65,13 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = myUserDetails.loadUserByUsername(getId(token));
+        UserDetails userDetails = myUserDetails.loadUserByUsername(getId(token).toString());
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
     //通过token得到Id
-    public String getId(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+    public Integer getId(String token) {
+        return Integer.parseInt(Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject());
     }
 
     //通过请求得到 token

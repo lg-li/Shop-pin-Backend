@@ -36,6 +36,8 @@ public class PinOrderGroup {
     @Column(name = "total_amount_of_money_paid")
     private BigDecimal totalAmountOfMoneyPaid;
 
+    private PinUser pinUser;
+
     /**
      * 获取拼团单ID
      *
@@ -154,5 +156,13 @@ public class PinOrderGroup {
      */
     public void setTotalAmountOfMoneyPaid(BigDecimal totalAmountOfMoneyPaid) {
         this.totalAmountOfMoneyPaid = totalAmountOfMoneyPaid;
+    }
+
+    public PinUser getPinUser() {
+        return pinUser;
+    }
+
+    public void setPinUser(PinUser pinUser) {
+        this.pinUser = pinUser;
     }
 }

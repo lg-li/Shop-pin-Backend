@@ -5,7 +5,7 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <id column="id" jdbcType="INTEGER" property="id" />
+    <id column="order_group_id" jdbcType="INTEGER" property="id" />
     <result column="owner_user_id" jdbcType="INTEGER" property="ownerUserId" />
     <result column="store_id" jdbcType="INTEGER" property="storeId" />
     <result column="status" jdbcType="BIT" property="status" />
@@ -13,5 +13,32 @@
     <result column="close_time" jdbcType="TIMESTAMP" property="closeTime" />
     <result column="actual_finish_time" jdbcType="TIMESTAMP" property="actualFinishTime" />
     <result column="total_amount_of_money_paid" jdbcType="DECIMAL" property="totalAmountOfMoneyPaid" />
+    <association property="pinUser" column="owner_user_id" javaType="PinUser" resultMap="userResult" />
   </resultMap>
+
+  <resultMap id="userResult" type="PinUser">
+    <id column="owner_user_id" property="id" />
+    <result column="avatar_url" property="avatarUrl" />
+    <result column="nickname" property="nickname" />
+  </resultMap>
+
+  <select id="getTopTenOrderGroups" resultMap="BaseResultMap">
+    select
+    g.id                            as order_group_id,
+    g.owner_user_id                 as owner_user_id,
+    u.avatar_url                    as avatar_url,
+    u.nickname                      as nickname,
+    g.store_id                      as store_id,
+    g.status                        as status,
+    g.create_time                   as create_time,
+    g.close_time                    as close_time,
+    g.actual_finish_time            as actual_finish_time,
+    g.total_amount_of_money_paid    as total_amount_of_money_paid
+    from pin_order_group g
+    left outer join pin_user u on g.owner_user_id = u.id
+    where g.store_id = #{storeId} and g.status = 0
+    order by create_time desc
+    limit 10
+  </select>
+
 </mapper>

@@ -111,13 +111,13 @@ public class PinOrderIndividual {
     /**
      * 订单状态（-1 : 申请退款中 -2 : 退货成功 0：待发货；1：待收货；2：已收货；3：待评价; 4: 已评价）
      */
-    private Boolean status;
+    private Integer status;
 
     /**
      * 0 未退款 1 申请中 2 已退款
      */
     @Column(name = "refund_status")
-    private Boolean refundStatus;
+    private Integer refundStatus;
 
     /**
      * 退款图片
@@ -510,7 +510,7 @@ public class PinOrderIndividual {
      *
      * @return status - 订单状态（-1 : 申请退款中 -2 : 退货成功 0：待发货；1：待收货；2：已收货；3：待评价; 4: 已评价）
      */
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
@@ -519,7 +519,7 @@ public class PinOrderIndividual {
      *
      * @param status 订单状态（-1 : 申请退款中 -2 : 退货成功 0：待发货；1：待收货；2：已收货；3：待评价; 4: 已评价）
      */
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
@@ -528,7 +528,7 @@ public class PinOrderIndividual {
      *
      * @return refund_status - 0 未退款 1 申请中 2 已退款
      */
-    public Boolean getRefundStatus() {
+    public Integer getRefundStatus() {
         return refundStatus;
     }
 
@@ -537,7 +537,7 @@ public class PinOrderIndividual {
      *
      * @param refundStatus 0 未退款 1 申请中 2 已退款
      */
-    public void setRefundStatus(Boolean refundStatus) {
+    public void setRefundStatus(Integer refundStatus) {
         this.refundStatus = refundStatus;
     }
 
@@ -791,7 +791,7 @@ public class PinOrderIndividual {
         this.list = list;
     }
 
-    public PinOrderIndividual(Integer orderGroupId, Integer storeId, Integer userId, String receiverName, String receiverPhone, String deliveryAddress, Integer totalProductNumber, BigDecimal totalPrice, BigDecimal postage, BigDecimal payPrice, BigDecimal payPostage, BigDecimal balancePaidPrice, Date payTime, Boolean paid, String payType, Date createTime, Boolean status, Boolean refundStatus, String refundReasonImage, String refundReasonExplain, Date refundApplyTime, String refundRefuseReason, BigDecimal refundPrice, String deliveryName, String deliveryType, String deliveryId, Integer gainedCredit, String merchantRemark, String userRemark, Boolean isGroup, BigDecimal totalCost) {
+    public PinOrderIndividual(Integer orderGroupId, Integer storeId, Integer userId, String receiverName, String receiverPhone, String deliveryAddress, Integer totalProductNumber, BigDecimal totalPrice, BigDecimal postage, BigDecimal payPrice, BigDecimal payPostage, BigDecimal balancePaidPrice, Date payTime, Boolean paid, String payType, Date createTime, Integer status, Integer refundStatus, String refundReasonImage, String refundReasonExplain, Date refundApplyTime, String refundRefuseReason, BigDecimal refundPrice, String deliveryName, String deliveryType, String deliveryId, Integer gainedCredit, String merchantRemark, String userRemark, Boolean isGroup, BigDecimal totalCost) {
         this.orderGroupId = orderGroupId;
         this.storeId = storeId;
         this.userId = userId;

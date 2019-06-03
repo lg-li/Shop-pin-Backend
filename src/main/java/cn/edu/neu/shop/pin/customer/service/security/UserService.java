@@ -44,7 +44,7 @@ public class UserService extends AbstractService<PinUser> {
      * @return 生成的token
      * @throws CredentialException 凭据错误异常
      */
-    public String signIn(String id, String password) throws CredentialException {
+    public String signIn(Integer id, String password) throws CredentialException {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(id, password));
             return jwtTokenProvider.createToken(id, userRoleListTransferService.findById(id).getRoles());
@@ -54,17 +54,12 @@ public class UserService extends AbstractService<PinUser> {
         }
     }
 
-    public String signIn(Integer id, String password) throws CredentialException {
-        return signIn(String.valueOf(id), password);
-    }
-
     public String signInFromWechatUser(PinWechatUser wechatUser) {
         PinUser pinUser = findById(wechatUser.getUserId());
         if(pinUser == null) {
             return null;
         }
-        String id = String.valueOf(pinUser.getId());
-        return jwtTokenProvider.createToken(id, userRoleListTransferService.findById(id).getRoles());
+        return jwtTokenProvider.createToken(pinUser.getId(), userRoleListTransferService.findById(wechatUser.getUserId()).getRoles());
     }
 
 
@@ -103,7 +98,7 @@ public class UserService extends AbstractService<PinUser> {
 
     private PinUser fillInCurrentTimeStampToUser(String phone, String email, String password, String avatarUrl, String nickname, String currentIp, Integer gender) {
         Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-        return new PinUser(null, phone, email, password, currentTimestamp, currentTimestamp, currentTimestamp, avatarUrl, nickname, new BigDecimal(0), 0, currentIp, currentIp, gender);
+        return new PinUser(/*null, phone, email, password, currentTimestamp, currentTimestamp, currentTimestamp, avatarUrl, nickname, new BigDecimal(0), 0, currentIp, currentIp, gender*/);
     }
 
     /**
@@ -113,20 +108,20 @@ public class UserService extends AbstractService<PinUser> {
      * @return 登录后 Token
      */
     private String signUp(PinUser user) {
-        if (!userRoleListTransferService.existsById(user.getId().toString())) {
+        if (!userRoleListTransferService.existsById(user.getId())) {
             user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
             userRoleListTransferService.save(user);
-            return jwtTokenProvider.createToken(user.getId().toString(), user.getRoles());
+            return jwtTokenProvider.createToken(user.getId(), user.getRoles());
         } else {
             throw new CredentialException("Id is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
         }
     }
 
-    public void delete(String id) {
+    public void delete(Integer id) {
         userRoleListTransferService.deleteById(id);
     }
 
-    public PinUser search(String id) {
+    public PinUser search(Integer id) {
         PinUser user = userRoleListTransferService.findById(id);
         if (user == null) {
             throw new CredentialException("The user doesn't exist", HttpStatus.NOT_FOUND);
@@ -138,7 +133,7 @@ public class UserService extends AbstractService<PinUser> {
         return userRoleListTransferService.findById(jwtTokenProvider.getId(jwtTokenProvider.resolveToken(req)));
     }
 
-    public String refresh(String id) {
+    public String refresh(Integer id) {
         return jwtTokenProvider.createToken(id, userRoleListTransferService.findById(id).getRoles());
     }
 
