@@ -18,7 +18,7 @@
 
   <resultMap id="userResult" type="PinUser">
     <id column="owner_user_id" property="id" />
-    <result column="avatar_url" property="avaterUrl" />
+    <result column="avatar_url" property="avatarUrl" />
     <result column="nickname" property="nickname" />
   </resultMap>
 
