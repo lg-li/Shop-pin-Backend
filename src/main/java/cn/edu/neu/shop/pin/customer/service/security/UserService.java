@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 public class UserService {
 
     @Autowired
-    private UserRoleListTransferService userMapper;
+    private UserRoleListTransferService userRoleListTransferService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -43,7 +43,7 @@ public class UserService {
     public String signIn(String id, String password) throws CustomException {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(id, password));
-            return jwtTokenProvider.createToken(id, userMapper.findById(id).getRoles());
+            return jwtTokenProvider.createToken(id, userRoleListTransferService.findById(id).getRoles());
         } catch (AuthenticationException e) {
             e.printStackTrace();
             throw new CustomException("Invalid id/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
@@ -61,9 +61,9 @@ public class UserService {
      * @return 登录后 Token
      */
     public String signUp(PinUser user) {
-        if (!userMapper.existsById(user.getId().toString())) {
+        if (!userRoleListTransferService.existsById(user.getId().toString())) {
             user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
-            userMapper.save(user);
+            userRoleListTransferService.save(user);
             return jwtTokenProvider.createToken(user.getId().toString(), user.getRoles());
         } else {
             throw new CustomException("Id is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
@@ -71,11 +71,11 @@ public class UserService {
     }
 
     public void delete(String id) {
-        userMapper.deleteById(id);
+        userRoleListTransferService.deleteById(id);
     }
 
     public PinUser search(String id) {
-        PinUser user = userMapper.findById(id);
+        PinUser user = userRoleListTransferService.findById(id);
         if (user == null) {
             throw new CustomException("The user doesn't exist", HttpStatus.NOT_FOUND);
         }
@@ -83,11 +83,11 @@ public class UserService {
     }
 
     public PinUser whoAmI(HttpServletRequest req) {
-        return userMapper.findById(jwtTokenProvider.getId(jwtTokenProvider.resolveToken(req)));
+        return userRoleListTransferService.findById(jwtTokenProvider.getId(jwtTokenProvider.resolveToken(req)));
     }
 
     public String refresh(String id) {
-        return jwtTokenProvider.createToken(id, userMapper.findById(id).getRoles());
+        return jwtTokenProvider.createToken(id, userRoleListTransferService.findById(id).getRoles());
     }
 
 }
