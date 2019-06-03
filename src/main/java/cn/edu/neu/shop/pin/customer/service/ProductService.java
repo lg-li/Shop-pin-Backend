@@ -46,6 +46,7 @@ public class ProductService extends AbstractService<PinProduct> {
     }
 
     /**
+     * TODO 分页插件还没用上
      * 返回热门商品，支持分页操作
      * @param pageNum 页面编号
      * @param pageSize 页面大小
@@ -59,6 +60,7 @@ public class ProductService extends AbstractService<PinProduct> {
     }
 
     /**
+     * TODO 分页插件还没用上
      * 返回最新商品，支持分页操作
      * @param pageNum 页面编号
      * @param pageSize 页面大小
