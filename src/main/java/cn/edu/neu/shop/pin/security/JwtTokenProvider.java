@@ -1,6 +1,6 @@
 package cn.edu.neu.shop.pin.security;
 
-import cn.edu.neu.shop.pin.exception.CustomException;
+import cn.edu.neu.shop.pin.exception.CredentialException;
 import cn.edu.neu.shop.pin.model.PinRole;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -89,7 +89,7 @@ public class JwtTokenProvider {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return true;
         } catch (JwtException | IllegalArgumentException e) {
-            throw new CustomException("Expired or invalid JWT token", HttpStatus.INTERNAL_SERVER_ERROR);
+            throw new CredentialException("Expired or invalid JWT token", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
