@@ -14,4 +14,14 @@
     <result column="order_individual_id" jdbcType="INTEGER" property="orderIndividualId" />
     <result column="is_submitted" jdbcType="BIT" property="isSubmitted" />
   </resultMap>
+
+  <insert id="addOrderItem">
+
+  </insert>
+
+  <select id="getUnsubmittedOrderItemByUserIdAndProductId" resultMap="BaseResultMap">
+    select *
+    from order_item
+    where user_id = #{userId} and product_id = #{productId} and is_submitted = 1
+  </select>
 </mapper>
