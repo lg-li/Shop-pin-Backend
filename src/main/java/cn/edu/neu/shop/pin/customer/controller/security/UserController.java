@@ -4,6 +4,7 @@ import cn.edu.neu.shop.pin.customer.service.security.UserService;
 import cn.edu.neu.shop.pin.dto.UserDataDTO;
 import cn.edu.neu.shop.pin.model.PinUser;
 import io.swagger.annotations.*;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -57,7 +58,7 @@ public class UserController {
             @ApiResponse(code = 403, message = "Access denied"), //
             @ApiResponse(code = 404, message = "The user doesn't exist"), //
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-    public String delete(@ApiParam("Id") @PathVariable String id) {
+    public Integer delete(@ApiParam("Id") @PathVariable Integer id) {
         System.out.println("123");
         userService.delete(id);
         return id;
@@ -71,7 +72,7 @@ public class UserController {
             @ApiResponse(code = 403, message = "Access denied"), //
             @ApiResponse(code = 404, message = "The user doesn't exist"), //
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-    public PinUser search(@ApiParam("Id") @RequestParam String id) {
+    public PinUser search(@ApiParam("Id") @RequestParam Integer id) {
         return userService.search(id);
     }
 
