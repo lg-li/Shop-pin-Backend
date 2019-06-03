@@ -72,25 +72,39 @@ public class ProductController {
         }
     }
 
+    /**
+     * 获取热门商品信息，支持分页操作
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
     @RequestMapping(value = "/hot/{pageNum}/{pageSize}", method = RequestMethod.GET)
     public JSONObject getHotProducts(@PathVariable(value = "pageNum") int pageNum, @PathVariable(value = "pageSize") int pageSize) {
         try {
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productService.getHotProductsByPage(pageNum, pageSize));
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS,
+                    PinConstants.ResponseMessage.SUCCESS,
+                    productService.getHotProductsByPage(pageNum, pageSize));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
     }
 
-//    @GetMapping("/hot")
-//    public JSONObject getHotProducts() {
-//        try {
-//            JSONObject data = new JSONObject();
-//            data.put("list", productService.getHotProducts());
-//            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
-//        }
-//    }
+    /**
+     * 获取全新商品信息，支持分页操作
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
+    @RequestMapping(value = "/new/{pageNum}/{pageSize}", method = RequestMethod.GET)
+    public JSONObject getNewProducts(@PathVariable(value = "pageNum") int pageNum, @PathVariable(value = "pageSize") int pageSize) {
+        try {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS,
+                    PinConstants.ResponseMessage.SUCCESS,
+                    productService.getNewProductsByPage(pageNum, pageSize));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
 }

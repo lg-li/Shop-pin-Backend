@@ -23,7 +23,7 @@ public class UserRoleListTransferService {
     }
 
     //是否存在有这个Id的用户
-    public Boolean existsById(String id) {
+    public Boolean existsById(Integer id) {
         return pinUserMapper.existsById(id);
     }
 
@@ -33,7 +33,7 @@ public class UserRoleListTransferService {
     }
 
     //通过id删除用户
-    public void deleteById(String id) {
+    public void deleteById(Integer id) {
         pinUserMapper.deleteById(id);
     }
 
