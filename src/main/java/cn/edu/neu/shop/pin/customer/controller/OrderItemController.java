@@ -30,7 +30,6 @@ public class OrderItemController {
         try{
             PinUser user = userService.whoAmI(httpServletRequest);
             Integer productAmount = requestJSON.getInteger("productAmount");
-            
         } catch (Exception e) {
 
         }
