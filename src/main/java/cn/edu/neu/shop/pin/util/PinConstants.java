@@ -35,4 +35,11 @@ public class PinConstants {
         public static final String INTERNAL_ERROR = "服务器错误";
     }
 
+    public class PayType{
+        public static final String WEICHAT = "WEICHAT";
+        public static final String BALANCE = "BALANCE";
+        public static final String BOTH = "WEICHAT BALANCE";
+
+    }
+
 }

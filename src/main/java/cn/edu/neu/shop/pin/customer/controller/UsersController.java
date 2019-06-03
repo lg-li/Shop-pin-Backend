@@ -10,12 +10,13 @@ import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.model.PinUserAddress;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.sql.Date;
 import java.util.ArrayList;
 
 @RestController
@@ -36,11 +37,11 @@ public class UsersController {
 
     @PostMapping("/user-info")
     public JSONObject getUserInfo(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
-        try{
+        try {
             PinUser user = userService.whoAmI(httpServletRequest);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
                     userService.findById(user.getId()));
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
@@ -83,17 +84,17 @@ public class UsersController {
 
     @DeleteMapping("/address")
     public JSONObject deleteAddress(HttpServletRequest httpServletRequest, @PathVariable(value = "addressId") int addressId) {
-        try{
+        try {
             PinUser user = userService.whoAmI(httpServletRequest);
             int code = addressService.deleteAddressByUserId(addressId, user.getId());
-            if(code == AddressService.STATUS_DELETE_ADDRESS_SUCCESS){
+            if (code == AddressService.STATUS_DELETE_ADDRESS_SUCCESS) {
                 return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
-            } else if(code == AddressService.STATUS_DELETE_ADDRESS_INVALID_ID){
+            } else if (code == AddressService.STATUS_DELETE_ADDRESS_INVALID_ID) {
                 return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, "删除失败", null);
-            } else if(code == AddressService.STATUS_DELETE_ADDRESS_PERMISSION_DENIED){
+            } else if (code == AddressService.STATUS_DELETE_ADDRESS_PERMISSION_DENIED) {
                 return ResponseWrapper.wrap(PinConstants.StatusCode.PERMISSION_DENIED, "无权限删除", null);
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
@@ -101,11 +102,11 @@ public class UsersController {
     }
 
     @PutMapping("/address")
-    public JSONObject updateAddress(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON){
-        try{
+    public JSONObject updateAddress(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
+        try {
             PinUser user = userService.whoAmI(httpServletRequest);
             PinUserAddress addressToUpdate = JSONObject.toJavaObject(requestJSON, PinUserAddress.class);
-            if(addressService.updateAddressByUserId(user.getId(), addressToUpdate) == null){
+            if (addressService.updateAddressByUserId(user.getId(), addressToUpdate) == null) {
                 // 无权
                 return ResponseWrapper.wrap(PinConstants.StatusCode.PERMISSION_DENIED, "无权限删除", null);
             }
@@ -124,10 +125,20 @@ public class UsersController {
             boolean isSameStore = productService.isBelongSameStore(list);
             //如果属于一家店铺
             if (isSameStore) {
-                int storeId = productService.getProductByProductId(list.get(0).getProductId()).getStoreId();
-//                PinOrderIndividual orderIndividual = new PinOrderIndividual(null, storeId, user.getId(), user.getNickname(), user.getPhone(), requestObject.getString("address"), orderItemService.getProductAmount(list), orderItemService.getProductTotalPrice(list),);
-//                return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, orderIndividual);
-                return null;
+                int storeId = productService.getProductByProductId(list.get(0).getProductId()).getStoreId();    // 店铺id
+                BigDecimal originallyPrice = orderItemService.getProductTotalPrice(list);   // 计算本来的价格
+                BigDecimal shippingFee = orderItemService.getAllShippingFee(list);  // 邮费
+                BigDecimal totalPrice = originallyPrice.add(shippingFee);   //总费用
+                OrderItemService.PayDetail payDetail = orderItemService.new PayDetail(user.getId(), totalPrice);    //支付详情
+
+                PinOrderIndividual orderIndividual = new PinOrderIndividual(null, storeId, user.getId(),
+                        user.getNickname(), user.getPhone(), requestObject.getString("address"),
+                        orderItemService.getProductAmount(list), totalPrice/*总价格 邮费加本来的费用*/,
+                        shippingFee,payDetail.getPayPrice(),shippingFee/*卖家可以改动实际支付的邮费，修改的时候总价格也要修改，余额支付，实际支付也要改*/,
+                        payDetail.getBalancePaidPrice(), null,false,payDetail.getPayType(),
+                        new Date(System.currentTimeMillis()),0,0,null,null,null,
+                        null,null,null,null,null,null,null,null,null,null/*TODO:未完成*/);
+                return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, orderIndividual);
             }
             //如果不属于一家店铺
             else {
