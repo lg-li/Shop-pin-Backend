@@ -9,6 +9,8 @@ import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import cn.edu.neu.shop.pin.util.wechat.WeChatCredentialExchangeException;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,8 +29,8 @@ public class SignInController {
     @Autowired
     WechatUserService wechatUserService;
 
-    @RequestMapping(value = "/default")
-    public JSONObject defaultLogin(JSONObject loginJSON) {
+    @PostMapping(value = "/default")
+    public JSONObject defaultLogin(@RequestBody JSONObject loginJSON) {
         String emailOrPhone = loginJSON.getString("user");
         String password = loginJSON.getString("password");
         PinUser userFound = userService.findByEmailOrPhone(emailOrPhone);
