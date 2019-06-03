@@ -137,5 +137,13 @@ public class OrderItemService {
         }
     }
 
+    public BigDecimal getTotalCost(ArrayList<PinOrderItem> array) {
+        BigDecimal total = new BigDecimal("0");
+        for (PinOrderItem item : array) {
+            total.add(item.getTotalCost());
+        }
+        return total;
+    }
+
 
 }

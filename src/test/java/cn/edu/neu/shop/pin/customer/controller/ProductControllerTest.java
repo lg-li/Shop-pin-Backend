@@ -65,4 +65,20 @@ public class ProductControllerTest extends UserCredentialNeededTest{
 
         System.out.println("返回的json=" + result);
     }
+
+    /**
+     * 测试获取热门商品getHotProducts
+     * @author flyhero
+     * @throws Exception
+     */
+    @Test
+    public void testGetNewProducts() throws Exception {
+        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/product/new/0/10")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn().getResponse().getContentAsString();
+
+        System.out.println("返回的json=" + result);
+    }
 }
