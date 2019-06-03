@@ -12,6 +12,9 @@ import cn.edu.neu.shop.pin.util.wechat.WeChatCredentialExchanger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/**
+ * @author llg
+ */
 @Service
 public class WechatUserService extends AbstractService<PinWechatUser> {
 
@@ -24,7 +27,7 @@ public class WechatUserService extends AbstractService<PinWechatUser> {
     @Autowired
     PinWechatUserMapper pinWechatUserMapper;
 
-    public PinWechatUser signInFormWechatMiniProgram(String code, String name, int gender, String avatarUrl, String country, String province, String city, String language) throws WeChatCredentialExchangeException {
+    public String signInFormWechatMiniProgram(String code, String name, int gender, String avatarUrl, String country, String province, String city, String language, String currentIp) throws WeChatCredentialExchangeException {
         final WeChatCredential wechatCredential = WeChatCredentialExchanger.fromMiniProgramCode(code);
         PinWechatUser wechatUser = new PinWechatUser();
         // 根据 OPEN ID 查找客户
@@ -35,21 +38,18 @@ public class WechatUserService extends AbstractService<PinWechatUser> {
             assignPropertyToWechatUserAndSave(name, gender, avatarUrl, country, province,city,language,wechatUser);
             // 更新头像等信息
             update(wechatUser);
+
         } else {
             // 微信用户首次登录
+            PinUser newPinUser = userService.signUpAndGetNewPinUser("0", "0", "", avatarUrl, name, currentIp, gender);
             wechatUser = new PinWechatUser();
-            assignPropertyToWechatUserAndSave(name, gender, avatarUrl, country, province,city,language,wechatUser);
-            // wechatUser.setUserId();
-            // TODO: 创建用户
-//            PinUser newPinUser = new PinUser();
-////            newPinUser.setAvatarUrl(avatarUrl);
-////            newPinUser.setGender(gender);
-////
-////            userService.signUp(newPinUser);
+            // 绑定微信用户与实体用户
+            wechatUser.setUserId(newPinUser.getId());
+            assignPropertyToWechatUserAndSave(name, gender, avatarUrl, country, province, city, language, wechatUser);
             // 创建基本信息并保存
             save(wechatUser);
         }
-        return wechatUser;
+        return userService.signInFromWechatUser(wechatUser);
     }
 
     private void assignPropertyToWechatUserAndSave(String name, int gender, String avatarUrl, String country, String province, String city, String language, PinWechatUser wechatUserToAssign) {

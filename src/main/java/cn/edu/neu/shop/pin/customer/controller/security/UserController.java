@@ -36,7 +36,7 @@ public class UserController {
 
     //这里在注册，保存信息，并且得到token
     @PostMapping("/sign-up")
-    @ApiOperation(value = "${UserController.signUp}")
+    @ApiOperation(value = "${UserController.signUpAndGetToken}")
     @ApiResponses(value = {//
             @ApiResponse(code = 400, message = "Something went wrong"), //
             @ApiResponse(code = 403, message = "Access denied"), //
@@ -44,7 +44,7 @@ public class UserController {
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
     public String signUp(@ApiParam("Sign-up User") @RequestBody UserDataDTO user) {
 //    PinUser pinUser = new PinUser(user.getId(),user.getPassword(),user.getRoles());
-//    return userService.signUp(pinUser);
+//    return userService.signUpAndGetToken(pinUser);
         return null;
     }
 

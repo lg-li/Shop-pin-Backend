@@ -3,6 +3,7 @@ package cn.edu.neu.shop.pin.customer.service.security;
 import cn.edu.neu.shop.pin.customer.service.UserRoleListTransferService;
 import cn.edu.neu.shop.pin.exception.CredentialException;
 import cn.edu.neu.shop.pin.model.PinUser;
+import cn.edu.neu.shop.pin.model.PinWechatUser;
 import cn.edu.neu.shop.pin.security.JwtTokenProvider;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 /**
- * @author ydy
+ * @author ydy, llg
  */
 @Service
 public class UserService extends AbstractService<PinUser> {
@@ -57,10 +58,52 @@ public class UserService extends AbstractService<PinUser> {
         return signIn(String.valueOf(id), password);
     }
 
-    public String signUp(String phone, String email, String password, String avatarUrl, String nickname, BigDecimal balance, Integer credit, String currentIp, Integer gender) {
-        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
-        PinUser pinUser = new PinUser(null, phone, email, password, currentTimestamp, currentTimestamp, currentTimestamp, avatarUrl, nickname, new BigDecimal(0), 0, currentIp, currentIp, gender);
+    public String signInFromWechatUser(PinWechatUser wechatUser) {
+        PinUser pinUser = findById(wechatUser.getUserId());
+        if(pinUser == null) {
+            return null;
+        }
+        String id = String.valueOf(pinUser.getId());
+        return jwtTokenProvider.createToken(id, userRoleListTransferService.findById(id).getRoles());
+    }
+
+
+    /**
+     * 注册并获取新用户token
+     * @param phone 手机号
+     * @param email 邮箱
+     * @param password 密码
+     * @param avatarUrl 头像链接
+     * @param nickname 昵称
+     * @param currentIp 当前IP
+     * @param gender 性别
+     * @return token
+     */
+    public String signUpAndGetToken(String phone, String email, String password, String avatarUrl, String nickname, String currentIp, Integer gender) {
+        PinUser pinUser = fillInCurrentTimeStampToUser(phone, email, password, avatarUrl, nickname, currentIp, gender);
         return signUp(pinUser);
+    }
+
+    /**
+     * 注册并获取新用户实体对象
+     * @param phone 手机号
+     * @param email 邮箱
+     * @param password 密码
+     * @param avatarUrl 头像链接
+     * @param nickname 昵称
+     * @param currentIp 当前IP
+     * @param gender 性别
+     * @return 实体对象
+     */
+    public PinUser signUpAndGetNewPinUser(String phone, String email, String password, String avatarUrl, String nickname, String currentIp, Integer gender) {
+        PinUser pinUser = fillInCurrentTimeStampToUser(phone, email, password, avatarUrl, nickname, currentIp, gender);
+        signUp(pinUser);
+        return pinUser;
+    }
+
+    private PinUser fillInCurrentTimeStampToUser(String phone, String email, String password, String avatarUrl, String nickname, String currentIp, Integer gender) {
+        Timestamp currentTimestamp = new Timestamp(System.currentTimeMillis());
+        return new PinUser(null, phone, email, password, currentTimestamp, currentTimestamp, currentTimestamp, avatarUrl, nickname, new BigDecimal(0), 0, currentIp, currentIp, gender);
     }
 
     /**
