@@ -2,9 +2,12 @@ package cn.edu.neu.shop.pin.customer.service;
 
 import cn.edu.neu.shop.pin.mapper.PinUserProductCollectionMapper;
 import cn.edu.neu.shop.pin.model.PinUserProductCollection;
+import cn.edu.neu.shop.pin.util.base.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -13,7 +16,7 @@ import java.util.List;
  */
 
 @Service
-public class UserProductCollectionService {
+public class UserProductCollectionService extends AbstractService<PinUserProductCollection> {
 
     @Autowired
     private PinUserProductCollectionMapper pinUserProductCollectionMapper;
@@ -25,5 +28,15 @@ public class UserProductCollectionService {
      */
     public List<PinUserProductCollection> getUserProductCollection(Integer userId) {
         return pinUserProductCollectionMapper.getUserProductCollection(userId);
+    }
+
+    @Transactional
+    public PinUserProductCollection addProductToCollection(Integer productId, Integer userId) {
+        PinUserProductCollection pinUserProductCollection = new PinUserProductCollection();
+        pinUserProductCollection.setProductId(productId);
+        pinUserProductCollection.setCreateTime(new Date());
+        pinUserProductCollection.setUserId(userId);
+        save(pinUserProductCollection);
+        return pinUserProductCollection;
     }
 }
