@@ -15,7 +15,7 @@ public class UserRoleListTransferService {
     PinUserMapper pinUserMapper;
 
     //通过id找用户
-    public PinUser findById(String id) {
+    public PinUser findById(Integer id) {
         PinUser pinUser = pinUserMapper.findById(id);
         List<PinRole> roles = PinUser.transfer(pinUser.getRoles());
         pinUser.setRoles(roles);

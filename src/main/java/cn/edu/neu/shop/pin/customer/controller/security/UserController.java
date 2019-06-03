@@ -31,7 +31,7 @@ public class UserController {
     public String signIn(//
                          @ApiParam("Id") @RequestParam String id, //
                          @ApiParam("Password") @RequestParam String password) {
-        return userService.signIn(id, password);
+        return userService.signIn(Integer.parseInt(id), password);
     }
 
     //这里在注册，保存信息，并且得到token
@@ -90,7 +90,7 @@ public class UserController {
     @GetMapping("/refresh")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public String refresh(HttpServletRequest req) {
-        return userService.refresh(req.getRemoteUser());
+        return userService.refresh(Integer.parseInt(req.getRemoteUser()));
     }
 
 }

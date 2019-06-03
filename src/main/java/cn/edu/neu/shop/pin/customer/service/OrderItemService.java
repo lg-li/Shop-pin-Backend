@@ -101,7 +101,7 @@ public class OrderItemService {
 
         public PayDetail(Integer userId, BigDecimal totalPrice) {
             //用户余额
-            BigDecimal userBalance = userService.findById(userId.toString()).getBalance();
+            BigDecimal userBalance = userService.findById(userId).getBalance();
 
             if (userBalance.compareTo(totalPrice) >= 0) {  //如果余额足够支付，则返回余额支付态
                 payType = PinConstants.PayType.WEICHAT;
