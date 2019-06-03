@@ -36,7 +36,7 @@ public class PinUserMapperTest {
 
     @Test
     public void existsById() {
-        System.out.println(pinUserMapper.existsById("2"));
+        System.out.println(pinUserMapper.existsById(2));
     }
 
     @Test
