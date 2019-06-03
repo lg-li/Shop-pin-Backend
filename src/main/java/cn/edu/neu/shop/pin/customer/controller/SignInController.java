@@ -18,8 +18,8 @@ import javax.servlet.http.HttpServletRequest;
  * @author llg
  */
 @RestController
-@RequestMapping(value = "/login")
-public class LoginController {
+@RequestMapping(value = "/sign-in")
+public class SignInController {
 
     @Autowired
     UserService userService;
