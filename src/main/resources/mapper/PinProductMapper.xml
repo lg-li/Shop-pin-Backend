@@ -43,4 +43,8 @@
     select * from pin_product where is_hot = 1
   </select>
 
+  <select id="getNewProducts" resultMap="BaseResultMap">
+    select * from pin_product where is_new = 1
+  </select>
+
 </mapper>
