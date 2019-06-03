@@ -24,7 +24,7 @@ import java.sql.Timestamp;
 public class UserService extends AbstractService<PinUser> {
 
     @Autowired
-    private UserRoleListTransferService userMapper;
+    private UserRoleListTransferService userRoleListTransferService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -46,7 +46,7 @@ public class UserService extends AbstractService<PinUser> {
     public String signIn(String id, String password) throws CredentialException {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(id, password));
-            return jwtTokenProvider.createToken(id, userMapper.findById(id).getRoles());
+            return jwtTokenProvider.createToken(id, userRoleListTransferService.findById(id).getRoles());
         } catch (AuthenticationException e) {
             e.printStackTrace();
             throw new CredentialException("Invalid id/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
@@ -70,9 +70,9 @@ public class UserService extends AbstractService<PinUser> {
      * @return 登录后 Token
      */
     private String signUp(PinUser user) {
-        if (!userMapper.existsById(user.getId().toString())) {
+        if (!userRoleListTransferService.existsById(user.getId().toString())) {
             user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
-            userMapper.save(user);
+            userRoleListTransferService.save(user);
             return jwtTokenProvider.createToken(user.getId().toString(), user.getRoles());
         } else {
             throw new CredentialException("Id is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
@@ -80,11 +80,11 @@ public class UserService extends AbstractService<PinUser> {
     }
 
     public void delete(String id) {
-        userMapper.deleteById(id);
+        userRoleListTransferService.deleteById(id);
     }
 
     public PinUser search(String id) {
-        PinUser user = userMapper.findById(id);
+        PinUser user = userRoleListTransferService.findById(id);
         if (user == null) {
             throw new CredentialException("The user doesn't exist", HttpStatus.NOT_FOUND);
         }
@@ -92,11 +92,11 @@ public class UserService extends AbstractService<PinUser> {
     }
 
     public PinUser whoAmI(HttpServletRequest req) {
-        return userMapper.findById(jwtTokenProvider.getId(jwtTokenProvider.resolveToken(req)));
+        return userRoleListTransferService.findById(jwtTokenProvider.getId(jwtTokenProvider.resolveToken(req)));
     }
 
     public String refresh(String id) {
-        return jwtTokenProvider.createToken(id, userMapper.findById(id).getRoles());
+        return jwtTokenProvider.createToken(id, userRoleListTransferService.findById(id).getRoles());
     }
 
     public PinUser findByEmail (String email) {
