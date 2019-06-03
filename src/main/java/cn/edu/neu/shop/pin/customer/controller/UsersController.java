@@ -42,7 +42,7 @@ public class UsersController {
                     userService.findById(user.getId()));
         } catch (Exception e){
             e.printStackTrace();
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, e.getMessage(), null);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
     }
 
