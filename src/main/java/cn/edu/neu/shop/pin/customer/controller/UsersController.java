@@ -2,6 +2,7 @@ package cn.edu.neu.shop.pin.customer.controller;
 
 import cn.edu.neu.shop.pin.customer.service.AddressService;
 import cn.edu.neu.shop.pin.customer.service.OrderItemService;
+import cn.edu.neu.shop.pin.customer.service.ProductRecordService;
 import cn.edu.neu.shop.pin.customer.service.ProductService;
 import cn.edu.neu.shop.pin.customer.service.security.UserService;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
@@ -33,6 +34,9 @@ public class UsersController {
 
     @Autowired
     private OrderItemService orderItemService;
+
+    @Autowired
+    private ProductRecordService productRecordService;
 
     @PostMapping("/user-info")
     public JSONObject getUserInfo(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
@@ -139,5 +143,18 @@ public class UsersController {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
 
+    }
+
+    @GetMapping("/product-visit-record")
+    public JSONObject getUserProductRecord(HttpServletRequest httpServletRequest) {
+        try{
+            PinUser user = userService.whoAmI(httpServletRequest);
+            JSONObject data = new JSONObject();
+            data.put("list", productRecordService.getUserProductVisitRecord(user.getId()));
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
     }
 }
