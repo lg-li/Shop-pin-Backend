@@ -38,9 +38,11 @@ public class UsersController {
     public JSONObject getUserInfo(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try{
             PinUser user = userService.whoAmI(httpServletRequest);
-            
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
+                    userService.findById(user.getId()));
         } catch (Exception e){
-
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, e.getMessage(), null);
         }
     }
 
