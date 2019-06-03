@@ -29,7 +29,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         registry.enableSimpleBroker(PinConstants.WEBSOCKET_BROADCAST_PATH, PinConstants.P2P_PUSH_BASE_PATH);
         //定义一对一推送的时候前缀
         registry.setUserDestinationPrefix(PinConstants.P2P_PUSH_BASE_PATH);
-        //定义websoket前缀
+        //定义websocket消息前缀
         registry.setApplicationDestinationPrefixes(PinConstants.WEBSOCKET_PATH_PREFIX);
     }
 }
