@@ -46,8 +46,8 @@ public class UsersController {
     @Autowired
     private OrderIndividualService orderIndividualService;
 
-    @PostMapping("/user-info")
-    public JSONObject getUserInfo(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
+    @GetMapping("/info")
+    public JSONObject getUserInfo(HttpServletRequest httpServletRequest) {
         try {
             PinUser user = userService.whoAmI(httpServletRequest);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
@@ -94,9 +94,13 @@ public class UsersController {
     }
 
     @DeleteMapping("/address")
-    public JSONObject deleteAddress(HttpServletRequest httpServletRequest, @PathVariable(value = "addressId") int addressId) {
+    public JSONObject deleteAddress(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try {
             PinUser user = userService.whoAmI(httpServletRequest);
+            Integer addressId = requestJSON.getInteger("id");
+            if(addressId == null) {
+                return ResponseWrapper.wrap(PinConstants.StatusCode.PERMISSION_DENIED, "无权限删除", null);
+            }
             int code = addressService.deleteAddressByUserId(addressId, user.getId());
             if (code == AddressService.STATUS_DELETE_ADDRESS_SUCCESS) {
                 return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);

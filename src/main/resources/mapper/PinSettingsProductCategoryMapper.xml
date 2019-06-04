@@ -16,12 +16,12 @@
 
   <!-- 获得所有一级商品种类 -->
   <select id="getAllParentProductCategory" resultMap="BaseResultMap">
-      select * from pin_settings_product_category where parent_category_id is NULL
+      select * from pin_settings_product_category where parent_category_id = 0
   </select>
 
   <!-- 获得所有二级商品种类 -->
   <select id="getAllSubProductCategory" resultMap="BaseResultMap">
-    select * from pin_settings_product_category where parent_category_id is not NULL
+    select * from pin_settings_product_category where parent_category_id &lt;&gt; 0
   </select>
 
 </mapper>

@@ -41,6 +41,22 @@ public class ProductController {
     }
 
     /**
+     * 层级获取商品分类表
+     * @return JSONObject
+     */
+    @GetMapping("/category/all")
+    public JSONObject geAllCategory() {
+        try{
+            JSONObject data = new JSONObject();
+            data.put("list", productCategoryService.getProductCategoryAll());
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
+        }catch(Exception e){
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
+    /**
      * 通过商品Id 获取商品详情
      * @param productId
      * @return JSONObject
@@ -78,7 +94,7 @@ public class ProductController {
      * @param pageSize
      * @return
      */
-    @RequestMapping(value = "/hot/{pageNum}/{pageSize}", method = RequestMethod.GET)
+    @GetMapping(value = "/hot/{pageNum}/{pageSize}")
     public JSONObject getHotProducts(@PathVariable(value = "pageNum") int pageNum, @PathVariable(value = "pageSize") int pageSize) {
         try {
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS,
@@ -96,7 +112,7 @@ public class ProductController {
      * @param pageSize
      * @return
      */
-    @RequestMapping(value = "/new/{pageNum}/{pageSize}", method = RequestMethod.GET)
+    @GetMapping(value = "/new/{pageNum}/{pageSize}")
     public JSONObject getNewProducts(@PathVariable(value = "pageNum") int pageNum, @PathVariable(value = "pageSize") int pageSize) {
         try {
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS,
