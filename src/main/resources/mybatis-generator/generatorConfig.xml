@@ -14,7 +14,7 @@
             <property name="mappers" value="cn.edu.neu.shop.pin.util.base.BaseMapper"/>
         </plugin>
 
-        <jdbcConnection driverClass="${spring.datasource.driver-class-name}"
+        <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
                         connectionURL="${spring.datasource.url}"
                         userId="${spring.datasource.username}"
                         password="${spring.datasource.password}">
@@ -27,7 +27,7 @@
         <javaClientGenerator targetPackage="cn.edu.neu.shop.pin.mapper" targetProject="src/main/java"
                              type="XMLMAPPER"/>
 
-        <table schema="pin" tableName="pin_%">
+        <table schema="pin" tableName="pin_product_attribute_value">
             <!--mysql 配置-->
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
             <!--<domainObjectRenamingRule searchString="^Pin" replaceString="" />-->

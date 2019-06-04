@@ -181,9 +181,10 @@ public class UsersController {
 
     /**
      * 获取商品收藏product-collection
-     * @return
+     * @param httpServletRequest 请求对象
+     * @return 响应 JSON
      */
-    @GetMapping("/user-product-collection")
+    @GetMapping("/product-collection")
     public JSONObject getUserProductCollection(HttpServletRequest httpServletRequest) {
         PinUser user = userService.whoAmI(httpServletRequest);
         try {
@@ -198,14 +199,15 @@ public class UsersController {
 
     /**
      * 获取店铺收藏store-collection
-     * @param userId
-     * @return
+     * @param httpServletRequest 请求对象
+     * @return 响应 JSON
      */
-    @GetMapping("/user-store-collection/{userId}")
-    public JSONObject getUserStoreCollection(@PathVariable(value = "userId") Integer userId) {
+    @GetMapping("/store-collection")
+    public JSONObject getUserStoreCollection(HttpServletRequest httpServletRequest) {
+        PinUser user = userService.whoAmI(httpServletRequest);
         try {
             JSONObject data = new JSONObject();
-            data.put("list", userStoreCollectionService.getUserStoreCollection(userId));
+            data.put("list", userStoreCollectionService.getUserStoreCollection(user.getId()));
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
         } catch (Exception e) {
             e.printStackTrace();
