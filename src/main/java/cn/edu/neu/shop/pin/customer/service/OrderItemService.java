@@ -150,6 +150,11 @@ public class OrderItemService extends AbstractService<PinOrderItem>{
         return total;
     }
 
+    /**TODO:ydy 未测试
+     * 挂载orderItem到OrderIndividual
+     * @param array
+     * @param target
+     */
     @Transactional
     public void amountOrderItems(ArrayList<PinOrderItem> array,Integer target){
         for (PinOrderItem item:array){
