@@ -41,6 +41,7 @@ public class SignInController {
                     PinConstants.ResponseMessage.INVALID_CREDENTIAL,
                     null);
         }
+        // System.out.println("Login...");
         String token;
         try {
             token = userService.signIn(userFound.getId(), password);

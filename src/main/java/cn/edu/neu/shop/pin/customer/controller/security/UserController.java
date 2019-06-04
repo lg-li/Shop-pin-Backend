@@ -4,7 +4,6 @@ import cn.edu.neu.shop.pin.customer.service.security.UserService;
 import cn.edu.neu.shop.pin.dto.UserDataDTO;
 import cn.edu.neu.shop.pin.model.PinUser;
 import io.swagger.annotations.*;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

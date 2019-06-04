@@ -791,6 +791,9 @@ public class PinOrderIndividual {
         this.list = list;
     }
 
+    public PinOrderIndividual() {
+    }
+
     public PinOrderIndividual(Integer orderGroupId, Integer storeId, Integer userId, String receiverName, String receiverPhone, String deliveryAddress, Integer totalProductNumber, BigDecimal totalPrice, BigDecimal postage, BigDecimal payPrice, BigDecimal payPostage, BigDecimal balancePaidPrice, Date payTime, Boolean paid, String payType, Date createTime, Integer status, Integer refundStatus, String refundReasonImage, String refundReasonExplain, Date refundApplyTime, String refundRefuseReason, BigDecimal refundPrice, String deliveryName, String deliveryType, String deliveryId, Integer gainedCredit, String merchantRemark, String userRemark, Boolean isGroup, BigDecimal totalCost) {
         this.orderGroupId = orderGroupId;
         this.storeId = storeId;
@@ -823,5 +826,43 @@ public class PinOrderIndividual {
         this.userRemark = userRemark;
         this.isGroup = isGroup;
         this.totalCost = totalCost;
+    }
+
+    @Override
+    public String toString() {
+        return "PinOrderIndividual{" +
+                "id=" + id +
+                ", orderGroupId=" + orderGroupId +
+                ", storeId=" + storeId +
+                ", userId=" + userId +
+                ", receiverName='" + receiverName + '\'' +
+                ", receiverPhone='" + receiverPhone + '\'' +
+                ", deliveryAddress='" + deliveryAddress + '\'' +
+                ", totalProductNumber=" + totalProductNumber +
+                ", totalPrice=" + totalPrice +
+                ", postage=" + postage +
+                ", payPrice=" + payPrice +
+                ", payPostage=" + payPostage +
+                ", balancePaidPrice=" + balancePaidPrice +
+                ", payTime=" + payTime +
+                ", paid=" + paid +
+                ", payType='" + payType + '\'' +
+                ", createTime=" + createTime +
+                ", status=" + status +
+                ", refundStatus=" + refundStatus +
+                ", refundReasonImage='" + refundReasonImage + '\'' +
+                ", refundReasonExplain='" + refundReasonExplain + '\'' +
+                ", refundApplyTime=" + refundApplyTime +
+                ", refundRefuseReason='" + refundRefuseReason + '\'' +
+                ", refundPrice=" + refundPrice +
+                ", deliveryName='" + deliveryName + '\'' +
+                ", deliveryType='" + deliveryType + '\'' +
+                ", deliveryId='" + deliveryId + '\'' +
+                ", gainedCredit=" + gainedCredit +
+                ", merchantRemark='" + merchantRemark + '\'' +
+                ", userRemark='" + userRemark + '\'' +
+                ", isGroup=" + isGroup +
+                ", totalCost=" + totalCost +
+                '}';
     }
 }

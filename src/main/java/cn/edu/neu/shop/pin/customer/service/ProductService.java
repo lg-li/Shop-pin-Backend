@@ -53,10 +53,10 @@ public class ProductService extends AbstractService<PinProduct> {
      * @return
      */
     public PageInfo<PinProduct> getHotProductsByPage(int pageNum, int pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
-        List<PinProduct> list = pinProductMapper.getHotProducts();
-        return new PageInfo<>(list, pageSize);
-//        return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(()->pinProductMapper.getHotProducts());
+//        PageHelper.startPage(pageNum, pageSize);
+//        List<PinProduct> list = pinProductMapper.getHotProducts();
+//        return new PageInfo<>(list, pageSize);
+        return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(()->pinProductMapper.getHotProducts());
     }
 
     /**
@@ -67,10 +67,10 @@ public class ProductService extends AbstractService<PinProduct> {
      * @return
      */
     public PageInfo<PinProduct> getNewProductsByPage(int pageNum, int pageSize) {
-        PageHelper.startPage(pageNum, pageSize);
-        List<PinProduct> list = pinProductMapper.getNewProducts();
-        return new PageInfo<>(list, pageSize);
-//        return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(()->pinProductMapper.getHotProducts());
+//        PageHelper.startPage(pageNum, pageSize);
+//        List<PinProduct> list = pinProductMapper.getNewProducts();
+//        return new PageInfo<>(list, pageSize);
+        return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(()->pinProductMapper.getHotProducts());
     }
 
     /** TODO:ydy未测试
