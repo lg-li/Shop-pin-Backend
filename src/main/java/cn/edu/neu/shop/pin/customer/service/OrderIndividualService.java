@@ -13,17 +13,16 @@ import java.util.List;
 @Service
 public class OrderIndividualService extends AbstractService<PinOrderIndividual> {
     @Autowired
-    PinUserMapper pinUserMapper;
+    UserRoleListTransferService userRoleListTransferService;
 
     /** 传入一串PinOrderIndividual，返回它们对应的用户list
-     * TODO:ydy 未测试
      * @param list 一串PinOrderIndividual
      * @return 返回它们对应的用户list
      */
     public List<PinUser> getUsers(List<PinOrderIndividual> list){
         ArrayList<PinUser> users = new ArrayList<>();
         for (PinOrderIndividual item:list){
-            users.add(pinUserMapper.selectByPrimaryKey(item.getUserId()));
+            users.add(userRoleListTransferService.findById(item.getUserId()));
         }
         return users;
     }
