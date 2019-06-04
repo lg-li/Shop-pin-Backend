@@ -125,6 +125,9 @@ public class UsersController {
         }
     }
 
+    /**TODO:ydy 未测试
+     * 创建一个pinOrderIndividual
+     */
     @PostMapping("/order")
     public JSONObject createOrderIndividual(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestObject) {
         try {
@@ -147,6 +150,8 @@ public class UsersController {
                         payDetail.getBalancePaidPrice(), null,false,payDetail.getPayType(),
                         new Date(System.currentTimeMillis()),0,0,null,null,null,
                         null,null,null,null,null,null,null,null,null,totalCost);
+
+                //TODO:将新建的orderIndividual写到数据库中
                 return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, orderIndividual);
             }
             //如果不属于一家店铺
