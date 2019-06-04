@@ -30,6 +30,12 @@ public class PinOrderItem {
     private Integer productId;
 
     /**
+     * sku ID
+     */
+    @Column(name = "sku_id")
+    private Integer skuId;
+
+    /**
      * 商品总价
      */
     @Column(name = "total_price")
@@ -52,6 +58,35 @@ public class PinOrderItem {
      */
     @Column(name = "is_submitted")
     private Boolean isSubmitted;
+
+    /**
+     * 默认无参构造方法
+     */
+    public PinOrderItem() {
+
+    }
+
+    /**
+     * 默认满参构造方法
+     * @param amount
+     * @param userId
+     * @param productId
+     * @param skuId
+     * @param totalPrice
+     * @param totalCost
+     * @param orderIndividualId
+     * @param isSubmitted
+     */
+    public PinOrderItem(Integer amount, Integer userId, Integer productId, Integer skuId, BigDecimal totalPrice, BigDecimal totalCost, Integer orderIndividualId, Boolean isSubmitted) {
+        this.amount = amount;
+        this.userId = userId;
+        this.productId = productId;
+        this.skuId = skuId;
+        this.totalPrice = totalPrice;
+        this.totalCost = totalCost;
+        this.orderIndividualId = orderIndividualId;
+        this.isSubmitted = isSubmitted;
+    }
 
     /**
      * 获取订单已选品ID
@@ -175,5 +210,21 @@ public class PinOrderItem {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public Integer getSkuId() {
+        return skuId;
+    }
+
+    public void setSkuId(Integer skuId) {
+        this.skuId = skuId;
+    }
+
+    public Boolean getSubmitted() {
+        return isSubmitted;
+    }
+
+    public void setSubmitted(Boolean submitted) {
+        isSubmitted = submitted;
     }
 }

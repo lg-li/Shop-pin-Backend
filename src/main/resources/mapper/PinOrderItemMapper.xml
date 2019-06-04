@@ -15,7 +15,13 @@
     <result column="is_submitted" jdbcType="BIT" property="isSubmitted" />
   </resultMap>
 
-  <insert id="addOrderItem">
+  <insert id="addOrderItem" parameterType="PinOrderItem" useGeneratedKeys="true" keyProperty="id">
+    insert into pin_order_item (
+        user_id, product_id, sku_id, amount, total_price, total_cost, order_individual_id, is_submitted
+    )
+    values (
+        #{userId}, #{productId}, #{skuId}, #{amount}, 0.00, 0.00, null, 0
+    )
 
   </insert>
 

@@ -10,4 +10,6 @@ import java.math.BigDecimal;
 public interface PinProductAttributeValueMapper extends BaseMapper<PinProductAttributeValue> {
     void insertProductAttributeValue(Integer productId, String sku, Integer stock,
                                      BigDecimal price, String imageUrl, BigDecimal cost);
+
+    PinProductAttributeValue getSkuBySkuId(Integer skuId);
 }
