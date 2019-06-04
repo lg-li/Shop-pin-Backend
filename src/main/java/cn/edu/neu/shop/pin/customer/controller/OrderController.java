@@ -11,10 +11,7 @@ import com.alibaba.fastjson.JSONObject;
 import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -31,9 +28,9 @@ public class OrderController {
     private OrderGroupService orderGroupService;
 
     @GetMapping("/beg-group-order")
-    public JSONObject getGroupOrderInfo(Integer groupOrderId) {
+    public JSONObject getGroupOrderInfo(@RequestParam Integer orderGroupId) {
         try{
-            PinOrderGroup orderGroupInfo =  orderService.getOrderGroupInfo(groupOrderId);
+            PinOrderGroup orderGroupInfo =  orderService.getOrderGroupInfo(orderGroupId);
             List<PinUser> list = orderGroupService.getUsersByOrderGroup(orderGroupInfo);
             JSONObject data = new JSONObject();
             data.put("orderGroup",orderGroupInfo);

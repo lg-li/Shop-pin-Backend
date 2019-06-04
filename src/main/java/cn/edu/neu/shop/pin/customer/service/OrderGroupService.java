@@ -20,7 +20,7 @@ public class OrderGroupService {
     @Autowired
     OrderIndividualService orderIndividualService;
 
-    /**TODO:ydy 未测试
+    /**
      * 传入orderGroup 返回拼单的人
      * @param orderGroup orderGroup
      * @return 拼单的人的list
