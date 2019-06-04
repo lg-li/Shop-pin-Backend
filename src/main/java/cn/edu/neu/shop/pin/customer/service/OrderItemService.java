@@ -1,20 +1,21 @@
 package cn.edu.neu.shop.pin.customer.service;
 
 import cn.edu.neu.shop.pin.mapper.PinOrderItemMapper;
-import cn.edu.neu.shop.pin.mapper.PinUserMapper;
 import cn.edu.neu.shop.pin.model.PinOrderItem;
 import cn.edu.neu.shop.pin.model.PinProduct;
-import cn.edu.neu.shop.pin.model.PinUser;
+import cn.edu.neu.shop.pin.model.PinUserAddress;
 import cn.edu.neu.shop.pin.util.PinConstants;
+import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
 @Service
-public class OrderItemService {
+public class OrderItemService extends AbstractService<PinOrderItem>{
 
     @Autowired
     private PinOrderItemMapper pinOrderItemMapper;
@@ -27,7 +28,7 @@ public class OrderItemService {
 
 
     /**
-     * TODO:未测试
+     * TODO:ydy 未测试
      * 通过传进来的JSONArray 产生 PinOrderItem 的array
      *
      * @param array 传入的JSONArray 里面是order_item的id
@@ -44,7 +45,7 @@ public class OrderItemService {
 
 
     /**
-     * TODO:未测试
+     * TODO:ydy 未测试
      * 通过JSONArray 传入PinOrderItem的数组
      *
      * @param array 数组 里面都是PinOrderItem的对象
@@ -59,7 +60,7 @@ public class OrderItemService {
     }
 
     /**
-     * TODO:未测试
+     * TODO:ydy 未测试
      * 通过JSONArray 传入PinOrderItem的数组
      *
      * @param array 数组 里面都是PinOrderItem的对象
@@ -75,7 +76,7 @@ public class OrderItemService {
     }
 
     /**
-     * TODO:未测试
+     * TODO:ydy 未测试
      *
      * @param array 传入一个PinOrderItem数组
      * @return 返回总的邮费
@@ -100,7 +101,7 @@ public class OrderItemService {
 
         public PayDetail(Integer userId, BigDecimal totalPrice) {
             //用户余额
-            BigDecimal userBalance = userService.findById(userId.toString()).getBalance();
+            BigDecimal userBalance = userService.findById(userId).getBalance();
 
             if (userBalance.compareTo(totalPrice) >= 0) {  //如果余额足够支付，则返回余额支付态
                 payType = PinConstants.PayType.WEICHAT;
@@ -136,5 +137,24 @@ public class OrderItemService {
         }
     }
 
+    /** TODO:ydy 未测试
+     * 传入所有的PinOrderItem的list，计算得到所有的成本
+     * @param array PinOrderItem的list
+     * @return 成本
+     */
+    public BigDecimal getTotalCost(ArrayList<PinOrderItem> array) {
+        BigDecimal total = new BigDecimal("0");
+        for (PinOrderItem item : array) {
+            total = total.add(item.getTotalCost());
+        }
+        return total;
+    }
 
+    @Transactional
+    public void amountOrderItems(ArrayList<PinOrderItem> array,Integer target){
+        for (PinOrderItem item:array){
+            item.setOrderIndividualId(target);
+            update(item);
+        }
+    }
 }

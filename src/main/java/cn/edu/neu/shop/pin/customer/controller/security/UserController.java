@@ -4,6 +4,7 @@ import cn.edu.neu.shop.pin.customer.service.security.UserService;
 import cn.edu.neu.shop.pin.dto.UserDataDTO;
 import cn.edu.neu.shop.pin.model.PinUser;
 import io.swagger.annotations.*;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -31,7 +32,7 @@ public class UserController {
     public String signIn(//
                          @ApiParam("Id") @RequestParam String id, //
                          @ApiParam("Password") @RequestParam String password) {
-        return userService.signIn(id, password);
+        return userService.signIn(Integer.parseInt(id), password);
     }
 
     //这里在注册，保存信息，并且得到token
@@ -57,7 +58,7 @@ public class UserController {
             @ApiResponse(code = 403, message = "Access denied"), //
             @ApiResponse(code = 404, message = "The user doesn't exist"), //
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-    public String delete(@ApiParam("Id") @PathVariable String id) {
+    public Integer delete(@ApiParam("Id") @PathVariable Integer id) {
         System.out.println("123");
         userService.delete(id);
         return id;
@@ -71,7 +72,7 @@ public class UserController {
             @ApiResponse(code = 403, message = "Access denied"), //
             @ApiResponse(code = 404, message = "The user doesn't exist"), //
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-    public PinUser search(@ApiParam("Id") @RequestParam String id) {
+    public PinUser search(@ApiParam("Id") @RequestParam Integer id) {
         return userService.search(id);
     }
 
@@ -90,7 +91,7 @@ public class UserController {
     @GetMapping("/refresh")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public String refresh(HttpServletRequest req) {
-        return userService.refresh(req.getRemoteUser());
+        return userService.refresh(Integer.parseInt(req.getRemoteUser()));
     }
 
 }

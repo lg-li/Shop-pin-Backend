@@ -42,6 +42,9 @@ public class UsersController {
     @Autowired
     private UserProductCollectionService userProductCollectionService;
 
+    @Autowired
+    private OrderIndividualService orderIndividualService;
+
     @PostMapping("/user-info")
     public JSONObject getUserInfo(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try {
@@ -124,6 +127,9 @@ public class UsersController {
         }
     }
 
+    /**TODO:ydy 未测试
+     * 创建一个pinOrderIndividual
+     */
     @PostMapping("/order")
     public JSONObject createOrderIndividual(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestObject) {
         try {
@@ -137,6 +143,7 @@ public class UsersController {
                 BigDecimal shippingFee = orderItemService.getAllShippingFee(list);  // 邮费
                 BigDecimal totalPrice = originallyPrice.add(shippingFee);   //总费用
                 OrderItemService.PayDetail payDetail = orderItemService.new PayDetail(user.getId(), totalPrice);    //支付详情
+                BigDecimal totalCost = orderItemService.getTotalCost(list);
 
                 PinOrderIndividual orderIndividual = new PinOrderIndividual(null, storeId, user.getId(),
                         user.getNickname(), user.getPhone(), requestObject.getString("address"),
@@ -144,7 +151,10 @@ public class UsersController {
                         shippingFee,payDetail.getPayPrice(),shippingFee/*卖家可以改动实际支付的邮费，修改的时候总价格也要修改，余额支付，实际支付也要改*/,
                         payDetail.getBalancePaidPrice(), null,false,payDetail.getPayType(),
                         new Date(System.currentTimeMillis()),0,0,null,null,null,
-                        null,null,null,null,null,null,null,null,null,null/*TODO:未完成*/);
+                        null,null,null,null,null,null,null,null,null,totalCost);
+                orderIndividualService.save(orderIndividual);
+                //将list中的PinOrderItem挂载到PinOrderIndividual上
+                orderItemService.amountOrderItems(list,orderIndividual.getId());
                 return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, orderIndividual);
             }
             //如果不属于一家店铺

@@ -25,15 +25,14 @@ public class OrderItemController {
     @Autowired
     private OrderItemService orderItemService;
 
-    @PostMapping("/add")
-    public JSONObject addProductToOrder(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
-        try{
-            PinUser user = userService.whoAmI(httpServletRequest);
-            Integer productAmount = requestJSON.getInteger("productAmount");
-            
-        } catch (Exception e) {
-
-        }
-        return null;
-    }
+//    @PostMapping("/add")
+//    public JSONObject addProductToOrder(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
+//        try{
+//            PinUser user = userService.whoAmI(httpServletRequest);
+//            Integer productAmount = requestJSON.getInteger("productAmount");
+//
+//        } catch (Exception e) {
+//
+//        }
+//    }
 }

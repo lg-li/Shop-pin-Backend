@@ -11,8 +11,8 @@ import java.util.ArrayList;
 @Component
 @Mapper
 public interface PinUserMapper extends BaseMapper<PinUser> {
-    PinUser findById(String id);    //通过id找用户
-    Boolean existsById(String id);    //是否存在有这个Id的用户
+    PinUser findById(Integer id);    //通过id找用户
+    Boolean existsById(Integer id);    //是否存在有这个Id的用户
     void save(PinUser user);    //保存用户信息
-    void deleteById(String id);   //通过id删除用户
+    void deleteById(Integer id);   //通过id删除用户
 }

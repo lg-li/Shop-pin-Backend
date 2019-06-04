@@ -22,6 +22,12 @@ public interface PinProductMapper extends BaseMapper<PinProduct> {
      * @author flyhero
      * @return
      */
-
     List<PinProduct> getHotProducts();
+
+    /**
+     * 筛选所有is_new属性为true的商品，显示在"新品"中
+     * @author flyhero
+     * @return
+     */
+    List<PinProduct> getNewProducts();
 }

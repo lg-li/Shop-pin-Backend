@@ -28,7 +28,7 @@ public class PinUserMapperTest {
 
     @Test
     public void findById() {
-        PinUser pinUser = pinUserMapper.findById("1");
+        PinUser pinUser = pinUserMapper.findById(1);
         List<PinRole> roles = PinUser.transfer(pinUser.getRoles());
         pinUser.setRoles(roles);
         System.out.println(pinUser);
@@ -36,7 +36,7 @@ public class PinUserMapperTest {
 
     @Test
     public void existsById() {
-        System.out.println(pinUserMapper.existsById("2"));
+        System.out.println(pinUserMapper.existsById(2));
     }
 
     @Test

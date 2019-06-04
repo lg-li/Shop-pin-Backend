@@ -45,9 +45,30 @@ public class ProductService extends AbstractService<PinProduct> {
         return pinProductMapper.select(pinProduct);
     }
 
+    /**
+     * TODO 分页插件还没用上
+     * 返回热门商品，支持分页操作
+     * @param pageNum 页面编号
+     * @param pageSize 页面大小
+     * @return
+     */
     public PageInfo<PinProduct> getHotProductsByPage(int pageNum, int pageSize) {
         PageHelper.startPage(pageNum, pageSize);
         List<PinProduct> list = pinProductMapper.getHotProducts();
+        return new PageInfo<>(list, pageSize);
+//        return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(()->pinProductMapper.getHotProducts());
+    }
+
+    /**
+     * TODO 分页插件还没用上
+     * 返回最新商品，支持分页操作
+     * @param pageNum 页面编号
+     * @param pageSize 页面大小
+     * @return
+     */
+    public PageInfo<PinProduct> getNewProductsByPage(int pageNum, int pageSize) {
+        PageHelper.startPage(pageNum, pageSize);
+        List<PinProduct> list = pinProductMapper.getNewProducts();
         return new PageInfo<>(list, pageSize);
 //        return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(()->pinProductMapper.getHotProducts());
     }
