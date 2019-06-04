@@ -23,7 +23,7 @@ public class PinProductAttributeValue {
     /**
      * 库存
      */
-    private String stock;
+    private Integer stock;
 
     /**
      * 价格
@@ -96,7 +96,7 @@ public class PinProductAttributeValue {
      *
      * @return stock - 库存
      */
-    public String getStock() {
+    public Integer getStock() {
         return stock;
     }
 
@@ -105,7 +105,7 @@ public class PinProductAttributeValue {
      *
      * @param stock 库存
      */
-    public void setStock(String stock) {
+    public void setStock(Integer stock) {
         this.stock = stock;
     }
 
