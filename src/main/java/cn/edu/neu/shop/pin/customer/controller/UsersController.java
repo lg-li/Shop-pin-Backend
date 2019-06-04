@@ -43,6 +43,9 @@ public class UsersController {
     @Autowired
     private UserProductCollectionService userProductCollectionService;
 
+    @Autowired
+    private OrderIndividualService orderIndividualService;
+
     @PostMapping("/user-info")
     public JSONObject getUserInfo(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try {
@@ -150,8 +153,9 @@ public class UsersController {
                         payDetail.getBalancePaidPrice(), null,false,payDetail.getPayType(),
                         new Date(System.currentTimeMillis()),0,0,null,null,null,
                         null,null,null,null,null,null,null,null,null,totalCost);
-
-                //TODO:将新建的orderIndividual写到数据库中
+                orderIndividualService.save(orderIndividual);
+                //将list中的PinOrderItem挂载到PinOrderIndividual上
+                orderItemService.amountOrderItems(list,orderIndividual.getId());
                 return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, orderIndividual);
             }
             //如果不属于一家店铺

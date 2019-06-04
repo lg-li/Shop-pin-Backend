@@ -3,16 +3,19 @@ package cn.edu.neu.shop.pin.customer.service;
 import cn.edu.neu.shop.pin.mapper.PinOrderItemMapper;
 import cn.edu.neu.shop.pin.model.PinOrderItem;
 import cn.edu.neu.shop.pin.model.PinProduct;
+import cn.edu.neu.shop.pin.model.PinUserAddress;
 import cn.edu.neu.shop.pin.util.PinConstants;
+import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
 @Service
-public class OrderItemService {
+public class OrderItemService extends AbstractService<PinOrderItem>{
 
     @Autowired
     private PinOrderItemMapper pinOrderItemMapper;
@@ -147,5 +150,11 @@ public class OrderItemService {
         return total;
     }
 
-
+    @Transactional
+    public void amountOrderItems(ArrayList<PinOrderItem> array,Integer target){
+        for (PinOrderItem item:array){
+            item.setOrderIndividualId(target);
+            update(item);
+        }
+    }
 }
