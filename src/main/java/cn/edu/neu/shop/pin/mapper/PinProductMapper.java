@@ -15,7 +15,7 @@ public interface PinProductMapper extends BaseMapper<PinProduct> {
      * @param productId
      * @return
      */
-    PinProduct getProductInfoByProductId(@Param("productId") Integer productId);
+    PinProduct getProductById(Integer productId);
 
     /**
      * 筛选所有is_hot属性为true的商品，显示在"热门商品"中
