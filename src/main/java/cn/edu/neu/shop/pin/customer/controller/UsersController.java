@@ -45,8 +45,8 @@ public class UsersController {
     @Autowired
     private OrderIndividualService orderIndividualService;
 
-    @PostMapping("/user-info")
-    public JSONObject getUserInfo(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
+    @GetMapping("/info")
+    public JSONObject getUserInfo(HttpServletRequest httpServletRequest) {
         try {
             PinUser user = userService.whoAmI(httpServletRequest);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
@@ -93,9 +93,13 @@ public class UsersController {
     }
 
     @DeleteMapping("/address")
-    public JSONObject deleteAddress(HttpServletRequest httpServletRequest, @PathVariable(value = "addressId") Integer addressId) {
+    public JSONObject deleteAddress(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try {
             PinUser user = userService.whoAmI(httpServletRequest);
+            Integer addressId = requestJSON.getInteger("id");
+            if(addressId == null) {
+                return ResponseWrapper.wrap(PinConstants.StatusCode.PERMISSION_DENIED, "无权限删除", null);
+            }
             int code = addressService.deleteAddressByUserId(addressId, user.getId());
             if (code == AddressService.STATUS_DELETE_ADDRESS_SUCCESS) {
                 return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
@@ -187,7 +191,7 @@ public class UsersController {
      * @param httpServletRequest 请求对象
      * @return 响应 JSON
      */
-    @GetMapping("/get-product-collection")
+    @GetMapping("/product-collection")
     public JSONObject getUserProductCollection(HttpServletRequest httpServletRequest) {
         PinUser user = userService.whoAmI(httpServletRequest);
         try {
@@ -205,7 +209,7 @@ public class UsersController {
      * @param httpServletRequest 请求对象
      * @return 响应 JSON
      */
-    @GetMapping("/get-store-collection")
+    @GetMapping("/store-collection")
     public JSONObject getUserStoreCollection(HttpServletRequest httpServletRequest) {
         PinUser user = userService.whoAmI(httpServletRequest);
         try {
@@ -218,7 +222,7 @@ public class UsersController {
         }
     }
 
-    @PostMapping("/add-product-collection")
+    @PostMapping("/product-collection")
     public JSONObject addProductToCollection(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try{
             PinUser user = userService.whoAmI(httpServletRequest);
@@ -232,7 +236,7 @@ public class UsersController {
         }
     }
 
-    @PostMapping("/add-store-collection")
+    @PostMapping("/store-collection")
     public JSONObject addStoreToCollection(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try{
             PinUser user = userService.whoAmI(httpServletRequest);

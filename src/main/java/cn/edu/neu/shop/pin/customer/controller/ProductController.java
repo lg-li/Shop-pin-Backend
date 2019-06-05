@@ -9,6 +9,9 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * @author LLG
+ */
 @RestController
 @RequestMapping("/commons/product")
 public class ProductController {
@@ -41,8 +44,40 @@ public class ProductController {
     }
 
     /**
+     * 层级获取商品分类表
+     * @return JSONObject
+     */
+    @GetMapping("/category/all")
+    public JSONObject geAllCategory() {
+        try{
+            JSONObject data = new JSONObject();
+            data.put("list", productCategoryService.getProductCategoryAll());
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
+        }catch(Exception e){
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
+    /**
+     * 层级获取商品分类表
+     * @return JSONObject
+     */
+    @GetMapping("/by-category/{categoryId}/{pageNum}/{pageSize}")
+    public JSONObject geProductByCategoryId(@PathVariable(value = "categoryId") Integer categoryId, @PathVariable(value = "pageNum") int pageNum, @PathVariable(value = "pageSize") int pageSize) {
+        try{
+            JSONObject data = new JSONObject();
+            data.put("list", productService.getProductByCategoryIdByPage(categoryId, pageNum, pageSize));
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
+        }catch(Exception e){
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
+    /**
      * 通过商品Id 获取商品详情
-     * @param productId
+     * @param productId 商品 ID
      * @return JSONObject
      */
     @GetMapping("/{productId}")
@@ -58,7 +93,7 @@ public class ProductController {
 
     /**
      * 根据商品Id 获取该商品评论信息
-     * @param productId
+     * @param productId 商品 ID
      * @return JSONObject
      */
     @GetMapping("/{productId}/user-comment")
@@ -75,11 +110,11 @@ public class ProductController {
 
     /**
      * 获取热门商品信息，支持分页操作
-     * @param pageNum
-     * @param pageSize
-     * @return
+     * @param pageNum  分页号
+     * @param pageSize 分页大小
+     * @return 分页的商品规范JSON
      */
-    @RequestMapping(value = "/hot/{pageNum}/{pageSize}", method = RequestMethod.GET)
+    @GetMapping(value = "/hot/{pageNum}/{pageSize}")
     public JSONObject getHotProducts(@PathVariable(value = "pageNum") int pageNum, @PathVariable(value = "pageSize") int pageSize) {
         try {
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS,
@@ -93,11 +128,11 @@ public class ProductController {
 
     /**
      * 获取全新商品信息，支持分页操作
-     * @param pageNum
-     * @param pageSize
-     * @return
+     * @param pageNum  分页号
+     * @param pageSize 分页大小
+     * @return 分页的商品规范JSON
      */
-    @RequestMapping(value = "/new/{pageNum}/{pageSize}", method = RequestMethod.GET)
+    @GetMapping(value = "/new/{pageNum}/{pageSize}")
     public JSONObject getNewProducts(@PathVariable(value = "pageNum") int pageNum, @PathVariable(value = "pageSize") int pageSize) {
         try {
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS,
