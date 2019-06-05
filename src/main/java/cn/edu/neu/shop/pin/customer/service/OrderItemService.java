@@ -5,7 +5,6 @@ import cn.edu.neu.shop.pin.mapper.PinProductAttributeValueMapper;
 import cn.edu.neu.shop.pin.model.PinOrderItem;
 import cn.edu.neu.shop.pin.model.PinProduct;
 import cn.edu.neu.shop.pin.model.PinProductAttributeValue;
-import cn.edu.neu.shop.pin.model.PinUserAddress;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONArray;
@@ -14,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.ArrayList;
 
 @Service
@@ -38,12 +38,11 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     /**
      * TODO:ydy 未测试
      * 通过传进来的JSONArray 产生 PinOrderItem 的array
-     *
      * @param array 传入的JSONArray 里面是order_item的id
      * @return 返回由PinOrderItem组成的ArrayList
      */
-    public ArrayList<PinOrderItem> getItemListByJSONArray(JSONArray array) {
-        ArrayList<PinOrderItem> list = new ArrayList<>();
+    public List<PinOrderItem> getItemListByJSONArray(JSONArray array) {
+        List<PinOrderItem> list = new ArrayList<>();
         for (int i = 0; i < array.size(); i++) {
             //这个selectByPrimaryKey 不知道有没有用
             list.add(pinOrderItemMapper.selectByPrimaryKey(array.getInteger(i)));
@@ -51,15 +50,13 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
         return list;
     }
 
-
     /**
      * TODO:ydy 未测试
      * 通过JSONArray 传入PinOrderItem的数组
-     *
      * @param array 数组 里面都是PinOrderItem的对象
      * @return 返回商品总数
      */
-    public Integer getProductAmount(ArrayList<PinOrderItem> array) {
+    public Integer getProductAmount(List<PinOrderItem> array) {
         Integer amount = 0;
         for (PinOrderItem item : array) {
             amount += item.getAmount();
@@ -70,11 +67,10 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     /**
      * TODO:ydy 未测试
      * 通过JSONArray 传入PinOrderItem的数组
-     *
      * @param array 数组 里面都是PinOrderItem的对象
      * @return 返回商品总数
      */
-    public BigDecimal getProductTotalPrice(ArrayList<PinOrderItem> array) {
+    public BigDecimal getProductTotalPrice(List<PinOrderItem> array) {
         //BigDecimal 尽量用字符串初始化
         BigDecimal price = new BigDecimal("0");
         for (PinOrderItem item : array) {
@@ -85,11 +81,10 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
 
     /**
      * TODO:ydy 未测试
-     *
      * @param array 传入一个PinOrderItem数组
      * @return 返回总的邮费
      */
-    public BigDecimal getAllShippingFee(ArrayList<PinOrderItem> array) {
+    public BigDecimal getAllShippingFee(List<PinOrderItem> array) {
         BigDecimal shippingFee = new BigDecimal("0");
         PinProduct product;
         for (PinOrderItem item : array) {
@@ -150,7 +145,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
      * @param array PinOrderItem的list
      * @return 成本
      */
-    public BigDecimal getTotalCost(ArrayList<PinOrderItem> array) {
+    public BigDecimal getTotalCost(List<PinOrderItem> array) {
         BigDecimal total = new BigDecimal("0");
         for (PinOrderItem item : array) {
             total = total.add(item.getTotalCost());
@@ -164,7 +159,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
      * @param target
      */
     @Transactional
-    public void amountOrderItems(ArrayList<PinOrderItem> array,Integer target){
+    public void amountOrderItems(List<PinOrderItem> array, Integer target) {
         for (PinOrderItem item:array){
             item.setOrderIndividualId(target);
             update(item);

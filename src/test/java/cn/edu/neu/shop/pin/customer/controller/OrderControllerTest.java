@@ -28,6 +28,17 @@ import static org.junit.Assert.*;
 public class OrderControllerTest extends UserCredentialNeededTest {
 
     @Test
+    public void testAddOrderItem() throws Exception {
+        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/order-item/add")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn().getResponse().getContentAsString();
+
+        System.out.println("返回的json=" + result);
+    }
+
+    @Test
     public void getGroupOrderInfo() throws Exception {
         String result;
         result = mvc.perform(MockMvcRequestBuilders.get("/commons/order/beg-group-order").param("orderGroupId","1")
