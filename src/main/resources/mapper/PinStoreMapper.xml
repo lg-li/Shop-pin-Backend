@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.edu.neu.shop.pin.mapper.PinStoreMapper">
-  <resultMap id="BaseResultMap" type="cn.edu.neu.shop.pin.model.PinStore">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="description" jdbcType="VARCHAR" property="description" />
-    <result column="phone" jdbcType="VARCHAR" property="phone" />
-    <result column="email" jdbcType="VARCHAR" property="email" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="logo_url" jdbcType="VARCHAR" property="logoUrl" />
-    <result column="owner_user_id" jdbcType="INTEGER" property="ownerUserId" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="cn.edu.neu.shop.pin.model.PinStore">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="logo_url" jdbcType="VARCHAR" property="logoUrl"/>
+        <result column="owner_user_id" jdbcType="INTEGER" property="ownerUserId"/>
+    </resultMap>
+
+    <select id="selectByOwnerId" resultMap="BaseResultMap">
+        select * from pin_store where owner_user_id=#{owner_user_id}
+    </select>
 </mapper>
