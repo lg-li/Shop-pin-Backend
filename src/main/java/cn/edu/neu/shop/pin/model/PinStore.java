@@ -193,4 +193,18 @@ public class PinStore {
     public void setOwnerUserId(Integer ownerUserId) {
         this.ownerUserId = ownerUserId;
     }
+
+    @Override
+    public String toString() {
+        return "PinStore{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", phone='" + phone + '\'' +
+                ", email='" + email + '\'' +
+                ", createTime=" + createTime +
+                ", logoUrl='" + logoUrl + '\'' +
+                ", ownerUserId=" + ownerUserId +
+                '}';
+    }
 }
