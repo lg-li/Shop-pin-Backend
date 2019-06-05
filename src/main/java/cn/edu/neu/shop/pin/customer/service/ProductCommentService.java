@@ -16,7 +16,7 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
 
     /**
      * 根据商品ID 获取该商品评论信息
-     * @param productId
+     * @param productId 商品 ID
      * @return List
      */
     public List<PinUserProductComment> getCommentByProductId(Integer productId){
