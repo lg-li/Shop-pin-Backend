@@ -2,10 +2,7 @@ package cn.edu.neu.shop.pin.service;
 
 import cn.edu.neu.shop.pin.mapper.PinOrderItemMapper;
 import cn.edu.neu.shop.pin.mapper.PinProductAttributeValueMapper;
-import cn.edu.neu.shop.pin.model.PinOrderItem;
-import cn.edu.neu.shop.pin.model.PinProduct;
-import cn.edu.neu.shop.pin.model.PinProductAttributeValue;
-import cn.edu.neu.shop.pin.model.PinStore;
+import cn.edu.neu.shop.pin.model.*;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONArray;
@@ -25,6 +22,9 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
 
     public static final int STATUS_ADD_ORDER_ITEM_SUCCESS = 0;
     public static final int STATUS_ADD_ORDER_ITEM_INVALID_ID = -1;
+    public static final int STATUS_DELETE_ORDER_ITEM_SUCCESS = 0;
+    public static final int STATUS_DELETE_ORDER_ITEM_INVALID_ID = -1;
+    public static final int STATUS_DELETE_ORDER_ITEM_PERMISSION_DENIED = -2;
 
     @Autowired
     private PinOrderItemMapper pinOrderItemMapper;
@@ -45,6 +45,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     /**
      * TODO:ydy 未测试
      * 通过传进来的JSONArray 产生 PinOrderItem 的array
+     *
      * @param array 传入的JSONArray 里面是order_item的id
      * @return 返回由PinOrderItem组成的ArrayList
      */
@@ -60,6 +61,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     /**
      * TODO:ydy 未测试
      * 通过JSONArray 传入PinOrderItem的数组
+     *
      * @param array 数组 里面都是PinOrderItem的对象
      * @return 返回商品总数
      */
@@ -67,6 +69,8 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
         Integer amount = 0;
         for (PinOrderItem item : array) {
             amount += item.getAmount();
+            //同时将对应的商品的amount减去相应的数量
+            productService.getProductById(item.getProductId()).setStockCount(productService.getProductById(item.getProductId()).getStockCount() - item.getAmount());
         }
         return amount;
     }
@@ -74,6 +78,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     /**
      * TODO:ydy 未测试
      * 通过JSONArray 传入PinOrderItem的数组
+     *
      * @param array 数组 里面都是PinOrderItem的对象
      * @return 返回商品总数
      */
@@ -88,6 +93,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
 
     /**
      * TODO:ydy 未测试
+     *
      * @param array 传入一个PinOrderItem数组
      * @return 返回总的邮费
      */
@@ -147,8 +153,10 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
         }
     }
 
-    /** TODO:ydy 未测试
+    /**
+     * TODO:ydy 未测试
      * 传入所有的PinOrderItem的list，计算得到所有的成本
+     *
      * @param array PinOrderItem的list
      * @return 成本
      */
@@ -160,22 +168,25 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
         return total;
     }
 
-    /**TODO:ydy 未测试
+    /**
+     * TODO:ydy 未测试
      * 挂载orderItem到OrderIndividual
+     *
      * @param array
      * @param target
      */
     @Transactional
     public void amountOrderItems(List<PinOrderItem> array, Integer target) {
-        for (PinOrderItem item:array){
+        for (PinOrderItem item : array) {
             item.setOrderIndividualId(target);
             update(item);
         }
     }
 
     /**
-     * written by flyhero
+     * flyhero
      * 添加商品到购物车（新增一条新的OrderItem记录）
+     *
      * @param userId
      * @param productId
      * @param skuId
@@ -186,7 +197,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
         // 查找对应的sku信息
         PinProductAttributeValue p = pinProductAttributeValueMapper.selectByPrimaryKey(skuId);
         PinProduct product = productService.getProductById(productId);
-        if(p == null || product == null) return STATUS_ADD_ORDER_ITEM_INVALID_ID;
+        if (p == null || product == null) return STATUS_ADD_ORDER_ITEM_INVALID_ID;
         // 计算并插入一条OrderItem记录
         BigDecimal totalPrice = p.getPrice().multiply(BigDecimal.valueOf(amount));
         BigDecimal totalCost = p.getCost().multiply(BigDecimal.valueOf(amount));
@@ -196,7 +207,9 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     }
 
     /**
+     * flyhero
      * 获取当前用户购物车中所有OrderItem的信息，加上其对应的商品、店铺、sku信息
+     *
      * @param userId
      * @return
      */
@@ -204,7 +217,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
         PinOrderItem pinOrderItem = new PinOrderItem();
         pinOrderItem.setUserId(userId);
         List<PinOrderItem> list = pinOrderItemMapper.select(pinOrderItem);
-        for(PinOrderItem p : list) {
+        for (PinOrderItem p : list) {
             PinProduct pro = productService.getProductById(p.getProductId());
             PinProductAttributeValue val = pinProductAttributeValueMapper.getSkuBySkuId(p.getSkuId());
             PinStore store = storeService.getStoreById(pro.getStoreId());
@@ -213,5 +226,17 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
             p.setProductAttributeValue(val);
         }
         return list;
+    }
+
+    @Transactional
+    public Integer deleteOrderItems(Integer userId, List<Integer> orderItemIds) {
+        PinUser user = userService.findById(userId);
+        for (Integer id : orderItemIds) {
+            PinOrderItem orderItem = pinOrderItemMapper.selectByPrimaryKey(id);
+            if (id == null) return STATUS_DELETE_ORDER_ITEM_INVALID_ID;
+            if (userId != orderItem.getUserId()) return STATUS_DELETE_ORDER_ITEM_PERMISSION_DENIED;
+            pinOrderItemMapper.delete(orderItem);
+        }
+        return STATUS_DELETE_ORDER_ITEM_SUCCESS;
     }
 }
