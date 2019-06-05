@@ -45,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/sign-up").permitAll()
                 .antMatchers("/h2-console/**/**").permitAll()
                 .antMatchers("/sign-in/default").permitAll()
-                .antMatchers("/sign-in/wechat").permitAll()
+                .antMatchers("/sign-in/wechat-mini-program").permitAll()
                 .antMatchers("/commons/product/**").permitAll()
                 // Disallow everything else..
                 .anyRequest().authenticated();
