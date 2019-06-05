@@ -59,9 +59,9 @@ public class PinOrderItem {
     @Column(name = "is_submitted")
     private Boolean isSubmitted;
 
-    private PinProduct pinProduct;
+    private PinProduct product;
 
-    private PinProductAttributeValue pinProductAttributeValue;
+    private PinProductAttributeValue productAttributeValue;
 
     /**
      * 默认无参构造方法
@@ -232,19 +232,19 @@ public class PinOrderItem {
         isSubmitted = submitted;
     }
 
-    public PinProduct getPinProduct() {
-        return pinProduct;
+    public PinProduct getProduct() {
+        return product;
     }
 
-    public void setPinProduct(PinProduct pinProduct) {
-        this.pinProduct = pinProduct;
+    public void setProduct(PinProduct product) {
+        this.product = product;
     }
 
-    public PinProductAttributeValue getPinProductAttributeValue() {
-        return pinProductAttributeValue;
+    public PinProductAttributeValue getProductAttributeValue() {
+        return productAttributeValue;
     }
 
-    public void setPinProductAttributeValue(PinProductAttributeValue pinProductAttributeValue) {
-        this.pinProductAttributeValue = pinProductAttributeValue;
+    public void setProductAttributeValue(PinProductAttributeValue productAttributeValue) {
+        this.productAttributeValue = productAttributeValue;
     }
 }

@@ -134,11 +134,11 @@ public class PinProduct {
      */
     private String description;
 
-    private PinStore pinStore;
+    private PinStore store;
 
-    private List<PinProductAttributeDefinition> pinProductAttributeDefinitions;
+    private List<PinProductAttributeDefinition> productAttributeDefinitions;
 
-    private List<PinProductAttributeValue> pinProductAttributeValues;
+    private List<PinProductAttributeValue> productAttributeValues;
 
     /**
      * 获取商品id
@@ -537,26 +537,26 @@ public class PinProduct {
     }
 
     public PinStore getStore() {
-        return pinStore;
+        return store;
     }
 
     public void setStore(PinStore store) {
-        this.pinStore = store;
+        this.store = store;
     }
 
-    public List<PinProductAttributeDefinition> getPinProductAttributeDefinitions() {
-        return pinProductAttributeDefinitions;
+    public List<PinProductAttributeDefinition> getProductAttributeDefinitions() {
+        return productAttributeDefinitions;
     }
 
-    public void setPinProductAttributeDefinitions(List<PinProductAttributeDefinition> pinProductAttributeDefinitions) {
-        this.pinProductAttributeDefinitions = pinProductAttributeDefinitions;
+    public void setProductAttributeDefinitions(List<PinProductAttributeDefinition> productAttributeDefinitions) {
+        this.productAttributeDefinitions = productAttributeDefinitions;
     }
 
-    public List<PinProductAttributeValue> getPinProductAttributeValues() {
-        return pinProductAttributeValues;
+    public List<PinProductAttributeValue> getProductAttributeValues() {
+        return productAttributeValues;
     }
 
-    public void setPinProductAttributeValues(List<PinProductAttributeValue> pinProductAttributeValues) {
-        this.pinProductAttributeValues = pinProductAttributeValues;
+    public void setProductAttributeValues(List<PinProductAttributeValue> productAttributeValues) {
+        this.productAttributeValues = productAttributeValues;
     }
 }
