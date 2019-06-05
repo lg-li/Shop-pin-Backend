@@ -1,12 +1,17 @@
 package cn.edu.neu.shop.pin.customer.service;
 
+import cn.edu.neu.shop.pin.mapper.PinProductAttributeDefinitionMapper;
+import cn.edu.neu.shop.pin.mapper.PinProductAttributeValueMapper;
 import cn.edu.neu.shop.pin.mapper.PinProductMapper;
 import cn.edu.neu.shop.pin.model.PinOrderItem;
 import cn.edu.neu.shop.pin.model.PinProduct;
+import cn.edu.neu.shop.pin.model.PinProductAttributeDefinition;
+import cn.edu.neu.shop.pin.model.PinProductAttributeValue;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONArray;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,20 +27,34 @@ public class ProductService extends AbstractService<PinProduct> {
     @Autowired
     private PinProductMapper pinProductMapper;
 
+    @Autowired
+    private PinProductAttributeDefinitionMapper pinProductAttributeDefinitionMapper;
+
+    @Autowired
+    private PinProductAttributeValueMapper pinProductAttributeValueMapper;
+
     /**
      * 根据商品Id 获取商品详情信息
-     *
      * @param productId
      * @return PinProduct类
      */
-    public PinProduct getProductByProductId(Integer productId) {
-        PinProduct pinProduct = pinProductMapper.getProductInfoByProductId(productId);
+    public PinProduct getProductById(Integer productId) {
+        PinProduct pinProduct = pinProductMapper.getProductById(productId);
+        PinProductAttributeDefinition ppad = new PinProductAttributeDefinition();
+        ppad.setProductId(productId);
+        List<PinProductAttributeDefinition> defList = pinProductAttributeDefinitionMapper.select(ppad);
+        System.out.println("defList.size(): " + defList.size());
+        PinProductAttributeValue ppav = new PinProductAttributeValue();
+        ppav.setProductId(productId);
+        List<PinProductAttributeValue> valList = pinProductAttributeValueMapper.select(ppav);
+        System.out.println("valList.size(): " + valList.size());
+        pinProduct.setPinProductAttributeDefinitions(defList);
+        pinProduct.setPinProductAttributeValues(valList);
         return pinProduct;
     }
 
     /**
      * 根据店铺Id，获取该店铺所有在售商品信息
-     *
      * @param storeId
      * @return list
      */
@@ -46,7 +65,6 @@ public class ProductService extends AbstractService<PinProduct> {
     }
 
     /**
-     * TODO 分页插件还没用上
      * 返回热门商品，支持分页操作
      * @param pageNum 页面编号
      * @param pageSize 页面大小
@@ -60,7 +78,6 @@ public class ProductService extends AbstractService<PinProduct> {
     }
 
     /**
-     * TODO 分页插件还没用上
      * 返回最新商品，支持分页操作
      * @param pageNum 页面编号
      * @param pageSize 页面大小
@@ -82,10 +99,10 @@ public class ProductService extends AbstractService<PinProduct> {
     public boolean isBelongSameStore(ArrayList<PinOrderItem> list) {
         boolean isSameStore = true;
         //判断是否属于一家店铺
-        Integer storeId = getProductByProductId(list.get(0).getProductId()).getStoreId();
+        Integer storeId = getProductById(list.get(0).getProductId()).getStoreId();
         for (PinOrderItem pinOrderItem : list) {
             Integer id = pinOrderItem.getProductId();
-            if (!storeId.equals(getProductByProductId(id).getStoreId()))
+            if (!storeId.equals(getProductById(id).getStoreId()))
                 isSameStore = false;
         }
         return isSameStore;
