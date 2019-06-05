@@ -142,7 +142,7 @@ public class UsersController {
             boolean isSameStore = productService.isBelongSameStore(list);
             //如果属于一家店铺
             if (isSameStore) {
-                int storeId = productService.getProductByProductId(list.get(0).getProductId()).getStoreId();    // 店铺id
+                int storeId = productService.getProductById(list.get(0).getProductId()).getStoreId();    // 店铺id
                 BigDecimal originallyPrice = orderItemService.getProductTotalPrice(list);   // 计算本来的价格
                 BigDecimal shippingFee = orderItemService.getAllShippingFee(list);  // 邮费
                 BigDecimal totalPrice = originallyPrice.add(shippingFee);   //总费用

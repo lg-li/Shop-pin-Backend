@@ -51,7 +51,7 @@ public class PinProductAttributeValueMapperTest {
         System.out.println("******* Inserting into proucts with 1 lines ********");
         System.out.println();
 
-        PinProduct product = pinProductMapper.getProductInfoByProductId(productId);
+        PinProduct product = pinProductMapper.getProductById(productId);
         Integer stock = product.getStockCount();
         BigDecimal price = product.getPrice();
         String imageUrl = "xxx";
@@ -73,7 +73,7 @@ public class PinProductAttributeValueMapperTest {
         System.out.println("******* Inserting into proucts with 2 lines ********");
         System.out.println();
 
-        PinProduct product = pinProductMapper.getProductInfoByProductId(productId);
+        PinProduct product = pinProductMapper.getProductById(productId);
         Integer stock = product.getStockCount();
         BigDecimal price = product.getPrice();
         String imageUrl = "xxx";
@@ -98,7 +98,7 @@ public class PinProductAttributeValueMapperTest {
         System.out.println("******* Inserting into proucts with 3 lines ********");
         System.out.println();
 
-        PinProduct product = pinProductMapper.getProductInfoByProductId(productId);
+        PinProduct product = pinProductMapper.getProductById(productId);
         Integer stock = product.getStockCount();
         BigDecimal price = product.getPrice();
         String imageUrl = "xxx";
@@ -126,7 +126,7 @@ public class PinProductAttributeValueMapperTest {
         System.out.println("******* Inserting into proucts with 4 lines ********");
         System.out.println();
 
-        PinProduct product = pinProductMapper.getProductInfoByProductId(productId);
+        PinProduct product = pinProductMapper.getProductById(productId);
         Integer stock = product.getStockCount();
         BigDecimal price = product.getPrice();
         String imageUrl = "xxx";
@@ -161,7 +161,7 @@ public class PinProductAttributeValueMapperTest {
         System.out.println("******* Inserting into proucts with 5 lines ********");
         System.out.println();
 
-        PinProduct product = pinProductMapper.getProductInfoByProductId(productId);
+        PinProduct product = pinProductMapper.getProductById(productId);
         Integer stock = product.getStockCount();
         BigDecimal price = product.getPrice();
         String imageUrl = "xxx";

@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.edu.neu.shop.pin.mapper.PinProductMapper">
+  
   <resultMap id="BaseResultMap" type="cn.edu.neu.shop.pin.model.PinProduct">
     <!--
       WARNING - @mbg.generated
     -->
-    <id column="id" jdbcType="INTEGER" property="id" />
+    <id column="pin_product.id" jdbcType="INTEGER" property="id" />
     <result column="store_id" jdbcType="INTEGER" property="storeId" />
     <result column="category_id" jdbcType="INTEGER" property="categoryId" />
     <result column="image_urls" jdbcType="VARCHAR" property="imageUrls" />
@@ -27,10 +28,82 @@
     <result column="cost" jdbcType="DECIMAL" property="cost" />
     <result column="visit_count" jdbcType="INTEGER" property="visitCount" />
     <result column="description" jdbcType="LONGVARCHAR" property="description" />
+<!--    <collection property="pinProductAttributeDefinitions"-->
+<!--                 javaType="ArrayList" ofType="PinProductAttributeDefinition"-->
+<!--                  column="pin_product.id"-->
+<!--                resultMap="PinProductAttributeDefinitionResultMap">-->
+<!--                select="getPinProductAttributeDefinitionsByProductId">-->
+<!--      <id column="product_id" property="productId" />-->
+<!--      <result column="def_id" property="id" />-->
+<!--      <result column="attribute_name" property="attributeName" />-->
+<!--      <result column="attribute_values" property="attributeValues" />-->
+<!--    </collection>-->
+<!--    <collection property="pinProductAttributeValues"-->
+<!--                javaType="ArrayList" ofType="PinProductAttributeValue"-->
+<!--                column="pin_product.id"-->
+<!--                resultMap="PinProductAttributeValueResultMap">-->
+<!--                select="getPinProductAttributeValuesByProductId">-->
+<!--      <id column="product_id" property="productId" />-->
+<!--      <result column="val_id" property="id" />-->
+<!--      <result column="sku" property="sku" />-->
+<!--      <result column="stock" property="stock" />-->
+<!--      <result column="price" property="price" />-->
+<!--      <result column="image_url" property="imageUrl" />-->
+<!--      <result column="cost" property="cost" />-->
+<!--    </collection>-->
+  </resultMap>
+  
+  <resultMap id="PinProductAttributeDefinitionResultMap" type="PinProductAttributeDefinition">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="product_id" jdbcType="INTEGER" property="productId" />
+    <result column="attr_name" jdbcType="VARCHAR" property="attributeName" />
+    <result column="attr_values" jdbcType="VARCHAR" property="attributeValues" />
+  </resultMap>
+  
+  <resultMap id="PinProductAttributeValueResultMap" type="PinProductAttributeValue">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="product_id" jdbcType="INTEGER" property="productId" />
+    <result column="sku" jdbcType="VARCHAR" property="sku" />
+    <result column="stock" jdbcType="INTEGER" property="stock" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="image_url" jdbcType="VARCHAR" property="imageUrl" />
+    <result column="cost" jdbcType="DECIMAL" property="cost" />
   </resultMap>
 
+  <!-- 获取Definition详情 -->
+  <select id="getPinProductAttributeDefinitionsByProductId" parameterType="PinProductAttributeDefinition"
+          resultMap="PinProductAttributeDefinitionResultMap">
+    select * from pin_product_attribute_definition
+    where product_id = #{productId}
+  </select>
+
+  <!-- 获取AttributeValue详情 -->
+  <select id="getPinProductAttributeValuesByProductId" parameterType="PinProductAttributeDefinition"
+          resultMap="PinProductAttributeDefinitionResultMap">
+    select * from pin_product_attribute_definition
+    where product_id = #{productId}
+  </select>
+
+<!--  &lt;!&ndash; 获取商品详情 &ndash;&gt;-->
+<!--  <select id="getProductById"  parameterType="Integer" resultMap="BaseResultMap">-->
+<!--    select-->
+<!--    pro.*,-->
+<!--    def.*,-->
+<!--    val.*-->
+<!--    from-->
+<!--    pin_product pro-->
+<!--    left outer join pin_product_attribute_definition def on pro.id = def.product_id-->
+<!--    left outer join pin_product_attribute_value val on pro.id = val.product_id-->
+<!--    where pro.id = #{productId}-->
+<!--  </select>-->
+
+<!--  &lt;!&ndash; 获取商品详情 &ndash;&gt;-->
+<!--  <select id="getProductById"  parameterType="Integer" resultMap="BaseResultMap">-->
+<!--    select * from pin_product where id = #{productId}-->
+<!--  </select>-->
+
   <!-- 根据商品ID 获取商品详情-->
-  <select id="getProductInfoByProductId"  parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="getProductById"  parameterType="Integer" resultMap="BaseResultMap">
     select * from pin_product where id = #{productId}
   </select>
 
@@ -40,11 +113,11 @@
   </select>
 
   <select id="getHotProducts" resultMap="BaseResultMap">
-    select * from pin_product
+    select * from pin_product where is_hot = 1
   </select>
 
   <select id="getNewProducts" resultMap="BaseResultMap">
-    select * from pin_product
+    select * from pin_product where is_new = 1
   </select>
 
 </mapper>

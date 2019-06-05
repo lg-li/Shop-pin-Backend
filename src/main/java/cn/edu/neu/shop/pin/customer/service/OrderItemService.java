@@ -93,7 +93,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
         BigDecimal shippingFee = new BigDecimal("0");
         PinProduct product;
         for (PinOrderItem item : array) {
-            product = productService.getProductByProductId(item.getProductId());
+            product = productService.getProductById(item.getProductId());
             if (!product.getIsFreeShipping()) {
                 shippingFee = shippingFee.add(product.getShippingFee().multiply(new BigDecimal(item.getAmount())));
             }
@@ -183,7 +183,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     public Integer addOrderItem(Integer userId, Integer productId, Integer skuId, Integer amount) {
         // 查找对应的sku信息
         PinProductAttributeValue p = pinProductAttributeValueMapper.selectByPrimaryKey(skuId);
-        PinProduct product = productService.getProductByProductId(productId);
+        PinProduct product = productService.getProductById(productId);
         if(p == null || product == null) return STATUS_ADD_ORDER_ITEM_INVALID_ID;
         // 计算并插入一条OrderItem记录
         BigDecimal totalPrice = p.getPrice().multiply(BigDecimal.valueOf(amount));

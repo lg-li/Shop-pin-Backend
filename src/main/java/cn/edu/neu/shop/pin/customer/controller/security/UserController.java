@@ -3,6 +3,9 @@ package cn.edu.neu.shop.pin.customer.controller.security;
 import cn.edu.neu.shop.pin.customer.service.security.UserService;
 import cn.edu.neu.shop.pin.dto.UserDataDTO;
 import cn.edu.neu.shop.pin.model.PinUser;
+import cn.edu.neu.shop.pin.util.PinConstants;
+import cn.edu.neu.shop.pin.util.ResponseWrapper;
+import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -82,9 +85,16 @@ public class UserController {
             @ApiResponse(code = 400, message = "Something went wrong"),
             @ApiResponse(code = 403, message = "Access denied"),
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-    public /*UserResponseDTO*/PinUser whoAmI(HttpServletRequest req) {
+    public /*UserResponseDTO*/JSONObject whoAmI(HttpServletRequest req) {
 //    return modelMapper.map(userService.whoAmI(req), UserResponseDTO.class);
-        return userService.whoAmI(req);
+        try{
+            PinUser user = userService.whoAmI(req);
+
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,null );
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
     }
 
     @GetMapping("/refresh")

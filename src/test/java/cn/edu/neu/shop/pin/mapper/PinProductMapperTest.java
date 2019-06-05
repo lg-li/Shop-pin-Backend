@@ -5,6 +5,8 @@ import cn.edu.neu.shop.pin.customer.service.ProductService;
 import cn.edu.neu.shop.pin.model.PinProduct;
 import java.util.List;
 
+import cn.edu.neu.shop.pin.model.PinProductAttributeDefinition;
+import cn.edu.neu.shop.pin.model.PinProductAttributeValue;
 import com.github.pagehelper.PageHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,12 +23,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 //@EnableAutoConfiguration
 
 @RunWith(SpringRunner.class)
-@MybatisTest
+@SpringBootTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 public class PinProductMapperTest {
 
     @Autowired
     private PinProductMapper pinProductMapper;
+
+    @Autowired
+    private ProductService productService;
 
 //    @Autowired
 //    private ProductService productService;
@@ -41,5 +46,29 @@ public class PinProductMapperTest {
             System.out.println(p);
             System.out.println();
         }
+    }
+
+    @Test
+    public void testGetProductById() {
+        PinProduct p = productService.getProductById(1);
+        System.out.println("p: " + p);
+        System.out.println("###########################");
+        System.out.println("");
+
+        System.out.println("Product: " + p.getName());
+        List<PinProductAttributeDefinition> defList = p.getPinProductAttributeDefinitions();
+        System.out.println("def: " + defList.size());
+        for(PinProductAttributeDefinition pp : defList) {
+            System.out.println(pp.getAttributeValues());
+        }
+
+        List<PinProductAttributeValue> valList = p.getPinProductAttributeValues();
+        System.out.println("val: " + valList.size());
+        for(PinProductAttributeValue pp : valList) {
+            System.out.println(pp.getSku());
+        }
+
+        System.out.println("");
+        System.out.println("###########################");
     }
 }

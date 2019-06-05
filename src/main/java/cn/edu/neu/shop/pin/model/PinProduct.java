@@ -1,5 +1,6 @@
 package cn.edu.neu.shop.pin.model;
 
+import java.util.List;
 import java.math.BigDecimal;
 import java.util.Date;
 import javax.persistence.*;
@@ -134,6 +135,10 @@ public class PinProduct {
     private String description;
 
     private PinStore store;
+
+    private List<PinProductAttributeDefinition> pinProductAttributeDefinitions;
+
+    private List<PinProductAttributeValue> pinProductAttributeValues;
 
     /**
      * 获取商品id
@@ -537,5 +542,21 @@ public class PinProduct {
 
     public void setStore(PinStore store) {
         this.store = store;
+    }
+
+    public List<PinProductAttributeDefinition> getPinProductAttributeDefinitions() {
+        return pinProductAttributeDefinitions;
+    }
+
+    public void setPinProductAttributeDefinitions(List<PinProductAttributeDefinition> pinProductAttributeDefinitions) {
+        this.pinProductAttributeDefinitions = pinProductAttributeDefinitions;
+    }
+
+    public List<PinProductAttributeValue> getPinProductAttributeValues() {
+        return pinProductAttributeValues;
+    }
+
+    public void setPinProductAttributeValues(List<PinProductAttributeValue> pinProductAttributeValues) {
+        this.pinProductAttributeValues = pinProductAttributeValues;
     }
 }
