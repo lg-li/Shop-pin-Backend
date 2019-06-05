@@ -54,7 +54,6 @@ public class ProductService extends AbstractService<PinProduct> {
 
     /**
      * 根据店铺Id，获取该店铺所有在售商品信息
-     *
      * @param storeId 店铺 ID
      * @return 商品列表
      */
@@ -66,8 +65,9 @@ public class ProductService extends AbstractService<PinProduct> {
 
     /**
      * 根据分类ID，获取该分类下所有在售商品信息
-     *
-     * @param categoryId 分类 ID
+     * @param categoryId 分类ID
+     * @param pageNum
+     * @param pageSize
      * @return 商品分页列表
      */
     public PageInfo<PinProduct> getProductByCategoryIdByPage(Integer categoryId, Integer pageNum, Integer pageSize) {
@@ -106,11 +106,10 @@ public class ProductService extends AbstractService<PinProduct> {
 
     /** TODO:ydy未测试
      * 判断传入的 order_item 是否属于同一家店铺
-     *
      * @param list 传入的数组，由order_item组成
      * @return  如果都属于同一家店铺，则返回true
      */
-    public boolean isBelongSameStore(ArrayList<PinOrderItem> list) {
+    public boolean isBelongSameStore(List<PinOrderItem> list) {
         boolean isSameStore = true;
         //判断是否属于一家店铺
         Integer storeId = getProductById(list.get(0).getProductId()).getStoreId();
