@@ -8,6 +8,7 @@ import cn.edu.neu.shop.pin.model.PinOrderItem;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -144,5 +146,13 @@ public class OrderController {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
+    }
+
+    @PostMapping("/delete-order-items")
+    public void deleteOrderItems(HttpServletRequest httpServletRequest, @RequestBody JSONObject jsonObject) {
+        JSONArray array = jsonObject.getJSONArray("orderItems");
+        List<Integer> list = array.toJavaList(Integer.class);
+        PinUser user = userService.whoAmI(httpServletRequest);
+        orderItemService.deleteOrderItems(user.getId(), list);
     }
 }
