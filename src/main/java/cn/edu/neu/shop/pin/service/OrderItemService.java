@@ -67,10 +67,17 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
      */
     public Integer getProductAmount(List<PinOrderItem> array) {
         Integer amount = 0;
+        PinProduct product;
         for (PinOrderItem item : array) {
             amount += item.getAmount();
+            product = productService.getProductById(item.getProductId());
             //同时将对应的商品的amount减去相应的数量
-            productService.getProductById(item.getProductId()).setStockCount(productService.getProductById(item.getProductId()).getStockCount() - item.getAmount());
+            if (product.getStockCount()>=item.getAmount())
+                product.setStockCount(product.getStockCount() - item.getAmount());
+            else
+                //库存不够，返回-1
+                return -1;
+
         }
         return amount;
     }
