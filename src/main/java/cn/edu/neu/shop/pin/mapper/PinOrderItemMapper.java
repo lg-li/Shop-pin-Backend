@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 @Component
 public interface PinOrderItemMapper extends BaseMapper<PinOrderItem> {
 
-    void addOrderItem(Integer productId, Integer userId, Integer amount);
+    void addOrderItem(Integer userId, Integer productId, Integer skuId, Integer amount);
 
-    PinOrderItem getUnsubmittedOrderItemByUserIdAndProductId(Integer userId, Integer productId);
+    PinOrderItem getUnsubmittedOrderItemByUserIdAndProductId(Integer userId, Integer productId, Integer skuId);
 }
