@@ -134,7 +134,7 @@ public class PinProduct {
      */
     private String description;
 
-    private PinStore store;
+    private PinStore pinStore;
 
     private List<PinProductAttributeDefinition> pinProductAttributeDefinitions;
 
@@ -537,11 +537,11 @@ public class PinProduct {
     }
 
     public PinStore getStore() {
-        return store;
+        return pinStore;
     }
 
     public void setStore(PinStore store) {
-        this.store = store;
+        this.pinStore = store;
     }
 
     public List<PinProductAttributeDefinition> getPinProductAttributeDefinitions() {

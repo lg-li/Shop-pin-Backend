@@ -5,6 +5,7 @@ import cn.edu.neu.shop.pin.mapper.PinProductAttributeValueMapper;
 import cn.edu.neu.shop.pin.model.PinOrderItem;
 import cn.edu.neu.shop.pin.model.PinProduct;
 import cn.edu.neu.shop.pin.model.PinProductAttributeValue;
+import cn.edu.neu.shop.pin.model.PinStore;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONArray;
@@ -16,6 +17,9 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.ArrayList;
 
+/**
+ * @author flyhero, ydy
+ */
 @Service
 public class OrderItemService extends AbstractService<PinOrderItem> {
 
@@ -30,6 +34,9 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private StoreService storeService;
 
     @Autowired
     private UserRoleListTransferService userService;
@@ -186,5 +193,25 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
         PinOrderItem pinOrderItem = new PinOrderItem(userId, productId, skuId, amount, totalPrice, totalCost, null, false);
         pinOrderItemMapper.insert(pinOrderItem);
         return STATUS_ADD_ORDER_ITEM_SUCCESS;
+    }
+
+    /**
+     * 获取当前用户购物车中所有OrderItem的信息，加上其对应的商品、店铺、sku信息
+     * @param userId
+     * @return
+     */
+    public List<PinOrderItem> getAllOrderItems(Integer userId) {
+        PinOrderItem pinOrderItem = new PinOrderItem();
+        pinOrderItem.setUserId(userId);
+        List<PinOrderItem> list = pinOrderItemMapper.select(pinOrderItem);
+        for(PinOrderItem p : list) {
+            PinProduct pro = productService.getProductById(p.getProductId());
+            PinProductAttributeValue val = pinProductAttributeValueMapper.getSkuBySkuId(p.getSkuId());
+            PinStore store = storeService.getStoreById(pro.getStoreId());
+            pro.setStore(store);
+            p.setPinProduct(pro);
+            p.setPinProductAttributeValue(val);
+        }
+        return list;
     }
 }
