@@ -2,10 +2,7 @@ package cn.edu.neu.shop.pin.service;
 
 import cn.edu.neu.shop.pin.mapper.PinOrderItemMapper;
 import cn.edu.neu.shop.pin.mapper.PinProductAttributeValueMapper;
-import cn.edu.neu.shop.pin.model.PinOrderItem;
-import cn.edu.neu.shop.pin.model.PinProduct;
-import cn.edu.neu.shop.pin.model.PinProductAttributeValue;
-import cn.edu.neu.shop.pin.model.PinStore;
+import cn.edu.neu.shop.pin.model.*;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONArray;
@@ -25,6 +22,9 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
 
     public static final int STATUS_ADD_ORDER_ITEM_SUCCESS = 0;
     public static final int STATUS_ADD_ORDER_ITEM_INVALID_ID = -1;
+    public static final int STATUS_DELETE_ORDER_ITEM_SUCCESS = 0;
+    public static final int STATUS_DELETE_ORDER_ITEM_INVALID_ID = -1;
+    public static final int STATUS_DELETE_ORDER_ITEM_PERMISSION_DENIED = -2;
 
     @Autowired
     private PinOrderItemMapper pinOrderItemMapper;
@@ -174,7 +174,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     }
 
     /**
-     * written by flyhero
+     * flyhero
      * 添加商品到购物车（新增一条新的OrderItem记录）
      * @param userId
      * @param productId
@@ -196,6 +196,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     }
 
     /**
+     * flyhero
      * 获取当前用户购物车中所有OrderItem的信息，加上其对应的商品、店铺、sku信息
      * @param userId
      * @return
@@ -213,5 +214,17 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
             p.setPinProductAttributeValue(val);
         }
         return list;
+    }
+
+    @Transactional
+    public Integer deleteOrderItems(Integer userId, List<Integer> orderItemIds) {
+        PinUser user = userService.findById(userId);
+        for(Integer id : orderItemIds) {
+            PinOrderItem orderItem = pinOrderItemMapper.selectByPrimaryKey(id);
+            if(id == null) return STATUS_DELETE_ORDER_ITEM_INVALID_ID;
+            if(userId != orderItem.getUserId()) return STATUS_DELETE_ORDER_ITEM_PERMISSION_DENIED;
+            pinOrderItemMapper.delete(orderItem);
+        }
+        return STATUS_DELETE_ORDER_ITEM_SUCCESS;
     }
 }
