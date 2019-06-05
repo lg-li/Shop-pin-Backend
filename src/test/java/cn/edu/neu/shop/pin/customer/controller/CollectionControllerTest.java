@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -29,27 +30,13 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = PinApplication.class)
 @WebAppConfiguration
-public class CollectionControllerTest {
-
-    @Autowired
-    PinUserProductCollectionMapper pinUserProductCollectionMapper;
-
-    @Autowired
-    PinUserStoreCollectionMapper pinUserStoreCollectionMapper;
-
-    @Autowired
-    private WebApplicationContext context;
-
-    private MockMvc mvc;
-
-    @Before
-    public void setUp() throws Exception {
-        this.mvc = MockMvcBuilders.webAppContextSetup(this.context).build();
-    }
+@EnableAutoConfiguration
+public class CollectionControllerTest extends UserCredentialNeededTest{
 
     @Test
     public void testGetUserProductCollection() throws Exception {
-        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/user/user-product-collection/1")
+        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/user/product-collection")
+                .header("Authorization", "Bear", token)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print())
