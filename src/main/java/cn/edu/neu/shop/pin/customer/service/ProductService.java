@@ -3,10 +3,8 @@ package cn.edu.neu.shop.pin.customer.service;
 import cn.edu.neu.shop.pin.mapper.PinProductAttributeDefinitionMapper;
 import cn.edu.neu.shop.pin.mapper.PinProductAttributeValueMapper;
 import cn.edu.neu.shop.pin.mapper.PinProductMapper;
-import cn.edu.neu.shop.pin.model.PinOrderItem;
-import cn.edu.neu.shop.pin.model.PinProduct;
-import cn.edu.neu.shop.pin.model.PinProductAttributeDefinition;
-import cn.edu.neu.shop.pin.model.PinProductAttributeValue;
+import cn.edu.neu.shop.pin.mapper.PinUserProductCollectionMapper;
+import cn.edu.neu.shop.pin.model.*;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -31,6 +29,9 @@ public class ProductService extends AbstractService<PinProduct> {
 
     @Autowired
     private PinProductAttributeValueMapper pinProductAttributeValueMapper;
+
+    @Autowired
+    private PinUserProductCollectionMapper pinUserProductCollectionMapper;
 
     /**
      * 根据商品Id 获取商品详情信息
@@ -101,7 +102,7 @@ public class ProductService extends AbstractService<PinProduct> {
 //        PageHelper.startPage(pageNum, pageSize);
 //        List<PinProduct> list = pinProductMapper.getNewProducts();
 //        return new PageInfo<>(list, pageSize);
-        return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(()->pinProductMapper.getHotProducts());
+        return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(()->pinProductMapper.getNewProducts());
     }
 
     /** TODO:ydy未测试
@@ -119,5 +120,15 @@ public class ProductService extends AbstractService<PinProduct> {
                 isSameStore = false;
         }
         return isSameStore;
+    }
+
+
+    public boolean isCollected(Integer userId, Integer productId) {
+        PinUserProductCollection p = new PinUserProductCollection();
+        p.setUserId(userId);
+        p.setProductId(productId);
+        List<PinUserProductCollection> list = pinUserProductCollectionMapper.select(p);
+        if(list.size() == 0) return false;
+        return true;
     }
 }
