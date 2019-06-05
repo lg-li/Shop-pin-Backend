@@ -52,13 +52,13 @@ public class PinProductMapperTest {
         System.out.println("");
 
         System.out.println("Product: " + p.getName());
-        List<PinProductAttributeDefinition> defList = p.getPinProductAttributeDefinitions();
+        List<PinProductAttributeDefinition> defList = p.getProductAttributeDefinitions();
         System.out.println("def: " + defList.size());
         for(PinProductAttributeDefinition pp : defList) {
             System.out.println(pp.getAttributeValues());
         }
 
-        List<PinProductAttributeValue> valList = p.getPinProductAttributeValues();
+        List<PinProductAttributeValue> valList = p.getProductAttributeValues();
         System.out.println("val: " + valList.size());
         for(PinProductAttributeValue pp : valList) {
             System.out.println(pp.getSku());

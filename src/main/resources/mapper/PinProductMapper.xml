@@ -28,7 +28,7 @@
     <result column="cost" jdbcType="DECIMAL" property="cost" />
     <result column="visit_count" jdbcType="INTEGER" property="visitCount" />
     <result column="description" jdbcType="LONGVARCHAR" property="description" />
-<!--    <collection property="pinProductAttributeDefinitions"-->
+<!--    <collection property="productAttributeDefinitions"-->
 <!--                 javaType="ArrayList" ofType="PinProductAttributeDefinition"-->
 <!--                  column="pin_product.id"-->
 <!--                resultMap="PinProductAttributeDefinitionResultMap">-->
@@ -38,7 +38,7 @@
 <!--      <result column="attribute_name" property="attributeName" />-->
 <!--      <result column="attribute_values" property="attributeValues" />-->
 <!--    </collection>-->
-<!--    <collection property="pinProductAttributeValues"-->
+<!--    <collection property="productAttributeValues"-->
 <!--                javaType="ArrayList" ofType="PinProductAttributeValue"-->
 <!--                column="pin_product.id"-->
 <!--                resultMap="PinProductAttributeValueResultMap">-->

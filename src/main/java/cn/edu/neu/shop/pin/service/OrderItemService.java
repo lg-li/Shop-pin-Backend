@@ -209,8 +209,8 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
             PinProductAttributeValue val = pinProductAttributeValueMapper.getSkuBySkuId(p.getSkuId());
             PinStore store = storeService.getStoreById(pro.getStoreId());
             pro.setStore(store);
-            p.setPinProduct(pro);
-            p.setPinProductAttributeValue(val);
+            p.setProduct(pro);
+            p.setProductAttributeValue(val);
         }
         return list;
     }
