@@ -48,7 +48,8 @@ public class ProductController {
     @GetMapping("/{productId}")
     public JSONObject getProductInfoByProductId(@PathVariable(value = "productId") Integer productId){
         try{
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productService.getProductByProductId(productId));
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
+                    productService.getProductByProductId(productId));
         }catch(Exception e){
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);

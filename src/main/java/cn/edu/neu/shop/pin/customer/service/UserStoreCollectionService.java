@@ -1,10 +1,14 @@
 package cn.edu.neu.shop.pin.customer.service;
 
+import cn.edu.neu.shop.pin.mapper.PinStoreMapper;
 import cn.edu.neu.shop.pin.mapper.PinUserStoreCollectionMapper;
+import cn.edu.neu.shop.pin.model.PinStore;
 import cn.edu.neu.shop.pin.model.PinUserStoreCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -14,6 +18,12 @@ import java.util.List;
 
 @Service
 public class UserStoreCollectionService {
+
+    public static final int STATUS_ADD_STORE_SUCCESS = 0;
+    public static final int STATUS_ADD_STORE_INVALID_ID = -1;
+
+    @Autowired
+    private PinStoreMapper pinStoreMapper;
 
     @Autowired
     private PinUserStoreCollectionMapper pinUserStoreCollectionMapper;
@@ -25,5 +35,22 @@ public class UserStoreCollectionService {
      */
     public List<PinUserStoreCollection> getUserStoreCollection(Integer userId) {
         return pinUserStoreCollectionMapper.getUserStoreCollection(userId);
+    }
+
+    /**
+     * 插入一条新的店铺收藏
+     * @param userId
+     * @param storeId
+     * @return
+     */
+    @Transactional
+    public Integer addStoreToCollection(Integer userId, Integer storeId) {
+        PinStore pinStore = pinStoreMapper.selectByPrimaryKey(storeId);
+        if(pinStore == null) return STATUS_ADD_STORE_INVALID_ID;
+        PinUserStoreCollection pinUserStoreCollection = new PinUserStoreCollection();
+        pinUserStoreCollection.setUserId(userId);
+        pinUserStoreCollection.setStoreId(storeId);
+        pinUserStoreCollection.setCreateTime(new Date());
+        return STATUS_ADD_STORE_SUCCESS;
     }
 }

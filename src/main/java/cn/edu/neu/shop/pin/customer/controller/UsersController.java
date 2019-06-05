@@ -94,7 +94,7 @@ public class UsersController {
     }
 
     @DeleteMapping("/address")
-    public JSONObject deleteAddress(HttpServletRequest httpServletRequest, @PathVariable(value = "addressId") int addressId) {
+    public JSONObject deleteAddress(HttpServletRequest httpServletRequest, @PathVariable(value = "addressId") Integer addressId) {
         try {
             PinUser user = userService.whoAmI(httpServletRequest);
             int code = addressService.deleteAddressByUserId(addressId, user.getId());
@@ -188,7 +188,7 @@ public class UsersController {
      * @param httpServletRequest 请求对象
      * @return 响应 JSON
      */
-    @GetMapping("/product-collection")
+    @GetMapping("/get-product-collection")
     public JSONObject getUserProductCollection(HttpServletRequest httpServletRequest) {
         PinUser user = userService.whoAmI(httpServletRequest);
         try {
@@ -206,7 +206,7 @@ public class UsersController {
      * @param httpServletRequest 请求对象
      * @return 响应 JSON
      */
-    @GetMapping("/store-collection")
+    @GetMapping("/get-store-collection")
     public JSONObject getUserStoreCollection(HttpServletRequest httpServletRequest) {
         PinUser user = userService.whoAmI(httpServletRequest);
         try {
@@ -219,7 +219,7 @@ public class UsersController {
         }
     }
 
-    @PostMapping("/product-collection")
+    @PostMapping("/add-product-collection")
     public JSONObject addProductToCollection(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try{
             PinUser user = userService.whoAmI(httpServletRequest);
@@ -227,6 +227,20 @@ public class UsersController {
             Integer productId = requestJSON.getInteger("productId");
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
                     userProductCollectionService.addProductToCollection(productId, userId));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
+    @PostMapping("/add-store-collection")
+    public JSONObject addStoreToCollection(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
+        try{
+            PinUser user = userService.whoAmI(httpServletRequest);
+            Integer userId = user.getId();
+            Integer storeId = requestJSON.getInteger("storeId");
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
+                    userStoreCollectionService.addStoreToCollection(storeId, userId));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
