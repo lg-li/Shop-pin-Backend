@@ -132,4 +132,20 @@ public class OrderController {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
     }
+
+    @GetMapping("/get-order-items")
+    public JSONObject getAllOrderItems(HttpServletRequest httpServletRequest) {
+        try {
+            PinUser user = userService.whoAmI(httpServletRequest);
+            Integer userId = user.getId();
+            List<PinOrderItem> list = orderItemService.getAllOrderItems(userId);
+            JSONObject data = new JSONObject();
+            data.put("items", list);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
+                    data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
 }
