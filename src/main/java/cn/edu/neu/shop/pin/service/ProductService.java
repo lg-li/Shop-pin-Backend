@@ -140,7 +140,7 @@ public class ProductService extends AbstractService<PinProduct> {
         return true;
     }
 
-    /**
+    /**TODO:未测试
      * 管理端，传入一个商品 queryType，返回满足条件的商品的list
      * @param products 传入一系列商品的list
      * @param queryType 传入条件
