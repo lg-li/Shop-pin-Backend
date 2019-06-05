@@ -1,8 +1,10 @@
 package cn.edu.neu.shop.pin.customer.service;
 
 import cn.edu.neu.shop.pin.mapper.PinOrderItemMapper;
+import cn.edu.neu.shop.pin.mapper.PinProductAttributeValueMapper;
 import cn.edu.neu.shop.pin.model.PinOrderItem;
 import cn.edu.neu.shop.pin.model.PinProduct;
+import cn.edu.neu.shop.pin.model.PinProductAttributeValue;
 import cn.edu.neu.shop.pin.model.PinUserAddress;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
@@ -15,10 +17,16 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 @Service
-public class OrderItemService extends AbstractService<PinOrderItem>{
+public class OrderItemService extends AbstractService<PinOrderItem> {
+
+    public static final int STATUS_ADD_ORDER_ITEM_SUCCESS = 0;
+    public static final int STATUS_ADD_ORDER_ITEM_INVALID_ID = -1;
 
     @Autowired
     private PinOrderItemMapper pinOrderItemMapper;
+
+    @Autowired
+    private PinProductAttributeValueMapper pinProductAttributeValueMapper;
 
     @Autowired
     private ProductService productService;
@@ -161,5 +169,26 @@ public class OrderItemService extends AbstractService<PinOrderItem>{
             item.setOrderIndividualId(target);
             update(item);
         }
+    }
+
+    /**
+     * written by flyhero
+     * 添加商品到购物车（新增一条新的OrderItem记录）
+     * @param userId
+     * @param productId
+     * @param skuId
+     * @param amount
+     */
+    public Integer addOrderItem(Integer userId, Integer productId, Integer skuId, Integer amount) {
+        // 查找对应的sku信息
+        PinProductAttributeValue p = pinProductAttributeValueMapper.selectByPrimaryKey(skuId);
+        PinProduct product = productService.getProductByProductId(productId);
+        if(p == null || product == null) return STATUS_ADD_ORDER_ITEM_INVALID_ID;
+        // 计算并插入一条OrderItem记录
+        BigDecimal totalPrice = p.getPrice().multiply(BigDecimal.valueOf(amount));
+        BigDecimal totalCost = p.getCost().multiply(BigDecimal.valueOf(amount));
+        PinOrderItem pinOrderItem = new PinOrderItem(userId, productId, skuId, amount, totalPrice, totalCost, null, false);
+        pinOrderItemMapper.insert(pinOrderItem);
+        return STATUS_ADD_ORDER_ITEM_SUCCESS;
     }
 }

@@ -42,6 +42,31 @@ public class PinProductAttributeValue {
     private BigDecimal cost;
 
     /**
+     * 默认无参构造方法
+     */
+    public PinProductAttributeValue() {
+
+    }
+
+    /**
+     * 满参构造方法
+     * @param productId
+     * @param sku
+     * @param stock
+     * @param price
+     * @param imageUrl
+     * @param cost
+     */
+    public PinProductAttributeValue(Integer productId, String sku, Integer stock, BigDecimal price, String imageUrl, BigDecimal cost) {
+        this.productId = productId;
+        this.sku = sku;
+        this.stock = stock;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.cost = cost;
+    }
+
+    /**
      * @return id
      */
     public Integer getId() {

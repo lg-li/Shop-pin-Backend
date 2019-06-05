@@ -27,7 +27,7 @@ public class OrderController {
     @Autowired
     private OrderGroupService orderGroupService;
 
-    @GetMapping("/beg-group-order")
+    @GetMapping("/get-group-order")
     public JSONObject getGroupOrderInfo(@RequestParam Integer orderGroupId) {
         try{
             PinOrderGroup orderGroupInfo =  orderService.getOrderGroupInfo(orderGroupId);

@@ -23,5 +23,9 @@
         #{productId}, #{sku}, #{stock}, #{price}, #{imageUrl}, #{cost}
     )
   </insert>
-  
+
+  <select id="getSkuBySkuId" resultMap="BaseResultMap" parameterType="PinProductAttributeValue">
+    select * from
+  </select>
+
 </mapper>
