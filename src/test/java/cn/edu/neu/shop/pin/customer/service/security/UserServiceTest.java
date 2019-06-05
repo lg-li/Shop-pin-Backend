@@ -1,6 +1,7 @@
 package cn.edu.neu.shop.pin.customer.service.security;
 
 import cn.edu.neu.shop.pin.PinApplication;
+import cn.edu.neu.shop.pin.service.security.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

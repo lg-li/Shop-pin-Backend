@@ -1,8 +1,8 @@
-package cn.edu.neu.shop.pin.customer.controller;
+package cn.edu.neu.shop.pin.controller;
 
 
-import cn.edu.neu.shop.pin.customer.service.ProductService;
-import cn.edu.neu.shop.pin.customer.service.StoreService;
+import cn.edu.neu.shop.pin.service.ProductService;
+import cn.edu.neu.shop.pin.service.StoreService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;

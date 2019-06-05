@@ -1,16 +1,12 @@
 package cn.edu.neu.shop.pin.security;
 
-import cn.edu.neu.shop.pin.customer.service.UserRoleListTransferService;
-import cn.edu.neu.shop.pin.mapper.PinUserMapper;
-import cn.edu.neu.shop.pin.model.PinRole;
+import cn.edu.neu.shop.pin.service.UserRoleListTransferService;
 import cn.edu.neu.shop.pin.model.PinUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @author ydy

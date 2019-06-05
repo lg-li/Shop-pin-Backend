@@ -1,9 +1,7 @@
-package cn.edu.neu.shop.pin.customer.controller;
+package cn.edu.neu.shop.pin.controller;
 
-import cn.edu.neu.shop.pin.customer.service.*;
-import cn.edu.neu.shop.pin.customer.service.security.UserService;
-import cn.edu.neu.shop.pin.model.PinOrderIndividual;
-import cn.edu.neu.shop.pin.model.PinOrderItem;
+import cn.edu.neu.shop.pin.service.*;
+import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.model.PinUserAddress;
 import cn.edu.neu.shop.pin.util.PinConstants;
@@ -13,9 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
-import java.sql.Date;
-import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/commons/user")

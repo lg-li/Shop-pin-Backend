@@ -1,6 +1,6 @@
-package cn.edu.neu.shop.pin.customer.controller.admin;
+package cn.edu.neu.shop.pin.controller.admin;
 
-import cn.edu.neu.shop.pin.customer.service.security.UserService;
+import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;

@@ -1,4 +1,4 @@
-package cn.edu.neu.shop.pin.customer.service;
+package cn.edu.neu.shop.pin.service;
 
 import cn.edu.neu.shop.pin.mapper.PinProductAttributeDefinitionMapper;
 import cn.edu.neu.shop.pin.mapper.PinProductAttributeValueMapper;

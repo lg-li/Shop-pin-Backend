@@ -1,6 +1,5 @@
-package cn.edu.neu.shop.pin.customer.service;
+package cn.edu.neu.shop.pin.service;
 
-import cn.edu.neu.shop.pin.mapper.PinUserMapper;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.util.base.AbstractService;

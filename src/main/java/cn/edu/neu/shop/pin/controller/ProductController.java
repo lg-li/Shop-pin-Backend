@@ -1,11 +1,10 @@
-package cn.edu.neu.shop.pin.customer.controller;
+package cn.edu.neu.shop.pin.controller;
 
-import cn.edu.neu.shop.pin.customer.service.ProductCategoryService;
-import cn.edu.neu.shop.pin.customer.service.ProductCommentService;
-import cn.edu.neu.shop.pin.customer.service.ProductService;
-import cn.edu.neu.shop.pin.customer.service.security.UserService;
+import cn.edu.neu.shop.pin.service.ProductCategoryService;
+import cn.edu.neu.shop.pin.service.ProductCommentService;
+import cn.edu.neu.shop.pin.service.ProductService;
+import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.model.PinUser;
-import cn.edu.neu.shop.pin.model.PinUserProductCollection;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
