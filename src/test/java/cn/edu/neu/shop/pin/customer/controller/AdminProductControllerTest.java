@@ -22,7 +22,7 @@ import org.springframework.web.context.WebApplicationContext;
 @SpringBootTest(classes = PinApplication.class)
 @WebAppConfiguration
 @EnableAutoConfiguration
-public class ProductControllerTest extends UserCredentialNeededTest{
+public class AdminProductControllerTest extends UserCredentialNeededTest{
 
     @Test
     public void testGetCategoryByLayer() throws Exception {

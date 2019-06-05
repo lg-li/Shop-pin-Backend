@@ -19,7 +19,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest(classes = PinApplication.class)
-public class StoreControllerTest extends UserCredentialNeededTest{
+public class AdminStoreControllerTest extends UserCredentialNeededTest{
 
     @Test
     public void testGetProductByStoreId() throws Exception {

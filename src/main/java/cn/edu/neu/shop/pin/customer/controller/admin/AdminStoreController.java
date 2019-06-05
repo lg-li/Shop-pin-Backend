@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping(value = "/manager/store")
-public class StoreController {
+public class AdminStoreController {
 
     @Autowired
     UserService userService;
