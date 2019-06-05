@@ -51,7 +51,7 @@ public class OrderController {
      * @param requestJSON
      * @return
      */
-    @PostMapping("/add")
+    @PostMapping("/add-order-item")
     public JSONObject addOrderItem(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try {
             PinUser user = userService.whoAmI(httpServletRequest);
