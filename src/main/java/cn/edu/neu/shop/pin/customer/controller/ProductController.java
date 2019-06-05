@@ -27,7 +27,7 @@ public class ProductController {
 
     /**
      * 层级获取商品分类表
-     * @param requestJSON
+     * @param requestJSON 请求 layer JSON数据
      * @return JSONObject
      */
     @PostMapping("/category/get-all-by-layer")
@@ -64,7 +64,7 @@ public class ProductController {
      * @return JSONObject
      */
     @GetMapping("/by-category/{categoryId}/{pageNum}/{pageSize}")
-    public JSONObject geProductByCategoryId(@PathVariable(value = "categoryId") Integer categoryId, @PathVariable(value = "pageNum") int pageNum, @PathVariable(value = "pageSize") int pageSize) {
+    public JSONObject geProductByCategoryId(@PathVariable(value = "categoryId") Integer categoryId, @PathVariable(value = "pageNum") Integer pageNum, @PathVariable(value = "pageSize") Integer pageSize) {
         try{
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productService.getProductByCategoryIdByPage(categoryId, pageNum, pageSize));
         }catch(Exception e){
@@ -94,12 +94,10 @@ public class ProductController {
      * @param productId 商品 ID
      * @return JSONObject
      */
-    @GetMapping("/{productId}/user-comment")
-    public JSONObject getCommentByProductId(@PathVariable(value = "productId") Integer productId){
+    @GetMapping("/{productId}/comment/{pageNum}/{pageSize}")
+    public JSONObject getCommentByProductIdByPage(@PathVariable(value = "productId") Integer productId, @PathVariable(value = "pageNum") Integer pageNum, @PathVariable(value = "pageSize") Integer pageSize) {
         try{
-            JSONObject data = new JSONObject();
-            data.put("list", productCommentService.getCommentByProductId(productId));
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productCommentService.getCommentByProductIdByPage(productId, pageNum, pageSize));
         }catch(Exception e){
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
@@ -113,7 +111,7 @@ public class ProductController {
      * @return 分页的商品规范JSON
      */
     @GetMapping(value = "/hot/{pageNum}/{pageSize}")
-    public JSONObject getHotProducts(@PathVariable(value = "pageNum") int pageNum, @PathVariable(value = "pageSize") int pageSize) {
+    public JSONObject getHotProducts(@PathVariable(value = "pageNum") Integer pageNum, @PathVariable(value = "pageSize") Integer pageSize) {
         try {
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS,
                     PinConstants.ResponseMessage.SUCCESS,
@@ -131,7 +129,7 @@ public class ProductController {
      * @return 分页的商品规范JSON
      */
     @GetMapping(value = "/new/{pageNum}/{pageSize}")
-    public JSONObject getNewProducts(@PathVariable(value = "pageNum") int pageNum, @PathVariable(value = "pageSize") int pageSize) {
+    public JSONObject getNewProducts(@PathVariable(value = "pageNum") Integer pageNum, @PathVariable(value = "pageSize") Integer pageSize) {
         try {
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS,
                     PinConstants.ResponseMessage.SUCCESS,

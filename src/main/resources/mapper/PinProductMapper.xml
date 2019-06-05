@@ -6,7 +6,7 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <id column="pin_product.id" jdbcType="INTEGER" property="id" />
+    <id column="id" jdbcType="INTEGER" property="id" />
     <result column="store_id" jdbcType="INTEGER" property="storeId" />
     <result column="category_id" jdbcType="INTEGER" property="categoryId" />
     <result column="image_urls" jdbcType="VARCHAR" property="imageUrls" />
