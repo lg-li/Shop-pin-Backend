@@ -25,7 +25,7 @@
   </insert>
 
   <select id="getSkuBySkuId" resultMap="BaseResultMap" parameterType="PinProductAttributeValue">
-    select * from
+    select * from pin_product_attribute_value where id = #{skuId}
   </select>
 
 </mapper>

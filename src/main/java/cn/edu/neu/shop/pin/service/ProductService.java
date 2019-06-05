@@ -9,17 +9,17 @@ import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author LLG, CQF, LYF
  */
 @Service
+@Component
 public class ProductService extends AbstractService<PinProduct> {
 
     @Autowired
@@ -50,8 +50,8 @@ public class ProductService extends AbstractService<PinProduct> {
         ppav.setProductId(productId);
         List<PinProductAttributeValue> valList = pinProductAttributeValueMapper.select(ppav);
         System.out.println("valList.size(): " + valList.size());
-        pinProduct.setPinProductAttributeDefinitions(defList);
-        pinProduct.setPinProductAttributeValues(valList);
+        pinProduct.setProductAttributeDefinitions(defList);
+        pinProduct.setProductAttributeValues(valList);
         return pinProduct;
     }
 
