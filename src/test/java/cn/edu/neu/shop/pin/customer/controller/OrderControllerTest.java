@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -24,19 +25,17 @@ import static org.junit.Assert.*;
 @SpringBootTest(classes = PinApplication.class)
 @WebAppConfiguration
 @EnableAutoConfiguration
-public class OrderControllerTest {
-    private MockMvc mvc;
-    @Autowired
-    private WebApplicationContext context;
-    @Autowired
-    protected UserService userService;
+public class OrderControllerTest extends UserCredentialNeededTest {
 
-    private String token;
+    @Test
+    public void testAddOrderItem() throws Exception {
+        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/order-item/add")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn().getResponse().getContentAsString();
 
-    @Before
-    public void setUp() throws Exception {
-        this.mvc = MockMvcBuilders.webAppContextSetup(this.context).build();
-        token = userService.signIn(1, "liyifei99");
+        System.out.println("返回的json=" + result);
     }
 
     @Test

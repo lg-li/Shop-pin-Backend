@@ -3,11 +3,16 @@ package cn.edu.neu.shop.pin.customer.controller;
 import cn.edu.neu.shop.pin.customer.service.ProductCategoryService;
 import cn.edu.neu.shop.pin.customer.service.ProductCommentService;
 import cn.edu.neu.shop.pin.customer.service.ProductService;
+import cn.edu.neu.shop.pin.customer.service.security.UserService;
+import cn.edu.neu.shop.pin.model.PinUser;
+import cn.edu.neu.shop.pin.model.PinUserProductCollection;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author LLG
@@ -15,6 +20,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/commons/product")
 public class ProductController {
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private ProductCategoryService productCategoryService;
@@ -136,6 +144,18 @@ public class ProductController {
                     productService.getNewProductsByPage(pageNum, pageSize));
         } catch (Exception e) {
             e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
+    @GetMapping(value = "/{productId}/is-collected")
+    public JSONObject isCollected(HttpServletRequest httpServletRequest, @PathVariable(value="productId") Integer productId) {
+        try {
+            PinUser user = userService.whoAmI(httpServletRequest);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS,
+                    PinConstants.ResponseMessage.SUCCESS,
+                    productService.isCollected(user.getId(), productId));
+        } catch (Exception e) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
     }
