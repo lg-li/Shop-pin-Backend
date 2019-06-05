@@ -30,4 +30,6 @@ public interface PinProductMapper extends BaseMapper<PinProduct> {
      * @return
      */
     List<PinProduct> getNewProducts();
+
+    List<PinProduct> getProductInfoByStoreId(Integer storeId);
 }
