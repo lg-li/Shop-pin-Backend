@@ -66,9 +66,7 @@ public class ProductController {
     @GetMapping("/by-category/{categoryId}/{pageNum}/{pageSize}")
     public JSONObject geProductByCategoryId(@PathVariable(value = "categoryId") Integer categoryId, @PathVariable(value = "pageNum") int pageNum, @PathVariable(value = "pageSize") int pageSize) {
         try{
-            JSONObject data = new JSONObject();
-            data.put("list", productService.getProductByCategoryIdByPage(categoryId, pageNum, pageSize));
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productService.getProductByCategoryIdByPage(categoryId, pageNum, pageSize));
         }catch(Exception e){
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);

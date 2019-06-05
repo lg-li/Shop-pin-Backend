@@ -174,6 +174,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
      * @param skuId
      * @param amount
      */
+    @Transactional
     public Integer addOrderItem(Integer userId, Integer productId, Integer skuId, Integer amount) {
         // 查找对应的sku信息
         PinProductAttributeValue p = pinProductAttributeValueMapper.selectByPrimaryKey(skuId);
