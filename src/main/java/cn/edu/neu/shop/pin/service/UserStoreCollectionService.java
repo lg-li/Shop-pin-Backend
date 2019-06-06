@@ -58,6 +58,12 @@ public class UserStoreCollectionService {
         return STATUS_ADD_STORE_SUCCESS;
     }
 
+    /**
+     * 根据userId和storeId删除一条店铺收藏
+     * @param userId
+     * @param storeId
+     * @return
+     */
     @Transactional
     public Integer deleteStoreCollection(Integer userId, Integer storeId) {
         PinStore pinStore = pinStoreMapper.selectByPrimaryKey(storeId);

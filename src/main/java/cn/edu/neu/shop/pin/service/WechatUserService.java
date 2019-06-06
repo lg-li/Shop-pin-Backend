@@ -31,6 +31,20 @@ public class WechatUserService extends AbstractService<PinWechatUser> {
     @Autowired
     PinWechatUserMapper pinWechatUserMapper;
 
+    /**
+     * 使用微信小程序登录
+     * @param code
+     * @param name
+     * @param gender
+     * @param avatarUrl
+     * @param country
+     * @param province
+     * @param city
+     * @param language
+     * @param currentIp
+     * @return
+     * @throws WeChatCredentialExchangeException
+     */
     public String signInFormWechatMiniProgram(String code, String name, int gender, String avatarUrl, String country, String province, String city, String language, String currentIp) throws WeChatCredentialExchangeException {
         final WeChatCredential wechatCredential = WeChatCredentialExchanger.fromMiniProgramCode(code);
         PinWechatUser wechatUser = new PinWechatUser();

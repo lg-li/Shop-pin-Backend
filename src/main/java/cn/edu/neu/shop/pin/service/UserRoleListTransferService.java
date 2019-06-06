@@ -35,7 +35,7 @@ public class UserRoleListTransferService extends AbstractService<PinUser> {
         return pinUserMapper.existsById(id);
     }
 
-    public List<PinRole> transfer(JSONArray list){
+    public List<PinRole> transfer(JSONArray list) {
         ArrayList<PinRole> roles = new ArrayList<>();
         for (int i = 0;i<list.size();i++){
             roles.add(PinRole.values()[list.getInteger(i)]);

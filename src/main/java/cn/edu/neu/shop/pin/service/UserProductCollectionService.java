@@ -58,6 +58,12 @@ public class UserProductCollectionService extends AbstractService<PinUserProduct
         return STATUS_ADD_PRODUCT_SUCCESS;
     }
 
+    /**
+     * 删除一条商品收藏
+     * @param userId
+     * @param productId
+     * @return
+     */
     @Transactional
     public Integer deleteStoreCollection(Integer userId, Integer productId) {
         PinProduct pinProduct = pinProductMapper.selectByPrimaryKey(productId);
