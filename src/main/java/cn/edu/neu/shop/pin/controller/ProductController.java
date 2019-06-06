@@ -51,7 +51,7 @@ public class ProductController {
     }
 
     /**
-     * 层级获取商品分类表
+     * 获取所有商品类别
      * @return JSONObject
      */
     @GetMapping("/category/all")
@@ -97,7 +97,7 @@ public class ProductController {
     }
 
     /**
-     * 根据商品Id 获取该商品评论信息
+     * 根据商品Id 获取该商品评论信息，支持分页操作
      * @param productId 商品 ID
      * @return JSONObject
      */
@@ -147,6 +147,12 @@ public class ProductController {
         }
     }
 
+    /**
+     * 判断某一商品是否已被收藏
+     * @param httpServletRequest
+     * @param productId
+     * @return
+     */
     @GetMapping(value = "/{productId}/is-collected")
     public JSONObject isCollected(HttpServletRequest httpServletRequest, @PathVariable(value="productId") Integer productId) {
         try {

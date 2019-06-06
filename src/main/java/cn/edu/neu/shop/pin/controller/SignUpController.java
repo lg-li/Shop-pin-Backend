@@ -34,6 +34,11 @@ public class SignUpController {
     @Autowired
     PinUserMapper pinUserMapper;
 
+    /**
+     * 默认注册
+     * @param signUpInfo
+     * @return
+     */
     @PostMapping("/default")
     public JSONObject signUpDefault(@RequestBody JSONObject signUpInfo) {
         try{

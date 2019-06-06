@@ -29,6 +29,11 @@ public class SignInController {
     @Autowired
     WechatUserService wechatUserService;
 
+    /**
+     * 默认登录
+     * @param loginJSON
+     * @return
+     */
     @PostMapping(value = "/default")
     public JSONObject defaultLogin(@RequestBody JSONObject loginJSON) {
         String emailOrPhone = loginJSON.getString("user");
@@ -58,6 +63,12 @@ public class SignInController {
                 token);
     }
 
+    /**
+     * 微信小程序登录
+     * @param request
+     * @param loginJSON
+     * @return
+     */
     @PostMapping(value = "/wechat-mini-program")
     public JSONObject wechatMiniProgramLogin(HttpServletRequest request, @RequestBody JSONObject loginJSON) {
         String code = loginJSON.getString("code");
@@ -84,7 +95,6 @@ public class SignInController {
                             request.getRemoteAddr()
                     )
             );
-
         } catch (WeChatCredentialExchangeException e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(
