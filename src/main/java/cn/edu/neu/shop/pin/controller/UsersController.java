@@ -324,13 +324,11 @@ public class UsersController {
      * @param httpServletRequest
      * @return
      */
-    @GetMapping("/get-user-credit-data")
+    @GetMapping("/credit-record")
     public JSONObject getUserCreditData(HttpServletRequest httpServletRequest) {
         PinUser user = userService.whoAmI(httpServletRequest);
         try {
-            JSONObject object = userCreditRecordService.getUserCreditData(user.getId());
-            JSONObject data = new JSONObject();
-            data.put("data", object);
+            JSONObject data = userCreditRecordService.getUserCreditData(user.getId());
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
         } catch (Exception e) {
             e.printStackTrace();
