@@ -1,17 +1,16 @@
 package cn.edu.neu.shop.pin.service;
 
-import cn.edu.neu.shop.pin.mapper.PinProductAttributeDefinitionMapper;
-import cn.edu.neu.shop.pin.mapper.PinProductAttributeValueMapper;
-import cn.edu.neu.shop.pin.mapper.PinProductMapper;
-import cn.edu.neu.shop.pin.mapper.PinUserProductCollectionMapper;
+import cn.edu.neu.shop.pin.mapper.*;
 import cn.edu.neu.shop.pin.model.*;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import sun.awt.image.IntegerInterleavedRaster;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +33,9 @@ public class ProductService extends AbstractService<PinProduct> {
 
     @Autowired
     private PinUserProductCollectionMapper pinUserProductCollectionMapper;
+
+    @Autowired
+    private PinSettingsProductCategoryMapper pinSettingsProductCategoryMapper;
 
     /**
      * 根据商品Id 获取商品详情信息
@@ -170,5 +172,9 @@ public class ProductService extends AbstractService<PinProduct> {
         }
         return list;
 
+    }
+    
+    public JSONObject getProductInfoFromSameStore(Integer storeId) {
+         return pinProductMapper.getProductFromSameStore(storeId);
     }
 }

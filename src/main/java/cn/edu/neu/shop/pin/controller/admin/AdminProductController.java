@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/manager/product")
+@RequestMapping(value = "/goods")
 public class AdminProductController {
     @Autowired
     UserService userService;
@@ -41,6 +41,18 @@ public class AdminProductController {
             String currentStoreId = req.getHeader("Current-Store");
             List<PinProduct> products = productMapper.getProductInfoByStoreId(Integer.parseInt(currentStoreId));
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productService.judgeQueryType(products, queryType));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
+    @GetMapping("/goodsCategory")
+    public JSONObject getProductFromSameStore(HttpServletRequest req) {
+        try{
+            String currentStoreId = req.getHeader("Current-Store");
+            JSONObject data = productService.getProductInfoFromSameStore(Integer.parseInt(currentStoreId));
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
