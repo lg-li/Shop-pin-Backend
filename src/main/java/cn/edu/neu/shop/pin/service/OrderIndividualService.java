@@ -2,11 +2,14 @@ package cn.edu.neu.shop.pin.service;
 
 import cn.edu.neu.shop.pin.exception.OrderItemsAreNotInTheSameStoreException;
 import cn.edu.neu.shop.pin.exception.ProductSoldOutException;
+import cn.edu.neu.shop.pin.exception.RecordNotFoundException;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.model.PinOrderItem;
 import cn.edu.neu.shop.pin.model.PinUser;
+import cn.edu.neu.shop.pin.model.PinUserAddress;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -26,6 +29,9 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
     @Autowired
     OrderItemService orderItemService;
 
+    @Autowired
+    AddressService addressService;
+
     /** 传入一串PinOrderIndividual，返回它们对应的用户list
      * @param list 一串PinOrderIndividual
      * @return 返回它们对应的用户list
@@ -42,12 +48,16 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
      * 提交订单，即把一条OrderItem记录变为Submitted
      * @param user
      * @param list
-     * @param address
+     * @param addressId
      * @return
      * @throws OrderItemsAreNotInTheSameStoreException
      * @throws ProductSoldOutException
      */
-    public PinOrderIndividual addOrderIndividual(PinUser user, List<PinOrderItem> list, String address) throws OrderItemsAreNotInTheSameStoreException, ProductSoldOutException {
+    public PinOrderIndividual addOrderIndividual(PinUser user, List<PinOrderItem> list, Integer addressId) throws OrderItemsAreNotInTheSameStoreException, ProductSoldOutException {
+        PinUserAddress address = addressService.findById(addressId);
+        if(address == null) {
+            throw new RecordNotFoundException("地址ID不正确");
+        }
         boolean isSameStore = productService.isBelongSameStore(list);
         //如果属于一家店铺
         if (isSameStore) {
@@ -60,14 +70,14 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
             BigDecimal originallyPrice = orderItemService.getProductTotalPrice(list);   // 计算本来的价格
             BigDecimal shippingFee = orderItemService.getAllShippingFee(list);  // 邮费
             BigDecimal totalPrice = originallyPrice.add(shippingFee);   //总费用
-            OrderItemService.PayDetail payDetail = orderItemService.new PayDetail(user.getId(), totalPrice);    //支付详情
+//            OrderItemService.PayDetail payDetail = orderItemService.new PayDetail(user.getId(), totalPrice);    //支付详情
             BigDecimal totalCost = orderItemService.getTotalCost(list);
-
+            String addressString = address.getProvince()+address.getCity()+address.getDistrict()+address.getDetail();
             PinOrderIndividual orderIndividual = new PinOrderIndividual(null, storeId, user.getId(),
-                    user.getNickname(), user.getPhone(), address,
+                    address.getRealName(), address.getPhone(), addressString,
                     orderItemService.getProductAmount(list), totalPrice/*总价格 邮费加本来的费用*/,
-                    shippingFee,payDetail.getPayPrice(),shippingFee/*卖家可以改动实际支付的邮费，修改的时候总价格也要修改，余额支付，实际支付也要改*/,
-                    payDetail.getBalancePaidPrice(), null,false,payDetail.getPayType(),
+                    shippingFee,null, /*卖家可以改动实际支付的邮费，修改的时候总价格也要修改，余额支付，实际支付也要改*/
+                    null, null,false, null,
                     new Date(System.currentTimeMillis()),0,0,null,null,null,
                     null,null,null,null,null,null,null,null,null,totalCost);
             this.save(orderIndividual);
