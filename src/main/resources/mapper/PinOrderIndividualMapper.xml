@@ -14,9 +14,8 @@
         <result column="delivery_address" jdbcType="VARCHAR" property="deliveryAddress"/>
         <result column="total_product_number" jdbcType="INTEGER" property="totalProductNumber"/>
         <result column="total_price" jdbcType="DECIMAL" property="totalPrice"/>
-        <result column="postage" jdbcType="DECIMAL" property="postage"/>
+        <result column="shipping_fee" jdbcType="DECIMAL" property="shippingFee"/>
         <result column="pay_price" jdbcType="DECIMAL" property="payPrice"/>
-        <result column="pay_postage" jdbcType="DECIMAL" property="payPostage"/>
         <result column="balance_paid_price" jdbcType="DECIMAL" property="balancePaidPrice"/>
         <result column="pay_time" jdbcType="TIMESTAMP" property="payTime"/>
         <result column="paid" jdbcType="BIT" property="paid"/>

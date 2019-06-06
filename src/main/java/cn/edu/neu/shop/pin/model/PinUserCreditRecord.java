@@ -20,18 +20,32 @@ public class PinUserCreditRecord {
      * 动账积分变化（区分正负）
      */
     @Column(name = "value_change")
-    private BigDecimal valueChange;
+    private Integer valueChange;
 
     /**
      * 动账类型, 0: 签到, 1: 购买商品; 2: 抵扣
      */
-    private Boolean type;
+    private Integer type;
 
     /**
      * 动账时间
      */
     @Column(name = "create_time")
     private Date createTime;
+
+    private Integer note;
+
+    public PinUserCreditRecord() {
+        super();
+    }
+
+    public PinUserCreditRecord(Integer userId, Integer valueChange, Integer type, Date createTime, Integer note) {
+        this.userId = userId;
+        this.valueChange = valueChange;
+        this.type = type;
+        this.createTime = createTime;
+        this.note = note;
+    }
 
     /**
      * @return id
@@ -70,7 +84,7 @@ public class PinUserCreditRecord {
      *
      * @return value_change - 动账积分变化（区分正负）
      */
-    public BigDecimal getValueChange() {
+    public Integer getValueChange() {
         return valueChange;
     }
 
@@ -79,7 +93,7 @@ public class PinUserCreditRecord {
      *
      * @param valueChange 动账积分变化（区分正负）
      */
-    public void setValueChange(BigDecimal valueChange) {
+    public void setValueChange(Integer valueChange) {
         this.valueChange = valueChange;
     }
 
@@ -88,7 +102,7 @@ public class PinUserCreditRecord {
      *
      * @return type - 动账类型, 0: 签到, 1: 购买商品; 2: 抵扣
      */
-    public Boolean getType() {
+    public Integer getType() {
         return type;
     }
 
@@ -97,7 +111,7 @@ public class PinUserCreditRecord {
      *
      * @param type 动账类型, 0: 签到, 1: 购买商品; 2: 抵扣
      */
-    public void setType(Boolean type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 
@@ -117,5 +131,13 @@ public class PinUserCreditRecord {
      */
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Integer getNote() {
+        return note;
+    }
+
+    public void setNote(Integer note) {
+        this.note = note;
     }
 }

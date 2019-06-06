@@ -62,7 +62,7 @@ CREATE TABLE `pin_order_individual`
   `delivery_address`      varchar(512)           NOT NULL COMMENT '详细地址',
   `total_product_number`  int(11) unsigned       NOT NULL DEFAULT '0' COMMENT '订单商品总数',
   `total_price`           decimal(8, 2) unsigned NOT NULL DEFAULT '0.00' COMMENT '订单总价',
-  `postage`               decimal(8, 2) unsigned NOT NULL DEFAULT '0.00' COMMENT '邮费',
+  `shippingFee`               decimal(8, 2) unsigned NOT NULL DEFAULT '0.00' COMMENT '邮费',
   `pay_price`             decimal(8, 2) unsigned NOT NULL DEFAULT '0.00' COMMENT '实际支付金额',
   `pay_postage`           decimal(8, 2) unsigned NOT NULL DEFAULT '0.00' COMMENT '支付邮费',
   `balance_paid_price`    decimal(8, 2) unsigned NOT NULL DEFAULT '0.00' COMMENT '余额支付的金额部分',

@@ -36,4 +36,11 @@
         SELECT EXISTS(SELECT 1 FROM pin_user WHERE id = #{id})
     </select>
 
+    <!-- 更新学生信息 -->
+    <update id="updateUserCredit" parameterType="Integer">
+        UPDATE pin_user
+            SET pin_user.credit = #{credit}
+         WHERE pin_user.id = #{userId}
+</update>
+
 </mapper>
