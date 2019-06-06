@@ -303,9 +303,6 @@ public class PinUser {
         this.roles = roles;
     }
 
-    public PinUser() {
-    }
-
     public PinUser(String phone, String email, String passwordHash, Date createTime, Date lastLoginTime, Date lastPaswordEditTime, String avatarUrl, String nickname, BigDecimal balance, Integer credit, String lastLoginIp, String createIp, Integer gender) {
         this.phone = phone;
         this.email = email;
