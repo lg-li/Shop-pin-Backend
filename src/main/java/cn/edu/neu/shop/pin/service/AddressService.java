@@ -21,7 +21,6 @@ public class AddressService extends AbstractService<PinUserAddress> {
 
     /**
      * 根据用户ID 查询该用户的收获地址
-     *
      * @param userId
      * @return
      */
@@ -31,6 +30,18 @@ public class AddressService extends AbstractService<PinUserAddress> {
         return pinUserAddressMapper.select(pinUserAddress);
     }
 
+    /**
+     * 根据用户Id创建地址
+     * @param userId
+     * @param realName
+     * @param phone
+     * @param province
+     * @param city
+     * @param district
+     * @param detail
+     * @param postCode
+     * @return
+     */
     @Transactional
     public PinUserAddress createAddressByUserId(Integer userId, String realName, String phone, String province, String city, String district, String detail, Integer postCode) {
         PinUserAddress pinUserAddress = assignAddress(userId, realName, phone, province, city, district, detail, postCode);
@@ -38,6 +49,12 @@ public class AddressService extends AbstractService<PinUserAddress> {
         return pinUserAddress;
     }
 
+    /**
+     * 根据用户Id删除地址
+     * @param addressId
+     * @param currentUserId
+     * @return
+     */
     @Transactional
     public int deleteAddressByUserId(Integer addressId, Integer currentUserId) {
         PinUserAddress pinUserAddress = findById(addressId);
@@ -53,13 +70,12 @@ public class AddressService extends AbstractService<PinUserAddress> {
         }
     }
 
-    @Transactional
-    public PinUserAddress updateAddressByUserId(Integer userId, String realName, String phone, String province, String city, String district, String detail, Integer postCode) {
-        PinUserAddress pinUserAddress = assignAddress(userId, realName, phone, province, city, district, detail, postCode);
-        update(pinUserAddress);
-        return pinUserAddress;
-    }
-
+    /**
+     * 根据用户Id更新地址
+     * @param currentUserId
+     * @param pinUserAddress
+     * @return
+     */
     @Transactional
     public PinUserAddress updateAddressByUserId(Integer currentUserId, PinUserAddress pinUserAddress) {
         if (pinUserAddress.getUserId().equals(currentUserId)) {
@@ -71,7 +87,18 @@ public class AddressService extends AbstractService<PinUserAddress> {
         return pinUserAddress;
     }
 
-
+    /**
+     * 修改地址
+     * @param userId
+     * @param realName
+     * @param phone
+     * @param province
+     * @param city
+     * @param district
+     * @param detail
+     * @param postCode
+     * @return
+     */
     private PinUserAddress assignAddress(Integer userId, String realName, String phone, String province, String city, String district, String detail, Integer postCode) {
         PinUserAddress pinUserAddress = new PinUserAddress();
         pinUserAddress.setUserId(userId);

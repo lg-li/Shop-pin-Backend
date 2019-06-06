@@ -38,6 +38,15 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
         return users;
     }
 
+    /**
+     * 提交订单，即把一条OrderItem记录变为Submitted
+     * @param user
+     * @param list
+     * @param address
+     * @return
+     * @throws OrderItemsAreNotInTheSameStoreException
+     * @throws ProductSoldOutException
+     */
     public PinOrderIndividual addOrderIndividual(PinUser user, List<PinOrderItem> list, String address) throws OrderItemsAreNotInTheSameStoreException, ProductSoldOutException {
         boolean isSameStore = productService.isBelongSameStore(list);
         //如果属于一家店铺

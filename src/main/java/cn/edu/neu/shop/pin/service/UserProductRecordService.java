@@ -14,6 +14,11 @@ public class UserProductRecordService extends AbstractService<PinUserProductVisi
     @Autowired
     private PinUserProductVisitRecordMapper pinUserProductVisitRecordMapper;
 
+    /**
+     * 根据userId获取商品浏览记录
+     * @param userId
+     * @return
+     */
     public List<PinUserProductVisitRecord> getUserProductVisitRecord(Integer userId) {
         PinUserProductVisitRecord pinUserProductVisitRecord = new PinUserProductVisitRecord();
         pinUserProductVisitRecord.setId(userId);
