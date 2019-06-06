@@ -43,33 +43,6 @@ public class OrderController {
     private OrderGroupService orderGroupService;
 
     /**
-     * TODO: 未测试
-     * written by flyhero
-     * 将商品添加到购物车中（新建一条OrderItem记录）
-     * @param httpServletRequest
-     * @param requestJSON
-     * @return
-     */
-    @PostMapping("/add-order-item")
-    public JSONObject addOrderItem(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
-        try {
-            PinUser user = userService.whoAmI(httpServletRequest);
-            Integer productId = requestJSON.getInteger("productId");
-            Integer skuId = requestJSON.getInteger("skuId");
-            Integer amount = requestJSON.getInteger("amount");
-            int code = orderItemService.addOrderItem(user.getId(), productId, skuId, amount);
-            if(code == OrderItemService.STATUS_ADD_ORDER_ITEM_SUCCESS) {
-                return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
-            }  else if(code == OrderItemService.STATUS_ADD_ORDER_ITEM_INVALID_ID) {
-                return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, "添加购物车失败", null);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    /**
      * 根据团单编号获取团单
      * @param orderGroupId
      * @return
@@ -137,7 +110,7 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/get-order-items")
+    @GetMapping("/order-items")
     public JSONObject getAllOrderItems(HttpServletRequest httpServletRequest) {
         try {
             PinUser user = userService.whoAmI(httpServletRequest);
@@ -153,7 +126,35 @@ public class OrderController {
         }
     }
 
-    @PostMapping("/delete-order-items")
+
+    /**
+     * TODO: 未测试
+     * written by flyhero
+     * 将商品添加到购物车中（新建一条OrderItem记录）
+     * @param httpServletRequest
+     * @param requestJSON
+     * @return
+     */
+    @PostMapping("/order-item")
+    public JSONObject addOrderItem(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
+        try {
+            PinUser user = userService.whoAmI(httpServletRequest);
+            Integer productId = requestJSON.getInteger("productId");
+            Integer skuId = requestJSON.getInteger("skuId");
+            Integer amount = requestJSON.getInteger("amount");
+            int code = orderItemService.addOrderItem(user.getId(), productId, skuId, amount);
+            if(code == OrderItemService.STATUS_ADD_ORDER_ITEM_SUCCESS) {
+                return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
+            }  else if(code == OrderItemService.STATUS_ADD_ORDER_ITEM_INVALID_ID) {
+                return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, "添加购物车失败", null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @DeleteMapping("/order-items")
     public JSONObject deleteOrderItems(HttpServletRequest httpServletRequest, @RequestBody JSONObject jsonObject) {
         try {
             JSONArray array = jsonObject.getJSONArray("orderItems");

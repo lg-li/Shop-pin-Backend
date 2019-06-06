@@ -62,6 +62,10 @@ public class PinUser {
      */
     private Integer gender;
 
+    public PinUser() {
+        super();
+    }
+
     public PinUser(String phone, String email, String password, Timestamp createTime, Timestamp lastLoginTime, Timestamp lastPaswordEditTime, String avatarUrl, String nickname, BigDecimal balance, Integer credit, String createIp, String lastLoginIp, Integer gender) {
         this.phone = phone;
         this.email = email;

@@ -55,6 +55,7 @@ public abstract class AbstractService<T> {
             field.set(model, value);
             return mapper.selectOne(model);
         } catch (ReflectiveOperationException e) {
+            e.printStackTrace();
             throw new RuntimeException("查询操作异常!");
         }
     }
