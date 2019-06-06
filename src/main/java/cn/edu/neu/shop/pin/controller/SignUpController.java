@@ -1,5 +1,6 @@
 package cn.edu.neu.shop.pin.controller;
 
+import cn.edu.neu.shop.pin.mapper.PinUserMapper;
 import cn.edu.neu.shop.pin.mapper.PinUserRoleMapper;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.model.PinUserRole;
@@ -30,10 +31,14 @@ public class SignUpController {
     private UserRoleListTransferService userRoleListTransferService;
     @Autowired
     private PinUserRoleMapper pinUserRoleMapper;
+    @Autowired
+    PinUserMapper pinUserMapper;
 
     @PostMapping("/default")
     public JSONObject signUpDefault(@RequestBody JSONObject signUpInfo) {
         try{
+            //设置角色
+            JSONArray roles = signUpInfo.getJSONArray("roles");
             String token = userService.signUpAndGetToken(
                     signUpInfo.getString("phone"),
                     signUpInfo.getString("email"),
@@ -41,13 +46,16 @@ public class SignUpController {
                     signUpInfo.getString("avatarUrl"),
                     signUpInfo.getString("nickname"),
                     signUpInfo.getString("currentIp"),
-                    signUpInfo.getInteger("gender"));
-            PinUser user = userRoleListTransferService.findById(jwtTokenProvider.getId(token));
-            //设置角色
-            JSONArray roles = signUpInfo.getJSONArray("roles");
+                    signUpInfo.getInteger("gender"),
+                    userRoleListTransferService.transfer(roles));
+            //如果在这里调findId，没有role，会报空指针
+            Integer id = jwtTokenProvider.getId(token);
+            PinUser user = pinUserMapper.selectByPrimaryKey(id);
             for (int i = 0;i<roles.size();i++){
-                pinUserRoleMapper.insert(new PinUserRole(user.getId(),roles.getInteger(i)));
+                PinUserRole role = new PinUserRole(user.getId(),roles.getInteger(i));
+                pinUserRoleMapper.insert(role);
             }
+            user = userRoleListTransferService.findById(jwtTokenProvider.getId(token));
             //创建JSONObject
             JSONObject data = new JSONObject();
             data.put("user",user);

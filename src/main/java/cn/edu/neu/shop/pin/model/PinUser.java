@@ -1,5 +1,6 @@
 package cn.edu.neu.shop.pin.model;
 
+import com.alibaba.fastjson.JSONArray;
 import io.swagger.models.auth.In;
 
 import java.math.BigDecimal;
@@ -345,4 +346,5 @@ public class PinUser {
         }
         return roleList;
     }
+
 }

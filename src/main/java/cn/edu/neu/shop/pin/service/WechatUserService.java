@@ -1,5 +1,6 @@
 package cn.edu.neu.shop.pin.service;
 
+import cn.edu.neu.shop.pin.model.PinRole;
 import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.mapper.PinUserMapper;
 import cn.edu.neu.shop.pin.mapper.PinWechatUserMapper;
@@ -11,6 +12,9 @@ import cn.edu.neu.shop.pin.util.wechat.WeChatCredentialExchangeException;
 import cn.edu.neu.shop.pin.util.wechat.WeChatCredentialExchanger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author llg
@@ -41,7 +45,9 @@ public class WechatUserService extends AbstractService<PinWechatUser> {
 
         } else {
             // 微信用户首次登录
-            PinUser newPinUser = userService.signUpAndGetNewPinUser("0", "0", "default", avatarUrl, name, currentIp, gender);
+            List<PinRole>list = new ArrayList<>();
+            list.add(PinRole.ROLE_USER);
+            PinUser newPinUser = userService.signUpAndGetNewPinUser("0", "0", "default", avatarUrl, name, currentIp, gender,list);
             wechatUser = new PinWechatUser();
             // 绑定微信用户与实体用户
             wechatUser.setUserId(newPinUser.getId());

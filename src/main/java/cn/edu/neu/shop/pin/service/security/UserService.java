@@ -1,5 +1,6 @@
 package cn.edu.neu.shop.pin.service.security;
 
+import cn.edu.neu.shop.pin.model.PinRole;
 import cn.edu.neu.shop.pin.service.UserRoleListTransferService;
 import cn.edu.neu.shop.pin.exception.CredentialException;
 import cn.edu.neu.shop.pin.model.PinUser;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.List;
 
 /**
  * @author ydy, llg
@@ -56,7 +58,7 @@ public class UserService extends AbstractService<PinUser> {
 
     public String signInFromWechatUser(PinWechatUser wechatUser) {
         PinUser pinUser = findById(wechatUser.getUserId());
-        if(pinUser == null) {
+        if (pinUser == null) {
             return null;
         }
         return jwtTokenProvider.createToken(pinUser.getId(), userRoleListTransferService.findById(wechatUser.getUserId()).getRoles());
@@ -65,34 +67,36 @@ public class UserService extends AbstractService<PinUser> {
 
     /**
      * 注册并获取新用户token
-     * @param phone 手机号
-     * @param email 邮箱
-     * @param password 密码
+     *
+     * @param phone     手机号
+     * @param email     邮箱
+     * @param password  密码
      * @param avatarUrl 头像链接
-     * @param nickname 昵称
+     * @param nickname  昵称
      * @param currentIp 当前IP
-     * @param gender 性别
+     * @param gender    性别
      * @return token
      */
-    public String signUpAndGetToken(String phone, String email, String password, String avatarUrl, String nickname, String currentIp, Integer gender) {
+    public String signUpAndGetToken(String phone, String email, String password, String avatarUrl, String nickname, String currentIp, Integer gender, List<PinRole> list) {
         PinUser pinUser = fillInCurrentTimeStampToUser(phone, email, password, avatarUrl, nickname, currentIp, gender);
-        return signUp(pinUser);
+        return signUp(pinUser,list);
     }
 
     /**
      * 注册并获取新用户实体对象
-     * @param phone 手机号
-     * @param email 邮箱
-     * @param password 密码
+     *
+     * @param phone     手机号
+     * @param email     邮箱
+     * @param password  密码
      * @param avatarUrl 头像链接
-     * @param nickname 昵称
+     * @param nickname  昵称
      * @param currentIp 当前IP
-     * @param gender 性别
+     * @param gender    性别
      * @return 实体对象
      */
-    public PinUser signUpAndGetNewPinUser(String phone, String email, String password, String avatarUrl, String nickname, String currentIp, Integer gender) {
+    public PinUser signUpAndGetNewPinUser(String phone, String email, String password, String avatarUrl, String nickname, String currentIp, Integer gender,List<PinRole> list) {
         PinUser pinUser = fillInCurrentTimeStampToUser(phone, email, password, avatarUrl, nickname, currentIp, gender);
-        signUp(pinUser);
+        signUp(pinUser,list);
         return pinUser;
     }
 
@@ -107,11 +111,11 @@ public class UserService extends AbstractService<PinUser> {
      * @param user 用户信息（密码传入时保持明文）
      * @return 登录后 Token
      */
-    private String signUp(PinUser user) {
+    private String signUp(PinUser user,List<PinRole> list) {
         if (!userRoleListTransferService.existsById(user.getId())) {
             user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
             userRoleListTransferService.save(user);
-            return jwtTokenProvider.createToken(user.getId(), user.getRoles());
+            return jwtTokenProvider.createToken(user.getId(), /*user.getRoles()*/list);
         } else {
             throw new CredentialException("Id is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
         }
@@ -137,17 +141,17 @@ public class UserService extends AbstractService<PinUser> {
         return jwtTokenProvider.createToken(id, userRoleListTransferService.findById(id).getRoles());
     }
 
-    public PinUser findByEmail (String email) {
+    public PinUser findByEmail(String email) {
         return findBy("email", email);
     }
 
-    public PinUser findByPhone (String phone) {
+    public PinUser findByPhone(String phone) {
         return findBy("phone", phone);
     }
 
-    public PinUser findByEmailOrPhone (String emailOrPhone) {
+    public PinUser findByEmailOrPhone(String emailOrPhone) {
         PinUser byEmail = findByEmail(emailOrPhone);
-        if(byEmail != null) {
+        if (byEmail != null) {
             return byEmail;
         }
         return findByPhone(emailOrPhone);
