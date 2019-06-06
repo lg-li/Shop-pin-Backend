@@ -2,8 +2,8 @@ package cn.edu.neu.shop.pin.util;
 
 public class PinConstants {
 
-    public static final String WECHAT_APP_ID = "";
-    public static final String WECHAT_SECRET_KEY = "";
+    public static final String WECHAT_APP_ID = "wx2c6c6a9247cd39b0";
+    public static final String WECHAT_SECRET_KEY = "94b2114db2aa49376df54fc6e0969962";
 
     // webSocket相关配置
     // 链接地址

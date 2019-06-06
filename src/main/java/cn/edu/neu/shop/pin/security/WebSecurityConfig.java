@@ -43,7 +43,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()//
                 .antMatchers("/user/sign-in").permitAll()
                 .antMatchers("/user/sign-up").permitAll()
-                .antMatchers("/h2-console/**/**").permitAll()
                 .antMatchers("/sign-in/default").permitAll()
                 .antMatchers("/sign-in/wechat-mini-program").permitAll()
                 .antMatchers("/commons/product/**").permitAll()

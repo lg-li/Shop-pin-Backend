@@ -62,6 +62,22 @@ public class PinUser {
      */
     private Integer gender;
 
+    public PinUser(String phone, String email, String password, Timestamp createTime, Timestamp lastLoginTime, Timestamp lastPaswordEditTime, String avatarUrl, String nickname, BigDecimal balance, Integer credit, String createIp, String lastLoginIp, Integer gender) {
+        this.phone = phone;
+        this.email = email;
+        this.passwordHash = password;
+        this.createTime = createTime;
+        this.lastLoginTime = lastLoginTime;
+        this.lastPaswordEditTime = lastPaswordEditTime;
+        this.avatarUrl = avatarUrl;
+        this.nickname = nickname;
+        this.balance = balance;
+        this.credit = credit;
+        this.createIp = createIp;
+        this.lastLoginIp = lastLoginIp;
+        this.gender = gender;
+    }
+
     /**
      * @return id
      */

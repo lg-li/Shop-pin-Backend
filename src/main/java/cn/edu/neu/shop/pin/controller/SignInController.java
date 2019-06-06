@@ -58,8 +58,8 @@ public class SignInController {
                 token);
     }
 
-    @RequestMapping(value = "/wechat-mini-program")
-    public JSONObject wechatMiniProgramLogin(HttpServletRequest request, JSONObject loginJSON) {
+    @PostMapping(value = "/wechat-mini-program")
+    public JSONObject wechatMiniProgramLogin(HttpServletRequest request, @RequestBody JSONObject loginJSON) {
         String code = loginJSON.getString("code");
         String name = loginJSON.getString("nickname");
         Integer gender = loginJSON.getInteger("gender");
@@ -93,5 +93,4 @@ public class SignInController {
                     null);
         }
     }
-
 }
