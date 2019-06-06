@@ -285,10 +285,9 @@ public class UsersController {
     public JSONObject deleteUserStoreCollection(HttpServletRequest httpServletRequest, @PathVariable Integer storeId) {
         PinUser user = userService.whoAmI(httpServletRequest);
         try {
-            JSONObject data = new JSONObject();
             int code = userProductCollectionService.deleteStoreCollection(user.getId(), storeId);
             if(code == UserStoreCollectionService.STATUS_DELETE_STORE_SUCCESS) {
-                return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
+                return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
             }
             else if(code == UserStoreCollectionService.STATUS_DELETE_STORE_PERMISSION_DENIED) {
                 return ResponseWrapper.wrap(PinConstants.StatusCode.PERMISSION_DENIED, "无权限删除", null);
@@ -301,5 +300,41 @@ public class UsersController {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
         return null;
+    }
+
+    /**
+     * 签到功能
+     * @param httpServletRequest
+     * @return
+     */
+    @GetMapping("/check-in")
+    public JSONObject checkIn(HttpServletRequest httpServletRequest) {
+        PinUser user = userService.whoAmI(httpServletRequest);
+        try {
+            userCreditRecordService.dailyCheckIn(user.getId());
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
+    /**
+     * 获取用户签到详细信息
+     * @param httpServletRequest
+     * @return
+     */
+    @GetMapping("/get-user-credit-data")
+    public JSONObject getUserCreditData(HttpServletRequest httpServletRequest) {
+        PinUser user = userService.whoAmI(httpServletRequest);
+        try {
+            JSONObject object = userCreditRecordService.getUserCreditData(user.getId());
+            JSONObject data = new JSONObject();
+            data.put("data", object);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
     }
 }
