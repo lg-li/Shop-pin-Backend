@@ -4,12 +4,10 @@ import cn.edu.neu.shop.pin.exception.CheckInFailedException;
 import cn.edu.neu.shop.pin.mapper.PinSettingsConstantMapper;
 import cn.edu.neu.shop.pin.mapper.PinUserCreditRecordMapper;
 import cn.edu.neu.shop.pin.mapper.PinUserMapper;
-import cn.edu.neu.shop.pin.model.PinSettingsConstant;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.model.PinUserCreditRecord;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -39,8 +37,10 @@ public class UserCreditRecordService {
         PinUser user = pinUserMapper.selectByPrimaryKey(userId);
         Integer credit = user.getCredit();
         data.put("credit", credit);
-        Integer checkInDays = pinUserCreditRecordMapper.getCheckInDaysNum(userId);
-        data.put("checkInDays", checkInDays);
+        Integer totalCheckInDays = pinUserCreditRecordMapper.getCheckInDaysNum(userId);
+        data.put("totalCheckInDays", totalCheckInDays);
+        Integer continuousCheckInDays = getContinuousCheckInDaysNum(userId);
+        data.put("continuousCheckInDays", continuousCheckInDays);
         PinUserCreditRecord p = new PinUserCreditRecord();
         p.setUserId(userId);
         List<PinUserCreditRecord> list = pinUserCreditRecordMapper.select(p);
@@ -55,35 +55,90 @@ public class UserCreditRecordService {
      */
     public void dailyCheckIn(Integer userId) throws Exception {
         List<PinUserCreditRecord> list = pinUserCreditRecordMapper.getCheckInDaysInfo(userId);
-        Integer credit = Integer.parseInt(pinSettingsConstantMapper
-                .selectByPrimaryKey(new String("check_in_credit"))
-                .getConstantValue());
-        Integer increment = Integer.parseInt(pinSettingsConstantMapper
-                .selectByPrimaryKey(new String("check_in_credit_increment"))
-                .getConstantValue());
-        Integer limit = Integer.parseInt(pinSettingsConstantMapper
-                .selectByPrimaryKey(new String("check_in_credit_limit"))
-                .getConstantValue());
+        Integer credit = getCredit();
+        Integer increment = getIncrement();
+        Integer limit = getLimit();
         PinUserCreditRecord record;
         if(list.size() == 0) { // 暂无签到记录
             record = new PinUserCreditRecord(userId, credit, 0, new Date(), 1);
             pinUserMapper.updateUserCredit(userId, credit);
             pinUserCreditRecordMapper.insert(record);
         }
+        else if(hasCheckedIn(userId)) { // 今日已签到
+            throw new CheckInFailedException("签到失败！请勿重复签到！");
+        }
+        else {
+            Date yesterday = this.getYesterday(new Date());
+            Integer note = getContinuousCheckInDaysNum(userId);
+            Integer creditVal = (credit+note*increment>limit) ? limit : credit+note*increment;
+            record = new PinUserCreditRecord(userId, creditVal, 0, new Date(), note);
+            pinUserCreditRecordMapper.insert(record);
+        }
+    }
+
+    /**
+     * 判断今天是否签到了
+     * @param userId
+     * @return
+     */
+    public Boolean hasCheckedIn(Integer userId) {
+        List<PinUserCreditRecord> list = pinUserCreditRecordMapper.getCheckInDaysInfo(userId);
+        if(list.size() == 0) {
+            return false;
+        }
         else {
             PinUserCreditRecord p = list.get(0);
             Date date = p.getCreateTime();
-            if(isSameDay(date, new Date())) { // 今日已签到
-                throw new CheckInFailedException("签到失败！请勿重复签到！");
-            }
-            else {
-                Date yesterday = this.getYesterday(new Date());
-                Integer note = isSameDay(date, yesterday) ? p.getNote() : 1;
-                Integer creditVal = (credit+note*increment>limit) ? limit : credit+note*increment;
-                record = new PinUserCreditRecord(userId, creditVal, 0, new Date(), note);
-                pinUserCreditRecordMapper.insert(record);
-            }
+            return isTheSameDay(date, new Date());
         }
+    }
+
+    /**
+     * 获取某一用户的连续签到天数（用到了DP思想）
+     * @param userId
+     * @return
+     */
+    public Integer getContinuousCheckInDaysNum(Integer userId) {
+        List<PinUserCreditRecord> list = pinUserCreditRecordMapper.getCheckInDaysInfo(userId);
+        if(list.size() == 0) {
+            return 0;
+        }
+        else {
+            PinUserCreditRecord p = list.get(0);
+            Date date = p.getCreateTime(), yesterday = this.getYesterday(new Date());
+            Integer note = isTheSameDay(date, yesterday) ? p.getNote() : 1;
+            return note;
+        }
+    }
+
+    /**
+     * 获取Constant表中的check_in_credit值，为了简化代码
+     * @return
+     */
+    public Integer getCredit() {
+        return Integer.parseInt(pinSettingsConstantMapper
+                .selectByPrimaryKey(new String("check_in_credit"))
+                .getConstantValue());
+    }
+
+    /**
+     * 获取Constant表中的check_in_credit_increment值，为了简化代码
+     * @return
+     */
+    private Integer getIncrement() {
+        return Integer.parseInt(pinSettingsConstantMapper
+                .selectByPrimaryKey(new String("check_in_credit_increment"))
+                .getConstantValue());
+    }
+
+    /**
+     * 获取Constant表中的check_in_credit_limit值，为了简化代码
+     * @return
+     */
+    private Integer getLimit() {
+        return Integer.parseInt(pinSettingsConstantMapper
+                .selectByPrimaryKey(new String("check_in_credit_limit"))
+                .getConstantValue());
     }
 
     /**
@@ -117,7 +172,7 @@ public class UserCreditRecordService {
      * @param date2
      * @return
      */
-    public Boolean isSameDay(Date date1, Date date2) {
+    public Boolean isTheSameDay(Date date1, Date date2) {
         SimpleDateFormat sf = new SimpleDateFormat("yyyyMMdd");
         String day1 = sf.format(date1), day2 = sf.format(date2);
         return day1.equals(day2);

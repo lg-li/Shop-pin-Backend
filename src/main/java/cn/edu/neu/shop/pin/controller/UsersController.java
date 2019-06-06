@@ -320,7 +320,7 @@ public class UsersController {
     }
 
     /**
-     * 获取用户签到详细信息
+     * 获取用户签到详细信息历史记录
      * @param httpServletRequest
      * @return
      */
@@ -335,6 +335,22 @@ public class UsersController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
+    /**
+     * 判断某一用户今日是否已经签到
+     * @param httpServletRequest
+     * @return
+     */
+    @GetMapping("/has-checked-in")
+    public JSONObject hasCheckedIn(HttpServletRequest httpServletRequest) {
+        PinUser user = userService.whoAmI(httpServletRequest);
+        Boolean flag = userCreditRecordService.hasCheckedIn(user.getId());
+        if(flag) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "已签到", null);
+        } else {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, "未签到", null);
         }
     }
 }
