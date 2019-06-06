@@ -5,8 +5,7 @@
     <!--
       WARNING - @mbg.generated
     -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="constant_key" jdbcType="VARCHAR" property="constantKey" />
+    <id column="constant_key" jdbcType="VARCHAR" property="constantKey" />
     <result column="constant_value" jdbcType="VARCHAR" property="constantValue" />
   </resultMap>
 </mapper>

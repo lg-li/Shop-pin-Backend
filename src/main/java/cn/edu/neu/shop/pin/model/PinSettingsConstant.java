@@ -5,28 +5,11 @@ import javax.persistence.*;
 @Table(name = "pin_settings_constant")
 public class PinSettingsConstant {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
     @Column(name = "constant_key")
     private String constantKey;
 
     @Column(name = "constant_value")
     private String constantValue;
-
-    /**
-     * @return id
-     */
-    public Integer getId() {
-        return id;
-    }
-
-    /**
-     * @param id
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
 
     /**
      * @return constant_key
