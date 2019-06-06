@@ -60,6 +60,19 @@ public class UsersController {
         }
     }
 
+    @GetMapping("/default-address")
+    public JSONObject getDefaultAddressByUserId(HttpServletRequest httpServletRequest) {
+        PinUser user = userService.whoAmI(httpServletRequest);
+        try {
+            JSONObject data = new JSONObject();
+            data.put("defaultAddress", addressService.getDefaultAddress(user.getId()));
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
     /**
      * 根据用户ID，查询该用户的所有收获地址
      * @param httpServletRequest
