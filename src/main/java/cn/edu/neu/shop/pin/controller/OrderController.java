@@ -70,8 +70,8 @@ public class OrderController {
         try {
             PinUser user = userService.whoAmI(httpServletRequest);
             List<PinOrderItem> list = orderItemService.getItemListByJSONArray(requestObject.getJSONArray("orderItemIds"));
-            String address = requestObject.getString("address");
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, orderIndividualService.addOrderIndividual(user, list, address));
+            Integer addressId = requestObject.getInteger("addressId");
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, orderIndividualService.addOrderIndividual(user, list, addressId));
         } catch (ProductSoldOutException e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.PRODUCT_SOLD_OUT, e.getMessage(), null);
