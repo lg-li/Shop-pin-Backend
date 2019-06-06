@@ -5,8 +5,6 @@ import cn.edu.neu.shop.pin.exception.ProductSoldOutException;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.model.PinOrderItem;
 import cn.edu.neu.shop.pin.model.PinUser;
-import cn.edu.neu.shop.pin.util.PinConstants;
-import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,6 +16,7 @@ import java.util.List;
 
 @Service
 public class OrderIndividualService extends AbstractService<PinOrderIndividual> {
+
     @Autowired
     UserRoleListTransferService userRoleListTransferService;
 
@@ -31,8 +30,8 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
      * @param list 一串PinOrderIndividual
      * @return 返回它们对应的用户list
      */
-    public List<PinUser> getUsers(List<PinOrderIndividual> list){
-        ArrayList<PinUser> users = new ArrayList<>();
+    public List<PinUser> getUsers(List<PinOrderIndividual> list) {
+        List<PinUser> users = new ArrayList<>();
         for (PinOrderIndividual item:list){
             users.add(userRoleListTransferService.findById(item.getUserId()));
         }
@@ -44,7 +43,7 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
         //如果属于一家店铺
         if (isSameStore) {
             Integer amount = orderItemService.getProductAmount(list);
-            if (amount==-1){
+            if (amount == -1) {
                 //库存不够，只能终止这次创建orderIndividual
                 throw new ProductSoldOutException("库存不足");
             }
