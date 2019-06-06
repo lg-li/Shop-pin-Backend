@@ -41,9 +41,7 @@ public class UserCreditRecordService {
         data.put("totalCheckInDays", totalCheckInDays);
         Integer continuousCheckInDays = getContinuousCheckInDaysNum(userId);
         data.put("continuousCheckInDays", continuousCheckInDays);
-        PinUserCreditRecord p = new PinUserCreditRecord();
-        p.setUserId(userId);
-        List<PinUserCreditRecord> list = pinUserCreditRecordMapper.select(p);
+        List<PinUserCreditRecord> list = pinUserCreditRecordMapper.getUserCreditRecordByDateDesc(userId);
         data.put("creditHistory", list);
         return data;
     }

@@ -23,4 +23,10 @@
     where `user_id` = #{userId} and `type` = 0
     order by create_time DESC
   </select>
+
+  <select id="getUserCreditRecordByDateDesc" parameterType="Integer" resultMap="BaseResultMap">
+    select * from pin_user_credit_record
+    where `user_id` = #{userId}
+    order by create_time DESC
+  </select>
 </mapper>
