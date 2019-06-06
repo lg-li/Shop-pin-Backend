@@ -3,6 +3,7 @@ package cn.edu.neu.shop.pin.service;
 import cn.edu.neu.shop.pin.mapper.PinStoreMapper;
 import cn.edu.neu.shop.pin.mapper.PinUserStoreCollectionMapper;
 import cn.edu.neu.shop.pin.model.PinStore;
+import cn.edu.neu.shop.pin.model.PinUserProductCollection;
 import cn.edu.neu.shop.pin.model.PinUserStoreCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ public class UserStoreCollectionService {
 
     public static final int STATUS_ADD_STORE_SUCCESS = 0;
     public static final int STATUS_ADD_STORE_INVALID_ID = -1;
+    public static final int STATUS_DELETE_STORE_SUCCESS = 0;
+    public static final int STATUS_DELETE_STORE_INVALID_ID = -1;
+    public static final int STATUS_DELETE_STORE_PERMISSION_DENIED = -2;
 
     @Autowired
     private PinStoreMapper pinStoreMapper;
@@ -52,5 +56,24 @@ public class UserStoreCollectionService {
         pinUserStoreCollection.setStoreId(storeId);
         pinUserStoreCollection.setCreateTime(new Date());
         return STATUS_ADD_STORE_SUCCESS;
+    }
+
+    @Transactional
+    public Integer deleteStoreCollection(Integer userId, Integer storeId) {
+        PinStore pinStore = pinStoreMapper.selectByPrimaryKey(storeId);
+        if(pinStore == null) return STATUS_DELETE_STORE_INVALID_ID;
+        PinUserStoreCollection p = new PinUserStoreCollection();
+        p.setUserId(userId);
+        p.setStoreId(storeId);
+        List<PinUserStoreCollection> list = pinUserStoreCollectionMapper.select(p);
+        if(list.size() == 0) return STATUS_DELETE_STORE_INVALID_ID;
+        for(PinUserStoreCollection pp : list) {
+            if(pp.getUserId() != userId)
+                return STATUS_DELETE_STORE_PERMISSION_DENIED;
+            if(pp.getStoreId() != storeId)
+                return STATUS_DELETE_STORE_INVALID_ID;
+            pinUserStoreCollectionMapper.delete(pp);
+        }
+        return STATUS_DELETE_STORE_SUCCESS;
     }
 }

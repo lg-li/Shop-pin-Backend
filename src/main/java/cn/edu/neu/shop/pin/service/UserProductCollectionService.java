@@ -21,6 +21,9 @@ public class UserProductCollectionService extends AbstractService<PinUserProduct
 
     public static final int STATUS_ADD_PRODUCT_SUCCESS = 0;
     public static final int STATUS_ADD_PRODUCT_INVALID_ID = -1;
+    public static final int STATUS_DELETE_PRODUCT_SUCCESS = 0;
+    public static final int STATUS_DELETE_PRODUCT_INVALID_ID = -1;
+    public static final int STATUS_DELETE_PRODUCT_PERMISSION_DENIED = -2;
 
     @Autowired
     private PinUserProductCollectionMapper pinUserProductCollectionMapper;
@@ -53,5 +56,24 @@ public class UserProductCollectionService extends AbstractService<PinUserProduct
         pinUserProductCollection.setUserId(userId);
         this.save(pinUserProductCollection);
         return STATUS_ADD_PRODUCT_SUCCESS;
+    }
+
+    @Transactional
+    public Integer deleteStoreCollection(Integer userId, Integer productId) {
+        PinProduct pinProduct = pinProductMapper.selectByPrimaryKey(productId);
+        if(pinProduct == null) return STATUS_DELETE_PRODUCT_INVALID_ID;
+        PinUserProductCollection p = new PinUserProductCollection();
+        p.setUserId(userId);
+        p.setProductId(productId);
+        List<PinUserProductCollection> list = pinUserProductCollectionMapper.select(p);
+        if(list.size() == 0) return STATUS_DELETE_PRODUCT_INVALID_ID;
+        for(PinUserProductCollection pp : list) {
+            if(pp.getUserId() != userId)
+                return STATUS_DELETE_PRODUCT_PERMISSION_DENIED;
+            if(pp.getProductId() != productId)
+                return STATUS_DELETE_PRODUCT_INVALID_ID;
+            pinUserProductCollectionMapper.delete(pp);
+        }
+        return STATUS_DELETE_PRODUCT_SUCCESS;
     }
 }
