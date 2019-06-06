@@ -40,6 +40,9 @@ public class UsersController {
     @Autowired
     private OrderIndividualService orderIndividualService;
 
+    @Autowired
+    private UserCreditRecordService userCreditRecordService;
+
     /**
      * 获取用户信息
      * @param httpServletRequest
