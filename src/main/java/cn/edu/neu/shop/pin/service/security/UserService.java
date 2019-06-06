@@ -1,12 +1,14 @@
 package cn.edu.neu.shop.pin.service.security;
 
 import cn.edu.neu.shop.pin.model.PinRole;
+import cn.edu.neu.shop.pin.service.UserCreditRecordService;
 import cn.edu.neu.shop.pin.service.UserRoleListTransferService;
 import cn.edu.neu.shop.pin.exception.CredentialException;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.model.PinWechatUser;
 import cn.edu.neu.shop.pin.security.JwtTokenProvider;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -37,6 +39,9 @@ public class UserService extends AbstractService<PinUser> {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private UserCreditRecordService userCreditRecordService;
 
     /**
      * 登录接口
@@ -139,6 +144,14 @@ public class UserService extends AbstractService<PinUser> {
 
     public String refresh(Integer id) {
         return jwtTokenProvider.createToken(id, userRoleListTransferService.findById(id).getRoles());
+    }
+
+    public JSONObject getUserInfoByUserId(Integer userId) {
+        JSONObject data = new JSONObject();
+        data.put("user", findById(userId));
+        Boolean hasCheckedIn = userCreditRecordService.hasCheckedIn(userId);
+        data.put("hasCheckedIn", hasCheckedIn);
+        return data;
     }
 
     public PinUser findByEmail(String email) {
