@@ -58,7 +58,7 @@ public class UserCreditRecordService {
         Integer limit = getLimit();
         PinUserCreditRecord record;
         if(list.size() == 0) { // 暂无签到记录
-            record = new PinUserCreditRecord(userId, credit, 0, new Date(), 1);
+            record = new PinUserCreditRecord(userId, credit, PinUserCreditRecord.TYPE_FROM_CHECK_IN, new Date(), 1);
             pinUserMapper.updateUserCredit(userId, credit);
             pinUserCreditRecordMapper.insert(record);
         }
@@ -69,7 +69,7 @@ public class UserCreditRecordService {
             Date yesterday = this.getYesterday(new Date());
             Integer note = getContinuousCheckInDaysNum(userId);
             Integer creditVal = (credit+note*increment>limit) ? limit : credit+note*increment;
-            record = new PinUserCreditRecord(userId, creditVal, 0, new Date(), note);
+            record = new PinUserCreditRecord(userId, creditVal, PinUserCreditRecord.TYPE_FROM_CHECK_IN, new Date(), note);
             pinUserCreditRecordMapper.insert(record);
         }
     }
