@@ -53,7 +53,7 @@ public class UsersController {
         try {
             PinUser user = userService.whoAmI(httpServletRequest);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
-                    userService.findById(user.getId()));
+                    userService.getUserInfoByUserId(user.getId()));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
