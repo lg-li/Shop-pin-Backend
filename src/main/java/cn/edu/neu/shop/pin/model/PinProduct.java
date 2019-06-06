@@ -27,6 +27,12 @@ public class PinProduct {
     private Integer categoryId;
 
     /**
+     * 分类id
+     */
+    @Column(name = "category_name")
+    private String categoryName;
+
+    /**
      * 商品图片（可以多个）
      */
     @Column(name = "image_urls")
@@ -534,6 +540,14 @@ public class PinProduct {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public PinStore getStore() {

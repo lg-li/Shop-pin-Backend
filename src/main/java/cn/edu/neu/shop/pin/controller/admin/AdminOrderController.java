@@ -1,4 +1,4 @@
-package cn.edu.neu.shop.pin.controller;
+package cn.edu.neu.shop.pin.controller.admin;
 
 import cn.edu.neu.shop.pin.service.ExpressService;
 import cn.edu.neu.shop.pin.util.PinConstants;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class AdminController {
+public class AdminOrderController {
 
     @Autowired
     private ExpressService expressService;
