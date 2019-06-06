@@ -4,13 +4,15 @@ import cn.edu.neu.shop.pin.mapper.PinUserMapper;
 import cn.edu.neu.shop.pin.model.PinRole;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
+import com.alibaba.fastjson.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class UserRoleListTransferService {
+public class UserRoleListTransferService extends AbstractService<PinUser> {
     @Autowired
     PinUserMapper pinUserMapper;
 
@@ -22,19 +24,22 @@ public class UserRoleListTransferService {
         return pinUser;
     }
 
+    //通过id找用户
+    public PinUser findByIdWithoutRole(Integer id) {
+        return pinUserMapper.findById(id);
+    }
+
+
     //是否存在有这个Id的用户
     public Boolean existsById(Integer id) {
         return pinUserMapper.existsById(id);
     }
 
-    //保存用户信息
-    public void save(PinUser user) {
-        pinUserMapper.save(user);
+    public List<PinRole> transfer(JSONArray list){
+        ArrayList<PinRole> roles = new ArrayList<>();
+        for (int i = 0;i<list.size();i++){
+            roles.add(PinRole.values()[list.getInteger(i)]);
+        }
+        return roles;
     }
-
-    //通过id删除用户
-    public void deleteById(Integer id) {
-        pinUserMapper.deleteById(id);
-    }
-
 }

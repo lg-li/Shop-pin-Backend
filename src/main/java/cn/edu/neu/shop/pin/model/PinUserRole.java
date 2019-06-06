@@ -54,4 +54,12 @@ public class PinUserRole {
     public void setRole(Integer role) {
         this.role = role;
     }
+
+    public PinUserRole() {
+    }
+
+    public PinUserRole(Integer userId, Integer role) {
+        this.userId = userId;
+        this.role = role;
+    }
 }
