@@ -45,9 +45,9 @@ public class UserController {
             @ApiResponse(code = 403, message = "Access denied"), //
             @ApiResponse(code = 422, message = "Id is already in use"), //
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-    public String signUp(@ApiParam("Sign-up User") @RequestBody UserDataDTO user) {
-//    PinUser pinUser = new PinUser(user.getId(),user.getPassword(),user.getRoles());
-//    return userService.signUpAndGetToken(pinUser);
+    public String signUp(@ApiParam("Sign-up User") @RequestBody PinUser user) {
+//        PinUser pinUser = new PinUser(user.getId(), user.getPassword(), user.getRoles());
+//        return userService.signUpAndGetToken(pinUser);
         return null;
     }
 
@@ -87,10 +87,10 @@ public class UserController {
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
     public /*UserResponseDTO*/JSONObject whoAmI(HttpServletRequest req) {
 //    return modelMapper.map(userService.whoAmI(req), UserResponseDTO.class);
-        try{
+        try {
             PinUser user = userService.whoAmI(req);
 
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,null );
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);

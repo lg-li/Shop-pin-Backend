@@ -298,6 +298,24 @@ public class PinUser {
         this.roles = roles;
     }
 
+    public PinUser() {
+    }
+
+    public PinUser(String phone, String email, String passwordHash, Date createTime, Date lastLoginTime, Date lastPaswordEditTime, String avatarUrl, String nickname, BigDecimal balance, Integer credit, String lastLoginIp, String createIp, Integer gender) {
+        this.phone = phone;
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.createTime = createTime;
+        this.lastLoginTime = lastLoginTime;
+        this.lastPaswordEditTime = lastPaswordEditTime;
+        this.avatarUrl = avatarUrl;
+        this.nickname = nickname;
+        this.balance = balance;
+        this.credit = credit;
+        this.lastLoginIp = lastLoginIp;
+        this.createIp = createIp;
+        this.gender = gender;
+    }
 
     @Override
     public String toString() {
