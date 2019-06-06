@@ -61,7 +61,7 @@ public class SignInController {
     @PostMapping(value = "/wechat-mini-program")
     public JSONObject wechatMiniProgramLogin(HttpServletRequest request, @RequestBody JSONObject loginJSON) {
         String code = loginJSON.getString("code");
-        String name = loginJSON.getString("nickname");
+        String name = loginJSON.getString("nickName");
         Integer gender = loginJSON.getInteger("gender");
         String avatarUrl = loginJSON.getString("avatarUrl");
         String country = loginJSON.getString("country");

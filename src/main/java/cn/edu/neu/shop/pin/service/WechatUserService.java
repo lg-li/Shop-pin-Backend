@@ -47,7 +47,7 @@ public class WechatUserService extends AbstractService<PinWechatUser> {
             // 微信用户首次登录
             List<PinRole>list = new ArrayList<>();
             list.add(PinRole.ROLE_USER);
-            PinUser newPinUser = userService.signUpAndGetNewPinUser("0", "0", "default", avatarUrl, name, currentIp, gender,list);
+            PinUser newPinUser = userService.signUpAndGetNewPinUser("0", "0", "default", avatarUrl, name, currentIp, gender, list);
             wechatUser = new PinWechatUser();
             // 绑定微信用户与实体用户
             wechatUser.setUserId(newPinUser.getId());
