@@ -81,7 +81,7 @@ public class PinOrderItem {
      * @param orderIndividualId
      * @param isSubmitted
      */
-    public PinOrderItem(Integer amount, Integer userId, Integer productId, Integer skuId, BigDecimal totalPrice, BigDecimal totalCost, Integer orderIndividualId, Boolean isSubmitted) {
+    public PinOrderItem(Integer userId, Integer productId, Integer skuId, Integer amount, BigDecimal totalPrice, BigDecimal totalCost, Integer orderIndividualId, Boolean isSubmitted) {
         this.amount = amount;
         this.userId = userId;
         this.productId = productId;
