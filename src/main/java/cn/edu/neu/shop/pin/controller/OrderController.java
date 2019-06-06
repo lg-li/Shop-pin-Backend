@@ -102,6 +102,11 @@ public class OrderController {
             boolean isSameStore = productService.isBelongSameStore(list);
             //如果属于一家店铺
             if (isSameStore) {
+                Integer amount = orderItemService.getProductAmount(list);
+                if (amount==-1){
+                    //库存不够，只能终止这次创建orderIndividual
+                    return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, "库存不够");
+                }
                 int storeId = productService.getProductById(list.get(0).getProductId()).getStoreId();    // 店铺id
                 BigDecimal originallyPrice = orderItemService.getProductTotalPrice(list);   // 计算本来的价格
                 BigDecimal shippingFee = orderItemService.getAllShippingFee(list);  // 邮费

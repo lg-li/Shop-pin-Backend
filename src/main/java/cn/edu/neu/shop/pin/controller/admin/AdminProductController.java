@@ -28,13 +28,13 @@ public class AdminProductController {
     ProductService productService;
 
     /**
-     * TODO:返回不同存货类型的商品
+     * TODO:未测试返回不同存货类型的商品
      *
      * @param req
      * @param queryType
      * @return
      */
-    @GetMapping("/")
+    @GetMapping("/query-type")
     public JSONObject getProducts(HttpServletRequest req, @RequestParam String queryType) {
         try {
             PinUser user = userService.whoAmI(req);
