@@ -40,6 +40,11 @@ public class UsersController {
     @Autowired
     private OrderIndividualService orderIndividualService;
 
+    /**
+     * 获取用户信息
+     * @param httpServletRequest
+     * @return
+     */
     @GetMapping("/info")
     public JSONObject getUserInfo(HttpServletRequest httpServletRequest) {
         try {
@@ -54,6 +59,8 @@ public class UsersController {
 
     /**
      * 根据用户ID，查询该用户的所有收获地址
+     * @param httpServletRequest
+     * @return
      */
     @GetMapping("/address")
     public JSONObject getAddressByUserId(HttpServletRequest httpServletRequest) {
@@ -68,6 +75,12 @@ public class UsersController {
         }
     }
 
+    /**
+     * 增加地址
+     * @param httpServletRequest
+     * @param requestJSON
+     * @return
+     */
     @PostMapping("/address")
     public JSONObject createAddress(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try {
@@ -87,6 +100,12 @@ public class UsersController {
         }
     }
 
+    /**
+     * 删除地址
+     * @param httpServletRequest
+     * @param requestJSON
+     * @return
+     */
     @DeleteMapping("/address")
     public JSONObject deleteAddress(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try {
@@ -110,6 +129,12 @@ public class UsersController {
         return null;
     }
 
+    /**
+     * 更新地址
+     * @param httpServletRequest
+     * @param requestJSON
+     * @return
+     */
     @PutMapping("/address")
     public JSONObject updateAddress(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try {
@@ -126,6 +151,11 @@ public class UsersController {
         }
     }
 
+    /**
+     * 获取商品浏览记录
+     * @param httpServletRequest
+     * @return
+     */
     @GetMapping("/product-visit-record")
     public JSONObject getUserProductRecord(HttpServletRequest httpServletRequest) {
         try{
@@ -175,6 +205,12 @@ public class UsersController {
         }
     }
 
+    /**
+     * 添加商品收藏
+     * @param httpServletRequest
+     * @param requestJSON
+     * @return
+     */
     @PostMapping("/product-collection")
     public JSONObject addProductToCollection(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try{
@@ -189,6 +225,39 @@ public class UsersController {
         }
     }
 
+    /**
+     * 删除商品收藏
+     * @param httpServletRequest
+     * @param productId
+     * @return
+     */
+    @DeleteMapping("/product-collection/{productId}")
+    public JSONObject deleteUserProductCollection(HttpServletRequest httpServletRequest, @PathVariable Integer productId) {
+        PinUser user = userService.whoAmI(httpServletRequest);
+        try {
+            int code = userProductCollectionService.deleteStoreCollection(user.getId(), productId);
+            if(code == UserProductCollectionService.STATUS_DELETE_PRODUCT_SUCCESS) {
+                return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
+            }
+            else if(code == UserProductCollectionService.STATUS_DELETE_PRODUCT_PERMISSION_DENIED) {
+                return ResponseWrapper.wrap(PinConstants.StatusCode.PERMISSION_DENIED, "无权限删除", null);
+            }
+            else if(code == UserProductCollectionService.STATUS_ADD_PRODUCT_INVALID_ID) {
+                return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, "删除失败", null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+        return null;
+    }
+
+    /**
+     * 添加店铺收藏
+     * @param httpServletRequest
+     * @param requestJSON
+     * @return
+     */
     @PostMapping("/store-collection")
     public JSONObject addStoreToCollection(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try{
@@ -201,5 +270,33 @@ public class UsersController {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
+    }
+
+    /**
+     * 删除店铺收藏
+     * @param httpServletRequest
+     * @param storeId
+     * @return
+     */
+    @DeleteMapping("/store-collection/{storeId}")
+    public JSONObject deleteUserStoreCollection(HttpServletRequest httpServletRequest, @PathVariable Integer storeId) {
+        PinUser user = userService.whoAmI(httpServletRequest);
+        try {
+            JSONObject data = new JSONObject();
+            int code = userProductCollectionService.deleteStoreCollection(user.getId(), storeId);
+            if(code == UserStoreCollectionService.STATUS_DELETE_STORE_SUCCESS) {
+                return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
+            }
+            else if(code == UserStoreCollectionService.STATUS_DELETE_STORE_PERMISSION_DENIED) {
+                return ResponseWrapper.wrap(PinConstants.StatusCode.PERMISSION_DENIED, "无权限删除", null);
+            }
+            else if(code == UserStoreCollectionService.STATUS_DELETE_STORE_INVALID_ID) {
+                return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, "删除失败", null);
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+        return null;
     }
 }
