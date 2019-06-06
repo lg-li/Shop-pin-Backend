@@ -40,6 +40,11 @@ public class UsersController {
     @Autowired
     private OrderIndividualService orderIndividualService;
 
+    /**
+     * 获取用户信息
+     * @param httpServletRequest
+     * @return
+     */
     @GetMapping("/info")
     public JSONObject getUserInfo(HttpServletRequest httpServletRequest) {
         try {
@@ -54,6 +59,8 @@ public class UsersController {
 
     /**
      * 根据用户ID，查询该用户的所有收获地址
+     * @param httpServletRequest
+     * @return
      */
     @GetMapping("/address")
     public JSONObject getAddressByUserId(HttpServletRequest httpServletRequest) {
@@ -68,6 +75,12 @@ public class UsersController {
         }
     }
 
+    /**
+     * 增加地址
+     * @param httpServletRequest
+     * @param requestJSON
+     * @return
+     */
     @PostMapping("/address")
     public JSONObject createAddress(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try {
@@ -87,6 +100,12 @@ public class UsersController {
         }
     }
 
+    /**
+     * 删除地址
+     * @param httpServletRequest
+     * @param requestJSON
+     * @return
+     */
     @DeleteMapping("/address")
     public JSONObject deleteAddress(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try {
@@ -110,6 +129,12 @@ public class UsersController {
         return null;
     }
 
+    /**
+     * 更新地址
+     * @param httpServletRequest
+     * @param requestJSON
+     * @return
+     */
     @PutMapping("/address")
     public JSONObject updateAddress(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try {
@@ -126,6 +151,11 @@ public class UsersController {
         }
     }
 
+    /**
+     * 获取商品浏览记录
+     * @param httpServletRequest
+     * @return
+     */
     @GetMapping("/product-visit-record")
     public JSONObject getUserProductRecord(HttpServletRequest httpServletRequest) {
         try{
