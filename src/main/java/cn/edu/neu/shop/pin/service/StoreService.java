@@ -2,9 +2,11 @@ package cn.edu.neu.shop.pin.service;
 
 import cn.edu.neu.shop.pin.mapper.PinStoreMapper;
 import cn.edu.neu.shop.pin.model.PinStore;
+import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -32,5 +34,28 @@ public class StoreService extends AbstractService<PinStore> {
      */
     public List<PinStore> getStoreListByOwnerId(Integer id){
         return pinStoreMapper.selectByOwnerId(id);
+    }
+
+    /**
+     * 管理端用户店主新增店铺
+     * @param name
+     * @param description
+     * @param phone
+     * @param email
+     * @param logoUrl
+     * @param userId
+     * @return
+     */
+    @Transactional
+    public PinStore addStore(String name, String description, String phone, String email, String logoUrl, Integer userId) {
+        PinStore pinStore = new PinStore();
+        pinStore.setName(name);
+        pinStore.setDescription(description);
+        pinStore.setPhone(phone);
+        pinStore.setEmail(email);
+        pinStore.setLogoUrl(logoUrl);
+        pinStore.setOwnerUserId(userId);
+        save(pinStore);
+        return pinStore;
     }
 }

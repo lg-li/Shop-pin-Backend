@@ -173,7 +173,7 @@ public class ProductService extends AbstractService<PinProduct> {
         return list;
 
     }
-    
+
     public JSONObject getProductInfoFromSameStore(Integer storeId) {
          return pinProductMapper.getProductFromSameStore(storeId);
     }
