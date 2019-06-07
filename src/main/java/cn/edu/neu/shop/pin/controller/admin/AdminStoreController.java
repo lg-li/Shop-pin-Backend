@@ -8,7 +8,6 @@ import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +41,7 @@ public class AdminStoreController {
      * 新增店铺
      */
     @PostMapping("/storeInfo")
-    public JSONObject addStore(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
+    public JSONObject addStoreInfo(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try{
             PinUser user = userService.whoAmI(httpServletRequest);
             String storeName = requestJSON.getString("name");
@@ -51,7 +50,28 @@ public class AdminStoreController {
             String email = requestJSON.getString("email");
             String logoUrl = requestJSON.getString("logoUrl");
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
-                    storeService.addStore(storeName, description, phone, email, logoUrl, user.getId()));
+                    storeService.addStoreInfo(storeName, description, phone, email, logoUrl, user.getId()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
+    /**
+     * 修改店铺信息
+     * @param httpServletRequest
+     * @param requestJSON
+     * @return
+     */
+    @PutMapping("/storeInfo")
+    public JSONObject updateStoreInfo(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
+        try{
+            PinUser user = userService.whoAmI(httpServletRequest);
+            PinStore store = JSONObject.toJavaObject(requestJSON, PinStore.class);
+            if(storeService.update(store) == null) {
+                return ResponseWrapper.wrap(PinConstants.StatusCode.PERMISSION_DENIED, PinConstants.ResponseMessage.PERMISSION_DENIED, null);
+            }
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);

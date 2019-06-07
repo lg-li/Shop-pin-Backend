@@ -5,6 +5,7 @@ import cn.edu.neu.shop.pin.model.PinStore;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,7 +48,7 @@ public class StoreService extends AbstractService<PinStore> {
      * @return
      */
     @Transactional
-    public PinStore addStore(String name, String description, String phone, String email, String logoUrl, Integer userId) {
+    public PinStore addStoreInfo(String name, String description, String phone, String email, String logoUrl, Integer userId) {
         PinStore pinStore = new PinStore();
         pinStore.setName(name);
         pinStore.setDescription(description);
@@ -56,6 +57,17 @@ public class StoreService extends AbstractService<PinStore> {
         pinStore.setLogoUrl(logoUrl);
         pinStore.setOwnerUserId(userId);
         save(pinStore);
+        return pinStore;
+    }
+
+    /**
+     * 管理端 修改店铺信息
+     * @param pinStore
+     * @return
+     */
+    @Transactional
+    public PinStore updateStoreInfo(PinStore pinStore) {
+        update(pinStore);
         return pinStore;
     }
 }
