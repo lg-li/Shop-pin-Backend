@@ -20,6 +20,18 @@ public class AddressService extends AbstractService<PinUserAddress> {
     PinUserAddressMapper pinUserAddressMapper;
 
     /**
+     * 根据用户ID 返回其默认的地址
+     * @param userId
+     * @return
+     */
+    public PinUserAddress getDefaultAddress(Integer userId) {
+        PinUserAddress pinUserAddress = new PinUserAddress();
+        pinUserAddress.setUserId(userId);
+        pinUserAddress.setDefault(true);
+        return pinUserAddressMapper.select(pinUserAddress).get(0);
+    }
+
+    /**
      * 根据用户ID 查询该用户的收获地址
      * @param userId
      * @return

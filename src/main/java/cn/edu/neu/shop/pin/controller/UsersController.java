@@ -53,7 +53,20 @@ public class UsersController {
         try {
             PinUser user = userService.whoAmI(httpServletRequest);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
-                    userService.findById(user.getId()));
+                    userService.getUserInfoByUserId(user.getId()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
+    @GetMapping("/default-address")
+    public JSONObject getDefaultAddressByUserId(HttpServletRequest httpServletRequest) {
+        PinUser user = userService.whoAmI(httpServletRequest);
+        try {
+            JSONObject data = new JSONObject();
+            data.put("defaultAddress", addressService.getDefaultAddress(user.getId()));
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
@@ -324,13 +337,11 @@ public class UsersController {
      * @param httpServletRequest
      * @return
      */
-    @GetMapping("/get-user-credit-data")
+    @GetMapping("/credit-record")
     public JSONObject getUserCreditData(HttpServletRequest httpServletRequest) {
         PinUser user = userService.whoAmI(httpServletRequest);
         try {
-            JSONObject object = userCreditRecordService.getUserCreditData(user.getId());
-            JSONObject data = new JSONObject();
-            data.put("data", object);
+            JSONObject data = userCreditRecordService.getUserCreditData(user.getId());
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
         } catch (Exception e) {
             e.printStackTrace();

@@ -6,6 +6,8 @@ import javax.persistence.*;
 
 @Table(name = "pin_user_credit_record")
 public class PinUserCreditRecord {
+    public static final int TYPE_FROM_CHECK_IN = 0;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

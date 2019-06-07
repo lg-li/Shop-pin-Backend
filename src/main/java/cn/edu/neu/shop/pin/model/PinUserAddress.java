@@ -72,6 +72,12 @@ public class PinUserAddress {
     private Date createTime;
 
     /**
+     * 是否为默认地址
+     */
+    @Column(name = "is_default")
+    private Boolean isDefault;
+
+    /**
      * 获取用户地址id
      *
      * @return id - 用户地址id
@@ -285,5 +291,13 @@ public class PinUserAddress {
      */
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public Boolean getDefault() {
+        return isDefault;
+    }
+
+    public void setDefault(Boolean aDefault) {
+        isDefault = aDefault;
     }
 }

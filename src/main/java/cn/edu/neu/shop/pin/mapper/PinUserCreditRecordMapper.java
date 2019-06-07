@@ -12,4 +12,6 @@ public interface PinUserCreditRecordMapper extends BaseMapper<PinUserCreditRecor
     Integer getCheckInDaysNum(Integer userId);
 
     List<PinUserCreditRecord> getCheckInDaysInfo(Integer userId);
+
+    List<PinUserCreditRecord> getUserCreditRecordByDateDesc(Integer userId);
 }
