@@ -163,6 +163,10 @@ public class UserService extends AbstractService<PinUser> {
     }
 
     public PinUser findByEmailOrPhone(String emailOrPhone) {
+        if(emailOrPhone == null || emailOrPhone.equals("")) {
+            // 非法输入
+            return null;
+        }
         PinUser byEmail = findByEmail(emailOrPhone);
         if (byEmail != null) {
             return byEmail;

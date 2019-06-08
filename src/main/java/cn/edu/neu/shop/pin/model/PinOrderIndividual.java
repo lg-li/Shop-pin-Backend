@@ -7,6 +7,7 @@ import javax.persistence.*;
 
 @Table(name = "pin_order_individual")
 public class PinOrderIndividual {
+
     /**
      * 订单ID
      */
@@ -103,15 +104,60 @@ public class PinOrderIndividual {
     private Date createTime;
 
     /**
-     * 订单状态（-1 : 申请退款中 -2 : 退货成功 0：待发货；1：待收货；2：已收货；3：待评价; 4: 已评价）
+     * 订单状态订单状态（0：待发货；1：待收货；2：待评价；3：已评价; 4: 已退款; 5: 已拒绝）
      */
     private Integer status;
+
+    /**
+     * 待发货
+     */
+    public static final int STATUS_DEPENDING_TO_SHIP = 0;
+
+    /**
+     * 待收货
+     */
+    public static final int STATUS_SHIPPED = 1;
+
+    /**
+     * 已收货待评价
+     */
+    public static final int STATUS_PENDING_COMMENT = 2;
+
+    /**
+     * 已评价（订单已完成）
+     */
+    public static final int STATUS_COMMENTED = 3;
+
+    /**
+     * 已退款（订单退款关闭）
+     */
+    public static final int STATUS_REFUND_SUCCESS = 4;
+
+    /**
+     * 退款被拒绝
+     */
+    public static final int STATUS_REFUND_REFUSED = 5;
 
     /**
      * 0 未退款 1 申请中 2 已退款
      */
     @Column(name = "refund_status")
     private Integer refundStatus;
+
+    /**
+     * 订单未申请退款（默认状态）
+     */
+    public static final int REFUND_STATUS_NOT_APPLIED = 0;
+
+    /**
+     * 订单退款申请中
+     */
+    public static final int REFUND_STATUS_APPLYING = 1;
+
+    /**
+     * 订单退款申请状态结束
+     */
+    public static final int REFUND_STATUS_FINISHED = 2;
 
     /**
      * 退款图片

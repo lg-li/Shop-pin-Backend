@@ -19,8 +19,10 @@ public class UserRoleListTransferService extends AbstractService<PinUser> {
     //通过id找用户
     public PinUser findById(Integer id) {
         PinUser pinUser = pinUserMapper.findById(id);
-        List<PinRole> roles = PinUser.transfer(pinUser.getRoles());
-        pinUser.setRoles(roles);
+        List<PinRole> roles = pinUser.getRoles();
+        if(roles != null) {
+            pinUser.setRoles(PinUser.transfer(roles));
+        }
         return pinUser;
     }
 
