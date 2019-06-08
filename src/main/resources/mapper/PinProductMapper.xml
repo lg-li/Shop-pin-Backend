@@ -28,29 +28,6 @@
     <result column="cost" jdbcType="DECIMAL" property="cost" />
     <result column="visit_count" jdbcType="INTEGER" property="visitCount" />
     <result column="description" jdbcType="LONGVARCHAR" property="description" />
-<!--    <collection property="productAttributeDefinitions"-->
-<!--                 javaType="ArrayList" ofType="PinProductAttributeDefinition"-->
-<!--                  column="pin_product.id"-->
-<!--                resultMap="PinProductAttributeDefinitionResultMap">-->
-<!--                select="getPinProductAttributeDefinitionsByProductId">-->
-<!--      <id column="product_id" property="productId" />-->
-<!--      <result column="def_id" property="id" />-->
-<!--      <result column="attribute_name" property="attributeName" />-->
-<!--      <result column="attribute_values" property="attributeValues" />-->
-<!--    </collection>-->
-<!--    <collection property="productAttributeValues"-->
-<!--                javaType="ArrayList" ofType="PinProductAttributeValue"-->
-<!--                column="pin_product.id"-->
-<!--                resultMap="PinProductAttributeValueResultMap">-->
-<!--                select="getPinProductAttributeValuesByProductId">-->
-<!--      <id column="product_id" property="productId" />-->
-<!--      <result column="val_id" property="id" />-->
-<!--      <result column="sku" property="sku" />-->
-<!--      <result column="stock" property="stock" />-->
-<!--      <result column="price" property="price" />-->
-<!--      <result column="image_url" property="imageUrl" />-->
-<!--      <result column="cost" property="cost" />-->
-<!--    </collection>-->
   </resultMap>
   
   <resultMap id="PinProductAttributeDefinitionResultMap" type="PinProductAttributeDefinition">
@@ -92,24 +69,6 @@
     select * from pin_product_attribute_definition
     where product_id = #{productId}
   </select>
-
-<!--  &lt;!&ndash; 获取商品详情 &ndash;&gt;-->
-<!--  <select id="getProductById"  parameterType="Integer" resultMap="BaseResultMap">-->
-<!--    select-->
-<!--    pro.*,-->
-<!--    def.*,-->
-<!--    val.*-->
-<!--    from-->
-<!--    pin_product pro-->
-<!--    left outer join pin_product_attribute_definition def on pro.id = def.product_id-->
-<!--    left outer join pin_product_attribute_value val on pro.id = val.product_id-->
-<!--    where pro.id = #{productId}-->
-<!--  </select>-->
-
-<!--  &lt;!&ndash; 获取商品详情 &ndash;&gt;-->
-<!--  <select id="getProductById"  parameterType="Integer" resultMap="BaseResultMap">-->
-<!--    select * from pin_product where id = #{productId}-->
-<!--  </select>-->
 
   <!-- 根据商品ID 获取商品详情-->
   <select id="getProductById"  parameterType="Integer" resultMap="BaseResultMap">

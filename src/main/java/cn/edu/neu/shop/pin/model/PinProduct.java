@@ -123,7 +123,7 @@ public class PinProduct {
     /**
      * 购买将获得的积分
      */
-    @Column(name = "credit_to_give")
+@Column(name = "credit_to_give")
     private Integer creditToGive;
 
     /**

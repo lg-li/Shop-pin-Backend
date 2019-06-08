@@ -202,6 +202,8 @@ public class PinOrderIndividual {
     @Column(name = "total_cost")
     private BigDecimal totalCost;
 
+    private PinStore store;
+
     public PinOrderIndividual() {
         super();
     }
@@ -811,6 +813,14 @@ public class PinOrderIndividual {
 
     public void setOrderItems(List<PinOrderItem> orderItems) {
         this.orderItems = orderItems;
+    }
+
+    public PinStore getStore() {
+        return store;
+    }
+
+    public void setStore(PinStore store) {
+        this.store = store;
     }
 
     @Override

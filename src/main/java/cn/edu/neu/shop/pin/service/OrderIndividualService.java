@@ -27,6 +27,9 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
     private ProductService productService;
 
     @Autowired
+    private StoreService storeService;
+
+    @Autowired
     private OrderItemService orderItemService;
 
     @Autowired
@@ -46,6 +49,7 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
                 pinOrderIndividualMapper.getRecentThreeMonthsOrderIndividuals(userId);
         for (PinOrderIndividual o : orderIndividuals) {
             o.setOrderItems(orderItemService.getOrderItemsByOrderIndividualId(o.getId()));
+            o.setStore(storeService.getStoreById(o.getStoreId()));
         }
         return orderIndividuals;
     }
