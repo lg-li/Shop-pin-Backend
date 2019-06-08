@@ -23,16 +23,17 @@ public class AddressService extends AbstractService<PinUserAddress> {
     PinUserAddressMapper pinUserAddressMapper;
 
     /**
+     * @author flyhero
      * @param userId
      * @return
-     * @author flyhero
      * 根据用户ID 返回其默认的地址
      */
     public PinUserAddress getDefaultAddress(Integer userId) {
         PinUserAddress pinUserAddress = new PinUserAddress();
         pinUserAddress.setUserId(userId);
         pinUserAddress.setDefault(true);
-        return pinUserAddressMapper.select(pinUserAddress).get(0);
+        PinUserAddress address = pinUserAddressMapper.selectOne(pinUserAddress);
+        return address;
     }
 
     /**
