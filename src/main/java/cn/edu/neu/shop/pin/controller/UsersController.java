@@ -9,8 +9,10 @@ import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sun.jvm.hotspot.debugger.Address;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 @RestController
 @RequestMapping("/commons/user")
@@ -60,8 +62,14 @@ public class UsersController {
         }
     }
 
+    /**
+     * @author flyhero
+     * 获取某用户的默认地址
+     * @param httpServletRequest
+     * @return
+     */
     @GetMapping("/default-address")
-    public JSONObject getDefaultAddressByUserId(HttpServletRequest httpServletRequest) {
+    public JSONObject getDefaultAddress(HttpServletRequest httpServletRequest) {
         PinUser user = userService.whoAmI(httpServletRequest);
         try {
             JSONObject data = new JSONObject();
@@ -74,16 +82,16 @@ public class UsersController {
     }
 
     /**
-     * 根据用户ID，查询该用户的所有收获地址
+     * 根据用户ID，查询该用户的所有收货地址
      * @param httpServletRequest
      * @return
      */
     @GetMapping("/address")
-    public JSONObject getAddressByUserId(HttpServletRequest httpServletRequest) {
+    public JSONObject getAllAddresses(HttpServletRequest httpServletRequest) {
         try {
             PinUser user = userService.whoAmI(httpServletRequest);
             JSONObject data = new JSONObject();
-            data.put("list", addressService.getAllAddressesByUserId(user.getId()));
+            data.put("list", addressService.getAllAddresses(user.getId()));
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
         } catch (Exception e) {
             e.printStackTrace();
@@ -92,7 +100,8 @@ public class UsersController {
     }
 
     /**
-     * 增加地址
+     * @author flyhero
+     * 增加地址，增加了对isDefault的检查
      * @param httpServletRequest
      * @param requestJSON
      * @return
@@ -101,16 +110,12 @@ public class UsersController {
     public JSONObject createAddress(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try {
             PinUser user = userService.whoAmI(httpServletRequest);
-            String realName = requestJSON.getString("realName");
-            String phone = requestJSON.getString("phone");
-            String province = requestJSON.getString("province");
-            String city = requestJSON.getString("city");
-            String district = requestJSON.getString("district");
-            String detail = requestJSON.getString("detail");
-            Integer postCode = requestJSON.getInteger("postCode");
-            PinUserAddress addressToUpdate = JSONObject.toJavaObject(requestJSON, PinUserAddress.class);
+            PinUserAddress address = JSONObject.toJavaObject(requestJSON, PinUserAddress.class);
+            address.setUserId(user.getId());
+            address.setCreateTime(new Date());
+            addressService.createAddress(address);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
-                    addressService.createAddressByUserId(user.getId(), realName, phone, province, city, district, detail, postCode));
+                    null);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
@@ -118,6 +123,7 @@ public class UsersController {
     }
 
     /**
+     * @author flyhero
      * 删除地址
      * @param httpServletRequest
      * @param requestJSON
@@ -131,7 +137,7 @@ public class UsersController {
             if(addressId == null) {
                 return ResponseWrapper.wrap(PinConstants.StatusCode.PERMISSION_DENIED, "无权限删除", null);
             }
-            int code = addressService.deleteAddressByUserId(addressId, user.getId());
+            int code = addressService.deleteAddress(addressId, user.getId());
             if (code == AddressService.STATUS_DELETE_ADDRESS_SUCCESS) {
                 return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
             } else if (code == AddressService.STATUS_DELETE_ADDRESS_INVALID_ID) {
@@ -147,6 +153,7 @@ public class UsersController {
     }
 
     /**
+     * @author flyhero
      * 更新地址
      * @param httpServletRequest
      * @param requestJSON
@@ -157,15 +164,19 @@ public class UsersController {
         try {
             PinUser user = userService.whoAmI(httpServletRequest);
             PinUserAddress addressToUpdate = JSONObject.toJavaObject(requestJSON, PinUserAddress.class);
-            if (addressService.updateAddressByUserId(user.getId(), addressToUpdate) == null) {
-                // 无权
-                return ResponseWrapper.wrap(PinConstants.StatusCode.PERMISSION_DENIED, "无权限删除", null);
+            int code = addressService.updateAddress(user.getId(), addressToUpdate);
+            if(code == AddressService.STATUS_UPDATE_ADDRESS_SUCCESS) { // 更新成功
+                return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
+            } else if(code == AddressService.STATUS_UPDATE_ADDRESS_INVALID_ID) { // 无地址记录
+                return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, "无对应地址记录！", null);
+            } else if(code == AddressService.STATUS_UPDATE_ADDRESS_PERMISSION_DENIED) {
+                return ResponseWrapper.wrap(PinConstants.StatusCode.PERMISSION_DENIED, "无权限删除！", null);
             }
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
+        return null;
     }
 
     /**
@@ -187,6 +198,7 @@ public class UsersController {
     }
 
     /**
+     * @author flyhero
      * 获取商品收藏product-collection
      * @param httpServletRequest 请求对象
      * @return 响应 JSON
@@ -205,6 +217,7 @@ public class UsersController {
     }
 
     /**
+     * @author flyhero
      * 获取店铺收藏store-collection
      * @param httpServletRequest 请求对象
      * @return 响应 JSON
@@ -223,6 +236,7 @@ public class UsersController {
     }
 
     /**
+     * @author flyhero
      * 添加商品收藏
      * @param httpServletRequest
      * @param requestJSON
@@ -243,6 +257,7 @@ public class UsersController {
     }
 
     /**
+     * @author flyhero
      * 删除商品收藏
      * @param httpServletRequest
      * @param productId
@@ -270,6 +285,7 @@ public class UsersController {
     }
 
     /**
+     * @author flyhero
      * 添加店铺收藏
      * @param httpServletRequest
      * @param requestJSON
@@ -290,6 +306,7 @@ public class UsersController {
     }
 
     /**
+     * @author flyhero
      * 删除店铺收藏
      * @param httpServletRequest
      * @param storeId
@@ -317,6 +334,7 @@ public class UsersController {
     }
 
     /**
+     * @author flyhero
      * 签到功能
      * @param httpServletRequest
      * @return
@@ -334,6 +352,7 @@ public class UsersController {
     }
 
     /**
+     * @author flyhero
      * 获取用户签到详细信息历史记录
      * @param httpServletRequest
      * @return
@@ -351,6 +370,7 @@ public class UsersController {
     }
 
     /**
+     * @author flyhero
      * 判断某一用户今日是否已经签到
      * @param httpServletRequest
      * @return
