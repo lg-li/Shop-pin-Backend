@@ -340,7 +340,7 @@ public class PinUser {
                 '}';
     }
 
-    public static List<PinRole> transfer(List<PinRole> list){
+    public static List<PinRole> transferRoleIntegerToPinRole(List<PinRole> list){
         ArrayList<PinRole> roleList = new ArrayList<>();
         for (Object integer : list) {
             roleList.add(PinRole.values()[(Integer) integer]);

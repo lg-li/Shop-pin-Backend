@@ -1,6 +1,8 @@
 package cn.edu.neu.shop.pin.service.security;
 
+import cn.edu.neu.shop.pin.mapper.PinUserRoleMapper;
 import cn.edu.neu.shop.pin.model.PinRole;
+import cn.edu.neu.shop.pin.model.PinUserRole;
 import cn.edu.neu.shop.pin.service.UserCreditRecordService;
 import cn.edu.neu.shop.pin.service.UserRoleListTransferService;
 import cn.edu.neu.shop.pin.exception.CredentialException;
@@ -43,6 +45,8 @@ public class UserService extends AbstractService<PinUser> {
     @Autowired
     private UserCreditRecordService userCreditRecordService;
 
+    @Autowired
+    private PinUserRoleMapper pinUserRoleMapper;
     /**
      * 登录接口
      *
@@ -66,7 +70,11 @@ public class UserService extends AbstractService<PinUser> {
         if (pinUser == null) {
             return null;
         }
-        return jwtTokenProvider.createToken(pinUser.getId(), userRoleListTransferService.findById(wechatUser.getUserId()).getRoles());
+        return jwtTokenProvider.createToken(
+                pinUser.getId(),
+                userRoleListTransferService
+                        .findById(pinUser.getId())
+                        .getRoles());
     }
 
 
@@ -99,9 +107,9 @@ public class UserService extends AbstractService<PinUser> {
      * @param gender    性别
      * @return 实体对象
      */
-    public PinUser signUpAndGetNewPinUser(String phone, String email, String password, String avatarUrl, String nickname, String currentIp, Integer gender,List<PinRole> list) {
+    public PinUser signUpAndGetNewPinUser(String phone, String email, String password, String avatarUrl, String nickname, String currentIp, Integer gender,List<PinRole> roleList) {
         PinUser pinUser = fillInCurrentTimeStampToUser(phone, email, password, avatarUrl, nickname, currentIp, gender);
-        signUp(pinUser,list);
+        signUp(pinUser,roleList);
         return pinUser;
     }
 
@@ -116,11 +124,16 @@ public class UserService extends AbstractService<PinUser> {
      * @param user 用户信息（密码传入时保持明文）
      * @return 登录后 Token
      */
-    private String signUp(PinUser user,List<PinRole> list) {
+    private String signUp(PinUser user,List<PinRole> roleList) {
         if (!userRoleListTransferService.existsById(user.getId())) {
             user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
             userRoleListTransferService.save(user);
-            return jwtTokenProvider.createToken(user.getId(), /*user.getRoles()*/list);
+            // 插入权限到权限表
+            for(PinRole roleToAppend : roleList) {
+                PinUserRole role = new PinUserRole(user.getId(),roleToAppend.ordinal());
+                pinUserRoleMapper.insert(role);
+            }
+            return jwtTokenProvider.createToken(user.getId(), roleList);
         } else {
             throw new CredentialException("Id is already in use", HttpStatus.UNPROCESSABLE_ENTITY);
         }

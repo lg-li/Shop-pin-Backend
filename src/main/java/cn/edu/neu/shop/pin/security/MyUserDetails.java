@@ -16,11 +16,11 @@ import org.springframework.stereotype.Service;
 public class MyUserDetails implements UserDetailsService {
 
     @Autowired
-    private UserRoleListTransferService userMapper;
+    private UserRoleListTransferService userRoleListTransferService;
 
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        final PinUser pinUser = userMapper.findById((Integer)Integer.parseInt(id));
+        final PinUser pinUser = userRoleListTransferService.findById(Integer.parseInt(id));
 
         if (pinUser == null) {
             throw new UsernameNotFoundException("User '" + id + "' not found");
