@@ -2,6 +2,7 @@ package cn.edu.neu.shop.pin.controller;
 
 import cn.edu.neu.shop.pin.mapper.PinUserMapper;
 import cn.edu.neu.shop.pin.mapper.PinUserRoleMapper;
+import cn.edu.neu.shop.pin.model.PinRole;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.model.PinUserRole;
 import cn.edu.neu.shop.pin.security.JwtTokenProvider;
@@ -52,7 +53,7 @@ public class SignUpController {
                     signUpInfo.getString("nickname"),
                     signUpInfo.getString("currentIp"),
                     signUpInfo.getInteger("gender"),
-                    userRoleListTransferService.transfer(roles));
+                    PinUser.transferRoleIntegerToPinRole(roles.toJavaList(PinRole.class)));
             //如果在这里调findId，没有role，会报空指针
             Integer id = jwtTokenProvider.getId(token);
             PinUser user = pinUserMapper.selectByPrimaryKey(id);

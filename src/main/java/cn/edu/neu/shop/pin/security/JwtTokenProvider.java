@@ -49,9 +49,16 @@ public class JwtTokenProvider {
     }
 
     public String createToken(Integer id, List<PinRole> roles) {
-
+        System.out.println(roles);
         Claims claims = Jwts.claims().setSubject(id.toString());
-        claims.put("auth", roles.stream().map(s -> new SimpleGrantedAuthority(s.getAuthority())).filter(Objects::nonNull).collect(Collectors.toList()));
+        claims.put("auth", roles
+                .stream()
+                .map(
+                        s -> new SimpleGrantedAuthority(
+                                s.getAuthority()
+                        ))
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList()));
 
         Date now = new Date();
         Date validity = new Date(now.getTime() + validityInMilliseconds);

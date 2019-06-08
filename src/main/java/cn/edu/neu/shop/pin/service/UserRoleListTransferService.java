@@ -17,14 +17,16 @@ public class UserRoleListTransferService extends AbstractService<PinUser> {
     PinUserMapper pinUserMapper;
 
     //通过id找用户
+    @Override
     public PinUser findById(Integer id) {
         PinUser pinUser = pinUserMapper.findById(id);
         List<PinRole> roles = pinUser.getRoles();
         if(roles != null) {
-            pinUser.setRoles(PinUser.transfer(roles));
+            pinUser.setRoles(PinUser.transferRoleIntegerToPinRole(roles));
         }
         return pinUser;
     }
+
 
     //通过id找用户
     public PinUser findByIdWithoutRole(Integer id) {
@@ -37,11 +39,11 @@ public class UserRoleListTransferService extends AbstractService<PinUser> {
         return pinUserMapper.existsById(id);
     }
 
-    public List<PinRole> transfer(JSONArray list) {
-        ArrayList<PinRole> roles = new ArrayList<>();
-        for (int i = 0;i<list.size();i++){
-            roles.add(PinRole.values()[list.getInteger(i)]);
-        }
-        return roles;
-    }
+//    public List<PinRole> transfer(JSONArray list) {
+//        ArrayList<PinRole> roles = new ArrayList<>();
+//        for (int i = 0;i<list.size();i++){
+//            roles.add(PinRole.values()[list.getInteger(i)]);
+//        }
+//        return roles;
+//    }
 }

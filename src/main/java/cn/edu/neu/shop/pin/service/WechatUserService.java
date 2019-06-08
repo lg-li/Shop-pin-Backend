@@ -59,10 +59,11 @@ public class WechatUserService extends AbstractService<PinWechatUser> {
 
         } else {
             // 微信用户首次登录
-            List<PinRole>list = new ArrayList<>();
-            list.add(PinRole.ROLE_USER);
-            PinUser newPinUser = userService.signUpAndGetNewPinUser(null, null, "default", avatarUrl, name, currentIp, gender, list);
-            wechatUser = new PinWechatUser();
+            List<PinRole> roleList = new ArrayList<>();
+            roleList.add(PinRole.ROLE_USER); // 默认权限
+            PinUser newPinUser = userService.signUpAndGetNewPinUser(null, null, "default", avatarUrl, name, currentIp, gender, roleList);
+            wechatUser = new PinWechatUser(); // 重新初始化
+            wechatUser.setOpenId(wechatCredential.getOpenId());
             // 绑定微信用户与实体用户
             wechatUser.setUserId(newPinUser.getId());
             assignPropertyToWechatUserAndSave(name, gender, avatarUrl, country, province, city, language, wechatUser);
