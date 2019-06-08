@@ -27,12 +27,12 @@
         <javaClientGenerator targetPackage="cn.edu.neu.shop.pin.mapper" targetProject="src/main/java"
                              type="XMLMAPPER"/>
 
-        <table schema="pin" tableName="pin_product_attribute_value">
-            <!--mysql 配置-->
-            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
-            <!--<domainObjectRenamingRule searchString="^Pin" replaceString="" />-->
-            <!--oracle 配置-->
-            <!--<generatedKey column="id" sqlStatement="select SEQ_{1}.nextval from dual" identity="false" type="pre"/>-->
-        </table>
+        <!--<table schema="pin" tableName="pin_product_attribute_value">-->
+            <!--&lt;!&ndash;mysql 配置&ndash;&gt;-->
+            <!--<generatedKey column="id" sqlStatement="Mysql" identity="true"/>-->
+            <!--&lt;!&ndash;<domainObjectRenamingRule searchString="^Pin" replaceString="" />&ndash;&gt;-->
+            <!--&lt;!&ndash;oracle 配置&ndash;&gt;-->
+            <!--&lt;!&ndash;<generatedKey column="id" sqlStatement="select SEQ_{1}.nextval from dual" identity="false" type="pre"/>&ndash;&gt;-->
+        <!--</table>-->
     </context>
 </generatorConfiguration>
