@@ -20,6 +20,6 @@ public class PinOrderItemMapperTest {
     @Test
     @Rollback(false)
     public void testAddOrderItem() {
-        pinOrderItemMapper.addOrderItem(1, 1, 150, 1);
+        pinOrderItemMapper.createOrderItem(1, 1, 150, 1);
     }
 }
