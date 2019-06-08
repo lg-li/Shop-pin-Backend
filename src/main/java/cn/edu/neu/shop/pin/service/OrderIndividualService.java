@@ -73,7 +73,7 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
      * @throws OrderItemsAreNotInTheSameStoreException
      * @throws ProductSoldOutException
      */
-    public PinOrderIndividual addOrderIndividual(PinUser user, List<PinOrderItem> list, Integer addressId) throws OrderItemsAreNotInTheSameStoreException, ProductSoldOutException {
+    public PinOrderIndividual addOrderIndividual(PinUser user, List<PinOrderItem> list, Integer addressId, String userRemark) throws OrderItemsAreNotInTheSameStoreException, ProductSoldOutException {
         PinUserAddress address = addressService.findById(addressId);
         if(address == null) {
             throw new RecordNotFoundException("地址ID不正确");
@@ -90,7 +90,7 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
             BigDecimal originallyPrice = orderItemService.getProductTotalPrice(list);   // 计算本来的价格
             BigDecimal shippingFee = orderItemService.getAllShippingFee(list);  // 邮费
             BigDecimal totalPrice = originallyPrice.add(shippingFee);   //总费用
-//            OrderItemService.PayDetail payDetail = orderItemService.new PayDetail(user.getId(), totalPrice);    //支付详情
+            // OrderItemService.PayDetail payDetail = orderItemService.new PayDetail(user.getId(), totalPrice);    //支付详情
             BigDecimal totalCost = orderItemService.getTotalCost(list);
             String addressString = address.getProvince()+address.getCity()+address.getDistrict()+address.getDetail();
             PinOrderIndividual orderIndividual = new PinOrderIndividual(null, storeId, user.getId(),
@@ -99,14 +99,13 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
                     shippingFee,null, /*卖家可以改动实际支付的邮费，修改的时候总价格也要修改，余额支付，实际支付也要改*/
                     null, null,false, null,
                     new Date(System.currentTimeMillis()),0,0,null,null,null,
-                    null,null,null,null,null,null,null,null,null,totalCost);
+                    null,null,null,null,null,null,null,userRemark,null,totalCost);
             this.save(orderIndividual);
             //将list中的PinOrderItem挂载到PinOrderIndividual上
             orderItemService.amountOrderItems(list,orderIndividual.getId());
             return orderIndividual;
-        }
-        //如果不属于一家店铺
-        else {
+        } else {
+            //如果不属于一家店铺
             throw new OrderItemsAreNotInTheSameStoreException("不属于一家店铺");
         }
     }

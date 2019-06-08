@@ -65,6 +65,9 @@ public class OrderController {
     /**
      * @author YDY LLG
      * 创建一个pinOrderIndividual
+     * @param httpServletRequest 请求对象
+     * @param requestObject 请求体JSON对象
+     * @return 返回JSON
      */
     @PostMapping("/order-individual")
     public JSONObject createOrderIndividual(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestObject) {
@@ -72,7 +75,8 @@ public class OrderController {
             PinUser user = userService.whoAmI(httpServletRequest);
             List<PinOrderItem> list = orderItemService.getItemListByJSONArray(requestObject.getJSONArray("orderItemIds"));
             Integer addressId = requestObject.getInteger("addressId");
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, orderIndividualService.addOrderIndividual(user, list, addressId));
+            String userRemark = requestObject.getString("userRemark");
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, orderIndividualService.addOrderIndividual(user, list, addressId, userRemark));
         } catch (ProductSoldOutException e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.PRODUCT_SOLD_OUT, e.getMessage(), null);
@@ -85,6 +89,11 @@ public class OrderController {
         }
     }
 
+    /**
+     * 获取三个月的订单
+     * @param httpServletRequest 请求对象
+     * @return 返回JSON
+     */
     @GetMapping("/order-items")
     public JSONObject getAllOrderItems(HttpServletRequest httpServletRequest) {
         try {
