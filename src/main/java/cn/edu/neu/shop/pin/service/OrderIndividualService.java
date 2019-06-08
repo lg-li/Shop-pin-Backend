@@ -103,7 +103,7 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
                     null, null, null, null, null, null, null, userRemark, null, totalCost);
             this.save(orderIndividual);
             //将list中的PinOrderItem挂载到PinOrderIndividual上
-            orderItemService.amountOrderItems(list, orderIndividual.getId());
+            orderItemService.mountOrderItems(list, orderIndividual.getId());
             return orderIndividual;
         } else {
             //如果不属于一家店铺
