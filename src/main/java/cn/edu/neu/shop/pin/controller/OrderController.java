@@ -43,7 +43,6 @@ public class OrderController {
 
     /**
      * 根据团单编号获取团单
-     *
      * @param orderGroupId
      * @return
      */
@@ -91,10 +90,10 @@ public class OrderController {
     }
 
     /**
-     * 获取三个月的订单
-     *
-     * @param httpServletRequest HTTP请求对象
-     * @return 返回JSON
+     * @author flyhero
+     * 获取所有订单信息
+     * @param httpServletRequest
+     * @return
      */
     @GetMapping("/order-items")
     public JSONObject getAllOrderItems(HttpServletRequest httpServletRequest) {
@@ -114,7 +113,7 @@ public class OrderController {
 
 
     /**
-     * @param httpServletRequest HTTP请求对象
+     * @param httpServletRequest
      * @param requestJSON
      * @return
      * @author flyhero
@@ -127,8 +126,8 @@ public class OrderController {
             Integer productId = requestJSON.getInteger("productId");
             Integer skuId = requestJSON.getInteger("skuId");
             Integer amount = requestJSON.getInteger("amount");
-            int code = orderItemService.addOrderItem(user.getId(), productId, skuId, amount);
-            if (code == OrderItemService.STATUS_ADD_ORDER_ITEM_SUCCESS) {
+            int code = orderItemService.createOrderItem(user.getId(), productId, skuId, amount);
+            if(code == OrderItemService.STATUS_ADD_ORDER_ITEM_SUCCESS) {
                 return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
             } else if (code == OrderItemService.STATUS_ADD_ORDER_ITEM_INVALID_ID) {
                 return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, "添加购物车失败", null);
