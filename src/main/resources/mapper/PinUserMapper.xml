@@ -39,8 +39,8 @@
     <!-- 更新学生信息 -->
     <update id="updateUserCredit" parameterType="Integer">
         UPDATE pin_user
-            SET pin_user.credit = #{credit}
-         WHERE pin_user.id = #{userId}
+            SET credit = credit + #{credit}
+         WHERE id = #{userId}
 </update>
 
 </mapper>
