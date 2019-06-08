@@ -188,6 +188,8 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     public List<PinOrderItem> getAllOrderItems(Integer userId) {
         PinOrderItem pinOrderItem = new PinOrderItem();
         pinOrderItem.setUserId(userId);
+        pinOrderItem.setOrderIndividualId(null);
+        pinOrderItem.setIsSubmitted(false);
         List<PinOrderItem> list = pinOrderItemMapper.select(pinOrderItem);
         for (PinOrderItem p : list) {
             PinProduct pro = productService.getProductById(p.getProductId());
