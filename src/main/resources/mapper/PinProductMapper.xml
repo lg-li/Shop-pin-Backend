@@ -129,7 +129,7 @@
     select * from pin_product where is_new = 1
   </select>
 
-  <select id="getgetProductFromSameStore" resultMap="PinProductFromSameStoreResultMap">
+  <select id="getProductFromSameStore" resultMap="PinProductFromSameStoreResultMap">
     select pin_product.id, image_urls, name, info, a1.category_name as sub_name, a2.category_name as parent_name
     from pin_product, pin_settings_product_category as a1, pin_settings_product_category as a2
     where pin_product.store_id = 1

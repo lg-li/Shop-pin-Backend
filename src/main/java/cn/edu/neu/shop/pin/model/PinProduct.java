@@ -1,5 +1,7 @@
 package cn.edu.neu.shop.pin.model;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -29,7 +31,7 @@ public class PinProduct {
     /**
      * 分类id
      */
-    @Column(name = "category_name")
+    @TableField(exist = false)
     private String categoryName;
 
     /**

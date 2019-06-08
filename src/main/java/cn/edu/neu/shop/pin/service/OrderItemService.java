@@ -227,15 +227,15 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
      * @author flyhero
      * 根据orderIndividualId返回所有的orderItem，集成了product和attributeValue
      *
-     * @param orderIndividualId
-     * @return
+     * @param orderIndividualId 子订单ID
+     * @return 子订单对应的已选商品项目列表
      */
     public List<PinOrderItem> getOrderItemsByOrderIndividualId(Integer orderIndividualId) {
         PinOrderItem orderItem = new PinOrderItem();
         orderItem.setOrderIndividualId(orderIndividualId);
         List<PinOrderItem> list = pinOrderItemMapper.select(orderItem);
         for (PinOrderItem o : list) {
-            PinProduct product = pinProductMapper.selectByPrimaryKey(o.getProductId());
+            PinProduct product = pinProductMapper.getProductById(o.getProductId());
             o.setProduct(product);
             PinProductAttributeValue pinProductAttributeValue =
                     pinProductAttributeValueMapper.selectByPrimaryKey(o.getSkuId());
