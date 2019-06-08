@@ -1,9 +1,9 @@
 package cn.edu.neu.shop.pin.controller.admin;
 
 import cn.edu.neu.shop.pin.model.PinStore;
+import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.service.StoreService;
 import cn.edu.neu.shop.pin.service.security.UserService;
-import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
@@ -23,8 +23,9 @@ public class AdminStoreController {
 
     /**
      * 得到这个商人所有的商铺
-     * @param req  传入的request
-     * @return  返回所有的商铺
+     *
+     * @param req 传入的request
+     * @return 返回所有的商铺
      */
     @GetMapping("/storeList")
     public JSONObject getProducts(HttpServletRequest req) {
@@ -42,7 +43,7 @@ public class AdminStoreController {
      */
     @PostMapping("/storeInfo")
     public JSONObject addStoreInfo(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
-        try{
+        try {
             PinUser user = userService.whoAmI(httpServletRequest);
             String storeName = requestJSON.getString("name");
             String description = requestJSON.getString("description");
@@ -59,16 +60,17 @@ public class AdminStoreController {
 
     /**
      * 修改店铺信息
+     *
      * @param httpServletRequest
      * @param requestJSON
      * @return
      */
     @PutMapping("/storeInfo")
     public JSONObject updateStoreInfo(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
-        try{
+        try {
             PinUser user = userService.whoAmI(httpServletRequest);
             PinStore store = JSONObject.toJavaObject(requestJSON, PinStore.class);
-            if(storeService.update(store) == null) {
+            if (storeService.update(store) == null) {
                 return ResponseWrapper.wrap(PinConstants.StatusCode.PERMISSION_DENIED, PinConstants.ResponseMessage.PERMISSION_DENIED, null);
             }
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);

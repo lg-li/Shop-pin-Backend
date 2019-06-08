@@ -1,8 +1,7 @@
 package cn.edu.neu.shop.pin.controller.security;
 
-import cn.edu.neu.shop.pin.service.security.UserService;
-import cn.edu.neu.shop.pin.dto.UserDataDTO;
 import cn.edu.neu.shop.pin.model.PinUser;
+import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;

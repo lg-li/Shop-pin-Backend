@@ -1,6 +1,8 @@
 package cn.edu.neu.shop.pin.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Table(name = "pin_settings_constant")
 public class PinSettingsConstant {

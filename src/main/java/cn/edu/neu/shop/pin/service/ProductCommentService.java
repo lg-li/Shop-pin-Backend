@@ -8,8 +8,6 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class ProductCommentService extends AbstractService<PinUserProductComment> {
 
@@ -18,11 +16,12 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
 
     /**
      * 根据商品ID 获取该商品评论信息
+     *
      * @param productId 商品 ID
      * @return List
      */
     public PageInfo<PinUserProductComment> getCommentByProductIdByPage(Integer productId, Integer pageNum, Integer pageSize) {
-        return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(()-> {
+        return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> {
             PinUserProductComment pinUserProductComment = new PinUserProductComment();
             pinUserProductComment.setProductId(productId);
             pinUserProductCommentMapper.select(pinUserProductComment);

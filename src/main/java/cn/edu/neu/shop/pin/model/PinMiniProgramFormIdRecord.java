@@ -1,7 +1,7 @@
 package cn.edu.neu.shop.pin.model;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "pin_mini_program_form_id_record")
 public class PinMiniProgramFormIdRecord {

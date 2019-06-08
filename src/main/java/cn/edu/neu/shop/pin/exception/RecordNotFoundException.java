@@ -1,7 +1,5 @@
 package cn.edu.neu.shop.pin.exception;
 
-import org.springframework.http.HttpStatus;
-
 /**
  * @author ydy
  */

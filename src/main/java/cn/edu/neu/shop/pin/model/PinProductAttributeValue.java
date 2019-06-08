@@ -1,7 +1,7 @@
 package cn.edu.neu.shop.pin.model;
 
-import java.math.BigDecimal;
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Table(name = "pin_product_attribute_value")
 public class PinProductAttributeValue {
@@ -50,6 +50,7 @@ public class PinProductAttributeValue {
 
     /**
      * 满参构造方法
+     *
      * @param productId
      * @param sku
      * @param stock

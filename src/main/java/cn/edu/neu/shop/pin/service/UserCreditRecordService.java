@@ -29,6 +29,7 @@ public class UserCreditRecordService {
 
     /**
      * 按照需求规约中格式，获取用户签到记录
+     *
      * @param userId
      * @return
      */
@@ -48,6 +49,7 @@ public class UserCreditRecordService {
 
     /**
      * 每日签到
+     *
      * @param userId
      * @throws Exception
      */
@@ -57,18 +59,16 @@ public class UserCreditRecordService {
         Integer increment = getIncrement();
         Integer limit = getLimit();
         PinUserCreditRecord record;
-        if(list.size() == 0) { // 暂无签到记录
+        if (list.size() == 0) { // 暂无签到记录
             record = new PinUserCreditRecord(userId, credit, PinUserCreditRecord.TYPE_FROM_CHECK_IN, new Date(), 1);
             pinUserMapper.updateUserCredit(userId, credit);
             pinUserCreditRecordMapper.insert(record);
-        }
-        else if(hasCheckedIn(userId)) { // 今日已签到
+        } else if (hasCheckedIn(userId)) { // 今日已签到
             throw new CheckInFailedException("签到失败！请勿重复签到！");
-        }
-        else {
+        } else {
             Date yesterday = this.getYesterday(new Date());
             Integer note = getContinuousCheckInDaysNum(userId);
-            Integer creditVal = (credit+note*increment>limit) ? limit : credit+note*increment;
+            Integer creditVal = (credit + note * increment > limit) ? limit : credit + note * increment;
             record = new PinUserCreditRecord(userId, creditVal, PinUserCreditRecord.TYPE_FROM_CHECK_IN, new Date(), note);
             pinUserCreditRecordMapper.insert(record);
         }
@@ -76,15 +76,15 @@ public class UserCreditRecordService {
 
     /**
      * 判断今天是否签到了
+     *
      * @param userId
      * @return
      */
     public Boolean hasCheckedIn(Integer userId) {
         List<PinUserCreditRecord> list = pinUserCreditRecordMapper.getCheckInDaysInfo(userId);
-        if(list.size() == 0) {
+        if (list.size() == 0) {
             return false;
-        }
-        else {
+        } else {
             PinUserCreditRecord p = list.get(0);
             Date date = p.getCreateTime();
             return isTheSameDay(date, new Date());
@@ -93,15 +93,15 @@ public class UserCreditRecordService {
 
     /**
      * 获取某一用户的连续签到天数（用到了DP思想）
+     *
      * @param userId
      * @return
      */
     public Integer getContinuousCheckInDaysNum(Integer userId) {
         List<PinUserCreditRecord> list = pinUserCreditRecordMapper.getCheckInDaysInfo(userId);
-        if(list.size() == 0) {
+        if (list.size() == 0) {
             return 0;
-        }
-        else {
+        } else {
             PinUserCreditRecord p = list.get(0);
             Date date = p.getCreateTime(), yesterday = this.getYesterday(new Date());
             Integer note = isTheSameDay(date, yesterday) ? p.getNote() : 1;
@@ -111,6 +111,7 @@ public class UserCreditRecordService {
 
     /**
      * 获取Constant表中的check_in_credit值，为了简化代码
+     *
      * @return
      */
     public Integer getCredit() {
@@ -121,6 +122,7 @@ public class UserCreditRecordService {
 
     /**
      * 获取Constant表中的check_in_credit_increment值，为了简化代码
+     *
      * @return
      */
     private Integer getIncrement() {
@@ -131,6 +133,7 @@ public class UserCreditRecordService {
 
     /**
      * 获取Constant表中的check_in_credit_limit值，为了简化代码
+     *
      * @return
      */
     private Integer getLimit() {
@@ -141,8 +144,9 @@ public class UserCreditRecordService {
 
     /**
      * 判断时间是不是今天
+     *
      * @param date
-     * @return    是返回true，不是返回false
+     * @return 是返回true，不是返回false
      */
     private boolean isNow(Date date) {
         Date now = new Date(); // 当前时间
@@ -154,6 +158,7 @@ public class UserCreditRecordService {
 
     /**
      * 给定今天日期，判断昨天日期
+     *
      * @param today
      * @return
      */
@@ -166,6 +171,7 @@ public class UserCreditRecordService {
 
     /**
      * 判断两个Date类型的日期是否相同
+     *
      * @param date1
      * @param date2
      * @return

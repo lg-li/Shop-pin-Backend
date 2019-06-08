@@ -1,9 +1,9 @@
 package cn.edu.neu.shop.pin.controller;
 
-import cn.edu.neu.shop.pin.service.WechatUserService;
-import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.exception.CredentialException;
 import cn.edu.neu.shop.pin.model.PinUser;
+import cn.edu.neu.shop.pin.service.WechatUserService;
+import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import cn.edu.neu.shop.pin.util.wechat.WeChatCredentialExchangeException;
@@ -31,6 +31,7 @@ public class SignInController {
 
     /**
      * 默认登录
+     *
      * @param loginJSON
      * @return
      */
@@ -39,7 +40,7 @@ public class SignInController {
         String emailOrPhone = loginJSON.getString("user");
         String password = loginJSON.getString("password");
         PinUser userFound = userService.findByEmailOrPhone(emailOrPhone);
-        if(userFound == null) {
+        if (userFound == null) {
             // 非法的用户名/邮箱/手机号
             return ResponseWrapper.wrap(
                     PinConstants.StatusCode.INVALID_CREDENTIAL,
@@ -65,6 +66,7 @@ public class SignInController {
 
     /**
      * 微信小程序登录
+     *
      * @param request
      * @param loginJSON
      * @return

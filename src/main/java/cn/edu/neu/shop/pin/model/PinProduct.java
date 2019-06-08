@@ -1,9 +1,9 @@
 package cn.edu.neu.shop.pin.model;
 
-import java.util.List;
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
-import javax.persistence.*;
+import java.util.List;
 
 @Table(name = "pin_product")
 public class PinProduct {

@@ -19,6 +19,7 @@ public class ProductCategoryService extends AbstractService<PinSettingsProductCa
 
     /**
      * 层级获取商品分类表
+     *
      * @param layer
      * @return List
      */
@@ -33,6 +34,7 @@ public class ProductCategoryService extends AbstractService<PinSettingsProductCa
 
     /**
      * 根据父分类获取商品分类表
+     *
      * @param parentId
      * @return List
      */
@@ -49,6 +51,7 @@ public class ProductCategoryService extends AbstractService<PinSettingsProductCa
 
     /**
      * 根据获取嵌套商品分类表
+     *
      * @return JSONArray 嵌套的商品分类
      */
     public JSONArray getProductCategoryAll() {

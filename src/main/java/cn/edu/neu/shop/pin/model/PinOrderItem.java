@@ -1,7 +1,7 @@
 package cn.edu.neu.shop.pin.model;
 
-import java.math.BigDecimal;
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Table(name = "pin_order_item")
 public class PinOrderItem {
@@ -72,6 +72,7 @@ public class PinOrderItem {
 
     /**
      * 默认满参构造方法
+     *
      * @param amount
      * @param userId
      * @param productId

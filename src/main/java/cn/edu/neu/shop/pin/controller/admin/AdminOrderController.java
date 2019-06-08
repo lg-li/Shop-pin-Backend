@@ -16,7 +16,7 @@ public class AdminOrderController {
 
     @GetMapping("/order/deliverNameList")
     public JSONObject getExpressInfo() {
-        try{
+        try {
             JSONObject data = new JSONObject();
             data.put("list", expressService.getExpressInfo());
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);

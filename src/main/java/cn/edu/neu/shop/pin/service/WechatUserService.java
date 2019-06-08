@@ -1,11 +1,11 @@
 package cn.edu.neu.shop.pin.service;
 
-import cn.edu.neu.shop.pin.model.PinRole;
-import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.mapper.PinUserMapper;
 import cn.edu.neu.shop.pin.mapper.PinWechatUserMapper;
+import cn.edu.neu.shop.pin.model.PinRole;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.model.PinWechatUser;
+import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import cn.edu.neu.shop.pin.util.wechat.WeChatCredential;
 import cn.edu.neu.shop.pin.util.wechat.WeChatCredentialExchangeException;
@@ -33,6 +33,7 @@ public class WechatUserService extends AbstractService<PinWechatUser> {
 
     /**
      * 使用微信小程序登录
+     *
      * @param code
      * @param name
      * @param gender
@@ -51,9 +52,9 @@ public class WechatUserService extends AbstractService<PinWechatUser> {
         // 根据 OPEN ID 查找客户
         wechatUser.setOpenId(wechatCredential.getOpenId());
         wechatUser = pinWechatUserMapper.selectOne(wechatUser);
-        if(wechatUser != null) {
+        if (wechatUser != null) {
             // 已存在此微信用户
-            assignPropertyToWechatUserAndSave(name, gender, avatarUrl, country, province,city,language,wechatUser);
+            assignPropertyToWechatUserAndSave(name, gender, avatarUrl, country, province, city, language, wechatUser);
             // 更新头像等信息
             update(wechatUser);
 

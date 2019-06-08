@@ -43,17 +43,18 @@ public class OrderController {
 
     /**
      * 根据团单编号获取团单
+     *
      * @param orderGroupId
      * @return
      */
     @GetMapping("/order-group/{orderGroupId}")
     public JSONObject getGroupOrderInfo(@PathVariable(value = "orderGroupId") Integer orderGroupId) {
-        try{
-            PinOrderGroup orderGroupInfo =  orderService.getOrderGroupInfo(orderGroupId);
+        try {
+            PinOrderGroup orderGroupInfo = orderService.getOrderGroupInfo(orderGroupId);
             List<PinUser> list = orderGroupService.getUsersByOrderGroup(orderGroupInfo);
             JSONObject data = new JSONObject();
-            data.put("orderGroup",orderGroupInfo);
-            data.put("users",list);
+            data.put("orderGroup", orderGroupInfo);
+            data.put("users", list);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
                     data);
         } catch (Exception e) {
@@ -63,11 +64,11 @@ public class OrderController {
     }
 
     /**
+     * @param httpServletRequest 请求对象
+     * @param requestObject      请求体JSON对象
+     * @return 返回JSON
      * @author YDY LLG
      * 创建一个pinOrderIndividual
-     * @param httpServletRequest 请求对象
-     * @param requestObject 请求体JSON对象
-     * @return 返回JSON
      */
     @PostMapping("/order-individual")
     public JSONObject createOrderIndividual(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestObject) {
@@ -91,7 +92,8 @@ public class OrderController {
 
     /**
      * 获取三个月的订单
-     * @param httpServletRequest 请求对象
+     *
+     * @param httpServletRequest HTTP请求对象
      * @return 返回JSON
      */
     @GetMapping("/order-items")
@@ -112,11 +114,11 @@ public class OrderController {
 
 
     /**
-     * @author flyhero
-     * 将商品添加到购物车中（新建一条OrderItem记录）
-     * @param httpServletRequest
+     * @param httpServletRequest HTTP请求对象
      * @param requestJSON
      * @return
+     * @author flyhero
+     * 将商品添加到购物车中（新建一条OrderItem记录）
      */
     @PostMapping("/order-item")
     public JSONObject addOrderItem(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
@@ -126,9 +128,9 @@ public class OrderController {
             Integer skuId = requestJSON.getInteger("skuId");
             Integer amount = requestJSON.getInteger("amount");
             int code = orderItemService.addOrderItem(user.getId(), productId, skuId, amount);
-            if(code == OrderItemService.STATUS_ADD_ORDER_ITEM_SUCCESS) {
+            if (code == OrderItemService.STATUS_ADD_ORDER_ITEM_SUCCESS) {
                 return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
-            }  else if(code == OrderItemService.STATUS_ADD_ORDER_ITEM_INVALID_ID) {
+            } else if (code == OrderItemService.STATUS_ADD_ORDER_ITEM_INVALID_ID) {
                 return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, "添加购物车失败", null);
             }
         } catch (Exception e) {
@@ -138,11 +140,11 @@ public class OrderController {
     }
 
     /**
+     * @param httpServletRequest HTTP请求对象
+     * @param jsonObject         请求体JSON
+     * @return
      * @author flyhero
      * 删除订单信息
-     * @param httpServletRequest
-     * @param jsonObject
-     * @return
      */
     @DeleteMapping("/order-items")
     public JSONObject deleteOrderItems(HttpServletRequest httpServletRequest, @RequestBody JSONObject jsonObject) {
@@ -166,12 +168,12 @@ public class OrderController {
     }
 
     /**
+     * @param httpServletRequest HTTP请求对象
+     * @return
      * @author flyhero
      * 获取近三个月所有的orderIndividuals
-     * @param httpServletRequest
-     * @return
      */
-    @GetMapping("/get-individual-orders")
+    @GetMapping("/order-individual/recent")
     public JSONObject getRecentThreeMonthsOrderIndividuals(HttpServletRequest httpServletRequest) {
         PinUser user = userService.whoAmI(httpServletRequest);
         try {

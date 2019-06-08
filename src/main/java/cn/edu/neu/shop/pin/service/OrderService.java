@@ -20,7 +20,7 @@ public class OrderService {
     @Autowired
     private PinOrderGroupMapper orderGroupMapper;
 
-    public PinOrderIndividual createOrderIndividual(){
+    public PinOrderIndividual createOrderIndividual() {
         return null;
     }
 

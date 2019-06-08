@@ -40,13 +40,13 @@ public class PinConstants {
         public static final String PRODUCT_SOLD_OUT = "存在商品库存不足";
     }
 
-    public class PayType{
+    public class PayType {
         public static final String WEICHAT = "WEICHAT";
         public static final String BALANCE = "BALANCE";
         public static final String BOTH = "WEICHAT BALANCE";
     }
 
-    public class ProductStatus{
+    public class ProductStatus {
         public static final int ALARM = 10;
     }
 

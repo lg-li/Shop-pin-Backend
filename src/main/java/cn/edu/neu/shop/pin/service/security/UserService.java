@@ -1,14 +1,14 @@
 package cn.edu.neu.shop.pin.service.security;
 
+import cn.edu.neu.shop.pin.exception.CredentialException;
 import cn.edu.neu.shop.pin.mapper.PinUserRoleMapper;
 import cn.edu.neu.shop.pin.model.PinRole;
-import cn.edu.neu.shop.pin.model.PinUserRole;
-import cn.edu.neu.shop.pin.service.UserCreditRecordService;
-import cn.edu.neu.shop.pin.service.UserRoleListTransferService;
-import cn.edu.neu.shop.pin.exception.CredentialException;
 import cn.edu.neu.shop.pin.model.PinUser;
+import cn.edu.neu.shop.pin.model.PinUserRole;
 import cn.edu.neu.shop.pin.model.PinWechatUser;
 import cn.edu.neu.shop.pin.security.JwtTokenProvider;
+import cn.edu.neu.shop.pin.service.UserCreditRecordService;
+import cn.edu.neu.shop.pin.service.UserRoleListTransferService;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +47,7 @@ public class UserService extends AbstractService<PinUser> {
 
     @Autowired
     private PinUserRoleMapper pinUserRoleMapper;
+
     /**
      * 登录接口
      *
@@ -92,7 +93,7 @@ public class UserService extends AbstractService<PinUser> {
      */
     public String signUpAndGetToken(String phone, String email, String password, String avatarUrl, String nickname, String currentIp, Integer gender, List<PinRole> list) {
         PinUser pinUser = fillInCurrentTimeStampToUser(phone, email, password, avatarUrl, nickname, currentIp, gender);
-        return signUp(pinUser,list);
+        return signUp(pinUser, list);
     }
 
     /**
@@ -107,9 +108,9 @@ public class UserService extends AbstractService<PinUser> {
      * @param gender    性别
      * @return 实体对象
      */
-    public PinUser signUpAndGetNewPinUser(String phone, String email, String password, String avatarUrl, String nickname, String currentIp, Integer gender,List<PinRole> roleList) {
+    public PinUser signUpAndGetNewPinUser(String phone, String email, String password, String avatarUrl, String nickname, String currentIp, Integer gender, List<PinRole> roleList) {
         PinUser pinUser = fillInCurrentTimeStampToUser(phone, email, password, avatarUrl, nickname, currentIp, gender);
-        signUp(pinUser,roleList);
+        signUp(pinUser, roleList);
         return pinUser;
     }
 
@@ -124,13 +125,13 @@ public class UserService extends AbstractService<PinUser> {
      * @param user 用户信息（密码传入时保持明文）
      * @return 登录后 Token
      */
-    private String signUp(PinUser user,List<PinRole> roleList) {
+    private String signUp(PinUser user, List<PinRole> roleList) {
         if (!userRoleListTransferService.existsById(user.getId())) {
             user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
             userRoleListTransferService.save(user);
             // 插入权限到权限表
-            for(PinRole roleToAppend : roleList) {
-                PinUserRole role = new PinUserRole(user.getId(),roleToAppend.ordinal());
+            for (PinRole roleToAppend : roleList) {
+                PinUserRole role = new PinUserRole(user.getId(), roleToAppend.ordinal());
                 pinUserRoleMapper.insert(role);
             }
             return jwtTokenProvider.createToken(user.getId(), roleList);
@@ -176,7 +177,7 @@ public class UserService extends AbstractService<PinUser> {
     }
 
     public PinUser findByEmailOrPhone(String emailOrPhone) {
-        if(emailOrPhone == null || emailOrPhone.equals("")) {
+        if (emailOrPhone == null || emailOrPhone.equals("")) {
             // 非法输入
             return null;
         }

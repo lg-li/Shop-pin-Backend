@@ -1,6 +1,5 @@
 package cn.edu.neu.shop.pin.util.base;
 
-import org.springframework.stereotype.Component;
 import tk.mybatis.mapper.common.ConditionMapper;
 import tk.mybatis.mapper.common.IdsMapper;
 import tk.mybatis.mapper.common.Mapper;

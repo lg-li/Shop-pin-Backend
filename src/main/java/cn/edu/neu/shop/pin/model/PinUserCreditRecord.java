@@ -1,8 +1,7 @@
 package cn.edu.neu.shop.pin.model;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "pin_user_credit_record")
 public class PinUserCreditRecord {

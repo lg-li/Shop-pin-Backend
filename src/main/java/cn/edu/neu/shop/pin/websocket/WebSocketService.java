@@ -8,7 +8,6 @@ import java.util.List;
 
 /**
  * @author flyhero
- *
  */
 public class WebSocketService {
 

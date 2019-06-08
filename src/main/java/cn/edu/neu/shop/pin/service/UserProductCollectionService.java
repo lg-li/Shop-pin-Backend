@@ -33,6 +33,7 @@ public class UserProductCollectionService extends AbstractService<PinUserProduct
 
     /**
      * 根据用户id获取其收藏的商品列表及商品信息、店铺信息
+     *
      * @param userId
      * @return
      */
@@ -42,6 +43,7 @@ public class UserProductCollectionService extends AbstractService<PinUserProduct
 
     /**
      * 插入一条新的商品收藏
+     *
      * @param userId
      * @param productId
      * @return
@@ -49,7 +51,7 @@ public class UserProductCollectionService extends AbstractService<PinUserProduct
     @Transactional
     public Integer addProductToCollection(Integer userId, Integer productId) {
         PinProduct pinProduct = pinProductMapper.selectByPrimaryKey(productId);
-        if(pinProduct == null) return STATUS_ADD_PRODUCT_INVALID_ID;
+        if (pinProduct == null) return STATUS_ADD_PRODUCT_INVALID_ID;
         PinUserProductCollection pinUserProductCollection = new PinUserProductCollection();
         pinUserProductCollection.setProductId(productId);
         pinUserProductCollection.setCreateTime(new Date());
@@ -60,6 +62,7 @@ public class UserProductCollectionService extends AbstractService<PinUserProduct
 
     /**
      * 删除一条商品收藏
+     *
      * @param userId
      * @param productId
      * @return
@@ -67,16 +70,16 @@ public class UserProductCollectionService extends AbstractService<PinUserProduct
     @Transactional
     public Integer deleteStoreCollection(Integer userId, Integer productId) {
         PinProduct pinProduct = pinProductMapper.selectByPrimaryKey(productId);
-        if(pinProduct == null) return STATUS_DELETE_PRODUCT_INVALID_ID;
+        if (pinProduct == null) return STATUS_DELETE_PRODUCT_INVALID_ID;
         PinUserProductCollection p = new PinUserProductCollection();
         p.setUserId(userId);
         p.setProductId(productId);
         List<PinUserProductCollection> list = pinUserProductCollectionMapper.select(p);
-        if(list.size() == 0) return STATUS_DELETE_PRODUCT_INVALID_ID;
-        for(PinUserProductCollection pp : list) {
-            if(pp.getUserId() != userId)
+        if (list.size() == 0) return STATUS_DELETE_PRODUCT_INVALID_ID;
+        for (PinUserProductCollection pp : list) {
+            if (pp.getUserId() != userId)
                 return STATUS_DELETE_PRODUCT_PERMISSION_DENIED;
-            if(pp.getProductId() != productId)
+            if (pp.getProductId() != productId)
                 return STATUS_DELETE_PRODUCT_INVALID_ID;
             pinUserProductCollectionMapper.delete(pp);
         }

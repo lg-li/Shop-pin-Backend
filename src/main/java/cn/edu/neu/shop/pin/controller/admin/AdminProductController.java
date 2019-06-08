@@ -2,9 +2,9 @@ package cn.edu.neu.shop.pin.controller.admin;
 
 import cn.edu.neu.shop.pin.mapper.PinProductMapper;
 import cn.edu.neu.shop.pin.model.PinProduct;
+import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.service.ProductService;
 import cn.edu.neu.shop.pin.service.security.UserService;
-import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
@@ -49,7 +49,7 @@ public class AdminProductController {
 
     @GetMapping("/goodsCategory")
     public JSONObject getProductFromSameStore(HttpServletRequest req) {
-        try{
+        try {
             String currentStoreId = req.getHeader("Current-Store");
             JSONObject data = productService.getProductInfoFromSameStore(Integer.parseInt(currentStoreId));
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);

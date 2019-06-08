@@ -16,6 +16,7 @@ public class UserProductRecordService extends AbstractService<PinUserProductVisi
 
     /**
      * 根据userId获取商品浏览记录
+     *
      * @param userId
      * @return
      */

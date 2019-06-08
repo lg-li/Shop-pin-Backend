@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author flyhero, ydy
@@ -49,6 +49,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     /**
      * TODO:ydy 未测试
      * 通过传进来的JSONArray 产生 PinOrderItem 的array
+     *
      * @param array 传入的JSONArray 里面是order_item的id
      * @return 返回由PinOrderItem组成的ArrayList
      */
@@ -64,6 +65,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     /**
      * TODO:ydy 未测试
      * 通过JSONArray 传入PinOrderItem的数组
+     *
      * @param array 数组 里面都是PinOrderItem的对象
      * @return 返回商品总数
      */
@@ -74,7 +76,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
             amount += item.getAmount();
             product = productService.getProductById(item.getProductId());
             //同时将对应的商品的amount减去相应的数量
-            if (product.getStockCount()>=item.getAmount())
+            if (product.getStockCount() >= item.getAmount())
                 product.setStockCount(product.getStockCount() - item.getAmount());
             else
                 //库存不够，返回-1
@@ -87,6 +89,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     /**
      * TODO:ydy 未测试
      * 通过JSONArray 传入PinOrderItem的数组
+     *
      * @param array 数组 里面都是PinOrderItem的对象
      * @return 返回商品总数
      */
@@ -101,6 +104,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
 
     /**
      * TODO:ydy 未测试
+     *
      * @param array 传入一个PinOrderItem数组
      * @return 返回总的邮费
      */
@@ -114,6 +118,120 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
             }
         }
         return shippingFee;
+    }
+
+    /**
+     * TODO:ydy 未测试
+     * 传入所有的PinOrderItem的list，计算得到所有的成本
+     *
+     * @param array PinOrderItem的list
+     * @return 成本
+     */
+    public BigDecimal getTotalCost(List<PinOrderItem> array) {
+        BigDecimal total = new BigDecimal("0");
+        for (PinOrderItem item : array) {
+            total = total.add(item.getTotalCost());
+        }
+        return total;
+    }
+
+    /**
+     * TODO:ydy 未测试
+     * 挂载orderItem到OrderIndividual
+     *
+     * @param array
+     * @param target
+     */
+    @Transactional
+    public void amountOrderItems(List<PinOrderItem> array, Integer target) {
+        for (PinOrderItem item : array) {
+            item.setOrderIndividualId(target);
+            update(item);
+        }
+    }
+
+    /**
+     * flyhero
+     * 添加商品到购物车（新增一条新的OrderItem记录）
+     *
+     * @param userId
+     * @param productId
+     * @param skuId
+     * @param amount
+     */
+    @Transactional
+    public Integer addOrderItem(Integer userId, Integer productId, Integer skuId, Integer amount) {
+        // 查找对应的sku信息
+        PinProductAttributeValue p = pinProductAttributeValueMapper.selectByPrimaryKey(skuId);
+        PinProduct product = productService.getProductById(productId);
+        if (p == null || product == null) return STATUS_ADD_ORDER_ITEM_INVALID_ID;
+        // 计算并插入一条OrderItem记录
+        BigDecimal totalPrice = p.getPrice().multiply(BigDecimal.valueOf(amount));
+        BigDecimal totalCost = p.getCost().multiply(BigDecimal.valueOf(amount));
+        PinOrderItem pinOrderItem = new PinOrderItem(userId, productId, skuId, amount, totalPrice, totalCost, null, false);
+        pinOrderItemMapper.insert(pinOrderItem);
+        return STATUS_ADD_ORDER_ITEM_SUCCESS;
+    }
+
+    /**
+     * flyhero
+     * 获取当前用户购物车中所有OrderItem的信息，加上其对应的商品、店铺、sku信息
+     *
+     * @param userId
+     * @return
+     */
+    public List<PinOrderItem> getAllOrderItems(Integer userId) {
+        PinOrderItem pinOrderItem = new PinOrderItem();
+        pinOrderItem.setUserId(userId);
+        List<PinOrderItem> list = pinOrderItemMapper.select(pinOrderItem);
+        for (PinOrderItem p : list) {
+            PinProduct pro = productService.getProductById(p.getProductId());
+            PinProductAttributeValue val = pinProductAttributeValueMapper.getSkuBySkuId(p.getSkuId());
+            PinStore store = storeService.getStoreById(pro.getStoreId());
+            pro.setStore(store);
+            p.setProduct(pro);
+            p.setProductAttributeValue(val);
+        }
+        return list;
+    }
+
+    /**
+     * 删除订单信息
+     *
+     * @param userId
+     * @param orderItemIds
+     * @return
+     */
+    @Transactional
+    public Integer deleteOrderItems(Integer userId, List<Integer> orderItemIds) {
+        PinUser user = userService.findById(userId);
+        for (Integer id : orderItemIds) {
+            PinOrderItem orderItem = pinOrderItemMapper.selectByPrimaryKey(id);
+            if (id == null) return STATUS_DELETE_ORDER_ITEM_INVALID_ID;
+            if (userId != orderItem.getUserId()) return STATUS_DELETE_ORDER_ITEM_PERMISSION_DENIED;
+            pinOrderItemMapper.delete(orderItem);
+        }
+        return STATUS_DELETE_ORDER_ITEM_SUCCESS;
+    }
+
+    /**
+     * 根据orderIndividualId返回所有的orderItem，集成了product和attributeValue
+     *
+     * @param orderIndividualId
+     * @return
+     */
+    public List<PinOrderItem> getOrderItemsByOrderIndividualId(Integer orderIndividualId) {
+        PinOrderItem orderItem = new PinOrderItem();
+        orderItem.setOrderIndividualId(orderIndividualId);
+        List<PinOrderItem> list = pinOrderItemMapper.select(orderItem);
+        for (PinOrderItem o : list) {
+            PinProduct product = pinProductMapper.selectByPrimaryKey(o.getProductId());
+            o.setProduct(product);
+            PinProductAttributeValue pinProductAttributeValue =
+                    pinProductAttributeValueMapper.selectByPrimaryKey(o.getSkuId());
+            o.setProductAttributeValue(pinProductAttributeValue);
+        }
+        return list;
     }
 
     /**
@@ -160,113 +278,5 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
         public String getPayType() {
             return payType;
         }
-    }
-
-    /**
-     * TODO:ydy 未测试
-     * 传入所有的PinOrderItem的list，计算得到所有的成本
-     * @param array PinOrderItem的list
-     * @return 成本
-     */
-    public BigDecimal getTotalCost(List<PinOrderItem> array) {
-        BigDecimal total = new BigDecimal("0");
-        for (PinOrderItem item : array) {
-            total = total.add(item.getTotalCost());
-        }
-        return total;
-    }
-
-    /**
-     * TODO:ydy 未测试
-     * 挂载orderItem到OrderIndividual
-     * @param array
-     * @param target
-     */
-    @Transactional
-    public void amountOrderItems(List<PinOrderItem> array, Integer target) {
-        for (PinOrderItem item : array) {
-            item.setOrderIndividualId(target);
-            update(item);
-        }
-    }
-
-    /**
-     * flyhero
-     * 添加商品到购物车（新增一条新的OrderItem记录）
-     * @param userId
-     * @param productId
-     * @param skuId
-     * @param amount
-     */
-    @Transactional
-    public Integer addOrderItem(Integer userId, Integer productId, Integer skuId, Integer amount) {
-        // 查找对应的sku信息
-        PinProductAttributeValue p = pinProductAttributeValueMapper.selectByPrimaryKey(skuId);
-        PinProduct product = productService.getProductById(productId);
-        if (p == null || product == null) return STATUS_ADD_ORDER_ITEM_INVALID_ID;
-        // 计算并插入一条OrderItem记录
-        BigDecimal totalPrice = p.getPrice().multiply(BigDecimal.valueOf(amount));
-        BigDecimal totalCost = p.getCost().multiply(BigDecimal.valueOf(amount));
-        PinOrderItem pinOrderItem = new PinOrderItem(userId, productId, skuId, amount, totalPrice, totalCost, null, false);
-        pinOrderItemMapper.insert(pinOrderItem);
-        return STATUS_ADD_ORDER_ITEM_SUCCESS;
-    }
-
-    /**
-     * flyhero
-     * 获取当前用户购物车中所有OrderItem的信息，加上其对应的商品、店铺、sku信息
-     * @param userId
-     * @return
-     */
-    public List<PinOrderItem> getAllOrderItems(Integer userId) {
-        PinOrderItem pinOrderItem = new PinOrderItem();
-        pinOrderItem.setUserId(userId);
-        List<PinOrderItem> list = pinOrderItemMapper.select(pinOrderItem);
-        for (PinOrderItem p : list) {
-            PinProduct pro = productService.getProductById(p.getProductId());
-            PinProductAttributeValue val = pinProductAttributeValueMapper.getSkuBySkuId(p.getSkuId());
-            PinStore store = storeService.getStoreById(pro.getStoreId());
-            pro.setStore(store);
-            p.setProduct(pro);
-            p.setProductAttributeValue(val);
-        }
-        return list;
-    }
-
-    /**
-     * 删除订单信息
-     * @param userId
-     * @param orderItemIds
-     * @return
-     */
-    @Transactional
-    public Integer deleteOrderItems(Integer userId, List<Integer> orderItemIds) {
-        PinUser user = userService.findById(userId);
-        for (Integer id : orderItemIds) {
-            PinOrderItem orderItem = pinOrderItemMapper.selectByPrimaryKey(id);
-            if (id == null) return STATUS_DELETE_ORDER_ITEM_INVALID_ID;
-            if (userId != orderItem.getUserId()) return STATUS_DELETE_ORDER_ITEM_PERMISSION_DENIED;
-            pinOrderItemMapper.delete(orderItem);
-        }
-        return STATUS_DELETE_ORDER_ITEM_SUCCESS;
-    }
-
-    /**
-     * 根据orderIndividualId返回所有的orderItem，集成了product和attributeValue
-     * @param orderIndividualId
-     * @return
-     */
-    public List<PinOrderItem> getOrderItemsByOrderIndividualId(Integer orderIndividualId) {
-        PinOrderItem orderItem = new PinOrderItem();
-        orderItem.setOrderIndividualId(orderIndividualId);
-        List<PinOrderItem> list = pinOrderItemMapper.select(orderItem);
-        for(PinOrderItem o : list) {
-            PinProduct product = pinProductMapper.selectByPrimaryKey(o.getProductId());
-            o.setProduct(product);
-            PinProductAttributeValue pinProductAttributeValue =
-                    pinProductAttributeValueMapper.selectByPrimaryKey(o.getSkuId());
-            o.setProductAttributeValue(pinProductAttributeValue);
-        }
-        return list;
     }
 }

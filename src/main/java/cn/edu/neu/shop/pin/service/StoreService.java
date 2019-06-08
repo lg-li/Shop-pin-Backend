@@ -2,10 +2,8 @@ package cn.edu.neu.shop.pin.service;
 
 import cn.edu.neu.shop.pin.mapper.PinStoreMapper;
 import cn.edu.neu.shop.pin.model.PinStore;
-import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +17,7 @@ public class StoreService extends AbstractService<PinStore> {
 
     /**
      * 根据店铺ID 获取该店铺的详细信息
+     *
      * @param storeId
      * @return PinStore类
      */
@@ -30,15 +29,17 @@ public class StoreService extends AbstractService<PinStore> {
 
     /**
      * 根据店铺所有者的id返回店铺的list
+     *
      * @param id 店铺所有者的id
      * @return store list
      */
-    public List<PinStore> getStoreListByOwnerId(Integer id){
+    public List<PinStore> getStoreListByOwnerId(Integer id) {
         return pinStoreMapper.selectByOwnerId(id);
     }
 
     /**
      * 管理端用户店主新增店铺
+     *
      * @param name
      * @param description
      * @param phone
@@ -62,6 +63,7 @@ public class StoreService extends AbstractService<PinStore> {
 
     /**
      * 管理端 修改店铺信息
+     *
      * @param pinStore
      * @return
      */

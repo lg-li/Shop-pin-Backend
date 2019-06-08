@@ -1,14 +1,11 @@
 package cn.edu.neu.shop.pin.model;
 
-import com.alibaba.fastjson.JSONArray;
-import io.swagger.models.auth.In;
-
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.*;
 
 @Table(name = "pin_user")
 public class PinUser {
@@ -81,6 +78,30 @@ public class PinUser {
         this.createIp = createIp;
         this.lastLoginIp = lastLoginIp;
         this.gender = gender;
+    }
+
+    public PinUser(String phone, String email, String passwordHash, Date createTime, Date lastLoginTime, Date lastPaswordEditTime, String avatarUrl, String nickname, BigDecimal balance, Integer credit, String lastLoginIp, String createIp, Integer gender) {
+        this.phone = phone;
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.createTime = createTime;
+        this.lastLoginTime = lastLoginTime;
+        this.lastPaswordEditTime = lastPaswordEditTime;
+        this.avatarUrl = avatarUrl;
+        this.nickname = nickname;
+        this.balance = balance;
+        this.credit = credit;
+        this.lastLoginIp = lastLoginIp;
+        this.createIp = createIp;
+        this.gender = gender;
+    }
+
+    public static List<PinRole> transferRoleIntegerToPinRole(List<PinRole> list) {
+        ArrayList<PinRole> roleList = new ArrayList<>();
+        for (Object integer : list) {
+            roleList.add(PinRole.values()[(Integer) integer]);
+        }
+        return roleList;
     }
 
     /**
@@ -303,22 +324,6 @@ public class PinUser {
         this.roles = roles;
     }
 
-    public PinUser(String phone, String email, String passwordHash, Date createTime, Date lastLoginTime, Date lastPaswordEditTime, String avatarUrl, String nickname, BigDecimal balance, Integer credit, String lastLoginIp, String createIp, Integer gender) {
-        this.phone = phone;
-        this.email = email;
-        this.passwordHash = passwordHash;
-        this.createTime = createTime;
-        this.lastLoginTime = lastLoginTime;
-        this.lastPaswordEditTime = lastPaswordEditTime;
-        this.avatarUrl = avatarUrl;
-        this.nickname = nickname;
-        this.balance = balance;
-        this.credit = credit;
-        this.lastLoginIp = lastLoginIp;
-        this.createIp = createIp;
-        this.gender = gender;
-    }
-
     @Override
     public String toString() {
         return "PinUser{" +
@@ -338,14 +343,6 @@ public class PinUser {
                 ", createIp='" + createIp + '\'' +
                 ", gender=" + gender +
                 '}';
-    }
-
-    public static List<PinRole> transferRoleIntegerToPinRole(List<PinRole> list){
-        ArrayList<PinRole> roleList = new ArrayList<>();
-        for (Object integer : list) {
-            roleList.add(PinRole.values()[(Integer) integer]);
-        }
-        return roleList;
     }
 
 }

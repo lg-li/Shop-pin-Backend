@@ -13,6 +13,14 @@ public class PinUserRole {
 
     private Integer role;
 
+    public PinUserRole() {
+    }
+
+    public PinUserRole(Integer userId, Integer role) {
+        this.userId = userId;
+        this.role = role;
+    }
+
     /**
      * @return id
      */
@@ -52,14 +60,6 @@ public class PinUserRole {
      * @param role
      */
     public void setRole(Integer role) {
-        this.role = role;
-    }
-
-    public PinUserRole() {
-    }
-
-    public PinUserRole(Integer userId, Integer role) {
-        this.userId = userId;
         this.role = role;
     }
 }

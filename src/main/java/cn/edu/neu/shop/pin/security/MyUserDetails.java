@@ -1,7 +1,7 @@
 package cn.edu.neu.shop.pin.security;
 
-import cn.edu.neu.shop.pin.service.UserRoleListTransferService;
 import cn.edu.neu.shop.pin.model.PinUser;
+import cn.edu.neu.shop.pin.service.UserRoleListTransferService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -8,9 +8,9 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 /**
+ * @author flyhero
  * @ClassName WebSocketConfig
  * @Description TODO 配置WebSocket
- * @author flyhero
  */
 
 @Configuration

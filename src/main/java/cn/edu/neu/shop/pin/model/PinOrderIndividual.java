@@ -1,246 +1,243 @@
 package cn.edu.neu.shop.pin.model;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import javax.persistence.*;
 
 @Table(name = "pin_order_individual")
 public class PinOrderIndividual {
 
+    /**
+     * 待发货
+     */
+    public static final int STATUS_DEPENDING_TO_SHIP = 0;
+    /**
+     * 待收货
+     */
+    public static final int STATUS_SHIPPED = 1;
+    /**
+     * 已收货待评价
+     */
+    public static final int STATUS_PENDING_COMMENT = 2;
+    /**
+     * 已评价（订单已完成）
+     */
+    public static final int STATUS_COMMENTED = 3;
+    /**
+     * 已退款（订单退款关闭）
+     */
+    public static final int STATUS_REFUND_SUCCESS = 4;
+    /**
+     * 退款被拒绝
+     */
+    public static final int STATUS_REFUND_REFUSED = 5;
+    /**
+     * 订单未申请退款（默认状态）
+     */
+    public static final int REFUND_STATUS_NOT_APPLIED = 0;
+    /**
+     * 订单退款申请中
+     */
+    public static final int REFUND_STATUS_APPLYING = 1;
+    /**
+     * 订单退款申请状态结束
+     */
+    public static final int REFUND_STATUS_FINISHED = 2;
+    /**
+     * 存储其包含的所有OrderItem
+     */
+    List<PinOrderItem> orderItems;
     /**
      * 订单ID
      */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
     /**
      * 团订单号
      */
     @Column(name = "order_group_id")
     private Integer orderGroupId;
-
     /**
      * 商户ID
      */
     @Column(name = "store_id")
     private Integer storeId;
-
     /**
      * 用户id
      */
     @Column(name = "user_id")
     private Integer userId;
-
     /**
      * 用户姓名
      */
     @Column(name = "receiver_name")
     private String receiverName;
-
     /**
      * 用户电话
      */
     @Column(name = "receiver_phone")
     private String receiverPhone;
-
     /**
      * 详细地址
      */
     @Column(name = "delivery_address")
     private String deliveryAddress;
-
     /**
      * 订单商品总数
      */
     @Column(name = "total_product_number")
     private Integer totalProductNumber;
-
     /**
      * 订单总价
      */
     @Column(name = "total_price")
     private BigDecimal totalPrice;
-
     /**
      * 邮费
      */
     private BigDecimal shippingFee;
-
     /**
      * 实际支付金额
      */
     @Column(name = "pay_price")
     private BigDecimal payPrice;
-
     /**
      * 余额支付的金额部分
      */
     @Column(name = "balance_paid_price")
     private BigDecimal balancePaidPrice;
-
     /**
      * 支付时间
      */
     @Column(name = "pay_time")
     private Date payTime;
-
     /**
      * 支付状态
      */
     private Boolean paid;
-
     /**
      * 支付方式; BALANCE 余额 / WECHAT 微信
      */
     @Column(name = "pay_type")
     private String payType;
-
     /**
      * 创建时间
      */
     @Column(name = "create_time")
     private Date createTime;
-
     /**
      * 订单状态订单状态（0：待发货；1：待收货；2：待评价；3：已评价; 4: 已退款; 5: 已拒绝）
      */
     private Integer status;
-
-    /**
-     * 待发货
-     */
-    public static final int STATUS_DEPENDING_TO_SHIP = 0;
-
-    /**
-     * 待收货
-     */
-    public static final int STATUS_SHIPPED = 1;
-
-    /**
-     * 已收货待评价
-     */
-    public static final int STATUS_PENDING_COMMENT = 2;
-
-    /**
-     * 已评价（订单已完成）
-     */
-    public static final int STATUS_COMMENTED = 3;
-
-    /**
-     * 已退款（订单退款关闭）
-     */
-    public static final int STATUS_REFUND_SUCCESS = 4;
-
-    /**
-     * 退款被拒绝
-     */
-    public static final int STATUS_REFUND_REFUSED = 5;
-
     /**
      * 0 未退款 1 申请中 2 已退款
      */
     @Column(name = "refund_status")
     private Integer refundStatus;
-
-    /**
-     * 订单未申请退款（默认状态）
-     */
-    public static final int REFUND_STATUS_NOT_APPLIED = 0;
-
-    /**
-     * 订单退款申请中
-     */
-    public static final int REFUND_STATUS_APPLYING = 1;
-
-    /**
-     * 订单退款申请状态结束
-     */
-    public static final int REFUND_STATUS_FINISHED = 2;
-
     /**
      * 退款图片
      */
     @Column(name = "refund_reason_image")
     private String refundReasonImage;
-
     /**
      * 退款用户说明
      */
     @Column(name = "refund_reason_explain")
     private String refundReasonExplain;
-
     /**
      * 退款申请时间
      */
     @Column(name = "refund_apply_time")
     private Date refundApplyTime;
-
     /**
      * 商户填写的不退款的理由
      */
     @Column(name = "refund_refuse_reason")
     private String refundRefuseReason;
-
     /**
      * 退款金额
      */
     @Column(name = "refund_price")
     private BigDecimal refundPrice;
-
     /**
      * 快递名称/送货人姓名
      */
     @Column(name = "delivery_name")
     private String deliveryName;
-
     /**
      * 发货类型
      */
     @Column(name = "delivery_type")
     private String deliveryType;
-
     /**
      * 快递单号/手机号
      */
     @Column(name = "delivery_id")
     private String deliveryId;
-
     /**
      * 消费赚取积分
      */
     @Column(name = "gained_credit")
     private Integer gainedCredit;
-
     /**
      * 商户备注
      */
     @Column(name = "merchant_remark")
     private String merchantRemark;
-
     /**
      * 管理员备注
      */
     @Column(name = "user_remark")
     private String userRemark;
-
     /**
      * 是否拼团
      */
     @Column(name = "is_group")
     private Boolean isGroup;
-
     /**
      * 总成本价
      */
     @Column(name = "total_cost")
     private BigDecimal totalCost;
 
-    /**
-     * 存储其包含的所有OrderItem
-     */
-    List<PinOrderItem> orderItems;
+    public PinOrderIndividual() {
+        super();
+    }
+
+    public PinOrderIndividual(Integer orderGroupId, Integer storeId, Integer userId, String receiverName, String receiverPhone, String deliveryAddress, Integer totalProductNumber, BigDecimal totalPrice, BigDecimal shippingFee, BigDecimal payPrice, BigDecimal balancePaidPrice, Date payTime, Boolean paid, String payType, Date createTime, Integer status, Integer refundStatus, String refundReasonImage, String refundReasonExplain, Date refundApplyTime, String refundRefuseReason, BigDecimal refundPrice, String deliveryName, String deliveryType, String deliveryId, Integer gainedCredit, String merchantRemark, String userRemark, Boolean isGroup, BigDecimal totalCost) {
+        this.orderGroupId = orderGroupId;
+        this.storeId = storeId;
+        this.userId = userId;
+        this.receiverName = receiverName;
+        this.receiverPhone = receiverPhone;
+        this.deliveryAddress = deliveryAddress;
+        this.totalProductNumber = totalProductNumber;
+        this.totalPrice = totalPrice;
+        this.shippingFee = shippingFee;
+        this.payPrice = payPrice;
+        this.balancePaidPrice = balancePaidPrice;
+        this.payTime = payTime;
+        this.paid = paid;
+        this.payType = payType;
+        this.createTime = createTime;
+        this.status = status;
+        this.refundStatus = refundStatus;
+        this.refundReasonImage = refundReasonImage;
+        this.refundReasonExplain = refundReasonExplain;
+        this.refundApplyTime = refundApplyTime;
+        this.refundRefuseReason = refundRefuseReason;
+        this.refundPrice = refundPrice;
+        this.deliveryName = deliveryName;
+        this.deliveryType = deliveryType;
+        this.deliveryId = deliveryId;
+        this.gainedCredit = gainedCredit;
+        this.merchantRemark = merchantRemark;
+        this.userRemark = userRemark;
+        this.isGroup = isGroup;
+        this.totalCost = totalCost;
+    }
 
     /**
      * 获取订单ID
@@ -814,43 +811,6 @@ public class PinOrderIndividual {
 
     public void setOrderItems(List<PinOrderItem> orderItems) {
         this.orderItems = orderItems;
-    }
-
-    public PinOrderIndividual() {
-        super();
-    }
-
-    public PinOrderIndividual(Integer orderGroupId, Integer storeId, Integer userId, String receiverName, String receiverPhone, String deliveryAddress, Integer totalProductNumber, BigDecimal totalPrice, BigDecimal shippingFee, BigDecimal payPrice, BigDecimal balancePaidPrice, Date payTime, Boolean paid, String payType, Date createTime, Integer status, Integer refundStatus, String refundReasonImage, String refundReasonExplain, Date refundApplyTime, String refundRefuseReason, BigDecimal refundPrice, String deliveryName, String deliveryType, String deliveryId, Integer gainedCredit, String merchantRemark, String userRemark, Boolean isGroup, BigDecimal totalCost) {
-        this.orderGroupId = orderGroupId;
-        this.storeId = storeId;
-        this.userId = userId;
-        this.receiverName = receiverName;
-        this.receiverPhone = receiverPhone;
-        this.deliveryAddress = deliveryAddress;
-        this.totalProductNumber = totalProductNumber;
-        this.totalPrice = totalPrice;
-        this.shippingFee = shippingFee;
-        this.payPrice = payPrice;
-        this.balancePaidPrice = balancePaidPrice;
-        this.payTime = payTime;
-        this.paid = paid;
-        this.payType = payType;
-        this.createTime = createTime;
-        this.status = status;
-        this.refundStatus = refundStatus;
-        this.refundReasonImage = refundReasonImage;
-        this.refundReasonExplain = refundReasonExplain;
-        this.refundApplyTime = refundApplyTime;
-        this.refundRefuseReason = refundRefuseReason;
-        this.refundPrice = refundPrice;
-        this.deliveryName = deliveryName;
-        this.deliveryType = deliveryType;
-        this.deliveryId = deliveryId;
-        this.gainedCredit = gainedCredit;
-        this.merchantRemark = merchantRemark;
-        this.userRemark = userRemark;
-        this.isGroup = isGroup;
-        this.totalCost = totalCost;
     }
 
     @Override

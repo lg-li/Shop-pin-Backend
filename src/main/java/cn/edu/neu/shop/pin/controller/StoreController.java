@@ -24,16 +24,17 @@ public class StoreController {
 
     /**
      * 根据店铺Id 获取该店铺的所有在售商品信息
+     *
      * @param storeId
      * @return JSONObject
      */
     @GetMapping("/{storeId}/products")
-    public JSONObject getProductInfoByStoreId(@PathVariable(value = "storeId") Integer storeId){
-        try{
+    public JSONObject getProductInfoByStoreId(@PathVariable(value = "storeId") Integer storeId) {
+        try {
             JSONObject data = new JSONObject();
             data.put("list", productService.getProductByStoreId(storeId));
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
@@ -41,14 +42,15 @@ public class StoreController {
 
     /**
      * 根据店铺ID 获取该店铺的详细信息
+     *
      * @param storeId
      * @return JSONObject
      */
     @GetMapping("/{storeId}")
     public JSONObject getStoreInfoByStoreId(@PathVariable(value = "storeId") Integer storeId) {
-        try{
+        try {
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, storeService.getStoreById(storeId));
-        } catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
