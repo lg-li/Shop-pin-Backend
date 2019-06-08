@@ -4,6 +4,8 @@ import cn.edu.neu.shop.pin.model.PinOrderItem;
 import cn.edu.neu.shop.pin.util.base.BaseMapper;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
+
 /**
  * @author flyhero
  */
@@ -11,7 +13,10 @@ import org.springframework.stereotype.Component;
 @Component
 public interface PinOrderItemMapper extends BaseMapper<PinOrderItem> {
 
-    void addOrderItem(Integer userId, Integer productId, Integer skuId, Integer amount);
+    void createOrderItem(Integer userId, Integer productId, Integer skuId, Integer amount);
 
-    PinOrderItem getUnsubmittedOrderItemByUserIdAndProductId(Integer userId, Integer productId, Integer skuId);
+    void addAmountInExistingOrderItem(Integer amount, BigDecimal totalPrice, BigDecimal totalCost,
+                                      Integer userId, Integer skuId);
+
+    PinOrderItem getUnSubmittedOrderItemByUserIdAndProductId(Integer userId, Integer productId, Integer skuId);
 }

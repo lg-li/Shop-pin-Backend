@@ -31,4 +31,13 @@
     from order_item
     where user_id = #{userId} and product_id = #{productId} and is_submitted = 1
   </select>
+
+  <update id="addAmountInExistingOrderItem">
+    update pin_order_item
+    set amount = amount + #{amount},
+        total_price = total_price + #{totalPrice},
+        total_cost = total_cost + #{totalCost}
+    where user_id = #{userId} and sku_id = #{skuId}
+  </update>
+
 </mapper>

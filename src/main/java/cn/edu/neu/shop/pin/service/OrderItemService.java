@@ -8,6 +8,7 @@ import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -183,7 +184,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
      * @param target
      */
     @Transactional
-    public void amountOrderItems(List<PinOrderItem> array, Integer target) {
+    public void mountOrderItems(List<PinOrderItem> array, Integer target) {
         for (PinOrderItem item : array) {
             item.setOrderIndividualId(target);
             update(item);
@@ -191,7 +192,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     }
 
     /**
-     * flyhero
+     * @author flyhero
      * 添加商品到购物车（新增一条新的OrderItem记录）
      * @param userId
      * @param productId
@@ -199,7 +200,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
      * @param amount
      */
     @Transactional
-    public Integer addOrderItem(Integer userId, Integer productId, Integer skuId, Integer amount) {
+    public Integer createOrderItem(Integer userId, Integer productId, Integer skuId, Integer amount) {
         // 查找对应的sku信息
         PinProductAttributeValue p = pinProductAttributeValueMapper.selectByPrimaryKey(skuId);
         PinProduct product = productService.getProductById(productId);
@@ -207,13 +208,17 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
         // 计算并插入一条OrderItem记录
         BigDecimal totalPrice = p.getPrice().multiply(BigDecimal.valueOf(amount));
         BigDecimal totalCost = p.getCost().multiply(BigDecimal.valueOf(amount));
-        PinOrderItem pinOrderItem = new PinOrderItem(userId, productId, skuId, amount, totalPrice, totalCost, null, false);
-        pinOrderItemMapper.insert(pinOrderItem);
+        PinOrderItem orderItem = new PinOrderItem(userId, productId, skuId, amount, totalPrice, totalCost, null, false);
+        if(checkIfAlreadyHaveOrderItem(userId, skuId)) { //当前用户购物车中已有同型号商品，在原来基础上增加数量
+            pinOrderItemMapper.addAmountInExistingOrderItem(amount, totalPrice, totalCost, userId, skuId);
+        } else { //购物车中没有同型号商品，新增一条OrderItem记录
+            save(orderItem);
+        }
         return STATUS_ADD_ORDER_ITEM_SUCCESS;
     }
 
     /**
-     * flyhero
+     * @author flyhero
      * 获取当前用户购物车中所有OrderItem的信息，加上其对应的商品、店铺、sku信息
      * @param userId
      * @return
@@ -234,6 +239,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     }
 
     /**
+     * @author flyhero
      * 删除订单信息
      * @param userId
      * @param orderItemIds
@@ -252,6 +258,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     }
 
     /**
+     * @author flyhero
      * 根据orderIndividualId返回所有的orderItem，集成了product和attributeValue
      * @param orderIndividualId
      * @return
@@ -268,5 +275,20 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
             o.setProductAttributeValue(pinProductAttributeValue);
         }
         return list;
+    }
+
+    /**
+     * @author flyhero
+     * 私有方法，在新增OrderItem之前判断一下数据库中是否已有同型号商品的添加记录
+     * @param userId
+     * @param skuId
+     * @return
+     */
+    private Boolean checkIfAlreadyHaveOrderItem(Integer userId, Integer skuId) {
+        PinOrderItem poi = new PinOrderItem();
+        poi.setUserId(userId);
+        poi.setSkuId(skuId);
+        PinOrderItem pinOrderItem = pinOrderItemMapper.selectOne(poi);
+        return pinOrderItem == null;
     }
 }

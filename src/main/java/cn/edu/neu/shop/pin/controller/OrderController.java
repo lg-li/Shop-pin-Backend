@@ -122,7 +122,7 @@ public class OrderController {
             Integer productId = requestJSON.getInteger("productId");
             Integer skuId = requestJSON.getInteger("skuId");
             Integer amount = requestJSON.getInteger("amount");
-            int code = orderItemService.addOrderItem(user.getId(), productId, skuId, amount);
+            int code = orderItemService.createOrderItem(user.getId(), productId, skuId, amount);
             if(code == OrderItemService.STATUS_ADD_ORDER_ITEM_SUCCESS) {
                 return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
             }  else if(code == OrderItemService.STATUS_ADD_ORDER_ITEM_INVALID_ID) {
