@@ -1,5 +1,7 @@
 package cn.edu.neu.shop.pin.mapper;
 
+import cn.edu.neu.shop.pin.model.PinOrderIndividual;
+import cn.edu.neu.shop.pin.model.PinOrderItem;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
@@ -7,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static org.junit.Assert.*;
+import java.util.List;
 
 @RunWith(SpringRunner.class)
 @MybatisTest
@@ -15,11 +17,19 @@ import static org.junit.Assert.*;
 public class PinOrderIndividualMapperTest {
 
     @Autowired
-    PinOrderIndividualMapper mapper;
+    PinOrderIndividualMapper pinOrderIndividualMapper;
 
     @Test
     public void selectByOrderGroupId() {
-        System.out.println(mapper.selectByOrderGroupId(1));
-        System.out.println(mapper.selectByOrderGroupId(1).size());
+        System.out.println(pinOrderIndividualMapper.selectByOrderGroupId(1));
+        System.out.println(pinOrderIndividualMapper.selectByOrderGroupId(1).size());
+    }
+
+    @Test
+    public void testGetRecentThreeMonthsOrderIndividuals() {
+        List<PinOrderIndividual> list = pinOrderIndividualMapper.getRecentThreeMonthsOrderIndividuals(1);
+        for(PinOrderIndividual p : list) {
+            System.out.println(p.getPayTime());
+        }
     }
 }

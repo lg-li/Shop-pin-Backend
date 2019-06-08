@@ -2,6 +2,7 @@ package cn.edu.neu.shop.pin.service;
 
 import cn.edu.neu.shop.pin.mapper.PinOrderItemMapper;
 import cn.edu.neu.shop.pin.mapper.PinProductAttributeValueMapper;
+import cn.edu.neu.shop.pin.mapper.PinProductMapper;
 import cn.edu.neu.shop.pin.model.*;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
@@ -33,6 +34,9 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     private PinProductAttributeValueMapper pinProductAttributeValueMapper;
 
     @Autowired
+    private PinProductMapper pinProductMapper;
+
+    @Autowired
     private ProductService productService;
 
     @Autowired
@@ -45,7 +49,6 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     /**
      * TODO:ydy 未测试
      * 通过传进来的JSONArray 产生 PinOrderItem 的array
-     *
      * @param array 传入的JSONArray 里面是order_item的id
      * @return 返回由PinOrderItem组成的ArrayList
      */
@@ -61,7 +64,6 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     /**
      * TODO:ydy 未测试
      * 通过JSONArray 传入PinOrderItem的数组
-     *
      * @param array 数组 里面都是PinOrderItem的对象
      * @return 返回商品总数
      */
@@ -85,7 +87,6 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     /**
      * TODO:ydy 未测试
      * 通过JSONArray 传入PinOrderItem的数组
-     *
      * @param array 数组 里面都是PinOrderItem的对象
      * @return 返回商品总数
      */
@@ -100,7 +101,6 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
 
     /**
      * TODO:ydy 未测试
-     *
      * @param array 传入一个PinOrderItem数组
      * @return 返回总的邮费
      */
@@ -116,7 +116,9 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
         return shippingFee;
     }
 
-    //创建一个和支付有关的内部类
+    /**
+     * 创建一个和支付有关的内部类
+     */
     public class PayDetail {
         String payType; //支付类型
         BigDecimal payPrice;    //微信支付的金额
@@ -163,7 +165,6 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     /**
      * TODO:ydy 未测试
      * 传入所有的PinOrderItem的list，计算得到所有的成本
-     *
      * @param array PinOrderItem的list
      * @return 成本
      */
@@ -178,7 +179,6 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     /**
      * TODO:ydy 未测试
      * 挂载orderItem到OrderIndividual
-     *
      * @param array
      * @param target
      */
@@ -193,7 +193,6 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     /**
      * flyhero
      * 添加商品到购物车（新增一条新的OrderItem记录）
-     *
      * @param userId
      * @param productId
      * @param skuId
@@ -216,7 +215,6 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     /**
      * flyhero
      * 获取当前用户购物车中所有OrderItem的信息，加上其对应的商品、店铺、sku信息
-     *
      * @param userId
      * @return
      */
@@ -235,6 +233,12 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
         return list;
     }
 
+    /**
+     * 删除订单信息
+     * @param userId
+     * @param orderItemIds
+     * @return
+     */
     @Transactional
     public Integer deleteOrderItems(Integer userId, List<Integer> orderItemIds) {
         PinUser user = userService.findById(userId);
@@ -245,5 +249,24 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
             pinOrderItemMapper.delete(orderItem);
         }
         return STATUS_DELETE_ORDER_ITEM_SUCCESS;
+    }
+
+    /**
+     * 根据orderIndividualId返回所有的orderItem，集成了product和attributeValue
+     * @param orderIndividualId
+     * @return
+     */
+    public List<PinOrderItem> getOrderItemsByOrderIndividualId(Integer orderIndividualId) {
+        PinOrderItem orderItem = new PinOrderItem();
+        orderItem.setOrderIndividualId(orderIndividualId);
+        List<PinOrderItem> list = pinOrderItemMapper.select(orderItem);
+        for(PinOrderItem o : list) {
+            PinProduct product = pinProductMapper.selectByPrimaryKey(o.getProductId());
+            o.setProduct(product);
+            PinProductAttributeValue pinProductAttributeValue =
+                    pinProductAttributeValueMapper.selectByPrimaryKey(o.getSkuId());
+            o.setProductAttributeValue(pinProductAttributeValue);
+        }
+        return list;
     }
 }

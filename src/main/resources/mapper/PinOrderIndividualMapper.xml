@@ -41,4 +41,10 @@
     <select id="selectByOrderGroupId" resultMap="BaseResultMap">
         select * from pin_order_individual where order_group_id=#{order_group_id}
     </select>
+
+    <!--  查询近三月的OrderIndividual记录  -->
+    <select id="getRecentThreeMonthsOrderIndividuals" resultMap="BaseResultMap">
+        select * from pin_order_individual
+        where pay_time > DATE_SUB(CURDATE(), INTERVAL 3 MONTH)
+    </select>
 </mapper>

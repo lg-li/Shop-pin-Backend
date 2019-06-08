@@ -237,7 +237,10 @@ public class PinOrderIndividual {
     @Column(name = "total_cost")
     private BigDecimal totalCost;
 
-    List<PinOrderItem> list;
+    /**
+     * 存储其包含的所有OrderItem
+     */
+    List<PinOrderItem> orderItems;
 
     /**
      * 获取订单ID
@@ -805,15 +808,16 @@ public class PinOrderIndividual {
         isGroup = group;
     }
 
-    public List<PinOrderItem> getList() {
-        return list;
+    public List<PinOrderItem> getOrderItems() {
+        return orderItems;
     }
 
-    public void setList(List<PinOrderItem> list) {
-        this.list = list;
+    public void setOrderItems(List<PinOrderItem> orderItems) {
+        this.orderItems = orderItems;
     }
 
     public PinOrderIndividual() {
+        super();
     }
 
     public PinOrderIndividual(Integer orderGroupId, Integer storeId, Integer userId, String receiverName, String receiverPhone, String deliveryAddress, Integer totalProductNumber, BigDecimal totalPrice, BigDecimal shippingFee, BigDecimal payPrice, BigDecimal balancePaidPrice, Date payTime, Boolean paid, String payType, Date createTime, Integer status, Integer refundStatus, String refundReasonImage, String refundReasonExplain, Date refundApplyTime, String refundRefuseReason, BigDecimal refundPrice, String deliveryName, String deliveryType, String deliveryId, Integer gainedCredit, String merchantRemark, String userRemark, Boolean isGroup, BigDecimal totalCost) {

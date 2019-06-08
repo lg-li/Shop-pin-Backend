@@ -3,15 +3,18 @@ package cn.edu.neu.shop.pin.service;
 import cn.edu.neu.shop.pin.exception.OrderItemsAreNotInTheSameStoreException;
 import cn.edu.neu.shop.pin.exception.ProductSoldOutException;
 import cn.edu.neu.shop.pin.exception.RecordNotFoundException;
+import cn.edu.neu.shop.pin.mapper.PinOrderIndividualMapper;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.model.PinOrderItem;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.model.PinUserAddress;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.sql.Date;
 import java.util.ArrayList;
@@ -21,16 +24,33 @@ import java.util.List;
 public class OrderIndividualService extends AbstractService<PinOrderIndividual> {
 
     @Autowired
-    UserRoleListTransferService userRoleListTransferService;
+    private UserRoleListTransferService userRoleListTransferService;
 
     @Autowired
-    ProductService productService;
+    private ProductService productService;
 
     @Autowired
-    OrderItemService orderItemService;
+    private OrderItemService orderItemService;
 
     @Autowired
-    AddressService addressService;
+    private AddressService addressService;
+
+    @Autowired
+    private PinOrderIndividualMapper pinOrderIndividualMapper;
+
+    /**
+     * 获取最近三个月的OrderIndividual信息
+     * @param userId
+     * @return
+     */
+    public List<PinOrderIndividual> getRecentThreeMonthsOrderIndividuals(Integer userId) {
+        List<PinOrderIndividual> orderIndividuals =
+                pinOrderIndividualMapper.getRecentThreeMonthsOrderIndividuals(userId);
+        for(PinOrderIndividual o : orderIndividuals) {
+            o.setOrderItems(orderItemService.getOrderItemsByOrderIndividualId(o.getId()));
+        }
+        return orderIndividuals;
+    }
 
     /** 传入一串PinOrderIndividual，返回它们对应的用户list
      * @param list 一串PinOrderIndividual

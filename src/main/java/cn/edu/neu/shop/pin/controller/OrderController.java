@@ -3,6 +3,7 @@ package cn.edu.neu.shop.pin.controller;
 import cn.edu.neu.shop.pin.exception.OrderItemsAreNotInTheSameStoreException;
 import cn.edu.neu.shop.pin.exception.ProductSoldOutException;
 import cn.edu.neu.shop.pin.model.PinOrderGroup;
+import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.model.PinOrderItem;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.service.*;
@@ -91,7 +92,7 @@ public class OrderController {
             Integer userId = user.getId();
             List<PinOrderItem> list = orderItemService.getAllOrderItems(userId);
             JSONObject data = new JSONObject();
-            data.put("items", list);
+            data.put("orderItems", list);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
                     data);
         } catch (Exception e) {
@@ -146,5 +147,24 @@ public class OrderController {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
         return null;
+    }
+
+    /**
+     * 获取近三个月所有的orderIndividuals
+     * @param httpServletRequest
+     * @return
+     */
+    @GetMapping("/get-individual-orders")
+    public JSONObject getRecentThreeMonthsOrderIndividuals(HttpServletRequest httpServletRequest) {
+        PinUser user = userService.whoAmI(httpServletRequest);
+        try {
+            List<PinOrderIndividual> list = orderIndividualService.getRecentThreeMonthsOrderIndividuals(user.getId());
+            JSONObject data = new JSONObject();
+            data.put("orderIndividuals", list);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
     }
 }

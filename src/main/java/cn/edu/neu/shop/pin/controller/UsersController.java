@@ -108,6 +108,7 @@ public class UsersController {
             String district = requestJSON.getString("district");
             String detail = requestJSON.getString("detail");
             Integer postCode = requestJSON.getInteger("postCode");
+            PinUserAddress addressToUpdate = JSONObject.toJavaObject(requestJSON, PinUserAddress.class);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
                     addressService.createAddressByUserId(user.getId(), realName, phone, province, city, district, detail, postCode));
         } catch (Exception e) {
