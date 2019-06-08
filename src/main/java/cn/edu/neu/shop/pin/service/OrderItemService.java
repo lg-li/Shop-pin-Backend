@@ -137,16 +137,17 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     }
 
     /**
-     * TODO:ydy 未测试
      * 挂载orderItem到OrderIndividual
      *
-     * @param array
-     * @param target
+     * @param orderItemList 所选商品列表
+     * @param targetOrderIndividualId 目标ID
      */
     @Transactional
-    public void mountOrderItems(List<PinOrderItem> array, Integer target) {
-        for (PinOrderItem item : array) {
-            item.setOrderIndividualId(target);
+    public void mountOrderItems(List<PinOrderItem> orderItemList, Integer targetOrderIndividualId) {
+        for (PinOrderItem item : orderItemList) {
+            // 修改提交状态和目标子订单ID
+            item.setOrderIndividualId(targetOrderIndividualId);
+            item.setIsSubmitted(true);
             update(item);
         }
     }
