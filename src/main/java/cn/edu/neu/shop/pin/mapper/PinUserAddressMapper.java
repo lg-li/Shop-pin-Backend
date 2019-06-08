@@ -6,4 +6,5 @@ import org.springframework.stereotype.Component;
 
 @Component
 public interface PinUserAddressMapper extends BaseMapper<PinUserAddress> {
+    void setAllDefaultToZero(Integer userId);
 }

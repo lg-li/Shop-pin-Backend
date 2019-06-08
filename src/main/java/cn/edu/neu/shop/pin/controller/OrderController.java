@@ -112,7 +112,7 @@ public class OrderController {
 
 
     /**
-     * written by flyhero
+     * @author flyhero
      * 将商品添加到购物车中（新建一条OrderItem记录）
      * @param httpServletRequest
      * @param requestJSON
@@ -137,6 +137,13 @@ public class OrderController {
         return null;
     }
 
+    /**
+     * @author flyhero
+     * 删除订单信息
+     * @param httpServletRequest
+     * @param jsonObject
+     * @return
+     */
     @DeleteMapping("/order-items")
     public JSONObject deleteOrderItems(HttpServletRequest httpServletRequest, @RequestBody JSONObject jsonObject) {
         try {
@@ -159,6 +166,7 @@ public class OrderController {
     }
 
     /**
+     * @author flyhero
      * 获取近三个月所有的orderIndividuals
      * @param httpServletRequest
      * @return

@@ -37,7 +37,6 @@ public class PinConstants {
         public static final String INVALID_DATA = "数据有误";
         public static final String PERMISSION_DENIED = "权限不足";
         public static final String INTERNAL_ERROR = "服务器错误";
-
         public static final String PRODUCT_SOLD_OUT = "存在商品库存不足";
     }
 

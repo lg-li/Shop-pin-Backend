@@ -18,4 +18,11 @@
     <result column="latitude" jdbcType="VARCHAR" property="latitude" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
+
+  <!-- 将设定为default地址意外的其他地址的is_default设为0 -->
+  <update id="setAllDefaultToZero" parameterType="INTEGER">
+    update pin_user_address
+    set is_default = 0
+    where user_id = #{userId}
+  </update>
 </mapper>

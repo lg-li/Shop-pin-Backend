@@ -15,11 +15,15 @@ public class AddressService extends AbstractService<PinUserAddress> {
     public static final int STATUS_DELETE_ADDRESS_SUCCESS = 0;
     public static final int STATUS_DELETE_ADDRESS_INVALID_ID = -1;
     public static final int STATUS_DELETE_ADDRESS_PERMISSION_DENIED = -2;
+    public static final int STATUS_UPDATE_ADDRESS_SUCCESS = 0;
+    public static final int STATUS_UPDATE_ADDRESS_INVALID_ID = -1;
+    public static final int STATUS_UPDATE_ADDRESS_PERMISSION_DENIED = -2;
 
     @Autowired
     PinUserAddressMapper pinUserAddressMapper;
 
     /**
+     * @author flyhero
      * 根据用户ID 返回其默认的地址
      * @param userId
      * @return
@@ -32,95 +36,80 @@ public class AddressService extends AbstractService<PinUserAddress> {
     }
 
     /**
+     * @author flyhero
      * 根据用户ID 查询该用户的收获地址
      * @param userId
      * @return
      */
-    public List<PinUserAddress> getAllAddressesByUserId(Integer userId) {
+    public List<PinUserAddress> getAllAddresses(Integer userId) {
         PinUserAddress pinUserAddress = new PinUserAddress();
         pinUserAddress.setUserId(userId);
         return pinUserAddressMapper.select(pinUserAddress);
     }
 
     /**
+     * @author flyhero
      * 根据用户Id创建地址
-     * @param userId
-     * @param realName
-     * @param phone
-     * @param province
-     * @param city
-     * @param district
-     * @param detail
-     * @param postCode
+     * @param pinUserAddress
      * @return
      */
     @Transactional
-    public PinUserAddress createAddressByUserId(Integer userId, String realName, String phone, String province, String city, String district, String detail, Integer postCode) {
-        PinUserAddress pinUserAddress = assignAddress(userId, realName, phone, province, city, district, detail, postCode);
-        save(pinUserAddress);
-        return pinUserAddress;
+    public void createAddress(PinUserAddress pinUserAddress) {
+        checkAddressIsDefaultAndDoModify(pinUserAddress);
+        this.save(pinUserAddress);
     }
 
     /**
+     * @author cqf, flyhero
      * 根据用户Id删除地址
      * @param addressId
-     * @param currentUserId
+     * @param userId
      * @return
      */
     @Transactional
-    public int deleteAddressByUserId(Integer addressId, Integer currentUserId) {
+    public int deleteAddress(Integer userId, Integer addressId) {
         PinUserAddress pinUserAddress = findById(addressId);
-        if (pinUserAddress == null) {
+        if (pinUserAddress == null) { // 没有相应的地址记录，无法删除
             return STATUS_DELETE_ADDRESS_INVALID_ID;
         }
-        if (pinUserAddress.getUserId().equals(currentUserId)) {
-            // 有权限
+        else if(!pinUserAddress.getUserId().equals(userId)) { // 用户ID不符，无权限删除
+            return STATUS_DELETE_ADDRESS_PERMISSION_DENIED;
+        }
+        else { // 正常删除
             deleteById(addressId);
             return STATUS_DELETE_ADDRESS_SUCCESS;
-        } else {
-            return STATUS_DELETE_ADDRESS_PERMISSION_DENIED;
         }
     }
 
     /**
+     * @author flyhero
      * 根据用户Id更新地址
      * @param currentUserId
      * @param pinUserAddress
      * @return
      */
     @Transactional
-    public PinUserAddress updateAddressByUserId(Integer currentUserId, PinUserAddress pinUserAddress) {
-        if (pinUserAddress.getUserId().equals(currentUserId)) {
-            // 有权限
-            update(pinUserAddress);
-        } else {
-            return null;
+    public Integer updateAddress(Integer currentUserId, PinUserAddress pinUserAddress) {
+        if(findById(pinUserAddress.getId()) == null) { // 没有相应的地址记录，无法修改
+            return STATUS_UPDATE_ADDRESS_INVALID_ID;
         }
-        return pinUserAddress;
+        else if(!pinUserAddress.getUserId().equals(currentUserId)) { // 用户ID不符，无权限修改
+            return STATUS_UPDATE_ADDRESS_PERMISSION_DENIED;
+        }
+        else { // 正常修改
+            checkAddressIsDefaultAndDoModify(pinUserAddress);
+            update(pinUserAddress);
+            return STATUS_UPDATE_ADDRESS_SUCCESS;
+        }
     }
 
     /**
-     * 修改地址
-     * @param userId
-     * @param realName
-     * @param phone
-     * @param province
-     * @param city
-     * @param district
-     * @param detail
-     * @param postCode
-     * @return
+     * 检查传入的地址的isDefault是否为true，若是则将当前用户其他地址全部设成非default
+     * @param pinUserAddress
      */
-    private PinUserAddress assignAddress(Integer userId, String realName, String phone, String province, String city, String district, String detail, Integer postCode) {
-        PinUserAddress pinUserAddress = new PinUserAddress();
-        pinUserAddress.setUserId(userId);
-        pinUserAddress.setRealName(realName);
-        pinUserAddress.setPhone(phone);
-        pinUserAddress.setProvince(province);
-        pinUserAddress.setCity(city);
-        pinUserAddress.setDistrict(district);
-        pinUserAddress.setDetail(detail);
-        pinUserAddress.setPostCode(postCode);
-        return pinUserAddress;
+    private void checkAddressIsDefaultAndDoModify(PinUserAddress pinUserAddress) {
+        if(pinUserAddress.getDefault()) {
+            pinUserAddressMapper.setAllDefaultToZero(pinUserAddress.getUserId());
+        }
     }
 }
