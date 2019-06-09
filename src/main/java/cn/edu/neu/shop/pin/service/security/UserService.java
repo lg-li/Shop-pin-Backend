@@ -153,7 +153,11 @@ public class UserService extends AbstractService<PinUser> {
     }
 
     public PinUser whoAmI(HttpServletRequest req) {
-        return userRoleListTransferService.findById(jwtTokenProvider.getId(jwtTokenProvider.resolveToken(req)));
+        return whoDoesThisTokenBelongsTo(jwtTokenProvider.resolveToken(req));
+    }
+
+    public PinUser whoDoesThisTokenBelongsTo(String token) {
+        return userRoleListTransferService.findById(jwtTokenProvider.getId(token));
     }
 
     public String refresh(Integer id) {

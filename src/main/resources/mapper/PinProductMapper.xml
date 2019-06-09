@@ -76,8 +76,12 @@
   </select>
 
   <!-- 根据店铺ID 获取该店铺的所有在售商品-->
-  <select id="getProductInfoByStoreId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+  <select id="getProductByStoreId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     select * from pin_product where store_id = #{storeId}
+  </select>
+
+  <select id="getProductByCategoryId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select * from pin_product where category_id = #{categoryId}
   </select>
 
   <select id="getHotProducts" resultMap="BaseResultMap">

@@ -14,6 +14,7 @@ public class PinUserRole {
     private Integer role;
 
     public PinUserRole() {
+        super();
     }
 
     public PinUserRole(Integer userId, Integer role) {

@@ -39,7 +39,7 @@ public class AdminProductController {
         try {
             PinUser user = userService.whoAmI(req);
             String currentStoreId = req.getHeader("Current-Store");
-            List<PinProduct> products = productMapper.getProductInfoByStoreId(Integer.parseInt(currentStoreId));
+            List<PinProduct> products = productMapper.getProductByStoreId(Integer.parseInt(currentStoreId));
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productService.judgeQueryType(products, queryType));
         } catch (Exception e) {
             e.printStackTrace();
