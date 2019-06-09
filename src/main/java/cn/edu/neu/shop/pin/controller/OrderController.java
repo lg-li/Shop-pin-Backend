@@ -134,8 +134,9 @@ public class OrderController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, "添加购物车失败", null);
         }
-        return null;
+        return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, "添加购物车失败", null);
     }
 
     /**

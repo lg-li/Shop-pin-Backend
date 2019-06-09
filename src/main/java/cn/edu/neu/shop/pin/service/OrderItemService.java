@@ -197,7 +197,6 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
         return STATUS_ADD_ORDER_ITEM_SUCCESS;
     }
 
-
     /**
      * @author flyhero
      * 删除订单信息
@@ -294,7 +293,8 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
         PinOrderItem poi = new PinOrderItem();
         poi.setUserId(userId);
         poi.setSkuId(skuId);
+        poi.setSubmitted(false);
         PinOrderItem pinOrderItem = pinOrderItemMapper.selectOne(poi);
-        return pinOrderItem == null;
+        return pinOrderItem != null;
     }
 }

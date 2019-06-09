@@ -28,11 +28,11 @@ public class PinProduct {
     @Column(name = "category_id")
     private Integer categoryId;
 
-    /**
-     * 分类id
+    /*
+     * 分类name (已注释)
      */
-    @TableField(exist = false)
-    private String categoryName;
+//    @TableField(exist = false)
+//    private String categoryName;
 
     /**
      * 商品图片（可以多个）
@@ -544,13 +544,13 @@ public class PinProduct {
         this.description = description;
     }
 
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
+//    public String getCategoryName() {
+//        return categoryName;
+//    }
+//
+//    public void setCategoryName(String categoryName) {
+//        this.categoryName = categoryName;
+//    }
 
     public PinStore getStore() {
         return store;
