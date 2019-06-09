@@ -47,11 +47,9 @@ public class ProductService extends AbstractService<PinProduct> {
         PinProductAttributeDefinition ppad = new PinProductAttributeDefinition();
         ppad.setProductId(productId);
         List<PinProductAttributeDefinition> defList = pinProductAttributeDefinitionMapper.select(ppad);
-        System.out.println("defList.size(): " + defList.size());
         PinProductAttributeValue ppav = new PinProductAttributeValue();
         ppav.setProductId(productId);
         List<PinProductAttributeValue> valList = pinProductAttributeValueMapper.select(ppav);
-        System.out.println("valList.size(): " + valList.size());
         pinProduct.setProductAttributeDefinitions(defList);
         pinProduct.setProductAttributeValues(valList);
         return pinProduct;
@@ -82,6 +80,7 @@ public class ProductService extends AbstractService<PinProduct> {
             PinProduct pinProduct = new PinProduct();
             pinProduct.setCategoryId(categoryId);
             pinProductMapper.select(pinProduct);
+            // pinProductMapper.getProductByCategoryId(categoryId);
         });
     }
 
@@ -120,7 +119,7 @@ public class ProductService extends AbstractService<PinProduct> {
      * @param list 传入的数组，由order_item组成
      * @return 如果都属于同一家店铺，则返回true
      */
-    public boolean isBelongSameStore(List<PinOrderItem> list) {
+    boolean isBelongSameStore(List<PinOrderItem> list) {
         boolean isSameStore = true;
         //判断是否属于一家店铺
         Integer storeId = getProductById(list.get(0).getProductId()).getStoreId();
@@ -144,8 +143,7 @@ public class ProductService extends AbstractService<PinProduct> {
         p.setUserId(userId);
         p.setProductId(productId);
         List<PinUserProductCollection> list = pinUserProductCollectionMapper.select(p);
-        if (list.size() == 0) return false;
-        return true;
+        return list.size() != 0;
     }
 
     /**

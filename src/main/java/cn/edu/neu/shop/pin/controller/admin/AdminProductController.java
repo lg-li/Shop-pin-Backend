@@ -39,7 +39,7 @@ public class AdminProductController {
         try {
             PinUser user = userService.whoAmI(req);
             String currentStoreId = req.getHeader("Current-Store");
-            List<PinProduct> products = productMapper.getProductInfoByStoreId(Integer.parseInt(currentStoreId));
+            List<PinProduct> products = productMapper.getProductByStoreId(Integer.parseInt(currentStoreId));
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productService.judgeQueryType(products, queryType));
         } catch (Exception e) {
             e.printStackTrace();
@@ -47,6 +47,12 @@ public class AdminProductController {
         }
     }
 
+    /**
+     * 商铺所有者管理本店铺的商品
+     * 商品分类部分 获取父级、子级分类名及一些商品信息
+     * @param req
+     * @return
+     */
     @GetMapping("/goodsCategory")
     public JSONObject getProductFromSameStore(HttpServletRequest req) {
         try {
@@ -57,5 +63,14 @@ public class AdminProductController {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
+    }
+
+    /**
+     * 商铺所有者管理本店铺的商品
+     * 商品管理部分 已上架商品
+     */
+    @GetMapping()
+    public JSONObject getProductIsShown() {
+        return null;
     }
 }

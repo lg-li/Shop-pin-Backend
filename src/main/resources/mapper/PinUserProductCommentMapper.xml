@@ -18,5 +18,12 @@
     <result column="merchant_comment_time" jdbcType="TIMESTAMP" property="merchantCommentTime" />
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
     <result column="images_urls" jdbcType="LONGVARCHAR" property="imagesUrls" />
+    <result column="store_id" jdbcType="INTEGER" property="storeId"/>
   </resultMap>
+
+  <!-- 获取近7天内 每天评论-->
+  <select id="getNumberOfComment" resultMap="BaseResultMap">
+    select * from pin_user_product_comment
+    where create_time > DATE_SUB(CURDATE(), INTERVAL 7 DAY) and store_id = #{storeId}
+  </select>
 </mapper>
