@@ -30,37 +30,12 @@ public class OrderController {
     private ProductService productService;
 
     @Autowired
-    private OrderService orderService;
-
-    @Autowired
     private OrderItemService orderItemService;
 
     @Autowired
     private OrderIndividualService orderIndividualService;
 
-    @Autowired
-    private OrderGroupService orderGroupService;
 
-    /**
-     * 根据团单编号获取团单
-     * @param orderGroupId
-     * @return
-     */
-    @GetMapping("/order-group/{orderGroupId}")
-    public JSONObject getGroupOrderInfo(@PathVariable(value = "orderGroupId") Integer orderGroupId) {
-        try {
-            PinOrderGroup orderGroupInfo = orderService.getOrderGroupInfo(orderGroupId);
-            List<PinUser> list = orderGroupService.getUsersByOrderGroup(orderGroupInfo);
-            JSONObject data = new JSONObject();
-            data.put("orderGroup", orderGroupInfo);
-            data.put("users", list);
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
-                    data);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
-        }
-    }
 
     /**
      * @param httpServletRequest 请求对象

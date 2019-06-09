@@ -1,6 +1,7 @@
 package cn.edu.neu.shop.pin.service;
 
 import cn.edu.neu.shop.pin.mapper.PinOrderGroupMapper;
+import cn.edu.neu.shop.pin.mapper.PinOrderGroupMapper;
 import cn.edu.neu.shop.pin.mapper.PinOrderIndividualMapper;
 import cn.edu.neu.shop.pin.model.PinOrderGroup;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
@@ -11,7 +12,6 @@ import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import cn.edu.neu.shop.pin.websocket.CustomerPrincipal;
 import cn.edu.neu.shop.pin.websocket.WebSocketService;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
