@@ -50,7 +50,6 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     /**
      * TODO:ydy 未测试
      * 通过传进来的JSONArray 产生 PinOrderItem 的array
-     *
      * @param array 传入的JSONArray 里面是order_item的id
      * @return 返回由PinOrderItem组成的ArrayList
      */
@@ -66,7 +65,6 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     /**
      * TODO:ydy 未测试
      * 通过JSONArray 传入PinOrderItem的数组
-     *
      * @param array 数组 里面都是PinOrderItem的对象
      * @return 返回商品总数
      */
@@ -77,12 +75,13 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
             amount += item.getAmount();
             product = productService.getProductById(item.getProductId());
             //同时将对应的商品的amount减去相应的数量
-            if (product.getStockCount() >= item.getAmount())
+            if (product.getStockCount() >= item.getAmount()) {
                 product.setStockCount(product.getStockCount() - item.getAmount());
-            else
+            }
+            else {
                 //库存不够，返回-1
                 return -1;
-
+            }
         }
         return amount;
     }
@@ -90,7 +89,6 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     /**
      * TODO:ydy 未测试
      * 通过JSONArray 传入PinOrderItem的数组
-     *
      * @param array 数组 里面都是PinOrderItem的对象
      * @return 返回商品总数
      */
@@ -105,7 +103,6 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
 
     /**
      * TODO:ydy 未测试
-     *
      * @param array 传入一个PinOrderItem数组
      * @return 返回总的邮费
      */
@@ -124,7 +121,6 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     /**
      * TODO:ydy 未测试
      * 传入所有的PinOrderItem的list，计算得到所有的成本
-     *
      * @param array PinOrderItem的list
      * @return 成本
      */
@@ -154,8 +150,30 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
 
     /**
      * @author flyhero
+     * 获取当前用户购物车中所有OrderItem的信息，加上其对应的商品、店铺、sku信息
+     * @param userId
+     * @return
+     */
+    public List<PinOrderItem> getAllOrderItems(Integer userId) {
+        PinOrderItem pinOrderItem = new PinOrderItem();
+        pinOrderItem.setUserId(userId);
+        pinOrderItem.setOrderIndividualId(null);
+        pinOrderItem.setIsSubmitted(false);
+        List<PinOrderItem> list = pinOrderItemMapper.select(pinOrderItem);
+        for (PinOrderItem p : list) {
+            PinProduct pro = productService.getProductById(p.getProductId());
+            PinProductAttributeValue val = pinProductAttributeValueMapper.getSkuBySkuId(p.getSkuId());
+            PinStore store = storeService.getStoreById(pro.getStoreId());
+            pro.setStore(store);
+            p.setProduct(pro);
+            p.setProductAttributeValue(val);
+        }
+        return list;
+    }
+
+    /**
+     * @author flyhero
      * 添加商品到购物车（新增一条新的OrderItem记录）
-     *
      * @param userId
      * @param productId
      * @param skuId
@@ -179,34 +197,10 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
         return STATUS_ADD_ORDER_ITEM_SUCCESS;
     }
 
-    /**
-     * @author flyhero
-     * 获取当前用户购物车中所有OrderItem的信息，加上其对应的商品、店铺、sku信息
-     *
-     * @param userId
-     * @return
-     */
-    public List<PinOrderItem> getAllOrderItems(Integer userId) {
-        PinOrderItem pinOrderItem = new PinOrderItem();
-        pinOrderItem.setUserId(userId);
-        pinOrderItem.setOrderIndividualId(null);
-        pinOrderItem.setIsSubmitted(false);
-        List<PinOrderItem> list = pinOrderItemMapper.select(pinOrderItem);
-        for (PinOrderItem p : list) {
-            PinProduct pro = productService.getProductById(p.getProductId());
-            PinProductAttributeValue val = pinProductAttributeValueMapper.getSkuBySkuId(p.getSkuId());
-            PinStore store = storeService.getStoreById(pro.getStoreId());
-            pro.setStore(store);
-            p.setProduct(pro);
-            p.setProductAttributeValue(val);
-        }
-        return list;
-    }
 
     /**
      * @author flyhero
      * 删除订单信息
-     *
      * @param userId
      * @param orderItemIds
      * @return
@@ -226,7 +220,6 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
     /**
      * @author flyhero
      * 根据orderIndividualId返回所有的orderItem，集成了product和attributeValue
-     *
      * @param orderIndividualId 子订单ID
      * @return 子订单对应的已选商品项目列表
      */
