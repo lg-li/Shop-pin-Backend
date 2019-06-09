@@ -192,7 +192,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
         if(checkIfAlreadyHaveOrderItem(userId, skuId)) { //当前用户购物车中已有同型号商品，在原来基础上增加数量
             pinOrderItemMapper.addAmountInExistingOrderItem(amount, totalPrice, totalCost, userId, skuId);
         } else { //购物车中没有同型号商品，新增一条OrderItem记录
-            save(orderItem);
+            pinOrderItemMapper.insert(orderItem);
         }
         return STATUS_ADD_ORDER_ITEM_SUCCESS;
     }
