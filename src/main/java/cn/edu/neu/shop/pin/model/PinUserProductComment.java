@@ -83,7 +83,13 @@ public class PinUserProductComment {
     private String imagesUrls;
 
     /**
-     * 获取评论ID
+     * 店铺
+     */
+    @Column(name = "store_id")
+    private Integer storeId;
+
+    /**
+     * 获取评论IDID
      *
      * @return id - 评论ID
      */
@@ -314,5 +320,13 @@ public class PinUserProductComment {
      */
     public void setImagesUrls(String imagesUrls) {
         this.imagesUrls = imagesUrls;
+    }
+
+    public Integer getStoreId() {
+        return storeId;
+    }
+
+    public void setStoreId(Integer storeId) {
+        this.storeId = storeId;
     }
 }
