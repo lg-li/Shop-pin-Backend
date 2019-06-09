@@ -32,9 +32,10 @@ import java.util.Map;
 // 注解开启STOMP协议来传输基于代理（message broker）的消息，这是控制器支持使用@MessageMaping，就像使用@RequestMapping一样
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-
     @Autowired
     private UserService userService;
+
+
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
@@ -80,13 +81,23 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         }).setAllowedOrigins("*");
     }
 
+    /**
+     * @author flyhero
+     * 根据src（source的缩写）判断用户来意（用途），根据token来验证授权
+     * @param src
+     * @param token
+     * @param orderIndividualId
+     * @param orderGroupId
+     * @param storeId
+     * @return
+     */
     private Principal parseTokenToPrinciple(String src, String token, Integer orderIndividualId, Integer orderGroupId, Integer storeId) {
         PinUser user = userService.whoDoesThisTokenBelongsTo(token);
         List<PinRole> roles = user.getRoles();
         if(src == "customer") {
             for(PinRole role : roles) {
                 if(role.equals(PinRole.ROLE_USER)) {
-                    return new CustomerPrinciple(user.getId(), orderIndividualId, orderGroupId);
+                    return new CustomerPrincipal(user.getId(), orderIndividualId, orderGroupId);
                 }
             }
             return null;
@@ -94,7 +105,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         else if(src == "merchant") {
             for(PinRole role : roles) {
                 if(role.equals(PinRole.ROLE_MERCHANT)) {
-                    return new MerchantPrinciple(user.getId(), storeId);
+                    return new MerchantPrincipal(user.getId(), storeId);
                 }
             }
             return null;
@@ -102,7 +113,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         else if(src == "admin") {
             for(PinRole role : roles) {
                 if(role.equals(PinRole.ROLE_ADMIN)) {
-                    return new AdminPrinciple(user.getId());
+                    return new AdminPrincipal(user.getId());
                 }
             }
             return null;
