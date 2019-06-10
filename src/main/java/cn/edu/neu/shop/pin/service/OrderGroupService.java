@@ -1,6 +1,5 @@
 package cn.edu.neu.shop.pin.service;
 
-import cn.edu.neu.shop.pin.exception.OrderGroupCreateFailedException;
 import cn.edu.neu.shop.pin.mapper.PinOrderGroupMapper;
 import cn.edu.neu.shop.pin.mapper.PinOrderIndividualMapper;
 import cn.edu.neu.shop.pin.model.PinOrderGroup;
@@ -25,6 +24,11 @@ import java.util.List;
  */
 @Service
 public class OrderGroupService extends AbstractService<PinOrderGroup> {
+
+    public static final int STATUS_CREATE_ORDER_GROUP_SUCCESS = 0;
+    public static final int STATUS_CREATE_ORDER_GROUP_INVALID_ID = -1;
+    public static final int STATUS_CREATE_ORDER_GROUP_PERMISSION_DENIED = -2;
+    public static final int STATUS_CREATE_ORDER_GROUP_NOT_ALLOWED = -3;
 
     @Autowired
     private PinOrderIndividualMapper individualMapper;
@@ -65,16 +69,20 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
      * 新建一个团单
      * @param orderIndividualId
      */
-    public void createOrderGroup(Integer orderIndividualId) throws Exception {
+    public Integer createOrderGroup(Integer userId, Integer storeId, Integer orderIndividualId) {
         PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
+        if(userId != orderIndividual.getUserId()) {
+            return STATUS_CREATE_ORDER_GROUP_PERMISSION_DENIED;
+        }
+        if(storeId != orderIndividual.getStoreId()) {
+            return STATUS_CREATE_ORDER_GROUP_INVALID_ID;
+        }
         // 团单创建失败的情况：1.orderGroupId不为空 2.isPaid不是未付款 3.status不是0-待发货
         if(orderIndividual.getOrderGroupId() != null
         || orderIndividual.getPaid() != true
         || orderIndividual.getStatus() != 0) {
-            throw new OrderGroupCreateFailedException("团单创建失败！");
+            return STATUS_CREATE_ORDER_GROUP_NOT_ALLOWED;
         }
-        Integer userId = orderIndividual.getUserId();
-        Integer storeId = orderIndividual.getStoreId();
         PinOrderGroup orderGroup = new PinOrderGroup();
         orderGroup.setOwnerUserId(userId);
         orderGroup.setStoreId(storeId);
@@ -82,6 +90,11 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         // TODO: 李林根好香
         orderGroup.setCloseTime(getOrderGroupCloseTime(storeId));
         orderGroupService.save(orderGroup);
+        return STATUS_CREATE_ORDER_GROUP_SUCCESS;
+    }
+
+    public void joinOrderGroup(Integer userId) {
+
     }
 
     /**
