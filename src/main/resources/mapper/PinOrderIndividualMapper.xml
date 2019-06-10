@@ -138,4 +138,18 @@
         </collection>
     </resultMap>
 
+    <select id="getNumberOfOrderNotShip" resultType="INTEGER">
+        select count(*) as nums
+        from pin_order_individual
+        where status = 0
+        and store_id = #{storeId}
+    </select>
+
+    <select id="getNumberOfOrderRefund" resultType="INTEGER">
+        select count(*) as nums
+        from pin_order_individual
+        where refund_status = 1
+        and store_id = #{storeId}
+    </select>
+
 </mapper>
