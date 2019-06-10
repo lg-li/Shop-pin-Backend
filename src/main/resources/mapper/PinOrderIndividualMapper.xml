@@ -52,47 +52,25 @@
           and user_id = #{userId}
     </select>
 
+    <!-- 根据输入日期 获取该店铺这一天的订单数-->
+    <select id="getNumberOfOrder" resultType="INTEGER">
+        select count(*) as nums
+        from pin_order_individual
+        where create_time >= #{fromTime}
+        and #{toTime} >= create_time
+        and store_id = #{storeId}
+    </select>
 
     <select id="getAllWithProducts" resultMap="AllWithProductsResultMap">
-        select OIN.*, OIN.id as oin_id, OIT.*, OIT.id as oit_id, P.*, P.id as p_id
+        select OIN.*
         from pin_order_individual as OIN,
              pin_order_item as OIT,
              pin_product as P
-        where OIN.id = OIT.order_individual_id and OIT.product_id = P.id and
-              OIN.id LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.order_group_id LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.store_id LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.user_id LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.receiver_name LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.receiver_phone LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.delivery_address LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.total_product_number LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.total_price LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.shipping_fee LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.pay_price LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.balance_paid_price LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.pay_time LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.paid LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.pay_type LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.create_time LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.status LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.refund_status LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.refund_reason_image LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.refund_reason_explain LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.refund_apply_time LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.refund_refuse_reason LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.refund_price LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.delivery_name LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.delivery_type LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.delivery_id LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.gained_credit LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.merchant_remark LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.user_remark LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.is_group LIKE CONCAT('%', #{keyword}, '%')
-            OR OIN.total_cost LIKE CONCAT('%', #{keyword}, '%')
+        where OIN.id = OIT.order_individual_id
+          AND OIT.product_id = p.id
     </select>
     <resultMap id="AllWithProductsResultMap" type="PinOrderIndividual">
-        <id column="oin_id" jdbcType="INTEGER" property="id"/>
+        <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="order_group_id" jdbcType="INTEGER" property="orderGroupId"/>
         <result column="store_id" jdbcType="INTEGER" property="storeId"/>
         <result column="user_id" jdbcType="INTEGER" property="userId"/>
@@ -123,8 +101,8 @@
         <result column="user_remark" jdbcType="VARCHAR" property="userRemark"/>
         <result column="is_group" jdbcType="BIT" property="isGroup"/>
         <result column="total_cost" jdbcType="DECIMAL" property="totalCost"/>
-        <collection property="orderItems" ofType="PinOrderItem" javaType="ArrayList" column="orderItems">
-            <id column="oit_id" jdbcType="INTEGER" property="id"/>
+        <collection property="orderItems" ofType="PinOrderItem">
+            <id column="id" jdbcType="INTEGER" property="id"/>
             <result column="user_id" jdbcType="INTEGER" property="userId"/>
             <result column="product_id" jdbcType="INTEGER" property="productId"/>
             <result column="sku_id" jdbcType="INTEGER" property="skuId"/>
@@ -133,8 +111,8 @@
             <result column="total_cost" jdbcType="DECIMAL" property="totalCost"/>
             <result column="order_individual_id" jdbcType="INTEGER" property="orderIndividualId"/>
             <result column="is_submitted" jdbcType="BIT" property="isSubmitted"/>
-            <association property="product" javaType="PinProduct" column="product">
-                <id column="p_id" jdbcType="INTEGER" property="id"/>
+            <association property="product" javaType="PinProduct">
+                <id column="id" jdbcType="INTEGER" property="id"/>
                 <result column="store_id" jdbcType="INTEGER" property="storeId"/>
                 <result column="category_id" jdbcType="INTEGER" property="categoryId"/>
                 <result column="image_urls" jdbcType="VARCHAR" property="imageUrls"/>

@@ -6,6 +6,7 @@ import cn.edu.neu.shop.pin.mapper.PinUserCreditRecordMapper;
 import cn.edu.neu.shop.pin.mapper.PinUserMapper;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.model.PinUserCreditRecord;
+import cn.edu.neu.shop.pin.service.security.UserService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,9 @@ public class UserCreditRecordService {
 
     @Autowired
     private PinSettingsConstantMapper pinSettingsConstantMapper;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * 按照需求规约中格式，获取用户签到记录
@@ -55,22 +59,30 @@ public class UserCreditRecordService {
      */
     public void dailyCheckIn(Integer userId) throws Exception {
         List<PinUserCreditRecord> list = pinUserCreditRecordMapper.getCheckInDaysInfo(userId);
-        Integer credit = getCredit();
-        Integer increment = getIncrement();
-        Integer limit = getLimit();
+        Integer creditValue = getCreditValueInDatabase();
+        Integer incrementValue = getIncrementValueInDatabase();
+        Integer limitValue = getLimitValueInDatabase();
         PinUserCreditRecord record;
+        PinUser user = pinUserMapper.selectByPrimaryKey(userId);
         if (list.size() == 0) { // 暂无签到记录
-            record = new PinUserCreditRecord(userId, credit, PinUserCreditRecord.TYPE_FROM_CHECK_IN, new Date(), 1);
-            pinUserMapper.updateUserCredit(userId, credit);
+            record = new PinUserCreditRecord(userId, creditValue, PinUserCreditRecord.TYPE_FROM_CHECK_IN, new Date(), 1);
+            // 插入一条积分变更记录
             pinUserCreditRecordMapper.insert(record);
+            // 更新用户积分
+            user.setCredit(creditValue + user.getCredit());
+            userService.update(user);
         } else if (hasCheckedIn(userId)) { // 今日已签到
             throw new CheckInFailedException("签到失败！请勿重复签到！");
         } else {
             Date yesterday = this.getYesterday(new Date());
             Integer note = getContinuousCheckInDaysNum(userId);
-            Integer creditVal = (credit + note * increment > limit) ? limit : credit + note * increment;
-            record = new PinUserCreditRecord(userId, creditVal, PinUserCreditRecord.TYPE_FROM_CHECK_IN, new Date(), note);
+            Integer deltaCredit = (creditValue + note * incrementValue > limitValue) ? limitValue : creditValue + note * incrementValue;
+            record = new PinUserCreditRecord(userId, deltaCredit, PinUserCreditRecord.TYPE_FROM_CHECK_IN, new Date(), note);
+            // 插入一条积分变更记录
             pinUserCreditRecordMapper.insert(record);
+            // 更新用户积分
+            user.setCredit(deltaCredit + user.getCredit());
+            userService.update(user);
         }
     }
 
@@ -114,7 +126,7 @@ public class UserCreditRecordService {
      *
      * @return
      */
-    public Integer getCredit() {
+    public Integer getCreditValueInDatabase() {
         return Integer.parseInt(pinSettingsConstantMapper
                 .selectByPrimaryKey(new String("check_in_credit"))
                 .getConstantValue());
@@ -125,7 +137,7 @@ public class UserCreditRecordService {
      *
      * @return
      */
-    private Integer getIncrement() {
+    private Integer getIncrementValueInDatabase() {
         return Integer.parseInt(pinSettingsConstantMapper
                 .selectByPrimaryKey(new String("check_in_credit_increment"))
                 .getConstantValue());
@@ -136,7 +148,7 @@ public class UserCreditRecordService {
      *
      * @return
      */
-    private Integer getLimit() {
+    private Integer getLimitValueInDatabase() {
         return Integer.parseInt(pinSettingsConstantMapper
                 .selectByPrimaryKey(new String("check_in_credit_limit"))
                 .getConstantValue());

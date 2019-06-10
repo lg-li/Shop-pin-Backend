@@ -118,6 +118,8 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
     }
 
     /**
+     * @author flyhero
+     * 根据OrderGroupId获取在此团单内的OrderIndividual的List
      * @param orderGroupId
      * @return
      * @author flyhero
@@ -128,6 +130,40 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
         orderIndividual.setOrderGroupId(orderGroupId);
         List<PinOrderIndividual> orderIndividuals = pinOrderIndividualMapper.select(orderIndividual);
         return orderIndividuals;
+    }
+
+    /**
+     * 获取订单数
+     * @param storeId
+     * @return
+     */
+    public Integer[] getOrders(Integer storeId) {
+        Integer order[] = new Integer[7];
+        java.util.Date date = new java.util.Date();
+        date = getTomorrow(date);
+        for(int i = 0; i < 7; i++) {
+            java.util.Date toDate = date;
+            date = getYesterday(date);
+            java.util.Date fromDate = date;
+//            System.out.println("fromDate: " + fromDate + " --- toDate: " + toDate);
+            order[i] = pinOrderIndividualMapper.getNumberOfOrder(fromDate, toDate, storeId);
+//            System.out.println("comment[i]: " + comment[i]);
+        }
+        return order;
+    }
+
+    private java.util.Date getYesterday(java.util.Date today) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(today);
+        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - 1);
+        return calendar.getTime();
+    }
+
+    private java.util.Date getTomorrow(java.util.Date today) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(today);
+        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + 1);
+        return calendar.getTime();
     }
 
     /**
