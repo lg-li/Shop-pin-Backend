@@ -93,7 +93,15 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         return STATUS_CREATE_ORDER_GROUP_SUCCESS;
     }
 
-    public void joinOrderGroup(Integer userId) {
+    /**
+     * @author flyhero
+     * 按照orderGroupId加入团单
+     * @param userId
+     * @param storeId
+     * @param individualId
+     * @param orderGroupId
+     */
+    public void joinOrderGroup(Integer userId, Integer storeId, Integer individualId, Integer orderGroupId) {
 
     }
 
