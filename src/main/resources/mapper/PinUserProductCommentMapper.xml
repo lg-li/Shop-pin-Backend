@@ -58,4 +58,10 @@
     and pin_user_product_comment.is_deleted = 0
     and pin_user_product_comment.product_id = #{productId}
   </select>
+
+  <select id="getNumberOfMerchantNotComment" resultType="INTEGER">
+    select count(*) as nums
+    from pin_user_product_comment
+    where merchant_comment_content is null
+  </select>
 </mapper>

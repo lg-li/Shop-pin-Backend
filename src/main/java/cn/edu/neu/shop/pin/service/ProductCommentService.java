@@ -68,6 +68,15 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
         });
     }
 
+    /**
+     * 获取该店铺商家未评论总数
+     * @param storeId
+     * @return
+     */
+    public Integer getMerchantNotComment(Integer storeId) {
+        return pinUserProductCommentMapper.getNumberOfMerchantNotComment(storeId);
+    }
+
     private Date getYesterday(Date today) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(today);

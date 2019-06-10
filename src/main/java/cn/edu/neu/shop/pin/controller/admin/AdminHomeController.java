@@ -33,9 +33,17 @@ public class AdminHomeController {
     public JSONObject getCommentSevenDays(HttpServletRequest httpServletRequest) {
         try{
             int storeId = getCurrentStoreIdFromHeader(httpServletRequest);
-            Integer commentNum[] = productCommentService.getComments(storeId);
-            Integer orderNum[] = orderIndividualService.getOrders(storeId);
-            Integer viewNum[] = productVisitRecordService.getVisitRecords(storeId);
+            Integer[] commentNum = productCommentService.getComments(storeId);
+            Integer[] orderNum = orderIndividualService.getOrders(storeId);
+            Integer[] viewNum = productVisitRecordService.getVisitRecords(storeId);
+            JSONObject chartData = new JSONObject();
+            chartData.put("commentNum", commentNum);
+            chartData.put("orderNum", orderNum);
+            chartData.put("viewNum", viewNum);
+            JSONObject data = new JSONObject();
+            data.put("chartData", chartData);
+            Integer comment = productCommentService.getMerchantNotComment(storeId);
+            data.put("comment", comment);
         } catch (Exception e) {
             e.printStackTrace();
         }
