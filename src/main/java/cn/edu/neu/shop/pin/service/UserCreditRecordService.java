@@ -69,15 +69,18 @@ public class UserCreditRecordService {
             // 插入一条积分变更记录
             pinUserCreditRecordMapper.insert(record);
             // 更新用户积分
+            System.out.println("user: " + user.getId() + " origin credit: " + user.getCredit());
             user.setCredit(creditValue + user.getCredit());
             userService.update(user);
-        } else if (hasCheckedIn(userId)) { // 今日已签到
+            user = pinUserMapper.selectByPrimaryKey(userId);
+            System.out.println("after update: " + user.getCredit());
+        } else if(hasCheckedIn(userId)) { // 今日已签到
             throw new CheckInFailedException("签到失败！请勿重复签到！");
         } else {
             Date yesterday = this.getYesterday(new Date());
             Integer note = getContinuousCheckInDaysNum(userId);
             Integer deltaCredit = (creditValue + note * incrementValue > limitValue) ? limitValue : creditValue + note * incrementValue;
-            record = new PinUserCreditRecord(userId, deltaCredit, PinUserCreditRecord.TYPE_FROM_CHECK_IN, new Date(), note);
+            record = new PinUserCreditRecord(userId, deltaCredit, PinUserCreditRecord.TYPE_FROM_CHECK_IN, new Date(), note+1);
             // 插入一条积分变更记录
             pinUserCreditRecordMapper.insert(record);
             // 更新用户积分
@@ -88,7 +91,6 @@ public class UserCreditRecordService {
 
     /**
      * 判断今天是否签到了
-     *
      * @param userId
      * @return
      */
