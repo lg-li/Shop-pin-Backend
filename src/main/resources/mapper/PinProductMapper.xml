@@ -100,5 +100,9 @@
     and a1.parent_category_id = a2.id
     order by pin_product.id
   </select>
+
+  <select id="getProductIsShown" resultMap="BaseResultMap">
+    select * from pin_product where is_shown = 1 and store_id = #{storeId}
+  </select>
   
 </mapper>

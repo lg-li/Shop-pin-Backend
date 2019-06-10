@@ -38,7 +38,7 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         for(int i = 0; i < list.size(); i++){
             Date date = list.get(i).getCreateTime();
-            
+
         }
         return data;
     }

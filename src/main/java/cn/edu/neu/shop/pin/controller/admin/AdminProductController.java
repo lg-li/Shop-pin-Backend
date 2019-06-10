@@ -65,12 +65,4 @@ public class AdminProductController {
         }
     }
 
-    /**
-     * 商铺所有者管理本店铺的商品
-     * 商品管理部分 已上架商品
-     */
-    @GetMapping()
-    public JSONObject getProductIsShown() {
-        return null;
-    }
 }
