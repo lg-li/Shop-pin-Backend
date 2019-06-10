@@ -19,4 +19,7 @@ public interface PinOrderIndividualMapper extends BaseMapper<PinOrderIndividual>
 
     Integer getNumberOfOrder(Date fromTime, Date toTime, Integer storeId);
 
+    Integer getNumberOfOrderNotShip(Integer storeId);
+
+    Integer getNumberOfOrderRefund(Integer storeId);
 }

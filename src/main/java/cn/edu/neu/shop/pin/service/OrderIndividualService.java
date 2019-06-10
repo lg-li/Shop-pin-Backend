@@ -293,4 +293,17 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
         }
         return returnList;
     }
+
+    /**
+     * 未发货商品数量
+     * @param storeId
+     * @return
+     */
+    public Integer getProductNotShip(Integer storeId) {
+        return pinOrderIndividualMapper.getNumberOfOrderNotShip(storeId);
+    }
+
+    public Integer getOrderRefund(Integer storeId) {
+        return pinOrderIndividualMapper.getNumberOfOrderRefund(storeId);
+    }
 }

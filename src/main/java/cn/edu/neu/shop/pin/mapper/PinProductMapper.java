@@ -42,4 +42,6 @@ public interface PinProductMapper extends BaseMapper<PinProduct> {
     JSONObject getProductFromSameStore(Integer storeId);
 
     List<PinProduct> getProductIsShown(Integer storeId);
+
+    Integer getNumberOfProductLessStock(Integer storeId);
 }
