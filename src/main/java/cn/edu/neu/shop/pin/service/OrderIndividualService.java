@@ -9,6 +9,7 @@ import cn.edu.neu.shop.pin.model.PinOrderItem;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.model.PinUserAddress;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -161,5 +162,129 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
         calendar.setTime(today);
         calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + 1);
         return calendar.getTime();
+    }
+
+    public List<PinOrderIndividual> getAllWithProducts() {
+        return pinOrderIndividualMapper.getAllWithProducts();
+    }
+
+    public List<PinOrderIndividual> getOrdersByOrderType(List<PinOrderIndividual> list, Integer orderType) {
+        List<PinOrderIndividual> returnList = new ArrayList<>();
+        switch (orderType) {
+            case 0://全部
+                return list;
+            case 1://未付款
+                for (PinOrderIndividual item : list) {
+                    if (!item.getPaid())
+                        returnList.add(item);
+                }
+                break;
+            case 2://待发货
+                for (PinOrderIndividual item : list) {
+                    if (item.getStatus() == PinOrderIndividual.STATUS_DEPENDING_TO_SHIP)
+                        returnList.add(item);
+                }
+                break;
+            case 3://待收货
+                for (PinOrderIndividual item : list) {
+                    if (item.getStatus() == PinOrderIndividual.STATUS_SHIPPED)
+                        returnList.add(item);
+                }
+                break;
+            case 4://待评价
+                for (PinOrderIndividual item : list) {
+                    if (item.getStatus() == PinOrderIndividual.STATUS_PENDING_COMMENT)
+                        returnList.add(item);
+                }
+                break;
+            case 5://交易完成
+                for (PinOrderIndividual item : list) {
+                    if (item.getStatus() == PinOrderIndividual.STATUS_COMMENTED)
+                        returnList.add(item);
+                }
+                break;
+            case 6://退款中
+                for (PinOrderIndividual item : list) {
+                    if (item.getStatus() == PinOrderIndividual.REFUND_STATUS_APPLYING)
+                        returnList.add(item);
+                }
+                break;
+            case 7://已退款
+                for (PinOrderIndividual item : list) {
+                    if (item.getStatus() == PinOrderIndividual.REFUND_STATUS_FINISHED)
+                        returnList.add(item);
+                }
+                break;
+        }
+        return returnList;
+    }
+
+    public List<PinOrderIndividual> getOrdersByOrderDate(List<PinOrderIndividual> list, Integer orderDate, JSONObject queryType) {
+        List<PinOrderIndividual> returnList = new ArrayList<>();
+        java.util.Date createTime;
+        java.util.Date now = new java.util.Date();
+        Calendar caNow = Calendar.getInstance();
+        caNow.setTime(now);
+        Calendar caCreate = Calendar.getInstance();
+
+
+        for (PinOrderIndividual item : list) {
+            createTime = item.getCreateTime();
+            caCreate.setTime(createTime);
+
+            switch (orderDate) {
+                case 0://全部
+                    returnList.add(item);
+                case 1://昨天
+                    caCreate.add(Calendar.DAY_OF_YEAR, 1);
+                    if ((caCreate.get(Calendar.DAY_OF_YEAR) == caNow.get(Calendar.DAY_OF_YEAR)) &&
+                            (caCreate.get(Calendar.YEAR) == caNow.get(Calendar.YEAR)))
+                        returnList.add(item);
+                    break;
+                case 2://今天
+                    if (caCreate.get(Calendar.DAY_OF_YEAR) == caNow.get(Calendar.DAY_OF_YEAR))
+                        returnList.add(item);
+                    break;
+                case 3://本周
+                    if ((caCreate.get(Calendar.YEAR) == caNow.get(Calendar.YEAR)) &&
+                            (caCreate.get(Calendar.WEEK_OF_YEAR) == caNow.get(Calendar.WEEK_OF_YEAR)))
+                        returnList.add(item);
+                    break;
+                case 4://本月
+                    if ((caCreate.get(Calendar.YEAR) == caNow.get(Calendar.YEAR)) &&
+                            (caCreate.get(Calendar.MONTH) == caNow.get(Calendar.MONTH)))
+                        returnList.add(item);
+                    break;
+                case 5://本季度
+                    int createMonth = caCreate.get(Calendar.MONTH) + 1; //创建时的月份
+                    int rightMonth = caNow.get(Calendar.MONTH) + 1; //现在的月份
+                    if (caCreate.get(Calendar.YEAR) == caNow.get(Calendar.YEAR)) {
+                        if (createMonth >= 1 && rightMonth >= 1 && createMonth <= 3 && rightMonth <= 3)
+                            returnList.add(item);
+                        else if (createMonth >= 4 && rightMonth >= 4 && createMonth <= 6 && rightMonth <= 6)
+                            returnList.add(item);
+                        else if (createMonth >= 7 && rightMonth >= 7 && createMonth <= 9 && rightMonth <= 9)
+                            returnList.add(item);
+                        else if (createMonth >= 10 && rightMonth >= 10 && createMonth <= 12 && rightMonth <= 12)
+                            returnList.add(item);
+                    }
+                    break;
+                case 6://本年
+                    if (caCreate.get(Calendar.YEAR) == caNow.get(Calendar.YEAR))
+                        returnList.add(item);
+                    break;
+                case 7://自定义
+                    java.util.Date begin = queryType.getDate("begin");
+                    java.util.Date end = queryType.getDate("end");
+                    if (caCreate.getTime().getTime() >= begin.getTime() && caCreate.getTime().getTime() <= end.getTime())
+                        returnList.add(item);
+                    break;
+            }
+        }
+        return returnList;
+    }
+
+    public List<PinOrderIndividual> getOrdersByKeyWord(List<PinOrderIndividual> list, String keyWord) {
+        return null;
     }
 }
