@@ -118,7 +118,8 @@ public class UserCreditRecordService {
         } else {
             PinUserCreditRecord p = list.get(0);
             Date date = p.getCreateTime(), yesterday = this.getYesterday(new Date());
-            Integer note = isTheSameDay(date, yesterday) ? p.getNote() : 1;
+            Integer note = (isTheSameDay(date, new Date()) || isTheSameDay(date, yesterday))
+                    ? p.getNote() : 1;
             return note;
         }
     }

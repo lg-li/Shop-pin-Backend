@@ -23,8 +23,8 @@ public class PinUserCreditRecordServiceTest {
 
     @Test
     public void testCheckIn() throws Exception {
-        System.out.println(userCreditRecordService.getContinuousCheckInDaysNum(8));
-        userCreditRecordService.dailyCheckIn(8);
+//        System.out.println(userCreditRecordService.getContinuousCheckInDaysNum(8));
+//        userCreditRecordService.dailyCheckIn(8);
         System.out.println(userCreditRecordService.getUserCreditData(8));
 
     }
