@@ -3,16 +3,16 @@ package cn.edu.neu.shop.pin.websocket;
 import javax.security.auth.Subject;
 import java.security.Principal;
 
-public class MerchantPrinciple implements Principal {
+public class MerchantPrincipal implements Principal {
     private Integer userId;
 
     private Integer storeId;
 
-    public MerchantPrinciple() {
+    public MerchantPrincipal() {
         super();
     }
 
-    public MerchantPrinciple(Integer userId, Integer storeId) {
+    public MerchantPrincipal(Integer userId, Integer storeId) {
         this.userId = userId;
         this.storeId = storeId;
     }

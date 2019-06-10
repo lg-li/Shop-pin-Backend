@@ -3,6 +3,7 @@ package cn.edu.neu.shop.pin.model;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Table(name = "pin_order_group")
 public class PinOrderGroup {
@@ -37,6 +38,8 @@ public class PinOrderGroup {
     private BigDecimal totalAmountOfMoneyPaid;
 
     private PinUser pinUser;
+
+    private List<PinOrderIndividual> orderIndividuals;
 
     /**
      * 获取拼团单ID
@@ -164,5 +167,13 @@ public class PinOrderGroup {
 
     public void setPinUser(PinUser pinUser) {
         this.pinUser = pinUser;
+    }
+
+    public List<PinOrderIndividual> getOrderIndividuals() {
+        return orderIndividuals;
+    }
+
+    public void setOrderIndividuals(List<PinOrderIndividual> orderIndividuals) {
+        this.orderIndividuals = orderIndividuals;
     }
 }

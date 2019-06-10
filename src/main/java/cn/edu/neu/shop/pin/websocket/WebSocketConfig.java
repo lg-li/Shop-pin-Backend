@@ -32,9 +32,10 @@ import java.util.Map;
 // 注解开启STOMP协议来传输基于代理（message broker）的消息，这是控制器支持使用@MessageMaping，就像使用@RequestMapping一样
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-
     @Autowired
     private UserService userService;
+
+
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
@@ -50,10 +51,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 String token = req.getServletRequest().getParameter("token");
                 String oii = req.getServletRequest().getParameter("orderIndividualId");
                 String ogi = req.getServletRequest().getParameter("orderGroupId");
+                String si = req.getServletRequest().getParameter("storeId");
                 Integer orderIndividualId = Integer.parseInt(oii != null ? oii : "-1");
                 Integer orderGroupId = Integer.parseInt(ogi != null ? ogi : "-1");
+                Integer storeId = Integer.parseInt(si != null ? si : "-1");
                 //解析token获取用户信息
-                Principal user = parseTokenToPrinciple(token, orderIndividualId, orderGroupId);
+                Principal user = parseTokenToPrinciple(src, token, orderIndividualId, orderGroupId, storeId);
                 if (user == null) { //如果token认证失败user为null，返回false拒绝握手
                     System.out.println("失败连接！！！！");
                     return false;
@@ -78,21 +81,46 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         }).setAllowedOrigins("*");
     }
 
-    private Principal parseTokenToPrinciple(String token, Integer orderIndividualId, Integer orderGroupId) {
+    /**
+     * @author flyhero
+     * 根据src（source的缩写）判断用户来意（用途），根据token来验证授权
+     * @param src
+     * @param token
+     * @param orderIndividualId
+     * @param orderGroupId
+     * @param storeId
+     * @return
+     */
+    private Principal parseTokenToPrinciple(String src, String token, Integer orderIndividualId, Integer orderGroupId, Integer storeId) {
         PinUser user = userService.whoDoesThisTokenBelongsTo(token);
         List<PinRole> roles = user.getRoles();
-        for(PinRole role : roles) {
-            if(role.equals(PinRole.ROLE_MERCHANT)) {
-                return new CustomerPrinciple(user.getId(), orderIndividualId, orderGroupId);
-            } else if(role.equals(PinRole.ROLE_USER)) {
-
-            } else if(role.equals(PinRole.ROLE_ADMIN)) {
-
-            } else {
-                return null;
+        if(src == "customer") {
+            for(PinRole role : roles) {
+                if(role.equals(PinRole.ROLE_USER)) {
+                    return new CustomerPrincipal(user.getId(), orderIndividualId, orderGroupId);
+                }
             }
+            return null;
         }
-        return null;
+        else if(src == "merchant") {
+            for(PinRole role : roles) {
+                if(role.equals(PinRole.ROLE_MERCHANT)) {
+                    return new MerchantPrincipal(user.getId(), storeId);
+                }
+            }
+            return null;
+        }
+        else if(src == "admin") {
+            for(PinRole role : roles) {
+                if(role.equals(PinRole.ROLE_ADMIN)) {
+                    return new AdminPrincipal(user.getId());
+                }
+            }
+            return null;
+        }
+        else {
+            return null;
+        }
     }
 
 //    @Override
