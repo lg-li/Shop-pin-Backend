@@ -56,7 +56,7 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
 
     /**
      * 管理端
-     * 分页获取商品评论信息 包括评论用户昵称和头像
+     * 分页获取商品评论信息 包括评论用户昵称和头像 购买商品类型
      * @param productId
      * @param pageNum
      * @param pageSize

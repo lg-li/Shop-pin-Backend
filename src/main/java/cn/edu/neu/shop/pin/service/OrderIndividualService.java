@@ -122,6 +122,8 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
      * 根据OrderGroupId获取在此团单内的OrderIndividual的List
      * @param orderGroupId
      * @return
+     * @author flyhero
+     * 根据OrderGroupId获取在此团单内的OrderIndividual的List
      */
     public List<PinOrderIndividual> getOrderIndividualsByOrderGroupId(Integer orderGroupId) {
         PinOrderIndividual orderIndividual = new PinOrderIndividual();
