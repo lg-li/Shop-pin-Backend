@@ -19,6 +19,17 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 public class OrderControllerTest extends UserCredentialNeededTest {
 
     @Test
+    public void testGetTopTenOrderGroupsByStoreId() throws Exception {
+        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/order-group/by-store-id/3")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andReturn().getResponse().getContentAsString();
+
+        System.out.println("返回的json=" + result);
+    }
+
+    @Test
     public void testGetAllOrderItems() throws Exception {
         String result = mvc.perform(MockMvcRequestBuilders.get("/commons/order/get-order-items/1")
                 .contentType(MediaType.APPLICATION_JSON))

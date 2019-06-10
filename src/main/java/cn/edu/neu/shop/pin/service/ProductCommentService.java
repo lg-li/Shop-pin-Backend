@@ -42,10 +42,10 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
     public Integer[] getComments(Integer storeId) {
         Integer comment[] = new Integer[7];
         Date date = new Date();
-        date = getTomorrow(date);
+        date = getDateByOffset(date, 1);
         for(int i = 0; i < 7; i++) {
             Date toDate = date;
-            date = getYesterday(date);
+            date = getDateByOffset(date, -1);
             Date fromDate = date;
 //            System.out.println("fromDate: " + fromDate + " --- toDate: " + toDate);
             comment[i] = pinUserProductCommentMapper.getNumberOfComment(fromDate, toDate, storeId);
@@ -68,17 +68,19 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
         });
     }
 
-    private Date getYesterday(Date today) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(today);
-        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - 1);
-        return calendar.getTime();
+    /**
+     * 获取该店铺商家未评论总数
+     * @param storeId
+     * @return
+     */
+    public Integer getMerchantNotComment(Integer storeId) {
+        return pinUserProductCommentMapper.getNumberOfMerchantNotComment(storeId);
     }
 
-    private Date getTomorrow(Date today) {
+    private java.util.Date getDateByOffset(java.util.Date today, Integer delta) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(today);
-        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + 1);
+        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + delta);
         return calendar.getTime();
     }
 

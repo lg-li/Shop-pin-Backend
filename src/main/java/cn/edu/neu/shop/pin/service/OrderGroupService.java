@@ -65,11 +65,11 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
 
     /**
      * 传入orderGroup 返回拼单的人
-     * @param orderGroup orderGroup
+     * @param orderGroupId
      * @return 拼单的人的list
      */
-    public List<PinUser> getUsersByOrderGroup(PinOrderGroup orderGroup) {
-        List<PinOrderIndividual> individuals = individualMapper.selectByOrderGroupId(orderGroup.getId());
+    public List<PinUser> getUsersByOrderGroup(Integer orderGroupId) {
+        List<PinOrderIndividual> individuals = individualMapper.selectByOrderGroupId(orderGroupId);
         return orderIndividualService.getUsers(individuals);
     }
 

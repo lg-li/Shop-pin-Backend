@@ -16,27 +16,20 @@ public class ProductVisitRecordService {
     public Integer[] getVisitRecords(Integer storeId) {
         Integer record[] = new Integer[7];
         Date date = new Date();
-        date = getTomorrow(date);
+        date = getDateByOffset(date, 1);
         for(int i = 0; i < 7; i++) {
             Date toDate = date;
-            date = getYesterday(date);
+            date = getDateByOffset(date, -1);
             Date fromDate = date;
             record[i] = pinUserProductVisitRecordMapper.getNumberOfVisitRecord(fromDate, toDate, storeId);
         }
         return record;
     }
 
-    private Date getYesterday(Date today) {
+    private java.util.Date getDateByOffset(java.util.Date today, Integer delta) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(today);
-        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - 1);
-        return calendar.getTime();
-    }
-
-    private Date getTomorrow(Date today) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(today);
-        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + 1);
+        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + delta);
         return calendar.getTime();
     }
 }

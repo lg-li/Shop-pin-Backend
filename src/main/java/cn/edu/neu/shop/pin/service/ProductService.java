@@ -185,4 +185,12 @@ public class ProductService extends AbstractService<PinProduct> {
         return pinProductMapper.getProductFromSameStore(storeId);
     }
 
+    /**
+     * 店铺库存预警商品个数
+     * @param storeId
+     * @return
+     */
+    public Integer getProductLessStock(Integer storeId) {
+        return pinProductMapper.getNumberOfProductLessStock(storeId);
+    }
 }
