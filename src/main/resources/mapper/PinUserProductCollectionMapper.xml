@@ -18,7 +18,7 @@
       <id column="product_id" property="id" />
       <result column="product_name" property="name" />
       <result column="image_urls" property="imageUrls" />
-      <result column="price" property="price" />
+      <result column="changedAmount" property="changedAmount" />
       <association property="store" column="store_id" javaType="PinStore" resultMap="storeResult" />
   </resultMap>
 
@@ -35,7 +35,7 @@
       col.product_id    as product_id,
       pro.name          as product_name,
       pro.image_urls    as image_urls,
-      pro.price         as price,
+      pro.changedAmount         as changedAmount,
       pro.store_id      as store_id,
       sto.name          as store_name,
       sto.logo_url      as logo_url,

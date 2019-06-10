@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
@@ -183,4 +184,5 @@ public class ProductService extends AbstractService<PinProduct> {
     public JSONObject getProductInfoFromSameStore(Integer storeId) {
         return pinProductMapper.getProductFromSameStore(storeId);
     }
+
 }
