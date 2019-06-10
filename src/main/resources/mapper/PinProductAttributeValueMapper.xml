@@ -9,7 +9,7 @@
     <result column="product_id" jdbcType="INTEGER" property="productId" />
     <result column="sku" jdbcType="VARCHAR" property="sku" />
     <result column="stock" jdbcType="VARCHAR" property="stock" />
-    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="changedAmount" jdbcType="DECIMAL" property="changedAmount" />
     <result column="image_url" jdbcType="VARCHAR" property="imageUrl" />
     <result column="cost" jdbcType="DECIMAL" property="cost" />
   </resultMap>
@@ -17,10 +17,10 @@
   <insert id="insertProductAttributeValue" parameterType="PinProductAttributeValue"
           useGeneratedKeys="true" keyProperty="id">
     insert into pin_product_attribute_value (
-        product_id, sku, stock, price, image_url, cost
+        product_id, sku, stock, changedAmount, image_url, cost
     )
     values (
-        #{productId}, #{sku}, #{stock}, #{price}, #{imageUrl}, #{cost}
+        #{productId}, #{sku}, #{stock}, #{changedAmount}, #{imageUrl}, #{cost}
     )
   </insert>
 

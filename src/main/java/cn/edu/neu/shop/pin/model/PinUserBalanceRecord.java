@@ -6,6 +6,11 @@ import java.util.Date;
 
 @Table(name = "pin_user_balance_record")
 public class PinUserBalanceRecord {
+    public static final int TYPE_RETURN_BONUS = 0;
+    public static final int TYPE_DISCOUNT_ON_ORDER = 1;
+    public static final int TYPE_TOP_UP = 2;
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -25,12 +30,12 @@ public class PinUserBalanceRecord {
     /**
      * 动账金额
      */
-    private BigDecimal price;
+    private BigDecimal changedAmount;
 
     /**
      * 类型, 0: 返现, 1: 抵扣; 2: 充值
      */
-    private Boolean type;
+    private Integer type;
 
     /**
      * 动账时间
@@ -91,19 +96,19 @@ public class PinUserBalanceRecord {
     /**
      * 获取动账金额
      *
-     * @return price - 动账金额
+     * @return changedAmount - 动账金额
      */
-    public BigDecimal getPrice() {
-        return price;
+    public BigDecimal getChangedAmount() {
+        return changedAmount;
     }
 
     /**
      * 设置动账金额
      *
-     * @param price 动账金额
+     * @param changedAmount 动账金额
      */
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setChangedAmount(BigDecimal changedAmount) {
+        this.changedAmount = changedAmount;
     }
 
     /**
@@ -111,7 +116,7 @@ public class PinUserBalanceRecord {
      *
      * @return type - 类型, 0: 返现, 1: 抵扣; 2: 充值
      */
-    public Boolean getType() {
+    public Integer getType() {
         return type;
     }
 
@@ -120,7 +125,7 @@ public class PinUserBalanceRecord {
      *
      * @param type 类型, 0: 返现, 1: 抵扣; 2: 充值
      */
-    public void setType(Boolean type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 
