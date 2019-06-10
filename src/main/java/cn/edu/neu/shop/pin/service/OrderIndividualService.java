@@ -134,33 +134,26 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
 
     /**
      * 获取订单数
-     * @param storeId
+     * @param storeId 商店ID
      * @return
      */
     public Integer[] getOrders(Integer storeId) {
-        Integer order[] = new Integer[7];
+        Integer[] order = new Integer[7];
         java.util.Date date = new java.util.Date();
-        date = getTomorrow(date);
+        date = getDateByOffset(date, 1); // tomorrow
         for(int i = 0; i < 7; i++) {
             java.util.Date toDate = date;
-            date = getYesterday(date);
-            Date fromDate = date;
+            date = getDateByOffset(date, -1); // yesterday
+            java.util.Date fromDate = date;
             order[i] = pinOrderIndividualMapper.getNumberOfOrder(fromDate, toDate, storeId);
         }
         return order;
     }
 
-    private java.util.Date getYesterday(java.util.Date today) {
+    private java.util.Date getDateByOffset(java.util.Date today, Integer delta) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(today);
-        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - 1);
-        return calendar.getTime();
-    }
-
-    private java.util.Date getTomorrow(java.util.Date today) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(today);
-        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + 1);
+        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + delta);
         return calendar.getTime();
     }
 

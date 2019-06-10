@@ -17,7 +17,7 @@ import java.util.List;
  * @author LLG
  */
 @RestController
-@RequestMapping(value = "order-group")
+@RequestMapping(value = "/order-group")
 public class OrderGroupController {
 
     @Autowired
@@ -99,7 +99,7 @@ public class OrderGroupController {
     public JSONObject getTopTenOrderGroups(@PathVariable Integer storeId) {
         List<PinOrderGroup> list = orderGroupService.getTopTenOrderGroups(storeId);
         JSONObject data = new JSONObject();
-        data.put("list", list);
+        data.put("orderGroups", list);
         return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
                 data);
     }
