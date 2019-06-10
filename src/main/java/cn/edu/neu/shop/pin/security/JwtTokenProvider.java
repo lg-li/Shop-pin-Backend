@@ -70,14 +70,14 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    public Authentication getAuthentication(String token) {
+    Authentication getAuthentication(String token) {
         UserDetails userDetails = myUserDetails.loadUserByUsername(getId(token).toString());
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
     //通过token得到Id
     public Integer getId(String token) {
-        return Integer.parseInt(Jwts.parser().setSigningKey(secretKey).wparseClaimsJws(token).getBody().getSubject());
+        return Integer.parseInt(Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject());
     }
 
     //通过请求得到 token
@@ -90,7 +90,7 @@ public class JwtTokenProvider {
     }
 
     //token是否可以解析
-    public boolean validateToken(String token) {
+    boolean validateToken(String token) {
         try {
             Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
             return true;
