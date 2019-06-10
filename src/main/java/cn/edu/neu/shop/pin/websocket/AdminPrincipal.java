@@ -2,15 +2,15 @@ package cn.edu.neu.shop.pin.websocket;
 
 import java.security.Principal;
 
-public class AdminPrinciple implements Principal {
+public class AdminPrincipal implements Principal {
 
     private Integer userId;
 
-    public AdminPrinciple() {
+    public AdminPrincipal() {
         super();
     }
 
-    public AdminPrinciple(Integer userId) {
+    public AdminPrincipal(Integer userId) {
         this.userId = userId;
     }
 

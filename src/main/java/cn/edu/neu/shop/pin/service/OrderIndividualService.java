@@ -115,4 +115,16 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
         }
     }
 
+    /**
+     * @author flyhero
+     * 根据OrderGroupId获取在此团单内的OrderIndividual的List
+     * @param orderGroupId
+     * @return
+     */
+    public List<PinOrderIndividual> getOrderIndividualsByOrderGroupId(Integer orderGroupId) {
+        PinOrderIndividual orderIndividual = new PinOrderIndividual();
+        orderIndividual.setOrderGroupId(orderGroupId);
+        List<PinOrderIndividual> orderIndividuals = pinOrderIndividualMapper.select(orderIndividual);
+        return orderIndividuals;
+    }
 }

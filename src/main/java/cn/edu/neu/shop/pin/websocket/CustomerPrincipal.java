@@ -3,7 +3,7 @@ package cn.edu.neu.shop.pin.websocket;
 import javax.security.auth.Subject;
 import java.security.Principal;
 
-public class CustomerPrinciple implements Principal {
+public class CustomerPrincipal implements Principal {
 
     private Integer userId;
 
@@ -11,11 +11,11 @@ public class CustomerPrinciple implements Principal {
 
     private Integer orderGroupId;
 
-    public CustomerPrinciple() {
+    public CustomerPrincipal() {
         super();
     }
 
-    public CustomerPrinciple(Integer userId, Integer orderIndividualId, Integer orderGroupId) {
+    public CustomerPrincipal(Integer userId, Integer orderIndividualId, Integer orderGroupId) {
         this.userId = userId;
         this.orderIndividualId = orderIndividualId;
         this.orderGroupId = orderGroupId;

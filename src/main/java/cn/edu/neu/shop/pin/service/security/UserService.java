@@ -2,11 +2,9 @@ package cn.edu.neu.shop.pin.service.security;
 
 import cn.edu.neu.shop.pin.exception.CredentialException;
 import cn.edu.neu.shop.pin.mapper.PinUserRoleMapper;
-import cn.edu.neu.shop.pin.model.PinRole;
-import cn.edu.neu.shop.pin.model.PinUser;
-import cn.edu.neu.shop.pin.model.PinUserRole;
-import cn.edu.neu.shop.pin.model.PinWechatUser;
+import cn.edu.neu.shop.pin.model.*;
 import cn.edu.neu.shop.pin.security.JwtTokenProvider;
+import cn.edu.neu.shop.pin.service.OrderIndividualService;
 import cn.edu.neu.shop.pin.service.UserCreditRecordService;
 import cn.edu.neu.shop.pin.service.UserRoleListTransferService;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
@@ -22,6 +20,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,6 +46,12 @@ public class UserService extends AbstractService<PinUser> {
 
     @Autowired
     private PinUserRoleMapper pinUserRoleMapper;
+
+    @Autowired
+    private OrderIndividualService orderIndividualService;
+
+    @Autowired
+    private UserService userService;
 
     /**
      * 登录接口
@@ -192,4 +197,18 @@ public class UserService extends AbstractService<PinUser> {
         return findByPhone(emailOrPhone);
     }
 
+    /**
+     * @author flyhero
+     * 根据orderGroupId查找团单内所有orderIndividual对应的用户
+     * @param orderGroupId
+     * @return
+     */
+    public List<PinUser> getUsersByOrderGroupId(Integer orderGroupId) {
+        List<PinOrderIndividual> list = orderIndividualService.getOrderIndividualsByOrderGroupId(orderGroupId);
+        List<PinUser> userList = new ArrayList<>();
+        for(PinOrderIndividual individual : list) {
+            userList.add(userService.findById(individual.getUserId()));
+        }
+        return userList;
+    }
 }
