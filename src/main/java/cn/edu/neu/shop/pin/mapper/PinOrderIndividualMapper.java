@@ -13,4 +13,6 @@ public interface PinOrderIndividualMapper extends BaseMapper<PinOrderIndividual>
     List<PinOrderIndividual> selectByOrderGroupId(Integer groupId);
 
     List<PinOrderIndividual> getRecentThreeMonthsOrderIndividuals(Integer userId);
+
+    List<PinOrderIndividual> getAllWithProducts();
 }
