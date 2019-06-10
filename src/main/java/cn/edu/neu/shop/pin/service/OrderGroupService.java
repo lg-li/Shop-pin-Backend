@@ -12,6 +12,7 @@ import cn.edu.neu.shop.pin.util.base.AbstractService;
 import cn.edu.neu.shop.pin.websocket.CustomerPrincipal;
 import cn.edu.neu.shop.pin.websocket.WebSocketService;
 import com.alibaba.fastjson.JSONObject;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,6 +54,15 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
 
     @Autowired
     private AddressService addressService;
+
+    /**
+     * @author flyhero
+     * 获取某一店铺当前活跃的前十条拼团数据
+     * @return
+     */
+    public List<PinOrderGroup> getTopTenOrderGroups(Integer storeId) {
+        return pinOrderGroupMapper.getTopTenOrderGroups(storeId);
+    }
 
     /**
      * 传入orderGroup 返回拼单的人

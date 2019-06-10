@@ -59,6 +59,7 @@ public class OrderGroupController {
     }
 
     /**
+     * @author flyhero
      * 加入团单
      * @param httpServletRequest
      * @return
@@ -69,11 +70,12 @@ public class OrderGroupController {
     }
 
     /**
+     * @author flyhero
      * 根据团单编号获取团单
      * @param orderGroupId
      * @return
      */
-    @GetMapping("/{orderGroupId}")
+    @GetMapping("/by-order-group-id/{orderGroupId}")
     public JSONObject getOrderGroupInfo(@PathVariable(value = "orderGroupId") Integer orderGroupId) {
         try {
             PinOrderGroup orderGroupInfo = orderGroupService.findById(orderGroupId);
@@ -87,6 +89,19 @@ public class OrderGroupController {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
+    }
+
+    /**
+     * @author flyhero
+     * 根据店铺Id，获取某一店铺当前活跃的最近十条拼团记录
+     */
+    @GetMapping("/by-store-id/{storeId}")
+    public JSONObject getTopTenOrderGroups(@PathVariable Integer storeId) {
+        List<PinOrderGroup> list = orderGroupService.getTopTenOrderGroups(storeId);
+        JSONObject data = new JSONObject();
+        data.put("list", list);
+        return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
+                data);
     }
 
 }

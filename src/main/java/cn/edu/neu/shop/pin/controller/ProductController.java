@@ -34,7 +34,6 @@ public class ProductController {
 
     /**
      * 层级获取商品分类表
-     *
      * @param requestJSON 请求 layer JSON数据
      * @return JSONObject
      */
@@ -53,7 +52,6 @@ public class ProductController {
 
     /**
      * 获取所有商品类别
-     *
      * @return JSONObject
      */
     @GetMapping("/category/all")
@@ -70,7 +68,6 @@ public class ProductController {
 
     /**
      * 层级获取商品分类表
-     *
      * @return JSONObject
      */
     @GetMapping("/by-category/{categoryId}/{pageNum}/{pageSize}")
@@ -85,7 +82,6 @@ public class ProductController {
 
     /**
      * 通过商品Id 获取商品详情
-     *
      * @param productId 商品 ID
      * @return JSONObject
      */
@@ -102,7 +98,6 @@ public class ProductController {
 
     /**
      * 根据商品Id 获取该商品评论信息，支持分页操作
-     *
      * @param productId 商品 ID
      * @return JSONObject
      */
@@ -118,7 +113,6 @@ public class ProductController {
 
     /**
      * 获取热门商品信息，支持分页操作
-     *
      * @param pageNum  分页号
      * @param pageSize 分页大小
      * @return 分页的商品规范JSON
