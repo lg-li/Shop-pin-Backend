@@ -36,7 +36,7 @@ public class CollectionControllerTest extends UserCredentialNeededTest{
     @Test
     public void testGetUserProductCollection() throws Exception {
         String result = mvc.perform(MockMvcRequestBuilders.get("/commons/user/product-collection")
-                .header("Authorization", "Bear", token)
+                .header("Authorization", "Bear ", token)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print())

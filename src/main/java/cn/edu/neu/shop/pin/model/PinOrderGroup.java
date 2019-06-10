@@ -37,7 +37,9 @@ public class PinOrderGroup {
     @Column(name = "total_amount_of_money_paid")
     private BigDecimal totalAmountOfMoneyPaid;
 
-    private PinUser pinUser;
+    private PinUser ownerUser;
+
+    private PinStore store;
 
     private List<PinOrderIndividual> orderIndividuals;
 
@@ -161,12 +163,20 @@ public class PinOrderGroup {
         this.totalAmountOfMoneyPaid = totalAmountOfMoneyPaid;
     }
 
-    public PinUser getPinUser() {
-        return pinUser;
+    public PinUser getOwnerUser() {
+        return ownerUser;
     }
 
-    public void setPinUser(PinUser pinUser) {
-        this.pinUser = pinUser;
+    public void setOwnerUser(PinUser ownerUser) {
+        this.ownerUser = ownerUser;
+    }
+
+    public PinStore getStore() {
+        return store;
+    }
+
+    public void setStore(PinStore store) {
+        this.store = store;
     }
 
     public List<PinOrderIndividual> getOrderIndividuals() {

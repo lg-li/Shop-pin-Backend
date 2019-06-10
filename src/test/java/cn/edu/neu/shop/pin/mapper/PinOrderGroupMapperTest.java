@@ -31,8 +31,8 @@ public class PinOrderGroupMapperTest {
         for(PinOrderGroup g : list) {
             System.out.println("order_group_id: " + g.getId());
             System.out.println("owner_user_id: " + g.getOwnerUserId());
-            System.out.println("owner_user_avatar_url: " + g.getPinUser().getAvatarUrl());
-            System.out.println("owner_user_nickname: " + g.getPinUser().getNickname());
+            System.out.println("owner_user_avatar_url: " + g.getOwnerUser().getAvatarUrl());
+            System.out.println("owner_user_nickname: " + g.getOwnerUser().getNickname());
             System.out.println("store_id: " + g.getStoreId());
             System.out.println("status: " + g.getStatus());
             System.out.println("create_time: " + g.getCreateTime());

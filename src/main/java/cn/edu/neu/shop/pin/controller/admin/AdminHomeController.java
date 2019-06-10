@@ -29,7 +29,7 @@ public class AdminHomeController {
     /**
      * 显示近七天内的评论数 交易数 浏览量
      */
-    @GetMapping()
+    @GetMapping("/oojh")
     public JSONObject getCommentSevenDays(HttpServletRequest httpServletRequest) {
         try{
             int storeId = getCurrentStoreIdFromHeader(httpServletRequest);

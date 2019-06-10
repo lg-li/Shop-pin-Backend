@@ -28,9 +28,10 @@ public abstract class UserCredentialNeededTest {
     protected MockMvc mvc;
 
    @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         this.mvc = MockMvcBuilders.webAppContextSetup(this.context).build();
         token = userService.signIn(1, "liyifei99");
+       System.out.println("token=" + token);
     }
 
 }

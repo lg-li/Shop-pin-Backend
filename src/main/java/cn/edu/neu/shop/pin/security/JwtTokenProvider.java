@@ -77,7 +77,7 @@ public class JwtTokenProvider {
 
     //通过token得到Id
     public Integer getId(String token) {
-        return Integer.parseInt(Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject());
+        return Integer.parseInt(Jwts.parser().setSigningKey(secretKey).wparseClaimsJws(token).getBody().getSubject());
     }
 
     //通过请求得到 token

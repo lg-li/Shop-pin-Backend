@@ -1,11 +1,16 @@
 package cn.edu.neu.shop.pin.controller;
 
 import cn.edu.neu.shop.pin.model.PinOrderGroup;
+import cn.edu.neu.shop.pin.model.PinOrderIndividual;
+import cn.edu.neu.shop.pin.model.PinStore;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.service.OrderGroupService;
+import cn.edu.neu.shop.pin.service.OrderIndividualService;
+import cn.edu.neu.shop.pin.service.StoreService;
 import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,14 +22,20 @@ import java.util.List;
  * @author LLG
  */
 @RestController
-@RequestMapping(value = "/order-group")
+@RequestMapping(value = "/commons/order-group")
 public class OrderGroupController {
 
     @Autowired
     private UserService userService;
 
     @Autowired
+    private OrderIndividualService orderIndividualService;
+
+    @Autowired
     private OrderGroupService orderGroupService;
+
+    @Autowired
+    private StoreService storeService;
 
     /**
      * @author flyhero
@@ -76,12 +87,12 @@ public class OrderGroupController {
      * @return
      */
     @GetMapping("/by-order-group-id/{orderGroupId}")
-    public JSONObject getOrderGroupInfo(@PathVariable(value = "orderGroupId") Integer orderGroupId) {
+    public JSONObject getOrderGroupByOrderGroupId(@PathVariable(value = "orderGroupId") Integer orderGroupId) {
         try {
-            PinOrderGroup orderGroupInfo = orderGroupService.findById(orderGroupId);
-            List<PinUser> list = orderGroupService.getUsersByOrderGroup(orderGroupInfo);
+            PinOrderGroup orderGroup = orderGroupService.findById(orderGroupId);
+            List<PinUser> list = orderGroupService.getUsersByOrderGroup(orderGroup.getId());
             JSONObject data = new JSONObject();
-            data.put("orderGroup", orderGroupInfo);
+            data.put("orderGroup", orderGroup);
             data.put("users", list);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
                     data);
@@ -96,8 +107,15 @@ public class OrderGroupController {
      * 根据店铺Id，获取某一店铺当前活跃的最近十条拼团记录
      */
     @GetMapping("/by-store-id/{storeId}")
-    public JSONObject getTopTenOrderGroups(@PathVariable Integer storeId) {
+    public JSONObject getTopTenOrderGroupsByStoreId(@PathVariable Integer storeId) {
         List<PinOrderGroup> list = orderGroupService.getTopTenOrderGroups(storeId);
+        System.out.println("list.size(): " + list.size());
+        PinStore store = storeService.getStoreById(storeId);
+        for(PinOrderGroup orderGroup : list) {
+            orderGroup.setStore(store);
+            List<PinOrderIndividual> orderIndividuals = orderIndividualService.getOrderIndividualsByOrderGroupId(orderGroup.getId());
+            orderGroup.setOrderIndividuals(orderIndividuals);
+        }
         JSONObject data = new JSONObject();
         data.put("orderGroups", list);
         return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
