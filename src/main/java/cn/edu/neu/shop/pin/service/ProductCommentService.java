@@ -39,7 +39,7 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
      * @param storeId
      * @return
      */
-    public Integer[] getComments(Integer storeId) throws Exception {
+    public Integer[] getComments(Integer storeId) {
         Integer comment[] = new Integer[7];
         Date date = new Date();
         date = getTomorrow(date);

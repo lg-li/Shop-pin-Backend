@@ -144,10 +144,8 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
         for(int i = 0; i < 7; i++) {
             Date toDate = date;
             date = getYesterday(date);
-            java.util.Date fromDate = date;
-//            System.out.println("fromDate: " + fromDate + " --- toDate: " + toDate);
+            Date fromDate = date;
             order[i] = pinOrderIndividualMapper.getNumberOfOrder(fromDate, toDate, storeId);
-//            System.out.println("comment[i]: " + comment[i]);
         }
         return order;
     }
