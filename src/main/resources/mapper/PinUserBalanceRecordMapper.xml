@@ -8,8 +8,8 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="order_individual_id" jdbcType="INTEGER" property="orderIndividualId" />
-    <result column="price" jdbcType="DECIMAL" property="price" />
-    <result column="type" jdbcType="BIT" property="type" />
+    <result column="changed_amount" jdbcType="DECIMAL" property="changedAmount" />
+    <result column="type" jdbcType="INTEGER" property="type" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
   </resultMap>
 </mapper>
