@@ -12,7 +12,6 @@ import cn.edu.neu.shop.pin.util.base.AbstractService;
 import cn.edu.neu.shop.pin.websocket.CustomerPrincipal;
 import cn.edu.neu.shop.pin.websocket.WebSocketService;
 import com.alibaba.fastjson.JSONObject;
-import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
