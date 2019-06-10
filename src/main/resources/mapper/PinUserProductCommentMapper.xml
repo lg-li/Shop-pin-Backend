@@ -24,6 +24,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
     <result column="avatal_url" jdbcType="VARCHAR" property="avatalUrl"/>
+    <result column="sku" jdbcType="VARCHAR" property="sku"/>
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="order_individual_id" jdbcType="INTEGER" property="orderIndividualId" />
     <result column="product_id" jdbcType="INTEGER" property="productId" />

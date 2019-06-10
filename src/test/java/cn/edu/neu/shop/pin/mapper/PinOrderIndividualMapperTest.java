@@ -32,4 +32,10 @@ public class PinOrderIndividualMapperTest {
             System.out.println(p.getPayTime());
         }
     }
+
+    @Test
+    public void getOrdersByKeyWord(){
+        List<PinOrderIndividual> list = pinOrderIndividualMapper.getAllWithProductsByKeyWord("Rica");
+        System.out.println("pause");
+    }
 }
