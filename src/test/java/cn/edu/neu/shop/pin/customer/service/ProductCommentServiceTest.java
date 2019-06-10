@@ -20,9 +20,9 @@ public class ProductCommentServiceTest {
     private ProductCommentService productCommentService;
 
     @Test
-    public void testGetComments(){
+    public void testGetComments() throws Exception {
         Integer list[] = productCommentService.getComments(9);
-        for(Integer i: list){
+        for(Integer i: list) {
             System.out.println(i);
         }
     }

@@ -11,7 +11,7 @@ import java.util.List;
 @Component
 public interface PinUserProductCommentMapper extends BaseMapper<PinUserProductComment> {
 
-    int getNumberOfComment(Date time, Integer storeId);
+    Integer getNumberOfComment(Date fromTime, Date toTime, Integer storeId);
 
     JSONObject getCommentAndUserInfo(Integer productId);
 }

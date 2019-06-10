@@ -8,6 +8,9 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -36,14 +39,17 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
      * @param storeId
      * @return
      */
-    public Integer[] getComments(Integer storeId) {
+    public Integer[] getComments(Integer storeId) throws Exception {
         Integer comment[] = new Integer[7];
-        Date date;
-        Calendar calendar = Calendar.getInstance();
-        for(int i = 0; i < 7; i++){
-            calendar.add(Calendar.DAY_OF_MONTH, -i);
-            date = calendar.getTime();
-            comment[i] = pinUserProductCommentMapper.getNumberOfComment(date, storeId);
+        Date date = new Date();
+        date = getTomorrow(date);
+        for(int i = 0; i < 7; i++) {
+            Date toDate = date;
+            date = getYesterday(date);
+            Date fromDate = date;
+//            System.out.println("fromDate: " + fromDate + " --- toDate: " + toDate);
+            comment[i] = pinUserProductCommentMapper.getNumberOfComment(fromDate, toDate, storeId);
+//            System.out.println("comment[i]: " + comment[i]);
         }
         return comment;
     }
@@ -52,6 +58,20 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
         return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> {
             pinUserProductCommentMapper.getCommentAndUserInfo(productId);
         });
+    }
+
+    private Date getYesterday(Date today) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(today);
+        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - 1);
+        return calendar.getTime();
+    }
+
+    private Date getTomorrow(Date today) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(today);
+        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + 1);
+        return calendar.getTime();
     }
 
 }
