@@ -75,7 +75,7 @@ public class UserCreditRecordService {
             user = pinUserMapper.selectByPrimaryKey(userId);
             System.out.println("after update: " + user.getCredit());
         } else if(hasCheckedIn(userId)) { // 今日已签到
-            throw new CheckInFailedException("签到失败！请勿重复签到！");
+            throw new CheckInFailedException("您已签到，明天再来吧。");
         } else {
             Date yesterday = this.getYesterday(new Date());
             Integer note = getContinuousCheckInDaysNum(userId);

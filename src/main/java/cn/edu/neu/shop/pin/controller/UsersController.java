@@ -1,5 +1,6 @@
 package cn.edu.neu.shop.pin.controller;
 
+import cn.edu.neu.shop.pin.exception.CheckInFailedException;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.model.PinUserAddress;
 import cn.edu.neu.shop.pin.service.*;
@@ -343,6 +344,8 @@ public class UsersController {
         try {
             userCreditRecordService.dailyCheckIn(user.getId());
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
+        } catch (CheckInFailedException e) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
