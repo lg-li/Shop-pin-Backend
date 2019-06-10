@@ -47,4 +47,13 @@
         select * from pin_order_individual
         where create_time > DATE_SUB(CURDATE(), INTERVAL 3 MONTH) and user_id = #{userId}
     </select>
+
+    <!-- 根据输入日期 获取该店铺这一天的订单数-->
+    <select id="getNumberOfOrder" resultType="INTEGER">
+        select count(*) as nums
+        from pin_order_individual
+        where create_time >= #{fromTime}
+        and #{toTime} >= create_time
+        and store_id = #{storeId}
+    </select>
 </mapper>

@@ -47,7 +47,7 @@
     and product_id in (select product_id from pin_product where store_id = #{storeId})
   </select>
 
-  <!-- 根据-->
+  <!-- 根据商品ID 得到该商品全部评论和评论用户的基本信息-->
   <select id="getCommentAndUserInfo" resultMap="PinGetCommentAndUserInfo">
     select pin_user.nickname, pin_user.avatar_url, pin_user_product_comment.*
     from pin_user, pin_user_product_comment

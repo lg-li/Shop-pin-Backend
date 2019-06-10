@@ -13,8 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 @Service
@@ -126,5 +127,39 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
         orderIndividual.setOrderGroupId(orderGroupId);
         List<PinOrderIndividual> orderIndividuals = pinOrderIndividualMapper.select(orderIndividual);
         return orderIndividuals;
+    }
+
+    /**
+     * 获取订单数
+     * @param storeId
+     * @return
+     */
+    public Integer[] getOrders(Integer storeId) {
+        Integer order[] = new Integer[7];
+        Date date = new Date();
+        date = getTomorrow(date);
+        for(int i = 0; i < 7; i++) {
+            Date toDate = date;
+            date = getYesterday(date);
+            java.util.Date fromDate = date;
+//            System.out.println("fromDate: " + fromDate + " --- toDate: " + toDate);
+            order[i] = pinOrderIndividualMapper.getNumberOfOrder(fromDate, toDate, storeId);
+//            System.out.println("comment[i]: " + comment[i]);
+        }
+        return order;
+    }
+
+    private Date getYesterday(Date today) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(today);
+        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - 1);
+        return calendar.getTime();
+    }
+
+    private Date getTomorrow(Date today) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(today);
+        calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + 1);
+        return calendar.getTime();
     }
 }

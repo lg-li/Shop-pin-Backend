@@ -54,6 +54,14 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
         return comment;
     }
 
+    /**
+     * 管理端
+     * 分页获取商品评论信息 包括评论用户昵称和头像
+     * @param productId
+     * @param pageNum
+     * @param pageSize
+     * @return
+     */
     public PageInfo<PinUserProductComment> getCommentAndUserInfoByPage(Integer productId, Integer pageNum, Integer pageSize) {
         return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> {
             pinUserProductCommentMapper.getCommentAndUserInfo(productId);
