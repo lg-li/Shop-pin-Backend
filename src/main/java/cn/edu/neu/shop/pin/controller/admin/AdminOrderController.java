@@ -43,15 +43,13 @@ public class AdminOrderController {
             int orderTypeChoice = queryType.getInteger("orderTypeChoice");
             int orderDateChoice = queryType.getInteger("orderDateChoice");
             String keyWord = queryType.getString("keyWord");
-            //查找得到所有的orders
-            List<PinOrderIndividual> orderList = orderIndividualService.getAllWithProducts();
+            //通过关键词查找得到所有的orders
+            List<PinOrderIndividual> orderList = orderIndividualService.getAllWithProductsByKeyWord(keyWord);
             //得到符合orderType的order
             List<PinOrderIndividual> orderTypeList = orderIndividualService.getOrdersByOrderType(orderList, orderTypeChoice);
             //得到符合orderDate的order
             List<PinOrderIndividual> orderDateList = orderIndividualService.getOrdersByOrderDate(orderTypeList, orderDateChoice,queryType);
-            //通过key word查得符合的order
-            List<PinOrderIndividual> orderKeyList = orderIndividualService.getOrdersByKeyWord(orderTypeList, keyWord);
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, orderKeyList);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, orderDateList);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);

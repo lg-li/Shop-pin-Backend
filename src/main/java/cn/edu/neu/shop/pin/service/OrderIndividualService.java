@@ -130,10 +130,22 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
         return orderIndividuals;
     }
 
-    public List<PinOrderIndividual> getAllWithProducts() {
-        return pinOrderIndividualMapper.getAllWithProducts();
+    /**
+     *
+     * @param keyWord 关键词
+     * @return 返回符合关键词的 PinOrderIndividual 数组，
+     * 每个 PinOrderIndividual 里面有多个 PinOrderItem
+     * 每个 PinOrderItem 里面有一个 PinProduct
+     */
+    public List<PinOrderIndividual> getAllWithProductsByKeyWord(String keyWord) {
+        return pinOrderIndividualMapper.getAllWithProductsByKeyWord(keyWord);
     }
 
+    /** TODO：待测试
+     * @param list 待过滤的PinOrderIndividual的数组
+     * @param orderType 传过来的orderType
+     * @return 返回过滤过后的list
+     */
     public List<PinOrderIndividual> getOrdersByOrderType(List<PinOrderIndividual> list, Integer orderType) {
         List<PinOrderIndividual> returnList = new ArrayList<>();
         switch (orderType) {
@@ -185,6 +197,13 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
         return returnList;
     }
 
+    /**TODO: 待测试
+     *
+     * @param list 待过滤的PinOrderIndividual的数组
+     * @param orderDate 时间条件对应的码
+     * @param queryType 前端传入的json
+     * @return 返回符合条件的数组
+     */
     public List<PinOrderIndividual> getOrdersByOrderDate(List<PinOrderIndividual> list, Integer orderDate, JSONObject queryType) {
         List<PinOrderIndividual> returnList = new ArrayList<>();
         java.util.Date createTime;
@@ -192,8 +211,6 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
         Calendar caNow = Calendar.getInstance();
         caNow.setTime(now);
         Calendar caCreate = Calendar.getInstance();
-
-
         for (PinOrderIndividual item : list) {
             createTime = item.getCreateTime();
             caCreate.setTime(createTime);
@@ -248,9 +265,5 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
             }
         }
         return returnList;
-    }
-
-    public List<PinOrderIndividual> getOrdersByKeyWord(List<PinOrderIndividual> list, String keyWord) {
-        return null;
     }
 }
