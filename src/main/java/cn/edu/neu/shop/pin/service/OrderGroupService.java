@@ -79,7 +79,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         orderGroup.setOwnerUserId(userId);
         orderGroup.setStoreId(storeId);
         orderGroup.setCreateTime(new Date());
-        // TO DO
+        // TODO: 李林根好香
         orderGroup.setCloseTime(getOrderGroupCloseTime(storeId));
         orderGroupService.save(orderGroup);
     }
