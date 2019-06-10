@@ -61,13 +61,43 @@
         and store_id = #{storeId}
     </select>
 
-    <select id="getAllWithProducts" resultMap="AllWithProductsResultMap">
-        select OIN.*
+    <select id="getAllWithProductsByKeyWord" resultMap="AllWithProductsResultMap">
+        select OIN.*, OIN.id as oin_id, OIT.*, OIT.id as oit_id, P.*, P.id as p_id
         from pin_order_individual as OIN,
              pin_order_item as OIT,
              pin_product as P
-        where OIN.id = OIT.order_individual_id
-          AND OIT.product_id = p.id
+        where OIN.id = OIT.order_individual_id and OIT.product_id = P.id and
+              OIN.id LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.order_group_id LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.store_id LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.user_id LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.receiver_name LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.receiver_phone LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.delivery_address LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.total_product_number LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.total_price LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.shipping_fee LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.pay_price LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.balance_paid_price LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.pay_time LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.paid LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.pay_type LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.create_time LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.status LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.refund_status LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.refund_reason_image LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.refund_reason_explain LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.refund_apply_time LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.refund_refuse_reason LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.refund_price LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.delivery_name LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.delivery_type LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.delivery_id LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.gained_credit LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.merchant_remark LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.user_remark LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.is_group LIKE CONCAT('%', #{keyword}, '%')
+           OR OIN.total_cost LIKE CONCAT('%', #{keyword}, '%')
     </select>
     <resultMap id="AllWithProductsResultMap" type="PinOrderIndividual">
         <id column="id" jdbcType="INTEGER" property="id"/>

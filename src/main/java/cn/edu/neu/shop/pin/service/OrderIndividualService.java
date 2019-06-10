@@ -124,6 +124,8 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
      * @return
      * @author flyhero
      * 根据OrderGroupId获取在此团单内的OrderIndividual的List
+     * @author flyhero
+     * 根据OrderGroupId获取在此团单内的OrderIndividual的List
      */
     public List<PinOrderIndividual> getOrderIndividualsByOrderGroupId(Integer orderGroupId) {
         PinOrderIndividual orderIndividual = new PinOrderIndividual();
@@ -158,7 +160,6 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
     }
 
     /**
-     *
      * @param keyWord 关键词
      * @return 返回符合关键词的 PinOrderIndividual 数组，
      * 每个 PinOrderIndividual 里面有多个 PinOrderItem
@@ -305,5 +306,19 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
 
     public Integer getOrderRefund(Integer storeId) {
         return pinOrderIndividualMapper.getNumberOfOrderRefund(storeId);
+    }
+
+    /**
+     * @param list 传入 一个对象 的list
+     * @param pageNumber 传入的页码数
+     * @param pageSize  传入一页的size
+     * @return 返回要查找的那页
+     */
+    public List<?> getOrdersByPageNumAndSize(List<?> list, Integer pageNumber, Integer pageSize) {
+        if (pageNumber * pageSize < list.size()) {
+            return list.subList((pageNumber - 1) * pageSize, pageNumber * pageSize);
+        } else {
+            return list.subList((pageNumber - 1) * pageSize, list.size());
+        }
     }
 }

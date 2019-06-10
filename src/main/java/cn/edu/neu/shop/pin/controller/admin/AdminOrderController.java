@@ -1,10 +1,13 @@
 package cn.edu.neu.shop.pin.controller.admin;
 
+import cn.edu.neu.shop.pin.model.PinOrderGroup;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.service.ExpressService;
+import cn.edu.neu.shop.pin.service.OrderGroupService;
 import cn.edu.neu.shop.pin.service.OrderIndividualService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -22,6 +26,8 @@ public class AdminOrderController {
     private ExpressService expressService;
     @Autowired
     OrderIndividualService orderIndividualService;
+    @Autowired
+    OrderGroupService orderGroupService;
 
     @GetMapping("/order/deliverNameList")
     public JSONObject getExpressInfo() {
@@ -38,23 +44,54 @@ public class AdminOrderController {
     @GetMapping("/order/query")
     public JSONObject getOrderByCondition(@RequestParam JSONObject queryType) {
         try {
-            int pageNumber = queryType.getInteger("pageNumber");
-            int pageSize = queryType.getInteger("pageSize");
-            int orderTypeChoice = queryType.getInteger("orderTypeChoice");
-            int orderDateChoice = queryType.getInteger("orderDateChoice");
+            Integer pageNumber = queryType.getInteger("pageNumber");
+            Integer pageSize = queryType.getInteger("pageSize");
+            Integer orderTypeChoice = queryType.getInteger("orderTypeChoice");
+            Integer orderDateChoice = queryType.getInteger("orderDateChoice");
             String keyWord = queryType.getString("keyWord");
             //通过关键词查找得到所有的orders
             List<PinOrderIndividual> orderList = orderIndividualService.getAllWithProductsByKeyWord(keyWord);
             //得到符合orderType的order
             List<PinOrderIndividual> orderTypeList = orderIndividualService.getOrdersByOrderType(orderList, orderTypeChoice);
             //得到符合orderDate的order
-            List<PinOrderIndividual> orderDateList = orderIndividualService.getOrdersByOrderDate(orderTypeList, orderDateChoice,queryType);
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, orderDateList);
+            List<PinOrderIndividual> orderDateList = orderIndividualService.getOrdersByOrderDate(orderTypeList, orderDateChoice, queryType);
+            //通过传入的一页的size和页码，返回那一页的list
+            List<PinOrderIndividual> list = (List<PinOrderIndividual>) orderIndividualService.getOrdersByPageNumAndSize(orderDateList, pageNumber, pageSize);
+
+            JSONObject specificPage = new JSONObject();
+            specificPage.put("total", orderDateList.size());
+            specificPage.put("orderList", list);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, specificPage);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
     }
 
+    @GetMapping("/order/get-group-order-list")
+    public JSONObject getGroupOrderByCondition(@RequestParam JSONObject queryType) {
+        try {
+            Integer pageNumber = queryType.getInteger("pageNumber");
+            Integer pageSize = queryType.getInteger("pageSize");
+            Integer groupStatus = queryType.getInteger("groupStatus");
+            Date begin = queryType.getDate("begin");
+            Date end = queryType.getDate("end");
+            //得到所有的orderGroup，其中嵌套了orderIndividual,orderIndividual中也嵌套了其他信息
+            List<PinOrderGroup> orderGroups = orderGroupService.getAllWithOrderIndividual();
+            //得到符合传入的状态的orderGroups
+            List<PinOrderGroup> orderStatusGroups = orderGroupService.getOrdersByOrderStatus(orderGroups, groupStatus);
+            //得到符合传入时间段的orderGroups
+            List<PinOrderGroup> orderDateGroups = orderGroupService.getOrdersByDate(orderStatusGroups, begin, end);
+            //为前端分页处理
+            List<PinOrderIndividual> list = (List<PinOrderIndividual>) orderIndividualService.getOrdersByPageNumAndSize(orderDateGroups, pageNumber, pageSize);
 
+            JSONObject specificPage = new JSONObject();
+            specificPage.put("total", orderDateGroups.size());
+            specificPage.put("groupOrderList", list);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, specificPage);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
 }
