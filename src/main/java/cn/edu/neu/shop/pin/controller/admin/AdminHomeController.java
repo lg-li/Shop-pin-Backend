@@ -25,7 +25,7 @@ public class AdminHomeController {
     public JSONObject getCommentSevenDays(HttpServletRequest httpServletRequest) {
         try{
             int storeId = getCurrentStoreIdFromHeader(httpServletRequest);
-            int commentNum[] = productCommentService.getComments(storeId);
+            Integer commentNum[] = productCommentService.getComments(storeId);
         } catch (Exception e) {
             e.printStackTrace();
         }

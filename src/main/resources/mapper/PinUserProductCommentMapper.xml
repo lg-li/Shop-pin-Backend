@@ -18,12 +18,40 @@
     <result column="merchant_comment_time" jdbcType="TIMESTAMP" property="merchantCommentTime" />
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
     <result column="images_urls" jdbcType="LONGVARCHAR" property="imagesUrls" />
-    <result column="store_id" jdbcType="INTEGER" property="storeId"/>
   </resultMap>
 
-  <!-- 获取近7天内 每天评论-->
-  <select id="getNumberOfComment" resultMap="BaseResultMap">
-    select * from pin_user_product_comment
-    where create_time > DATE_SUB(CURDATE(), INTERVAL 7 DAY) and store_id = #{storeId}
+  <resultMap id="PinGetCommentAndUserInfo" type="com.alibaba.fastjson.JSONObject">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
+    <result column="avatal_url" jdbcType="VARCHAR" property="avatalUrl"/>
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="order_individual_id" jdbcType="INTEGER" property="orderIndividualId" />
+    <result column="product_id" jdbcType="INTEGER" property="productId" />
+    <result column="grade" jdbcType="BIT" property="grade" />
+    <result column="product_score" jdbcType="BIT" property="productScore" />
+    <result column="service_score" jdbcType="BIT" property="serviceScore" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="merchant_comment_content" jdbcType="VARCHAR" property="merchantCommentContent" />
+    <result column="merchant_comment_time" jdbcType="TIMESTAMP" property="merchantCommentTime" />
+    <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
+    <result column="images_urls" jdbcType="LONGVARCHAR" property="imagesUrls" />
+  </resultMap>
+
+  <!-- 根据输入时间 获取该店铺在这个时间的所有商品评论数 -->
+  <select id="getNumberOfComment" resultMap="INTEGER">
+    select count(*) as nums
+    from pin_user_product_comment
+    where create_time &gt;= date_add(#{time}, INTERVAL 1 DAY) and create_time &lt;= #{time}
+    and product_id in (select product_id from pin_product where store_id = #{storeId})
+  </select>
+
+  <!-- 根据-->
+  <select id="getCommentAndUserInfo" resultMap="PinGetCommentAndUserInfo">
+    select pin_user.nickname, pin_user.avatar_url, pin_user_product_comment.*
+    from pin_user, pin_user_product_comment
+    where pin_user.id = pin_user_product_comment.user_id
+    and is_deleted = 0
+    and product_id = #{product_id}
   </select>
 </mapper>
