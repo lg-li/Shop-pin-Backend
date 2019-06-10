@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -139,10 +139,10 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
      */
     public Integer[] getOrders(Integer storeId) {
         Integer order[] = new Integer[7];
-        Date date = new Date();
+        java.util.Date date = new java.util.Date();
         date = getTomorrow(date);
         for(int i = 0; i < 7; i++) {
-            Date toDate = date;
+            java.util.Date toDate = date;
             date = getYesterday(date);
             Date fromDate = date;
             order[i] = pinOrderIndividualMapper.getNumberOfOrder(fromDate, toDate, storeId);
@@ -150,24 +150,36 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
         return order;
     }
 
-    private Date getYesterday(Date today) {
+    private java.util.Date getYesterday(java.util.Date today) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(today);
         calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - 1);
         return calendar.getTime();
     }
 
-    private Date getTomorrow(Date today) {
+    private java.util.Date getTomorrow(java.util.Date today) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(today);
         calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + 1);
         return calendar.getTime();
     }
 
-    public List<PinOrderIndividual> getAllWithProducts() {
-        return pinOrderIndividualMapper.getAllWithProducts();
+    /**
+     *
+     * @param keyWord 关键词
+     * @return 返回符合关键词的 PinOrderIndividual 数组，
+     * 每个 PinOrderIndividual 里面有多个 PinOrderItem
+     * 每个 PinOrderItem 里面有一个 PinProduct
+     */
+    public List<PinOrderIndividual> getAllWithProductsByKeyWord(String keyWord) {
+        return pinOrderIndividualMapper.getAllWithProductsByKeyWord(keyWord);
     }
 
+    /** TODO：待测试
+     * @param list 待过滤的PinOrderIndividual的数组
+     * @param orderType 传过来的orderType
+     * @return 返回过滤过后的list
+     */
     public List<PinOrderIndividual> getOrdersByOrderType(List<PinOrderIndividual> list, Integer orderType) {
         List<PinOrderIndividual> returnList = new ArrayList<>();
         switch (orderType) {
@@ -219,6 +231,13 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
         return returnList;
     }
 
+    /**TODO: 待测试
+     *
+     * @param list 待过滤的PinOrderIndividual的数组
+     * @param orderDate 时间条件对应的码
+     * @param queryType 前端传入的json
+     * @return 返回符合条件的数组
+     */
     public List<PinOrderIndividual> getOrdersByOrderDate(List<PinOrderIndividual> list, Integer orderDate, JSONObject queryType) {
         List<PinOrderIndividual> returnList = new ArrayList<>();
         java.util.Date createTime;
@@ -226,8 +245,6 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
         Calendar caNow = Calendar.getInstance();
         caNow.setTime(now);
         Calendar caCreate = Calendar.getInstance();
-
-
         for (PinOrderIndividual item : list) {
             createTime = item.getCreateTime();
             caCreate.setTime(createTime);
@@ -282,9 +299,5 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
             }
         }
         return returnList;
-    }
-
-    public List<PinOrderIndividual> getOrdersByKeyWord(List<PinOrderIndividual> list, String keyWord) {
-        return null;
     }
 }
