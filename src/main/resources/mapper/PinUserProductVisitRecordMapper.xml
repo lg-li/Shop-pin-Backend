@@ -11,4 +11,12 @@
     <result column="visit_time" jdbcType="TIMESTAMP" property="visitTime" />
     <result column="visit_ip" jdbcType="VARCHAR" property="visitIp" />
   </resultMap>
+
+  <select id="getNumberOfVisitRecord" resultType="INTEGER">
+    select count(*) as nums
+    from pin_user_product_visit_record
+    where visit_time >= #{fromTime}
+    and #{toTime} >= visit_time
+    and product_id in (select product_id from pin_product where store_id = #{storeId})
+  </select>
 </mapper>

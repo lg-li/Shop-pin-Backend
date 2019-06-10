@@ -2,6 +2,7 @@ package cn.edu.neu.shop.pin.controller.admin;
 
 import cn.edu.neu.shop.pin.service.OrderIndividualService;
 import cn.edu.neu.shop.pin.service.ProductCommentService;
+import cn.edu.neu.shop.pin.service.ProductVisitRecordService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +23,9 @@ public class AdminHomeController {
     @Autowired
     private OrderIndividualService orderIndividualService;
 
+    @Autowired
+    private ProductVisitRecordService productVisitRecordService;
+
     /**
      * 显示近七天内的评论数 交易数 浏览量
      */
@@ -31,6 +35,7 @@ public class AdminHomeController {
             int storeId = getCurrentStoreIdFromHeader(httpServletRequest);
             Integer commentNum[] = productCommentService.getComments(storeId);
             Integer orderNum[] = orderIndividualService.getOrders(storeId);
+            Integer viewNum[] = productVisitRecordService.getVisitRecords(storeId);
         } catch (Exception e) {
             e.printStackTrace();
         }
