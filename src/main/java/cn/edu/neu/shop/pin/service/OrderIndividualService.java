@@ -121,10 +121,10 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
     }
 
     /**
-     * @author flyhero
-     * 根据OrderGroupId获取在此团单内的OrderIndividual的List
      * @param orderGroupId
      * @return
+     * @author flyhero
+     * 根据OrderGroupId获取在此团单内的OrderIndividual的List
      * @author flyhero
      * 根据OrderGroupId获取在此团单内的OrderIndividual的List
      * @author flyhero
@@ -139,6 +139,7 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
 
     /**
      * 获取订单数
+     *
      * @param storeId 商店ID
      * @return
      */
@@ -146,7 +147,7 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
         Integer[] order = new Integer[7];
         java.util.Date date = new java.util.Date();
         date = getDateByOffset(date, 1); // tomorrow
-        for(int i = 0; i < 7; i++) {
+        for (int i = 0; i < 7; i++) {
             java.util.Date toDate = date;
             date = getDateByOffset(date, -1); // yesterday
             java.util.Date fromDate = date;
@@ -168,12 +169,14 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
      * 每个 PinOrderIndividual 里面有多个 PinOrderItem
      * 每个 PinOrderItem 里面有一个 PinProduct
      */
-    public List<PinOrderIndividual> getAllWithProductsByKeyWord(String keyWord,Integer storeId) {
-        return pinOrderIndividualMapper.getAllWithProductsByKeyWord(keyWord,storeId);
+    public List<PinOrderIndividual> getAllWithProductsByKeyWord(String keyWord, Integer storeId) {
+        return pinOrderIndividualMapper.getAllWithProductsByKeyWord(keyWord == null ? "" : keyWord, storeId);
     }
 
-    /** TODO：待测试
-     * @param list 待过滤的PinOrderIndividual的数组
+    /**
+     * TODO：待测试
+     *
+     * @param list      待过滤的PinOrderIndividual的数组
      * @param orderType 传过来的orderType
      * @return 返回过滤过后的list
      */
@@ -228,9 +231,10 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
         return returnList;
     }
 
-    /**TODO: 待测试
+    /**
+     * TODO: 待测试
      *
-     * @param list 待过滤的PinOrderIndividual的数组
+     * @param list      待过滤的PinOrderIndividual的数组
      * @param orderDate 时间条件对应的码
      * @param queryType 前端传入的json
      * @return 返回符合条件的数组
@@ -290,8 +294,16 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
                 case 7://自定义
                     java.util.Date begin = queryType.getDate("begin");
                     java.util.Date end = queryType.getDate("end");
-                    if (caCreate.getTime().getTime() >= begin.getTime() && caCreate.getTime().getTime() <= end.getTime())
-                        returnList.add(item);
+                    if (begin != null && end != null) {
+                        if (caCreate.getTime().getTime() >= begin.getTime() && caCreate.getTime().getTime() <= end.getTime())
+                            returnList.add(item);
+                    } else if (begin == null && end != null) {
+                        if (caCreate.getTime().getTime() <= end.getTime())
+                            returnList.add(item);
+                    } else if (end == null && begin != null) {
+                        if (caCreate.getTime().getTime() >= begin.getTime())
+                            returnList.add(item);
+                    }
                     break;
             }
         }
@@ -300,6 +312,7 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
 
     /**
      * 未发货商品数量
+     *
      * @param storeId
      * @return
      */
@@ -312,9 +325,9 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
     }
 
     /**
-     * @param list 传入 一个对象 的list
+     * @param list       传入 一个对象 的list
      * @param pageNumber 传入的页码数
-     * @param pageSize  传入一页的size
+     * @param pageSize   传入一页的size
      * @return 返回要查找的那页
      */
     public List<?> getOrdersByPageNumAndSize(List<?> list, Integer pageNumber, Integer pageSize) {
@@ -325,9 +338,9 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
         }
     }
 
-    public void kickOutAnOrder(Integer orderIndividualId) {
-        PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
-        orderIndividual.setOrderGroupId(null);
-        orderIndividual.setStatus(0);
-    }
+//    public void kickOutAnOrder(Integer orderIndividualId) {
+//        PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
+//        orderIndividual.setOrderGroupId(null);
+//        orderIndividual.setStatus(0);
+//    }
 }
