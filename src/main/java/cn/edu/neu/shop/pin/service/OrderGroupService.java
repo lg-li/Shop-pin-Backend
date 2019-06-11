@@ -31,14 +31,14 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
     public static final int STATUS_PERMISSION_DENIED = -2;
     public static final int STATUS_NOT_ALLOWED = -3;
 
-//    public static final int STATUS_JOIN_ORDER_GROUP_SUCCESS = -4;
+    //    public static final int STATUS_JOIN_ORDER_GROUP_SUCCESS = -4;
 //    public static final int STATUS_JOIN_ORDER_GROUP_INVALID_ID = -5;
 //    public static final int STATUS_JOIN_ORDER_GROUP_PERMISSION_DENIED = -6;
 //    public static final int STATUS_JOIN_ORDER_GROUP_NOT_ALLOWED = -7;
     public static final int STATUS_JOIN_ORDER_GROUP_IS_ENDED = -8;
     public static final int STATUS_JOIN_ORDER_GROUP_IS_FULL = -9;
 
-//    public static final int STATUS_QUIT_ORDER_GROUP_SUCCESS = -10;
+    //    public static final int STATUS_QUIT_ORDER_GROUP_SUCCESS = -10;
     public static final int STATUS_QUIT_ORDER_GROUP_FAILED = -11;
 
     public static final int GROUP_CLOSE_DELAY_MILLISECOND = 7200000;
@@ -194,11 +194,11 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
     public Integer quitOrderGroup(Integer userId, Integer storeId, Integer orderIndividualId, Integer orderGroupId) {
         PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
         PinOrderGroup orderGroup = orderGroupService.findById(orderGroupId);
-        if(userId != orderIndividual.getUserId()) {
+        if (userId != orderIndividual.getUserId()) {
             // 用户ID不符，返回权限不够
             return STATUS_PERMISSION_DENIED;
         }
-        if(orderGroup.getOwnerUserId().equals(userId)) {
+        if (orderGroup.getOwnerUserId().equals(userId)) {
             // 用户是团单创建者，不允许退出
             return STATUS_QUIT_ORDER_GROUP_FAILED;
         }
@@ -245,7 +245,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         orderGroupJSON.put("closeTime", orderGroup.getCloseTime());
         // 获取当前用户个人单包含的商品
         List<PinOrderIndividual> orderIndividualsInCurrentGroup = orderIndividualService.getOrderIndividualsByOrderGroupId(orderGroup.getId());
-        orderIndividualsInCurrentGroup.forEach(orderIndividual-> {
+        orderIndividualsInCurrentGroup.forEach(orderIndividual -> {
             orderIndividual.setUser(userService.findById(orderIndividual.getUserId()));
             orderIndividual.setOrderItems(orderItemService.getOrderItemsByOrderIndividualId(orderIndividual.getId()));
         });
@@ -291,7 +291,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         List<PinOrderGroup> returnList = new ArrayList<>();
         switch (groupStatus) {
             case 0://全部
-                return returnList;
+                return list;
             case 1://正在拼团
                 for (PinOrderGroup item : list) {
                     if (item.getStatus() == PinOrderGroup.STATUS_PINGING)
@@ -325,6 +325,8 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
                 if (item.getCreateTime().getTime() >= begin.getTime())
                     returnList.add(item);
             }
+        } else {
+            return list;
         }
         return returnList;
     }

@@ -13,10 +13,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -37,16 +34,16 @@ public class AdminProductController {
      * TODO:未测试返回不同存货类型的商品
      *
      * @param req
-     * @param queryType
+     * @param requestObject
      * @return
      */
-    @GetMapping("/goods-list")
-    public JSONObject getProducts(HttpServletRequest req, @RequestParam String queryType) {
+    @PostMapping("/goods-list")
+    public JSONObject getProducts(HttpServletRequest req, @RequestBody JSONObject requestObject) {
         try {
-            PinUser user = userService.whoAmI(req);
             String currentStoreId = req.getHeader("Current-Store");
             List<PinProduct> products = productMapper.getProductByStoreId(Integer.parseInt(currentStoreId));
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productService.judgeQueryType(products, queryType));
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
+                    productService.judgeQueryType(products, requestObject.getString("queryType")));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
