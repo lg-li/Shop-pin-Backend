@@ -2,6 +2,7 @@ package cn.edu.neu.shop.pin.mapper;
 
 import cn.edu.neu.shop.pin.model.PinProduct;
 import cn.edu.neu.shop.pin.util.base.BaseMapper;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Component;
 
@@ -39,7 +40,7 @@ public interface PinProductMapper extends BaseMapper<PinProduct> {
 
     List<PinProduct> getProductByCategoryId(Integer categoryId);
 
-    JSONObject getProductFromSameStore(Integer storeId);
+    JSONArray getProductFromSameStore(Integer storeId);
 
     List<PinProduct> getProductIsShown(Integer storeId);
 
