@@ -20,6 +20,7 @@ import org.springframework.web.socket.server.support.DefaultHandshakeHandler;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * @author flyhero
@@ -94,7 +95,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     private Principal parseTokenToPrinciple(String src, String token, Integer orderIndividualId, Integer orderGroupId, Integer storeId) {
         PinUser user = userService.whoDoesThisTokenBelongsTo(token);
         List<PinRole> roles = user.getRoles();
-        if(src == "customer") {
+        if(Objects.equals(src, "customer")) {
             for(PinRole role : roles) {
                 if(role.equals(PinRole.ROLE_USER)) {
                     return new CustomerPrincipal(user.getId(), orderIndividualId, orderGroupId);
@@ -102,7 +103,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
             }
             return null;
         }
-        else if(src == "merchant") {
+        else if(Objects.equals(src, "merchant")) {
             for(PinRole role : roles) {
                 if(role.equals(PinRole.ROLE_MERCHANT)) {
                     return new MerchantPrincipal(user.getId(), storeId);
@@ -110,7 +111,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
             }
             return null;
         }
-        else if(src == "admin") {
+        else if(Objects.equals(src, "admin")) {
             for(PinRole role : roles) {
                 if(role.equals(PinRole.ROLE_ADMIN)) {
                     return new AdminPrincipal(user.getId());

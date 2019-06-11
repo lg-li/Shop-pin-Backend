@@ -8,9 +8,11 @@ import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.logging.Logger;
 
+@RestController
 public class GroupController {
 //    private static Logger logger = Logger.getLogger()
 
@@ -51,6 +53,7 @@ public class GroupController {
 //        }
 //    }
 
+    @MessageMapping("/join")
     public void join(CustomerPrincipal customerPrincipal) {
         PinOrderIndividual orderIndividual = orderIndividualService.findById(customerPrincipal.getOrderIndividualId());
         Integer orderGroupId = customerPrincipal.getOrderGroupId();
