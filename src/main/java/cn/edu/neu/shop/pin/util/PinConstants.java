@@ -44,9 +44,9 @@ public class PinConstants {
     }
 
     public class PayType {
-        public static final String WEICHAT = "WEICHAT";
+        public static final String WECHAT = "WECHAT";
         public static final String BALANCE = "BALANCE";
-        public static final String BOTH = "WEICHAT BALANCE";
+        public static final String BOTH = "WECHAT BALANCE";
     }
 
     public class ProductStatus {
