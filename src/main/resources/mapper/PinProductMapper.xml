@@ -13,7 +13,7 @@
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="info" jdbcType="VARCHAR" property="info" />
     <result column="keyword" jdbcType="VARCHAR" property="keyword" />
-    <result column="changedAmount" jdbcType="DECIMAL" property="changedAmount" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
     <result column="price_before_discount" jdbcType="DECIMAL" property="priceBeforeDiscount" />
     <result column="unit_name" jdbcType="VARCHAR" property="unitName" />
     <result column="stock_count" jdbcType="INTEGER" property="stockCount" />
@@ -42,7 +42,7 @@
     <result column="product_id" jdbcType="INTEGER" property="productId" />
     <result column="sku" jdbcType="VARCHAR" property="sku" />
     <result column="stock" jdbcType="INTEGER" property="stock" />
-    <result column="changedAmount" jdbcType="DECIMAL" property="changedAmount" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
     <result column="image_url" jdbcType="VARCHAR" property="imageUrl" />
     <result column="cost" jdbcType="DECIMAL" property="cost" />
   </resultMap>
