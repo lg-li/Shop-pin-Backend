@@ -1,7 +1,5 @@
 package cn.edu.neu.shop.pin.security;
 
-import cn.edu.neu.shop.pin.security.JwtTokenFilterConfigurer;
-import cn.edu.neu.shop.pin.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

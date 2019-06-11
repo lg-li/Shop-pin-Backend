@@ -41,6 +41,7 @@ public class UserBalanceService extends AbstractService<PinUserBalanceRecord> {
         // 动账操作
         PinUserBalanceRecord newBalanceRecord = getNewBalanceRecord(userId, fromOrderIndividualId);
         // 减少金额需要取反
+
         newBalanceRecord.setChangedAmount(balanceToReduce.negate());
         newBalanceRecord.setType(PinUserBalanceRecord.TYPE_DISCOUNT_ON_ORDER);
         save(newBalanceRecord);
