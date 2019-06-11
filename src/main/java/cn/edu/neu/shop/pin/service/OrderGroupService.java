@@ -6,6 +6,7 @@ import cn.edu.neu.shop.pin.model.PinOrderGroup;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.model.PinStoreGroupCloseBatch;
 import cn.edu.neu.shop.pin.model.PinUser;
+import cn.edu.neu.shop.pin.schedule.GroupClosingScheduler;
 import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
@@ -14,6 +15,8 @@ import cn.edu.neu.shop.pin.websocket.CustomerPrincipal;
 import cn.edu.neu.shop.pin.websocket.WebSocketService;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +28,8 @@ import java.util.*;
  */
 @Service
 public class OrderGroupService extends AbstractService<PinOrderGroup> {
+
+    private static Logger logger = LoggerFactory.getLogger(OrderGroupService.class);
 
     public static final int STATUS_SUCCESS = 0;
     public static final int STATUS_INVALID_ID = -1;
@@ -194,7 +199,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
     public Integer quitOrderGroup(Integer userId, Integer storeId, Integer orderIndividualId, Integer orderGroupId) {
         PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
         PinOrderGroup orderGroup = orderGroupService.findById(orderGroupId);
-        if (userId != orderIndividual.getUserId()) {
+        if (!Objects.equals(userId, orderIndividual.getUserId())) {
             // 用户ID不符，返回权限不够
             return STATUS_PERMISSION_DENIED;
         }
@@ -230,7 +235,8 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         }
         JSONObject orderGroupJSON = generateOrderGroupJSON(orderGroup);
         orderGroupJSON.put("message", "hello");
-        webSocketService.sendSingleHelloMessage(customerPrincipal, orderGroupJSON);
+        logger.info("Sending: "+orderGroupJSON.toJSONString());
+        webSocketService.sendSingleUpdateMessage(customerPrincipal, orderGroupJSON);
     }
 
     /**

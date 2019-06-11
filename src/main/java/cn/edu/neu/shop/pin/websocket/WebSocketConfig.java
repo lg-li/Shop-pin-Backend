@@ -143,6 +143,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         //定义一对一推送的时候前缀
         registry.setUserDestinationPrefix("/user");
         //定义websocket消息前缀
-        registry.setApplicationDestinationPrefixes("/websocket");
+        registry.setApplicationDestinationPrefixes("/server");
     }
 }
