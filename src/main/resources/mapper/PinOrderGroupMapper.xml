@@ -22,6 +22,11 @@
         <result column="nickname" property="nickname"/>
     </resultMap>
 
+    <select id="getOrderGroupsByStatus" parameterType="Integer" resultMap="BaseResultMap">
+        select *
+        from pin_order_group where status = #{status};
+    </select>
+
     <select id="getTopTenOrderGroups" resultMap="BaseResultMap">
         select g.id                         as order_group_id,
                g.owner_user_id              as owner_user_id,

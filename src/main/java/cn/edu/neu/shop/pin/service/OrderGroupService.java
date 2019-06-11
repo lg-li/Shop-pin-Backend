@@ -289,4 +289,8 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         }
         return returnList;
     }
+
+    public List<PinOrderGroup> getOrdersByStatus(Integer status) {
+        return pinOrderGroupMapper.getOrderGroupsByStatus(status);
+    }
 }

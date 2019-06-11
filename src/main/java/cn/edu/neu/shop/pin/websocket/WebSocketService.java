@@ -64,44 +64,12 @@ public class WebSocketService {
 
     /**
      * @author flyhero
-     * 超时
-     * @param customerId
-     */
-    public void sendTimeout(Integer customerId) {
-        simpMessageSendingOperations.convertAndSendToUser(customerId.toString(), "/time-out",
-                ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null));
-    }
-
-    /**
-     * @author flyhero
      * 点对点发送错误信息
      * @param principal
      * @param errorInfo
      */
     public void sendSingleErrorMessage(CustomerPrincipal principal, JSONObject errorInfo) {
         sendSingleMessage(principal, "error", errorInfo);
-    }
-
-    /**
-     * @author flyhero
-     * 向同一Group内的用户发送错误信息
-     * @param principal
-     * @param errorInfo
-     */
-    public void sendGroupErrorMessage(CustomerPrincipal principal, JSONObject errorInfo) {
-        sendGroupMessage(principal, "error", errorInfo);
-
-    }
-
-    /**
-     * @author flyhero
-     * 点对点发送通知信息
-     * @param principal
-     * @param msg
-     */
-    public void sendSingleNotifyMessage(CustomerPrincipal principal, String msg) {
-        sendSingleMessage(principal, "notify",
-                ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, msg, null));
     }
 
     /**
@@ -139,19 +107,6 @@ public class WebSocketService {
 
     /**
      * @author flyhero
-     * 发送结束消息
-     * @param orderGroupId
-     * @param finalPeopleCount
-     */
-    public void sendFinishedMessage(Integer orderGroupId, Integer finalPeopleCount) {
-        JSONObject returnData = new JSONObject();
-        returnData.put("finalPeopleCount", finalPeopleCount);
-        sendGroupMessage(orderGroupId, "notify",
-                ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, returnData));
-    }
-
-    /**
-     * @author flyhero
      * 在一个Group内发送广播消息
      * @param orderGroupId
      * @param router
@@ -180,36 +135,7 @@ public class WebSocketService {
      * @param object
      */
     private void sendSingleMessage(CustomerPrincipal principal, String router, Object object) {
-        simpMessageSendingOperations.convertAndSendToUser(principal.getUserId().toString(), "/" + router, object);
-    }
-
-    public void sendAllOrderToMerchant(MerchantPrincipal merchantPrincipal, Object data) {
-        sendSingleMerchant(merchantPrincipal, "hello",
-                ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data));
-    }
-
-    public void sendNewGroupToMerchant(MerchantPrincipal merchantPrincipal, PinOrderGroup orderGroup, List<PinOrderIndividual> orderIndividualList) {
-        JSONObject jsonObject = (JSONObject) JSONObject.toJSON(orderGroup);
-        jsonObject.put("orderIndividuals", orderIndividualList);
-        sendSingleMerchant(merchantPrincipal, "group/new",
-                ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null));
-    }
-
-    public void notifyMerchantNewOrderGroupHasCreated(MerchantPrincipal merchantPrincipal) {
-//        List<PinOrderGroup> orderGroups = orderGroupService.
-//        List<PinOrderGroup> orderGroups = orderGroupService.findByRestaurantAndStatus(providerPrincipal.getRestaurantId(), OrderGroup.STATUS_NOT_ALL_PAID);
-        JSONArray jsonArray =new JSONArray();
-//        orderGroups.forEach(orderGroup -> {
-////            jsonObject.put("address",addressService.findById(orderGroup.getAddressId()));
-////            jsonObject.put("owner",orderIndividualService.findIndividualOrderByCustomerIdAndGroupOrderId(orderGroup.getGroupOwnerId(),orderGroup.getId()));
-//            jsonArray.add(orderGroupService.addHoleThingsForProvider(orderGroup));
-//        });
-//        sendSingleMerchant(providerPrincipal, CommonUtil.successJsonWithoutToken(jsonArray), "group/new");
-    }
-
-    public void sendNewOrderToMerchant(MerchantPrincipal merchantPrincipal, Object data) {
-        sendSingleMerchant(merchantPrincipal,"new",
-                ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data));
+        simpMessageSendingOperations.convertAndSendToUser("/user/" + principal.getUserId().toString(), "/" + router, object);
     }
 
     private void sendSingleMerchant(MerchantPrincipal merchantPrincipal, String router, Object o) {

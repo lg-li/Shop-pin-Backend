@@ -6,9 +6,7 @@ import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.model.PinRole;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.service.OrderGroupService;
-import cn.edu.neu.shop.pin.service.OrderIndividualService;
 import cn.edu.neu.shop.pin.service.security.UserService;
-import cn.edu.neu.shop.pin.util.PinConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
@@ -62,7 +60,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 String ogi = req.getServletRequest().getParameter("orderGroupId");
                 String si = req.getServletRequest().getParameter("storeId");
                 Integer orderGroupId = Integer.parseInt(ogi != null && !ogi.equals("undefined") ? ogi : "-1");
-                Integer storeId = Integer.parseInt(si != null  && !si.equals("undefined") ? si : "-1");
+                Integer storeId = Integer.parseInt(si != null && !si.equals("undefined") ? si : "-1");
                 //解析token获取用户信息
                 Principal user = parseTokenToPrinciple(src, token, orderGroupId, storeId);
                 if (user == null) { //如果token认证失败user为null，返回false拒绝握手
@@ -90,53 +88,50 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     }
 
     /**
-     * @author flyhero
-     * 根据src（source的缩写）判断用户来意（用途），根据token来验证授权
      * @param src
      * @param token
      * @param orderGroupId
      * @param storeId
      * @return
+     * @author flyhero
+     * 根据src（source的缩写）判断用户来意（用途），根据token来验证授权
      */
     private Principal parseTokenToPrinciple(String src, String token, Integer orderGroupId, Integer storeId) {
         PinUser user = userService.whoDoesThisTokenBelongsTo(token);
         List<PinRole> roles = user.getRoles();
-        if(Objects.equals(src, "customer")) {
-            for(PinRole role : roles) {
-                if(role.equals(PinRole.ROLE_USER)) {
+        if (Objects.equals(src, "customer")) {
+            for (PinRole role : roles) {
+                if (role.equals(PinRole.ROLE_USER)) {
                     PinOrderGroup orderGroup = orderGroupService.findById(orderGroupId);
-                    if(orderGroup == null) {
+                    if (orderGroup == null) {
                         return null;
                     }
                     PinOrderIndividual orderIndividualSample = new PinOrderIndividual();
                     orderIndividualSample.setUserId(user.getId());
                     orderIndividualSample.setOrderGroupId(orderGroupId);
-                    PinOrderIndividual orderIndividual =pinOrderIndividualMapper.selectOne(orderIndividualSample);
-                    if(orderIndividual == null) {
+                    PinOrderIndividual orderIndividual = pinOrderIndividualMapper.selectOne(orderIndividualSample);
+                    if (orderIndividual == null) {
                         return null;
                     }
                     return new CustomerPrincipal(user.getId(), orderIndividual.getId(), orderGroupId);
                 }
             }
             return null;
-        }
-        else if(Objects.equals(src, "merchant")) {
-            for(PinRole role : roles) {
-                if(role.equals(PinRole.ROLE_MERCHANT)) {
+        } else if (Objects.equals(src, "merchant")) {
+            for (PinRole role : roles) {
+                if (role.equals(PinRole.ROLE_MERCHANT)) {
                     return new MerchantPrincipal(user.getId(), storeId);
                 }
             }
             return null;
-        }
-        else if(Objects.equals(src, "admin")) {
-            for(PinRole role : roles) {
-                if(role.equals(PinRole.ROLE_ADMIN)) {
+        } else if (Objects.equals(src, "admin")) {
+            for (PinRole role : roles) {
+                if (role.equals(PinRole.ROLE_ADMIN)) {
                     return new AdminPrincipal(user.getId());
                 }
             }
             return null;
-        }
-        else {
+        } else {
             return null;
         }
     }
