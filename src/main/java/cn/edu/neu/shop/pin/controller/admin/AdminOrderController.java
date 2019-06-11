@@ -89,7 +89,7 @@ public class AdminOrderController {
 
             JSONObject specificPage = new JSONObject();
             specificPage.put("total", orderDateGroups.size());
-            specificPage.put("groupOrderList", list);
+            specificPage.put("orderList", list);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, specificPage);
         } catch (Exception e) {
             e.printStackTrace();

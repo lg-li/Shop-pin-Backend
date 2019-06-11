@@ -249,7 +249,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
             BigDecimal userBalance = userService.findById(userId).getBalance();
 
             if (userBalance.compareTo(totalPrice) >= 0) {  //如果余额足够支付，则返回余额支付态
-                payType = PinConstants.PayType.WEICHAT;
+                payType = PinConstants.PayType.WECHAT;
                 payPrice = new BigDecimal("0");
                 balancePaidPrice = totalPrice;
             }
@@ -262,7 +262,7 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
             }
             //没有余额的话，则返回微信支付
             else/* if (userBalance.compareTo(new BigDecimal("0")) == 0)*/ {
-                payType = PinConstants.PayType.WEICHAT;
+                payType = PinConstants.PayType.WECHAT;
                 payPrice = totalPrice;
                 balancePaidPrice = new BigDecimal("0");
 

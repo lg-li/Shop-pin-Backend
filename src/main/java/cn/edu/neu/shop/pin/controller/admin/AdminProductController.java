@@ -34,16 +34,16 @@ public class AdminProductController {
      * TODO:未测试返回不同存货类型的商品
      *
      * @param req
-     * @param queryType
+     * @param requestObject
      * @return
      */
-    @GetMapping("/goods-list")
-    public JSONObject getProducts(HttpServletRequest req, @RequestParam String queryType) {
+    @PostMapping("/goods-list")
+    public JSONObject getProducts(HttpServletRequest req, @RequestBody JSONObject requestObject) {
         try {
-            PinUser user = userService.whoAmI(req);
             String currentStoreId = req.getHeader("Current-Store");
             List<PinProduct> products = productMapper.getProductByStoreId(Integer.parseInt(currentStoreId));
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productService.judgeQueryType(products, queryType));
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
+                    productService.judgeQueryType(products, requestObject.getString("queryType")));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);

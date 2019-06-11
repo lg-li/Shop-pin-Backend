@@ -31,14 +31,14 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
     public static final int STATUS_PERMISSION_DENIED = -2;
     public static final int STATUS_NOT_ALLOWED = -3;
 
-//    public static final int STATUS_JOIN_ORDER_GROUP_SUCCESS = -4;
+    //    public static final int STATUS_JOIN_ORDER_GROUP_SUCCESS = -4;
 //    public static final int STATUS_JOIN_ORDER_GROUP_INVALID_ID = -5;
 //    public static final int STATUS_JOIN_ORDER_GROUP_PERMISSION_DENIED = -6;
 //    public static final int STATUS_JOIN_ORDER_GROUP_NOT_ALLOWED = -7;
     public static final int STATUS_JOIN_ORDER_GROUP_IS_ENDED = -8;
     public static final int STATUS_JOIN_ORDER_GROUP_IS_FULL = -9;
 
-//    public static final int STATUS_QUIT_ORDER_GROUP_SUCCESS = -10;
+    //    public static final int STATUS_QUIT_ORDER_GROUP_SUCCESS = -10;
     public static final int STATUS_QUIT_ORDER_GROUP_FAILED = -11;
 
     public static final int GROUP_CLOSE_DELAY_MILLISECOND = 7200000;
@@ -170,37 +170,52 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
             // 指定的团单人数已满
             return STATUS_JOIN_ORDER_GROUP_IS_FULL;
         }
-        // 上述问题都没有出现，则正常加入团单
+        // 上述问题都没有出现，则正常加入团单，并更新数据库
         orderIndividual.setOrderGroupId(orderGroupId);
         orderIndividual.setIsGroup(true);
-        // 更新数据库
         orderIndividualService.update(orderIndividual);
         // 向房间内的人发送消息
+        JSONObject orderGroupJSON = generateOrderGroupJSON(orderGroup);
+        orderGroupJSON.put("message", "有人适才加入了房间");
         CustomerPrincipal customerPrincipal = new CustomerPrincipal(userId, orderIndividualId, orderGroupId);
-        webSocketService.sendGroupNotifyMessage(customerPrincipal, "有人适才加入了房间");
-        return STATUS_SUCCESS;
-    }
-
-    public Integer quitOrderGroup(Integer userId, Integer storeId, Integer orderIndividualId, Integer orderGroupId) {
-        PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
-        PinOrderGroup orderGroup = orderGroupService.findById(orderGroupId);
-        if(userId != orderIndividual.getUserId()) {
-            // 用户ID不符，返回权限不够
-            return STATUS_PERMISSION_DENIED;
-        }
-        if(orderGroup.getOwnerUserId().equals(userId)) {
-            // 用户是团单创建者，不允许退出
-            return STATUS_QUIT_ORDER_GROUP_FAILED;
-        }
-        orderIndividual.setOrderGroupId(null);
-        orderIndividual.setIsGroup(false);
-        orderIndividualService.update(orderIndividual);
-        CustomerPrincipal customerPrincipal = new CustomerPrincipal(userId, orderIndividualId, orderGroupId);
-        webSocketService.sendGroupNotifyMessage(customerPrincipal, "有人适才退出了房间");
+        webSocketService.sendGroupUpdateMessage(customerPrincipal, orderGroupJSON);
         return STATUS_SUCCESS;
     }
 
     /**
+     * @author flyhero
+     * 退出团单
+     * @param userId
+     * @param storeId
+     * @param orderIndividualId
+     * @param orderGroupId
+     * @return
+     */
+    public Integer quitOrderGroup(Integer userId, Integer storeId, Integer orderIndividualId, Integer orderGroupId) {
+        PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
+        PinOrderGroup orderGroup = orderGroupService.findById(orderGroupId);
+        if (userId != orderIndividual.getUserId()) {
+            // 用户ID不符，返回权限不够
+            return STATUS_PERMISSION_DENIED;
+        }
+        if (orderGroup.getOwnerUserId().equals(userId)) {
+            // 用户是团单创建者，不允许退出
+            return STATUS_QUIT_ORDER_GROUP_FAILED;
+        }
+        // 上述问题都没有出现，则正常退出团单，并更新数据库
+        orderIndividual.setOrderGroupId(null);
+        orderIndividual.setIsGroup(false);
+        orderIndividualService.update(orderIndividual);
+        // 向房间内的人发送消息
+        JSONObject orderGroupJSON = generateOrderGroupJSON(orderGroup);
+        orderGroupJSON.put("message", "有人适才退出了房间");
+        CustomerPrincipal customerPrincipal = new CustomerPrincipal(userId, orderIndividualId, orderGroupId);
+        webSocketService.sendGroupUpdateMessage(customerPrincipal, orderGroupJSON);
+        return STATUS_SUCCESS;
+    }
+
+    /**
+     * @author flyhero
      * Stomp 初始化页面消息
      *
      * @param customerPrincipal 客户principal
@@ -213,19 +228,30 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
                     ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, PinConstants.ResponseMessage.INVALID_DATA, null));
             return;
         }
+        JSONObject orderGroupJSON = generateOrderGroupJSON(orderGroup);
+        orderGroupJSON.put("message", "hello");
+        webSocketService.sendSingleHelloMessage(customerPrincipal, orderGroupJSON);
+    }
+
+    /**
+     * @author flyhero
+     * 生成返回的JSON格式的orderGroup，由于多个地方会用到，因此将其抽离出来
+     * @param orderGroup
+     * @return
+     */
+    private JSONObject generateOrderGroupJSON(PinOrderGroup orderGroup) {
         JSONObject orderGroupJSON = (JSONObject) JSONObject.toJSON(orderGroup);
         // 重新置入团单结束时间 => 转为时间戳
         orderGroupJSON.put("closeTime", orderGroup.getCloseTime());
         // 获取当前用户个人单包含的商品
         List<PinOrderIndividual> orderIndividualsInCurrentGroup = orderIndividualService.getOrderIndividualsByOrderGroupId(orderGroup.getId());
-        orderIndividualsInCurrentGroup.forEach(orderIndividual-> {
+        orderIndividualsInCurrentGroup.forEach(orderIndividual -> {
             orderIndividual.setUser(userService.findById(orderIndividual.getUserId()));
             orderIndividual.setOrderItems(orderItemService.getOrderItemsByOrderIndividualId(orderIndividual.getId()));
         });
 
         orderGroupJSON.put("orderIndividuals", orderIndividualsInCurrentGroup);
-
-        webSocketService.sendSingleHelloMessage(customerPrincipal, orderGroupJSON);
+        return orderGroupJSON;
     }
 
     /**
@@ -265,7 +291,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         List<PinOrderGroup> returnList = new ArrayList<>();
         switch (groupStatus) {
             case 0://全部
-                return returnList;
+                return list;
             case 1://正在拼团
                 for (PinOrderGroup item : list) {
                     if (item.getStatus() == PinOrderGroup.STATUS_PINGING)
@@ -299,7 +325,13 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
                 if (item.getCreateTime().getTime() >= begin.getTime())
                     returnList.add(item);
             }
+        } else {
+            return list;
         }
         return returnList;
+    }
+
+    public List<PinOrderGroup> getOrdersByStatus(Integer status) {
+        return pinOrderGroupMapper.getOrderGroupsByStatus(status);
     }
 }

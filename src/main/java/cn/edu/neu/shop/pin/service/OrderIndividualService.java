@@ -303,6 +303,8 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
                     } else if (end == null && begin != null) {
                         if (caCreate.getTime().getTime() >= begin.getTime())
                             returnList.add(item);
+                    }else {
+                        returnList.add(item);
                     }
                     break;
             }
@@ -338,9 +340,9 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
         }
     }
 
-    public void kickOutAnOrder(Integer orderIndividualId) {
-        PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
-        orderIndividual.setOrderGroupId(null);
-        orderIndividual.setStatus(0);
-    }
+//    public void kickOutAnOrder(Integer orderIndividualId) {
+//        PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
+//        orderIndividual.setOrderGroupId(null);
+//        orderIndividual.setStatus(0);
+//    }
 }
