@@ -39,6 +39,14 @@
     <result column="images_urls" jdbcType="LONGVARCHAR" property="imagesUrls" />
   </resultMap>
 
+  <resultMap id="PinGetAllProductWithComment" type="com.alibaba.fastjson.JSONObject">
+    <id column="id" jdbcType="INTEGER" property="id"/>
+    <result column="image_urls" jdbcType="VARCHAR" property="imageUrls"/>
+    <result column="name" jdbcType="VARCHAR" property="name"/>
+    <result column="info" jdbcType="VARCHAR" property="info"/>
+    <result column="nums" jdbcType="INTEGER" property="nums"/>
+  </resultMap>
+
   <!-- 根据输入时间 获取该店铺在这个时间的所有商品评论数 -->
   <select id="getNumberOfComment" resultType="INTEGER">
     select count(*) as nums
@@ -64,5 +72,15 @@
     from pin_user_product_comment
     where merchant_comment_content is null
     and product_id in (select product_id from pin_product where store_id = #{storeId})
+  </select>
+
+  <!-- 获取所有有评论的商品的信息和评论数-->
+  <select id="getAllProductWithComment" resultMap="PinGetAllProductWithComment">
+    select pin_product.id, pin_product.image_urls, pin_product.name, pin_product.info, count(*) as nums
+    from pin_user_product_comment, pin_product
+    where pin_product.id = pin_user_product_comment.product_id
+    and pin_user_product_comment.content is not null
+    and pin_product.store_id = #{storeId}
+    group by pin_product.name
   </select>
 </mapper>
