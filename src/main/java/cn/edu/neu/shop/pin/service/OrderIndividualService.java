@@ -325,9 +325,9 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
         }
     }
 
-    public void kickOutAnOrder(Integer orderIndividualId) {
-        PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
-        orderIndividual.setOrderGroupId(null);
-        orderIndividual.setStatus(0);
-    }
+//    public void kickOutAnOrder(Integer orderIndividualId) {
+//        PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
+//        orderIndividual.setOrderGroupId(null);
+//        orderIndividual.setStatus(0);
+//    }
 }

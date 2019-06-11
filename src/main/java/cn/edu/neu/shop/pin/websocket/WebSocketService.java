@@ -25,9 +25,6 @@ import java.util.List;
 public class WebSocketService {
 
     @Autowired
-    private SimpMessagingTemplate template;
-
-    @Autowired
     private SimpMessageSendingOperations simpMessageSendingOperations;
 
     @Autowired
@@ -35,42 +32,6 @@ public class WebSocketService {
 
     @Autowired
     private OrderIndividualService orderIndividualService;
-
-    @Autowired
-    private AddressService addressService;
-
-    @Autowired
-    private UserService userService;
-
-    /**
-     * @author flyhero
-     * 用户被踢出房间
-     * @param userId
-     */
-    public void sendBeenKickedOut(Integer userId) {
-        simpMessageSendingOperations.convertAndSendToUser(userId.toString(), "/kick",
-                ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null));
-    }
-
-    /**
-     * @author flyhero
-     * 用户主动退出
-     * @param userId
-     */
-    public void getOut(Integer userId) {
-        simpMessageSendingOperations.convertAndSendToUser(userId.toString(), "/out",
-                ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null));
-    }
-
-    /**
-     * @author flyhero
-     * 超时
-     * @param customerId
-     */
-    public void sendTimeout(Integer customerId) {
-        simpMessageSendingOperations.convertAndSendToUser(customerId.toString(), "/time-out",
-                ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null));
-    }
 
     /**
      * @author flyhero
@@ -97,22 +58,20 @@ public class WebSocketService {
      * @author flyhero
      * 点对点发送通知信息
      * @param principal
-     * @param msg
+     * @param jsonObject
      */
-    public void sendSingleNotifyMessage(CustomerPrincipal principal, String msg) {
-        sendSingleMessage(principal, "notify",
-                ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, msg, null));
+    public void sendSingleUpdateMessage(CustomerPrincipal principal, JSONObject jsonObject) {
+        sendSingleMessage(principal, "update", jsonObject);
     }
 
     /**
      * @author flyhero
      * 在同一个Group内发送通知信息
      * @param principal
-     * @param msg
+     * @param jsonObject
      */
-    public void sendGroupNotifyMessage(CustomerPrincipal principal, String msg) {
-        sendGroupMessage(principal, "notify",
-                ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, msg, null));
+    public void sendGroupUpdateMessage(CustomerPrincipal principal, JSONObject jsonObject) {
+        sendGroupMessage(principal, "update", jsonObject);
     }
 
     /**
@@ -124,41 +83,42 @@ public class WebSocketService {
         sendSingleMessage(principal, "hello", jsonObject);
     }
 
-    /**
-     * @author flyhero
-     * 向同一Group内的用户发送Hello消息
-     * @param newPrincipal
-     */
-    public void sendGroupHelloMessage(CustomerPrincipal newPrincipal) {
-        List<PinOrderIndividual> orderIndividuals = orderIndividualService.getOrderIndividualsByOrderGroupId(newPrincipal.getOrderGroupId());
-        orderIndividuals.forEach(orderIndividual -> {
-            CustomerPrincipal principal = new CustomerPrincipal(orderIndividual.getUserId(), orderIndividual.getId(), orderIndividual.getOrderGroupId());
-            orderGroupService.sendGroupInitMessageToSingle(principal);
-        });
-    }
+//    /**
+//     * @author flyhero
+//     * 向同一Group内的用户发送Hello消息
+//     * @param newPrincipal
+//     */
+//    public void sendGroupHelloMessage(CustomerPrincipal newPrincipal) {
+//        List<PinOrderIndividual> orderIndividuals = orderIndividualService.getOrderIndividualsByOrderGroupId(newPrincipal.getOrderGroupId());
+//        orderIndividuals.forEach(orderIndividual -> {
+//            CustomerPrincipal principal = new CustomerPrincipal(orderIndividual.getUserId(), orderIndividual.getId(), orderIndividual.getOrderGroupId());
+//            orderGroupService.sendGroupInitMessageToSingle(principal);
+//        });
+//    }
+
+//    /**
+//     * @author flyhero
+//     * 发送结束消息
+//     * @param orderGroupId
+//     * @param finalPeopleCount
+//     */
+//    public void sendFinishedMessage(Integer orderGroupId, Integer finalPeopleCount) {
+//        JSONObject returnData = new JSONObject();
+//        returnData.put("finalPeopleCount", finalPeopleCount);
+//        sendGroupMessage(orderGroupId, "notify",
+//                ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, returnData));
+//    }
 
     /**
      * @author flyhero
-     * 发送结束消息
-     * @param orderGroupId
-     * @param finalPeopleCount
-     */
-    public void sendFinishedMessage(Integer orderGroupId, Integer finalPeopleCount) {
-        JSONObject returnData = new JSONObject();
-        returnData.put("finalPeopleCount", finalPeopleCount);
-        sendGroupMessage(orderGroupId, "notify",
-                ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, returnData));
-    }
-
-    /**
-     * @author flyhero
-     * 在一个Group内发送广播消息
-     * @param orderGroupId
+     * 点对点发送消息
+     * @param principal
      * @param router
      * @param object
      */
-    private void sendGroupMessage(Integer orderGroupId, String router, Object object) {
-        simpMessageSendingOperations.convertAndSend("/group/" + orderGroupId + "/" + router, object);
+    private void sendSingleMessage(CustomerPrincipal principal, String router, Object object) {
+        simpMessageSendingOperations.convertAndSendToUser(
+                "/user/" + principal.getUserId().toString(), "/" + router, object);
     }
 
     /**
@@ -174,45 +134,12 @@ public class WebSocketService {
 
     /**
      * @author flyhero
-     * 点对点发送消息
-     * @param principal
+     * 在一个Group内发送广播消息
+     * @param orderGroupId
      * @param router
      * @param object
      */
-    private void sendSingleMessage(CustomerPrincipal principal, String router, Object object) {
-        simpMessageSendingOperations.convertAndSendToUser(principal.getUserId().toString(), "/" + router, object);
-    }
-
-    public void sendAllOrderToMerchant(MerchantPrincipal merchantPrincipal, Object data) {
-        sendSingleMerchant(merchantPrincipal, "hello",
-                ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data));
-    }
-
-    public void sendNewGroupToMerchant(MerchantPrincipal merchantPrincipal, PinOrderGroup orderGroup, List<PinOrderIndividual> orderIndividualList) {
-        JSONObject jsonObject = (JSONObject) JSONObject.toJSON(orderGroup);
-        jsonObject.put("orderIndividuals", orderIndividualList);
-        sendSingleMerchant(merchantPrincipal, "group/new",
-                ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null));
-    }
-
-    public void notifyMerchantNewOrderGroupHasCreated(MerchantPrincipal merchantPrincipal) {
-//        List<PinOrderGroup> orderGroups = orderGroupService.
-//        List<PinOrderGroup> orderGroups = orderGroupService.findByRestaurantAndStatus(providerPrincipal.getRestaurantId(), OrderGroup.STATUS_NOT_ALL_PAID);
-        JSONArray jsonArray =new JSONArray();
-//        orderGroups.forEach(orderGroup -> {
-////            jsonObject.put("address",addressService.findById(orderGroup.getAddressId()));
-////            jsonObject.put("owner",orderIndividualService.findIndividualOrderByCustomerIdAndGroupOrderId(orderGroup.getGroupOwnerId(),orderGroup.getId()));
-//            jsonArray.add(orderGroupService.addHoleThingsForProvider(orderGroup));
-//        });
-//        sendSingleMerchant(providerPrincipal, CommonUtil.successJsonWithoutToken(jsonArray), "group/new");
-    }
-
-    public void sendNewOrderToMerchant(MerchantPrincipal merchantPrincipal, Object data) {
-        sendSingleMerchant(merchantPrincipal,"new",
-                ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data));
-    }
-
-    private void sendSingleMerchant(MerchantPrincipal merchantPrincipal, String router, Object o) {
-        simpMessageSendingOperations.convertAndSend("/provider/" + merchantPrincipal.getStoreId() + '/' + router, o);
+    private void sendGroupMessage(Integer orderGroupId, String router, Object object) {
+        simpMessageSendingOperations.convertAndSend("/group/" + orderGroupId + "/" + router, object);
     }
 }

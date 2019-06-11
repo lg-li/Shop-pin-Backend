@@ -170,17 +170,27 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
             // 指定的团单人数已满
             return STATUS_JOIN_ORDER_GROUP_IS_FULL;
         }
-        // 上述问题都没有出现，则正常加入团单
+        // 上述问题都没有出现，则正常加入团单，并更新数据库
         orderIndividual.setOrderGroupId(orderGroupId);
         orderIndividual.setIsGroup(true);
-        // 更新数据库
         orderIndividualService.update(orderIndividual);
         // 向房间内的人发送消息
+        JSONObject orderGroupJSON = generateOrderGroupJSON(orderGroup);
+        orderGroupJSON.put("message", "有人适才加入了房间");
         CustomerPrincipal customerPrincipal = new CustomerPrincipal(userId, orderIndividualId, orderGroupId);
-        webSocketService.sendGroupNotifyMessage(customerPrincipal, "有人适才加入了房间");
+        webSocketService.sendGroupUpdateMessage(customerPrincipal, orderGroupJSON);
         return STATUS_SUCCESS;
     }
 
+    /**
+     * @author flyhero
+     * 退出团单
+     * @param userId
+     * @param storeId
+     * @param orderIndividualId
+     * @param orderGroupId
+     * @return
+     */
     public Integer quitOrderGroup(Integer userId, Integer storeId, Integer orderIndividualId, Integer orderGroupId) {
         PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
         PinOrderGroup orderGroup = orderGroupService.findById(orderGroupId);
@@ -192,15 +202,20 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
             // 用户是团单创建者，不允许退出
             return STATUS_QUIT_ORDER_GROUP_FAILED;
         }
+        // 上述问题都没有出现，则正常退出团单，并更新数据库
         orderIndividual.setOrderGroupId(null);
         orderIndividual.setIsGroup(false);
         orderIndividualService.update(orderIndividual);
+        // 向房间内的人发送消息
+        JSONObject orderGroupJSON = generateOrderGroupJSON(orderGroup);
+        orderGroupJSON.put("message", "有人适才退出了房间");
         CustomerPrincipal customerPrincipal = new CustomerPrincipal(userId, orderIndividualId, orderGroupId);
-        webSocketService.sendGroupNotifyMessage(customerPrincipal, "有人适才退出了房间");
+        webSocketService.sendGroupUpdateMessage(customerPrincipal, orderGroupJSON);
         return STATUS_SUCCESS;
     }
 
     /**
+     * @author flyhero
      * Stomp 初始化页面消息
      * @param customerPrincipal 客户principal
      */
@@ -212,6 +227,18 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
                     ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, PinConstants.ResponseMessage.INVALID_DATA, null));
             return;
         }
+        JSONObject orderGroupJSON = generateOrderGroupJSON(orderGroup);
+        orderGroupJSON.put("message", "hello");
+        webSocketService.sendSingleHelloMessage(customerPrincipal, orderGroupJSON);
+    }
+
+    /**
+     * @author flyhero
+     * 生成返回的JSON格式的orderGroup，由于多个地方会用到，因此将其抽离出来
+     * @param orderGroup
+     * @return
+     */
+    private JSONObject generateOrderGroupJSON(PinOrderGroup orderGroup) {
         JSONObject orderGroupJSON = (JSONObject) JSONObject.toJSON(orderGroup);
         // 重新置入团单结束时间 => 转为时间戳
         orderGroupJSON.put("closeTime", orderGroup.getCloseTime());
@@ -223,8 +250,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         });
 
         orderGroupJSON.put("orderIndividuals", orderIndividualsInCurrentGroup);
-
-        webSocketService.sendSingleHelloMessage(customerPrincipal, orderGroupJSON);
+        return orderGroupJSON;
     }
 
     /**
