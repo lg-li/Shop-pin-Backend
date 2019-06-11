@@ -1,20 +1,19 @@
-package cn.edu.neu.shop.pin.websocket;
+package cn.edu.neu.shop.pin.controller.realtimecommunication;
 
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.service.OrderGroupService;
 import cn.edu.neu.shop.pin.service.OrderIndividualService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
+import cn.edu.neu.shop.pin.websocket.CustomerPrincipal;
+import cn.edu.neu.shop.pin.websocket.WebSocketService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.logging.Logger;
 
 @RestController
 public class GroupController {
-//    private static Logger logger = Logger.getLogger()
 
     @Autowired
     OrderGroupService orderGroupService;
@@ -52,13 +51,6 @@ public class GroupController {
 //                stompService.sendSingleErrorMessage(customerPrincipal, ErrorEnum.E_508);
 //        }
 //    }
-
-    @MessageMapping("/join")
-    public void join(CustomerPrincipal customerPrincipal) {
-        PinOrderIndividual orderIndividual = orderIndividualService.findById(customerPrincipal.getOrderIndividualId());
-        Integer orderGroupId = customerPrincipal.getOrderGroupId();
-        webSocketService.sendGroupNotifyMessage(customerPrincipal, "有人适才加入了房间");
-    }
 
     @MessageMapping("/out")
     public void out(CustomerPrincipal customerPrincipal) {

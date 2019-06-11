@@ -168,8 +168,16 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         // 上述问题都没有出现，则正常加入团单
         orderIndividual.setOrderGroupId(orderGroupId);
         orderIndividualService.update(orderIndividual);
+
         return STATUS_JOIN_ORDER_GROUP_SUCCESS;
     }
+
+    public void join(CustomerPrincipal customerPrincipal) {
+        PinOrderIndividual orderIndividual = orderIndividualService.findById(customerPrincipal.getOrderIndividualId());
+        Integer orderGroupId = customerPrincipal.getOrderGroupId();
+        webSocketService.sendGroupNotifyMessage(customerPrincipal, "有人适才加入了房间");
+    }
+
 
     /**
      * Stomp 初始化页面消息
