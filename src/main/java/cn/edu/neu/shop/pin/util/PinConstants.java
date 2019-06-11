@@ -7,8 +7,8 @@ public class PinConstants {
 
     // webSocket相关配置
     // 链接地址
-    public static final String WEBSOCKET_PATH_PREFIX = "/ws-push";
-    public static final String WEBSOCKET_PATH = "/endpointWisely";
+    public static final String WEBSOCKET_PATH_PREFIX = "/ws";
+    public static final String WEBSOCKET_PATH = "/endpoint";
     // 消息代理路径
     public static final String WEBSOCKET_BROADCAST_PATH = "/topic";
     // 前端发送给服务端请求地址
