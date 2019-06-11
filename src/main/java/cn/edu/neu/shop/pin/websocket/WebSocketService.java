@@ -117,8 +117,7 @@ public class WebSocketService {
      * @param object
      */
     private void sendSingleMessage(CustomerPrincipal principal, String router, Object object) {
-        simpMessageSendingOperations.convertAndSendToUser(
-                "/user/" + principal.getUserId().toString(), "/" + router, object);
+        simpMessageSendingOperations.convertAndSendToUser(principal.getUserId().toString(), "/" + router, object);
     }
 
     /**

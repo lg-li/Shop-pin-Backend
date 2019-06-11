@@ -122,7 +122,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
-            <version>5.2.0.BUILD-SNAPSHOT</version>
+            <version>5.1.7.RELEASE</version>
         </dependency>
         <!-- 用于@Aspect -->
         <dependency>
