@@ -45,4 +45,6 @@ public interface PinProductMapper extends BaseMapper<PinProduct> {
     List<PinProduct> getProductIsShown(Integer storeId);
 
     Integer getNumberOfProductLessStock(Integer storeId);
+
+    void updateProductCategory(Integer productId, Integer categoryId);
 }

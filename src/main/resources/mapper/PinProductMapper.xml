@@ -54,7 +54,7 @@
     <result column="info" jdbcType="VARCHAR" property="info"/>
     <result column="sub_name" jdbcType="VARCHAR" property="childCategoryName"/>
     <result column="parent_name" jdbcType="VARCHAR" property="parentCategoryName"/>
-    <result column="sub_id" jdbcType="INTEGER" property="chileCategoryId"/>
+    <result column="sub_id" jdbcType="INTEGER" property="childCategoryId"/>
     <result column="parent_id" jdbcType="INTEGER" property="parentCategoryId"/>
   </resultMap>
 
@@ -114,5 +114,11 @@
     where stock_count &lt;= 10
     and store_id = #{storeId}
   </select>
+
+  <update id="updateProductCategory">
+    update pin_product
+    set category_id = #{categoryId}
+    where id = #{productId}
+  </update>
   
 </mapper>
