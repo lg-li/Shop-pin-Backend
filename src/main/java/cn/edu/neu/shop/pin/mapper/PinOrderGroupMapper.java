@@ -14,5 +14,5 @@ import java.util.List;
 public interface PinOrderGroupMapper extends BaseMapper<PinOrderGroup> {
     List<PinOrderGroup> getTopTenOrderGroups(Integer storeId);
 
-    List<PinOrderGroup> getAllWithOrderIndividual();
+    List<PinOrderGroup> getAllWithOrderIndividual(Integer storeId);
 }

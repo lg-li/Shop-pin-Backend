@@ -54,7 +54,8 @@
              pin_order_individual as P2,
              pin_order_item as P3,
              pin_product as P4
-        where P2.order_group_id = P1.id
+        where P1.store_id = #{store_id}
+          and P2.order_group_id = P1.id
           and P3.order_individual_id = P2.id
           and P3.product_id = P4.id
     </select>
