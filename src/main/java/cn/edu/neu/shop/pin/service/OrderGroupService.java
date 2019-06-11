@@ -15,6 +15,8 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -188,4 +190,37 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
 //        return new Date(timeSecondsStampOfClosing);
 //    }
 
+    public List<PinOrderGroup> getAllWithOrderIndividual() {
+        return pinOrderGroupMapper.getAllWithOrderIndividual();
+    }
+
+    public List<PinOrderGroup> getOrdersByOrderStatus(List<PinOrderGroup> list, Integer groupStatus) {
+        List<PinOrderGroup> returnList = new ArrayList<>();
+        switch (groupStatus) {
+            case 0://全部
+                return returnList;
+            case 1://正在拼团
+                for (PinOrderGroup item : list) {
+                    if (item.getStatus() == PinOrderGroup.STATUS_PINGING)
+                        returnList.add(item);
+                }
+                break;
+            case 2://已结束拼团
+                for (PinOrderGroup item : list) {
+                    if (item.getStatus() == PinOrderGroup.STATUS_FINISHED)
+                        returnList.add(item);
+                }
+                break;
+        }
+        return returnList;
+    }
+
+    public List<PinOrderGroup> getOrdersByDate(List<PinOrderGroup> list, Date begin, Date end) {
+        List<PinOrderGroup> returnList = new ArrayList<>();
+        for(PinOrderGroup item:list){
+            if (item.getCreateTime().getTime()>=end.getTime()&&item.getCreateTime().getTime()<begin.getTime())
+                returnList.add(item);
+        }
+        return returnList;
+    }
 }

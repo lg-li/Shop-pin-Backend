@@ -8,6 +8,14 @@ import java.util.List;
 @Table(name = "pin_order_group")
 public class PinOrderGroup {
     /**
+     * 正在拼团
+     */
+    public static final int STATUS_PINGING = 0;
+    /**
+     * 已结束拼团
+     */
+    public static final int STATUS_FINISHED = 1;
+    /**
      * 拼团单ID
      */
     @Id
@@ -23,7 +31,7 @@ public class PinOrderGroup {
     /**
      * 0: 正在拼团；1：已结束拼团
      */
-    private Boolean status;
+    private Integer status;
 
     @Column(name = "create_time")
     private Date createTime;
@@ -94,7 +102,7 @@ public class PinOrderGroup {
      *
      * @return status - 0: 正在拼团；1：已结束拼团
      */
-    public Boolean getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
@@ -103,7 +111,7 @@ public class PinOrderGroup {
      *
      * @param status 0: 正在拼团；1：已结束拼团
      */
-    public void setStatus(Boolean status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 
