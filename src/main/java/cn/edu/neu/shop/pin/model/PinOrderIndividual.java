@@ -7,6 +7,9 @@ import java.util.List;
 
 @Table(name = "pin_order_individual")
 public class PinOrderIndividual {
+    public static final String PAY_TYPE_BALANCE = "BALANCE";
+    public static final String PAY_TYPE_WECHAT = "WECHAT";
+    public static final String PAY_TYPE_WECHAT_AND_BALANCE = "WECHAT-BALANCE";
 
     /**
      * 待发货

@@ -13,7 +13,7 @@
     <result column="close_time" jdbcType="TIMESTAMP" property="closeTime" />
     <result column="actual_finish_time" jdbcType="TIMESTAMP" property="actualFinishTime" />
     <result column="total_amount_of_money_paid" jdbcType="DECIMAL" property="totalAmountOfMoneyPaid" />
-    <association property="pinUser" column="owner_user_id" javaType="PinUser" resultMap="userResult" />
+    <association property="ownerUser" column="owner_user" javaType="PinUser" resultMap="userResult" />
   </resultMap>
 
   <resultMap id="userResult" type="PinUser">

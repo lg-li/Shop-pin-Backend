@@ -29,6 +29,9 @@ public class PinConstants {
 
         public static final int INTERNAL_ERROR = 500;
         public static final int PRODUCT_SOLD_OUT = 800;
+
+        public static final int PAY_REPEAT_PAYMENT = 900; // 重复支付已经支付的订单
+        public static final int PAY_INSUFFICIENT_BALANCE = 901; // 余额不足
     }
 
     public class ResponseMessage {
