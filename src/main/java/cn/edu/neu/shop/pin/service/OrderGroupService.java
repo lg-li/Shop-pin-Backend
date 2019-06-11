@@ -123,6 +123,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         PinOrderGroup orderGroup = new PinOrderGroup();
         orderGroup.setOwnerUserId(userId);
         orderGroup.setStoreId(storeId);
+        orderGroup.setStatus(0);
         orderGroup.setCreateTime(new Date());
         orderGroup.setCloseTime(getOrderGroupCloseTimeFromNow(storeId));
         orderGroupService.save(orderGroup);
@@ -168,6 +169,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         }
         // 上述问题都没有出现，则正常加入团单
         orderIndividual.setOrderGroupId(orderGroupId);
+        orderIndividual.setStatus(1);
         // 更新数据库
         orderIndividualService.update(orderIndividual);
         // 向房间内的人发送消息
