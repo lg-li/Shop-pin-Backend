@@ -182,7 +182,7 @@ public class ProductService extends AbstractService<PinProduct> {
 
     }
 
-    public JSONArray getProductInfoFromSameStore(Integer storeId) {
+    public List<JSONObject> getProductInfoFromSameStore(Integer storeId) {
         return pinProductMapper.getProductFromSameStore(storeId);
     }
 

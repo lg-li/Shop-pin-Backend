@@ -47,7 +47,7 @@
     <result column="cost" jdbcType="DECIMAL" property="cost" />
   </resultMap>
 
-  <resultMap id="PinProductFromSameStoreResultMap" type="com.alibaba.fastjson.JSONArray">
+  <resultMap id="PinProductFromSameStoreResultMap" type="JSONObject">
     <id column="id" jdbcType="INTEGER" property="id"/>
     <result column="image_urls" jdbcType="VARCHAR" property="imageUrls"/>
     <result column="name" jdbcType="VARCHAR" property="name"/>

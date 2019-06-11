@@ -40,7 +40,7 @@ public interface PinProductMapper extends BaseMapper<PinProduct> {
 
     List<PinProduct> getProductByCategoryId(Integer categoryId);
 
-    JSONArray getProductFromSameStore(Integer storeId);
+    List<JSONObject> getProductFromSameStore(Integer storeId);
 
     List<PinProduct> getProductIsShown(Integer storeId);
 
