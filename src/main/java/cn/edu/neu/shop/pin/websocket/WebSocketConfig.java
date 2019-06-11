@@ -39,7 +39,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint(PinConstants.WEBSOCKET_PATH).addInterceptors(new HandshakeInterceptor() {
+        registry.addEndpoint("/pin-websocket").addInterceptors(new HandshakeInterceptor() {
             /**
              * websocket握手
              */
