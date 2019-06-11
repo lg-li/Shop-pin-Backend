@@ -35,7 +35,9 @@ public class AdminStoreController {
     public JSONObject getProducts(HttpServletRequest req) {
         try {
             PinUser user = userService.whoAmI(req);
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, storeService.getStoreListByOwnerId(user.getId()));
+            JSONObject data = new JSONObject();
+            data.put("storeList", storeService.getStoreListByOwnerId(user.getId()));
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
