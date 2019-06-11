@@ -52,22 +52,22 @@ public class OrderGroupController {
         Integer storeId = jsonObject.getInteger("storeId");
         Integer orderIndividualId = jsonObject.getInteger("orderIndividualId");
         int code = orderGroupService.createOrderGroup(user.getId(), storeId, orderIndividualId);
-        if(code == OrderGroupService.STATUS_CREATE_ORDER_GROUP_SUCCESS) {
+        if(code == OrderGroupService.STATUS_SUCCESS) {
             // 创建成功
             PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
             JSONObject data = new JSONObject();
             data.put("orderGroupId", orderIndividual.getOrderGroupId());
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "创团成功！",
                     data);
-        } else if(code == OrderGroupService.STATUS_CREATE_ORDER_GROUP_INVALID_ID) {
+        } else if(code == OrderGroupService.STATUS_INVALID_ID) {
             // 创建失败，店铺ID不符
             return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, "创团失败，店铺ID有误！",
                     null);
-        } else if(code == OrderGroupService.STATUS_CREATE_ORDER_GROUP_PERMISSION_DENIED) {
+        } else if(code == OrderGroupService.STATUS_PERMISSION_DENIED) {
             // 创建失败，用户ID不符
             return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_CREDENTIAL, "创团失败，用户ID有误！",
                     null);
-        } else if(code == OrderGroupService.STATUS_CREATE_ORDER_GROUP_NOT_ALLOWED) {
+        } else if(code == OrderGroupService.STATUS_NOT_ALLOWED) {
             // 创建失败，订单状态不符合创团条件（未付款或已发货）
             return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, "创团失败，订单不符合条件！",
                      null);
@@ -85,7 +85,7 @@ public class OrderGroupController {
     /**
      * @author flyhero
      * 加入团单
-     * @param httpServletRequest
+     * @param httpServletRequest: 包括
      * @return
      */
     @PostMapping("/join")
@@ -95,19 +95,19 @@ public class OrderGroupController {
         Integer orderIndividualId = jsonObject.getInteger("orderIndividualId");
         Integer orderGroupId = jsonObject.getInteger("orderGroupId");
         int code = orderGroupService.joinOrderGroup(user.getId(), storeId, orderIndividualId, orderGroupId);
-        if(code == OrderGroupService.STATUS_JOIN_ORDER_GROUP_SUCCESS) {
+        if(code == OrderGroupService.STATUS_SUCCESS) {
             // 团单加入成功
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "团单加入成功！",
                     null);
-        } else if(code == OrderGroupService.STATUS_JOIN_ORDER_GROUP_INVALID_ID) {
+        } else if(code == OrderGroupService.STATUS_INVALID_ID) {
             // 店铺ID不符，返回ID错误
             return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, "加团失败，店铺ID有误！",
                     null);
-        } else if(code == OrderGroupService.STATUS_JOIN_ORDER_GROUP_PERMISSION_DENIED) {
+        } else if(code == OrderGroupService.STATUS_PERMISSION_DENIED) {
             // 创建失败，用户ID不符
             return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_CREDENTIAL, "加团失败，用户ID有误！",
                     null);
-        } else if(code == OrderGroupService.STATUS_JOIN_ORDER_GROUP_NOT_ALLOWED) {
+        } else if(code == OrderGroupService.STATUS_NOT_ALLOWED) {
             // 给定的团单不满足情况：1.isPaid不是未付款 2.status不是0-待发货
             return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, "加团失败，订单不符合条件！",
                     null);
@@ -125,6 +125,30 @@ public class OrderGroupController {
             PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
             data.put("orderGroupId", orderIndividual.getOrderGroupId());
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, "加团失败，已经在某一团单中！", data);
+        }
+        return null;
+    }
+
+    /**
+     * @author flyhero
+     * 退出团单
+     * @param httpServletRequest
+     * @param jsonObject: 包括storeId, orderIndividualId, orderGroupId
+     * @return
+     */
+    @PostMapping("/quit")
+    public JSONObject quitOrderGroup(HttpServletRequest httpServletRequest, @RequestBody JSONObject jsonObject) {
+        PinUser user = userService.whoAmI(httpServletRequest);
+        Integer storeId = jsonObject.getInteger("storeId");
+        Integer orderIndividualId = jsonObject.getInteger("orderIndividualId");
+        Integer orderGroupId = jsonObject.getInteger("orderGroupId");
+        int code = orderGroupService.quitOrderGroup(user.getId(), storeId, orderIndividualId, orderGroupId);
+        if(code == OrderGroupService.STATUS_SUCCESS) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "团单退出成功！",
+                    null);
+        } else if(code == OrderGroupService.STATUS_QUIT_ORDER_GROUP_FAILED) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "退出失败！团单创建者无法退出团单！",
+                    null);
         }
         return null;
     }

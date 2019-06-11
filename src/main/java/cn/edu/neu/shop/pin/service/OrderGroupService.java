@@ -26,17 +26,20 @@ import java.util.*;
 @Service
 public class OrderGroupService extends AbstractService<PinOrderGroup> {
 
-    public static final int STATUS_CREATE_ORDER_GROUP_SUCCESS = 0;
-    public static final int STATUS_CREATE_ORDER_GROUP_INVALID_ID = -1;
-    public static final int STATUS_CREATE_ORDER_GROUP_PERMISSION_DENIED = -2;
-    public static final int STATUS_CREATE_ORDER_GROUP_NOT_ALLOWED = -3;
+    public static final int STATUS_SUCCESS = 0;
+    public static final int STATUS_INVALID_ID = -1;
+    public static final int STATUS_PERMISSION_DENIED = -2;
+    public static final int STATUS_NOT_ALLOWED = -3;
 
-    public static final int STATUS_JOIN_ORDER_GROUP_SUCCESS = -4;
-    public static final int STATUS_JOIN_ORDER_GROUP_INVALID_ID = -5;
-    public static final int STATUS_JOIN_ORDER_GROUP_PERMISSION_DENIED = -6;
-    public static final int STATUS_JOIN_ORDER_GROUP_NOT_ALLOWED = -7;
+//    public static final int STATUS_JOIN_ORDER_GROUP_SUCCESS = -4;
+//    public static final int STATUS_JOIN_ORDER_GROUP_INVALID_ID = -5;
+//    public static final int STATUS_JOIN_ORDER_GROUP_PERMISSION_DENIED = -6;
+//    public static final int STATUS_JOIN_ORDER_GROUP_NOT_ALLOWED = -7;
     public static final int STATUS_JOIN_ORDER_GROUP_IS_ENDED = -8;
     public static final int STATUS_JOIN_ORDER_GROUP_IS_FULL = -9;
+
+//    public static final int STATUS_QUIT_ORDER_GROUP_SUCCESS = -10;
+    public static final int STATUS_QUIT_ORDER_GROUP_FAILED = -11;
 
     public static final int GROUP_CLOSE_DELAY_MILLISECOND = 7200000;
 
@@ -106,15 +109,15 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
         if(!Objects.equals(userId, orderIndividual.getUserId())) {
             // 用户ID不符，返回权限不够
-            return STATUS_CREATE_ORDER_GROUP_PERMISSION_DENIED;
+            return STATUS_PERMISSION_DENIED;
         }
         if(!Objects.equals(storeId, orderIndividual.getStoreId())) {
             // 店铺ID不符，返回ID错误
-            return STATUS_CREATE_ORDER_GROUP_INVALID_ID;
+            return STATUS_INVALID_ID;
         }
         if(!(orderIndividual.getPaid() && orderIndividual.getStatus() == 0)) {
             // 给定的订单不满足创团条件：1.isPaid不是未付款 2.status不是0-待发货
-            return STATUS_CREATE_ORDER_GROUP_NOT_ALLOWED;
+            return STATUS_NOT_ALLOWED;
         }
         if(orderIndividual.getOrderGroupId() != null) {
             // orderGroupId不为空，已在某一团单中，返回团单ID
@@ -127,7 +130,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         orderGroup.setCreateTime(new Date());
         orderGroup.setCloseTime(getOrderGroupCloseTimeFromNow(storeId));
         orderGroupService.save(orderGroup);
-        return STATUS_CREATE_ORDER_GROUP_SUCCESS;
+        return STATUS_SUCCESS;
     }
 
     /**
@@ -143,15 +146,15 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         PinOrderGroup orderGroup = orderGroupService.findById(orderGroupId);
         if(!Objects.equals(userId, orderIndividual.getUserId())) {
             // 用户ID不符，返回权限不够
-            return STATUS_JOIN_ORDER_GROUP_PERMISSION_DENIED;
+            return STATUS_PERMISSION_DENIED;
         }
         if(!Objects.equals(storeId, orderIndividual.getStoreId())) {
             // 店铺ID不符，返回ID错误
-            return STATUS_JOIN_ORDER_GROUP_INVALID_ID;
+            return STATUS_INVALID_ID;
         }
         if(!orderIndividual.getPaid() || orderIndividual.getStatus() != 0) {
             // 给定的订单不满足加团条件：1.isPaid不是未付款 2.status不是0-待发货
-            return STATUS_JOIN_ORDER_GROUP_NOT_ALLOWED;
+            return STATUS_NOT_ALLOWED;
         }
         if(orderIndividual.getOrderGroupId() != null) {
             // orderGroupId不为空，已在某一团单中，返回团单ID
@@ -169,13 +172,32 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         }
         // 上述问题都没有出现，则正常加入团单
         orderIndividual.setOrderGroupId(orderGroupId);
-        orderIndividual.setStatus(1);
+        orderIndividual.setIsGroup(true);
         // 更新数据库
         orderIndividualService.update(orderIndividual);
         // 向房间内的人发送消息
         CustomerPrincipal customerPrincipal = new CustomerPrincipal(userId, orderIndividualId, orderGroupId);
         webSocketService.sendGroupNotifyMessage(customerPrincipal, "有人适才加入了房间");
-        return STATUS_JOIN_ORDER_GROUP_SUCCESS;
+        return STATUS_SUCCESS;
+    }
+
+    public Integer quitOrderGroup(Integer userId, Integer storeId, Integer orderIndividualId, Integer orderGroupId) {
+        PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
+        PinOrderGroup orderGroup = orderGroupService.findById(orderGroupId);
+        if(userId != orderIndividual.getUserId()) {
+            // 用户ID不符，返回权限不够
+            return STATUS_PERMISSION_DENIED;
+        }
+        if(orderGroup.getOwnerUserId().equals(userId)) {
+            // 用户是团单创建者，不允许退出
+            return STATUS_QUIT_ORDER_GROUP_FAILED;
+        }
+        orderIndividual.setOrderGroupId(null);
+        orderIndividual.setIsGroup(false);
+        orderIndividualService.update(orderIndividual);
+        CustomerPrincipal customerPrincipal = new CustomerPrincipal(userId, orderIndividualId, orderGroupId);
+        webSocketService.sendGroupNotifyMessage(customerPrincipal, "有人适才退出了房间");
+        return STATUS_SUCCESS;
     }
 
     /**
