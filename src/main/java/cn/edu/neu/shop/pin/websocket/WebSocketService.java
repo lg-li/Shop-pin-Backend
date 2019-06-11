@@ -163,7 +163,7 @@ public class WebSocketService {
 
     /**
      * @author flyhero
-     * 在一个Group内发送广播消息
+     * 向/group/{orderGroupId}/notify地址发送广播消息，属于同一团内的用户订阅这个地址
      * @param principal
      * @param router
      * @param object
