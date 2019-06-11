@@ -10,10 +10,7 @@ import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -42,9 +39,10 @@ public class AdminOrderController {
         }
     }
 
-    @GetMapping("/order/query")
-    public JSONObject getOrderByCondition(HttpServletRequest req, @RequestParam JSONObject queryType) {
+    @PostMapping("/order/query")
+    public JSONObject getOrderByCondition(HttpServletRequest req, @RequestBody JSONObject queryType) {
         try {
+            System.out.println(queryType);
             Integer storeId = Integer.parseInt(req.getHeader("Current-Store"));
             Integer pageNumber = queryType.getInteger("pageNumber");
             Integer pageSize = queryType.getInteger("pageSize");
@@ -70,9 +68,10 @@ public class AdminOrderController {
         }
     }
 
-    @GetMapping("/order/get-group-order-list")
-    public JSONObject getGroupOrderByCondition(HttpServletRequest req,@RequestParam JSONObject queryType) {
+    @PostMapping("/order/get-group-order-list")
+    public JSONObject getGroupOrderByCondition(HttpServletRequest req,@RequestBody JSONObject queryType) {
         try {
+            System.out.println(queryType);
             Integer storeId = Integer.parseInt(req.getHeader("Current-Store"));
             Integer pageNumber = queryType.getInteger("pageNumber");
             Integer pageSize = queryType.getInteger("pageSize");

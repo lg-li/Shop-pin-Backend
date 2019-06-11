@@ -3,6 +3,7 @@ package cn.edu.neu.shop.pin.mapper;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.util.base.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -15,7 +16,7 @@ public interface PinOrderIndividualMapper extends BaseMapper<PinOrderIndividual>
 
     List<PinOrderIndividual> getRecentThreeMonthsOrderIndividuals(Integer userId);
 
-    List<PinOrderIndividual> getAllWithProductsByKeyWord(String keyWord,Integer storeId);
+    List<PinOrderIndividual> getAllWithProductsByKeyWord(@Param("keyWord") String keyWord,@Param("storeId") Integer storeId);
 
     Integer getNumberOfOrder(Date fromTime, Date toTime, Integer storeId);
 
