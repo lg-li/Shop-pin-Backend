@@ -20,9 +20,18 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
     @Autowired
     private PinUserProductCommentMapper pinUserProductCommentMapper;
 
+    public void addComment(Integer userId, Integer orderIndividualId, Integer productId, Integer grade,
+                           Integer productScore, Integer serviceScore, String content, String imageUrl) {
+        PinUserProductComment comment = new PinUserProductComment();
+        comment.setUserId(userId);
+        comment.setOrderIndividualId(orderIndividualId);
+        comment.setProductId(productId);
+        comment.setGrade(grade);
+
+    }
+
     /**
      * 根据商品ID 获取该商品评论信息
-     *
      * @param productId 商品 ID
      * @return List
      */
@@ -35,8 +44,8 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
     }
 
     /**
-     * 获取评论数
-     * @param storeId
+     * 从当前时间算起，获取之前7天内每天的评论数
+     * @param storeId 店铺ID
      * @return
      */
     public Integer[] getComments(Integer storeId) {
@@ -77,11 +86,16 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
         return pinUserProductCommentMapper.getNumberOfMerchantNotComment(storeId);
     }
 
+    /**
+     * 指定偏移的天数，计算某天的日期
+     * @param today 当前时间
+     * @param delta 偏移量
+     * @return
+     */
     private java.util.Date getDateByOffset(java.util.Date today, Integer delta) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(today);
         calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + delta);
         return calendar.getTime();
     }
-
 }

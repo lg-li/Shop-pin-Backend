@@ -6,6 +6,7 @@ import cn.edu.neu.shop.pin.util.base.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -15,8 +16,18 @@ public class StoreCloseBatchService extends AbstractService<PinStoreGroupCloseBa
     private PinStoreGroupCloseBatchMapper pinStoreGroupCloseBatchMapper;
 
     public List<PinStoreGroupCloseBatch> getGroupCloseBatchTime(Integer storeId) {
-        PinStoreGroupCloseBatch pinStoreGroupCloseBatch = new PinStoreGroupCloseBatch();
-        pinStoreGroupCloseBatch.setStoreId(storeId);
-        return pinStoreGroupCloseBatchMapper.select(pinStoreGroupCloseBatch);
+        return pinStoreGroupCloseBatchMapper.getStoreGroupCloseBatchByStoreIdAndTimeDesc(storeId);
+    }
+
+    public PinStoreGroupCloseBatch getRecentGroupCloseBatchTime(Integer storeId) {
+        List<PinStoreGroupCloseBatch> list = getGroupCloseBatchTime(storeId);
+        if(list.size() == 0) return null;
+        for(PinStoreGroupCloseBatch batch : list) {
+            Date nowPlusTenMinutes = new Date(new Date().getTime() + 600000);
+            if(nowPlusTenMinutes.before(batch.getTime())) {
+                return batch;
+            }
+        }
+        return list.get(0);
     }
 }

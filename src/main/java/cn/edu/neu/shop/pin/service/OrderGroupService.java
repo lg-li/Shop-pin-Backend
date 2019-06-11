@@ -4,6 +4,7 @@ import cn.edu.neu.shop.pin.mapper.PinOrderGroupMapper;
 import cn.edu.neu.shop.pin.mapper.PinOrderIndividualMapper;
 import cn.edu.neu.shop.pin.model.PinOrderGroup;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
+import cn.edu.neu.shop.pin.model.PinStoreGroupCloseBatch;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
@@ -15,10 +16,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author flyhero
@@ -32,11 +30,23 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
     public static final int STATUS_CREATE_ORDER_GROUP_PERMISSION_DENIED = -2;
     public static final int STATUS_CREATE_ORDER_GROUP_NOT_ALLOWED = -3;
 
+    public static final int STATUS_JOIN_ORDER_GROUP_SUCCESS = -4;
+    public static final int STATUS_JOIN_ORDER_GROUP_INVALID_ID = -5;
+    public static final int STATUS_JOIN_ORDER_GROUP_PERMISSION_DENIED = -6;
+    public static final int STATUS_JOIN_ORDER_GROUP_NOT_ALLOWED = -7;
+    public static final int STATUS_JOIN_ORDER_GROUP_IS_ENDED = -8;
+    public static final int STATUS_JOIN_ORDER_GROUP_IS_FULL = -9;
+
+    public static final int GROUP_CLOSE_DELAY_MILLISECOND = 7200000;
+
     @Autowired
     private PinOrderIndividualMapper individualMapper;
 
     @Autowired
     private PinOrderGroupMapper pinOrderGroupMapper;
+
+    @Autowired
+    private StoreService storeService;
 
     @Autowired
     private OrderItemService orderItemService;
@@ -54,7 +64,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
     private UserService userService;
 
     @Autowired
-    private AddressService addressService;
+    private StoreCloseBatchService storeCloseBatchService;
 
     /**
      * @author flyhero
@@ -66,6 +76,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
     }
 
     /**
+     * @author flyhero
      * 传入orderGroup 返回拼单的人
      * @param orderGroupId
      * @return 拼单的人的list
@@ -77,29 +88,42 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
 
     /**
      * @author flyhero
+     * 返回在某一团单中的人数
+     * @param orderGroupId
+     * @return
+     */
+    public Integer getUserNumberInAOrderGroup(Integer orderGroupId) {
+        return getUsersByOrderGroup(orderGroupId).size();
+    }
+
+    /**
+     * @author flyhero
      * 新建一个团单
      * @param orderIndividualId
      */
     public Integer createOrderGroup(Integer userId, Integer storeId, Integer orderIndividualId) {
         PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
-        if(userId != orderIndividual.getUserId()) {
+        if(!Objects.equals(userId, orderIndividual.getUserId())) {
+            // 用户ID不符，返回权限不够
             return STATUS_CREATE_ORDER_GROUP_PERMISSION_DENIED;
         }
-        if(storeId != orderIndividual.getStoreId()) {
+        if(!Objects.equals(storeId, orderIndividual.getStoreId())) {
+            // 店铺ID不符，返回ID错误
             return STATUS_CREATE_ORDER_GROUP_INVALID_ID;
         }
-        // 团单创建失败的情况：1.orderGroupId不为空 2.isPaid不是未付款 3.status不是0-待发货
-        if(orderIndividual.getOrderGroupId() != null
-        || orderIndividual.getPaid() != true
-        || orderIndividual.getStatus() != 0) {
+        if(!(orderIndividual.getPaid() && orderIndividual.getStatus() == 0)) {
+            // 给定的订单不满足创团条件：1.isPaid不是未付款 2.status不是0-待发货
             return STATUS_CREATE_ORDER_GROUP_NOT_ALLOWED;
+        }
+        if(orderIndividual.getOrderGroupId() != null) {
+            // orderGroupId不为空，已在某一团单中，返回团单ID
+            return orderIndividual.getOrderGroupId();
         }
         PinOrderGroup orderGroup = new PinOrderGroup();
         orderGroup.setOwnerUserId(userId);
         orderGroup.setStoreId(storeId);
         orderGroup.setCreateTime(new Date());
-        // TODO: 李林根好香
-        orderGroup.setCloseTime(getOrderGroupCloseTime(storeId));
+        orderGroup.setCloseTime(getOrderGroupCloseTimeFromNow(storeId));
         orderGroupService.save(orderGroup);
         return STATUS_CREATE_ORDER_GROUP_SUCCESS;
     }
@@ -107,13 +131,44 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
     /**
      * @author flyhero
      * 按照orderGroupId加入团单
-     * @param userId
-     * @param storeId
-     * @param individualId
-     * @param orderGroupId
+     * @param userId 用户ID
+     * @param storeId 店铺ID
+     * @param orderIndividualId 用户传进来的订单ID
+     * @param orderGroupId 要加入的团单 orderGroupID
      */
-    public void joinOrderGroup(Integer userId, Integer storeId, Integer individualId, Integer orderGroupId) {
-
+    public Integer joinOrderGroup(Integer userId, Integer storeId, Integer orderIndividualId, Integer orderGroupId) {
+        PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
+        PinOrderGroup orderGroup = orderGroupService.findById(orderGroupId);
+        if(!Objects.equals(userId, orderIndividual.getUserId())) {
+            // 用户ID不符，返回权限不够
+            return STATUS_JOIN_ORDER_GROUP_PERMISSION_DENIED;
+        }
+        if(!Objects.equals(storeId, orderIndividual.getStoreId())) {
+            // 店铺ID不符，返回ID错误
+            return STATUS_JOIN_ORDER_GROUP_INVALID_ID;
+        }
+        if(!orderIndividual.getPaid() || orderIndividual.getStatus() != 0) {
+            // 给定的订单不满足加团条件：1.isPaid不是未付款 2.status不是0-待发货
+            return STATUS_JOIN_ORDER_GROUP_NOT_ALLOWED;
+        }
+        if(orderIndividual.getOrderGroupId() != null) {
+            // orderGroupId不为空，已在某一团单中，返回团单ID
+            return orderIndividual.getOrderGroupId();
+        }
+        if(orderGroup.getStatus() != 0 || orderGroup.getCloseTime().before(new Date())) {
+            // 指定的团单已结束
+            return STATUS_JOIN_ORDER_GROUP_IS_ENDED;
+        }
+        Integer userNum = orderGroupService.getUserNumberInAOrderGroup(orderGroupId);
+        Integer limit = storeService.getStoreById(storeId).getPeopleLimit();
+        if(userNum >= limit) {
+            // 指定的团单人数已满
+            return STATUS_JOIN_ORDER_GROUP_IS_FULL;
+        }
+        // 上述问题都没有出现，则正常加入团单
+        orderIndividual.setOrderGroupId(orderGroupId);
+        orderIndividualService.update(orderIndividual);
+        return STATUS_JOIN_ORDER_GROUP_SUCCESS;
     }
 
     /**
@@ -163,32 +218,28 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
      * @param storeId
      * @return
      */
-    private Date getOrderGroupCloseTime(Integer storeId) {
-
-        return new Date();
+    private Date getOrderGroupCloseTimeFromNow(Integer storeId) {
+        // 获设置拼团时间
+        PinStoreGroupCloseBatch recentBatch = storeCloseBatchService.getRecentGroupCloseBatchTime(storeId);
+        long timeSecondsStampOfClosing;
+        if(recentBatch == null) {
+            // 向下取整到整点分钟
+            // 未指定配送批次则2小时后收团
+            timeSecondsStampOfClosing = ((System.currentTimeMillis() + GROUP_CLOSE_DELAY_MILLISECOND) / 60000);
+            timeSecondsStampOfClosing *= 60000; // 恢复大小到毫秒
+        } else if(recentBatch.getTime().before(new Date(new Date().getTime() + 600000))) {
+            // 返回的是下一天的第一批
+            long current = System.currentTimeMillis() + 8*1000*3600; // 添加时区offset
+            long zero = (current/(1000*3600*24) + 1) * (1000*3600*24);
+            timeSecondsStampOfClosing = zero + recentBatch.getTime().getTime();
+        } else {
+            // 已指定配送批次，选择最近时间收团
+            long current = System.currentTimeMillis() + 8*1000*3600; // 添加时区offset
+            long zero = current/(1000*3600*24)*(1000*3600*24);
+            timeSecondsStampOfClosing = zero + recentBatch.getTime().getTime();
+        }
+        return new Date(timeSecondsStampOfClosing);
     }
-
-//    private Date getGroupCloseTimeFromNow(Integer restaurantId) {
-//        // 获设置拼团时间
-//        RestaurantDeliveryBatch recentBatch = restaurantDeliveryBatchService.getRecentDeliveryBatchByRestaurant(restaurantId);
-//        long timeSecondsStampOfClosing;
-//        if(recentBatch == null) {
-//            // 向下取整到整点分钟
-//            // 未指定配送批次则10分钟后收团
-//            timeSecondsStampOfClosing = ((System.currentTimeMillis() + GROUP_CLOSE_DELAY_MILLISECOND) / 60000);
-//            timeSecondsStampOfClosing *= 60000; // 恢复大小到毫秒
-//        } else {
-//            // 已指定配送批次，选择最近时间收团
-//            //Calendar zeroCalendar = Calendar.getInstance();
-//            //            zeroCalendar.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
-//            //            zeroCalendar.set(zeroCalendar.get(Calendar.YEAR), zeroCalendar.get(Calendar.MONTH), zeroCalendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-//            //            timeSecondsStampOfClosing = zeroCalendar.getTime().getTime() + recentBatch.getTriggerTime().getTime();
-//            long current = System.currentTimeMillis() + 8*1000*3600; // 添加时区offset
-//            long zero = current/(1000*3600*24)*(1000*3600*24);
-//            timeSecondsStampOfClosing = zero + recentBatch.getTriggerTime().getTime();
-//        }
-//        return new Date(timeSecondsStampOfClosing);
-//    }
 
     public List<PinOrderGroup> getAllWithOrderIndividual(Integer storeId) {
         return pinOrderGroupMapper.getAllWithOrderIndividual(storeId);

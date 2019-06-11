@@ -33,7 +33,7 @@ public class PinUserProductComment {
     /**
      * 0: 好评；1：中评；2：差评
      */
-    private Boolean grade;
+    private Integer grade;
 
     /**
      * 商品打分
@@ -159,7 +159,7 @@ public class PinUserProductComment {
      *
      * @return grade - 0: 好评；1：中评；2：差评
      */
-    public Boolean getGrade() {
+    public Integer getGrade() {
         return grade;
     }
 
@@ -168,7 +168,7 @@ public class PinUserProductComment {
      *
      * @param grade 0: 好评；1：中评；2：差评
      */
-    public void setGrade(Boolean grade) {
+    public void setGrade(Integer grade) {
         this.grade = grade;
     }
 
