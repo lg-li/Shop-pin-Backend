@@ -3,16 +3,19 @@ package cn.edu.neu.shop.pin.service;
 import cn.edu.neu.shop.pin.mapper.PinUserProductCommentMapper;
 import cn.edu.neu.shop.pin.model.PinUserProductComment;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
+import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.*;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class ProductCommentService extends AbstractService<PinUserProductComment> {
@@ -97,5 +100,9 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
         calendar.setTime(today);
         calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) + delta);
         return calendar.getTime();
+    }
+
+    public List<JSONObject> getProductWithComment(Integer storeId) {
+        return pinUserProductCommentMapper.getAllProductWithComment(storeId);
     }
 }
