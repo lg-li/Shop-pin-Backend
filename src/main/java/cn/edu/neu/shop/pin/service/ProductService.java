@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -193,5 +194,10 @@ public class ProductService extends AbstractService<PinProduct> {
      */
     public Integer getProductLessStock(Integer storeId) {
         return pinProductMapper.getNumberOfProductLessStock(storeId);
+    }
+
+    @Transactional
+    public void updateProductCategory(Integer productId, Integer categoryId) {
+        pinProductMapper.updateProductCategory(productId, categoryId);
     }
 }
