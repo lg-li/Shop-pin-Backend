@@ -2,11 +2,13 @@ package cn.edu.neu.shop.pin.controller.admin;
 
 import cn.edu.neu.shop.pin.model.PinStore;
 import cn.edu.neu.shop.pin.model.PinUser;
+import cn.edu.neu.shop.pin.service.StoreCloseBatchService;
 import cn.edu.neu.shop.pin.service.StoreService;
 import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
+import org.graalvm.compiler.replacements.IntrinsicGraphBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +22,9 @@ public class AdminStoreController {
     UserService userService;
     @Autowired
     StoreService storeService;
+
+    @Autowired
+    StoreCloseBatchService storeCloseBatchService;
 
     /**
      * 得到这个商人所有的商铺
@@ -76,6 +81,19 @@ public class AdminStoreController {
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
         } catch (Exception e) {
             e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
+    @GetMapping("/close-batch")
+    public JSONObject getGruopCloseBatchTime(HttpServletRequest httpServletRequest) {
+        try{
+            String store = httpServletRequest.getHeader("current-store");
+            Integer storeId = Integer.parseInt(store);
+            JSONObject data = new JSONObject();
+            data.put("list", storeCloseBatchService.getGroupCloseBatchTime(storeId));
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
+        } catch (Exception e) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
     }
