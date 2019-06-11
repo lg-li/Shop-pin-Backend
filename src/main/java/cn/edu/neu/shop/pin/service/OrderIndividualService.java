@@ -35,6 +35,9 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
     private OrderItemService orderItemService;
 
     @Autowired
+    private OrderIndividualService orderIndividualService;
+
+    @Autowired
     private AddressService addressService;
 
     @Autowired
@@ -320,5 +323,11 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
         } else {
             return list.subList((pageNumber - 1) * pageSize, list.size());
         }
+    }
+
+    public void kickOutAnOrder(Integer orderIndividualId) {
+        PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
+        orderIndividual.setOrderGroupId(null);
+        orderIndividual.setStatus(0);
     }
 }

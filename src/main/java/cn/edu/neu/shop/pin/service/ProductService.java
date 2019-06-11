@@ -4,6 +4,7 @@ import cn.edu.neu.shop.pin.mapper.*;
 import cn.edu.neu.shop.pin.model.*;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
@@ -181,7 +182,7 @@ public class ProductService extends AbstractService<PinProduct> {
 
     }
 
-    public JSONObject getProductInfoFromSameStore(Integer storeId) {
+    public List<JSONObject> getProductInfoFromSameStore(Integer storeId) {
         return pinProductMapper.getProductFromSameStore(storeId);
     }
 
