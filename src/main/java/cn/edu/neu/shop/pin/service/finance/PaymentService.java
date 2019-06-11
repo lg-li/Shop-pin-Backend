@@ -62,7 +62,7 @@ public class PaymentService {
         // 总金额-余额支付抵扣金额 = 实际进帐金额
         orderIndividual.setPayPrice(orderIndividual.getTotalPrice().subtract(balancePaidPrice));
         orderIndividual.setPayType(paymentType);
-        orderIndividualService.save(orderIndividual);
+        orderIndividualService.update(orderIndividual);
     }
 
 }
