@@ -190,8 +190,8 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
 //        return new Date(timeSecondsStampOfClosing);
 //    }
 
-    public List<PinOrderGroup> getAllWithOrderIndividual() {
-        return pinOrderGroupMapper.getAllWithOrderIndividual();
+    public List<PinOrderGroup> getAllWithOrderIndividual(Integer storeId) {
+        return pinOrderGroupMapper.getAllWithOrderIndividual(storeId);
     }
 
     public List<PinOrderGroup> getOrdersByOrderStatus(List<PinOrderGroup> list, Integer groupStatus) {

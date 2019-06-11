@@ -12,7 +12,6 @@ import java.util.List;
 
 /**
  * @author flyhero
- *
  */
 @RunWith(SpringRunner.class)
 @MybatisTest
@@ -28,7 +27,7 @@ public class PinOrderGroupMapperTest {
         System.out.println("##################################################");
         System.out.println();
         List<PinOrderGroup> list = pinOrderGroupMapper.getTopTenOrderGroups(3);
-        for(PinOrderGroup g : list) {
+        for (PinOrderGroup g : list) {
             System.out.println("order_group_id: " + g.getId());
             System.out.println("owner_user_id: " + g.getOwnerUserId());
             System.out.println("owner_user_avatar_url: " + g.getOwnerUser().getAvatarUrl());
@@ -43,5 +42,11 @@ public class PinOrderGroupMapperTest {
         System.out.println();
         System.out.println("##################################################");
         System.out.println();
+    }
+
+    @Test
+    public void getAllWithOrderIndividual() {
+        List<PinOrderGroup> list = pinOrderGroupMapper.getAllWithOrderIndividual(1);
+        System.out.println("pause");
     }
 }

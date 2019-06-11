@@ -165,8 +165,8 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
      * 每个 PinOrderIndividual 里面有多个 PinOrderItem
      * 每个 PinOrderItem 里面有一个 PinProduct
      */
-    public List<PinOrderIndividual> getAllWithProductsByKeyWord(String keyWord) {
-        return pinOrderIndividualMapper.getAllWithProductsByKeyWord(keyWord);
+    public List<PinOrderIndividual> getAllWithProductsByKeyWord(String keyWord,Integer storeId) {
+        return pinOrderIndividualMapper.getAllWithProductsByKeyWord(keyWord,storeId);
     }
 
     /** TODO：待测试

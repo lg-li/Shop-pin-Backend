@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 
@@ -42,15 +43,16 @@ public class AdminOrderController {
     }
 
     @GetMapping("/order/query")
-    public JSONObject getOrderByCondition(@RequestParam JSONObject queryType) {
+    public JSONObject getOrderByCondition(HttpServletRequest req, @RequestParam JSONObject queryType) {
         try {
+            Integer storeId = Integer.parseInt(req.getHeader("Current-Store"));
             Integer pageNumber = queryType.getInteger("pageNumber");
             Integer pageSize = queryType.getInteger("pageSize");
             Integer orderTypeChoice = queryType.getInteger("orderTypeChoice");
             Integer orderDateChoice = queryType.getInteger("orderDateChoice");
             String keyWord = queryType.getString("keyWord");
             //通过关键词查找得到所有的orders
-            List<PinOrderIndividual> orderList = orderIndividualService.getAllWithProductsByKeyWord(keyWord);
+            List<PinOrderIndividual> orderList = orderIndividualService.getAllWithProductsByKeyWord(keyWord,storeId);
             //得到符合orderType的order
             List<PinOrderIndividual> orderTypeList = orderIndividualService.getOrdersByOrderType(orderList, orderTypeChoice);
             //得到符合orderDate的order
@@ -69,15 +71,16 @@ public class AdminOrderController {
     }
 
     @GetMapping("/order/get-group-order-list")
-    public JSONObject getGroupOrderByCondition(@RequestParam JSONObject queryType) {
+    public JSONObject getGroupOrderByCondition(HttpServletRequest req,@RequestParam JSONObject queryType) {
         try {
+            Integer storeId = Integer.parseInt(req.getHeader("Current-Store"));
             Integer pageNumber = queryType.getInteger("pageNumber");
             Integer pageSize = queryType.getInteger("pageSize");
             Integer groupStatus = queryType.getInteger("groupStatus");
             Date begin = queryType.getDate("begin");
             Date end = queryType.getDate("end");
             //得到所有的orderGroup，其中嵌套了orderIndividual,orderIndividual中也嵌套了其他信息
-            List<PinOrderGroup> orderGroups = orderGroupService.getAllWithOrderIndividual();
+            List<PinOrderGroup> orderGroups = orderGroupService.getAllWithOrderIndividual(storeId);
             //得到符合传入的状态的orderGroups
             List<PinOrderGroup> orderStatusGroups = orderGroupService.getOrdersByOrderStatus(orderGroups, groupStatus);
             //得到符合传入时间段的orderGroups
