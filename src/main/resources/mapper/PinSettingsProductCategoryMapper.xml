@@ -24,4 +24,16 @@
     select * from pin_settings_product_category where parent_category_id &lt;&gt; 0
   </select>
 
+  <select id="getParentProductCategory" resultType="com.alibaba.fastjson.JSONObject">
+    select id, category_name
+    from pin_settings_product_category
+    where parent_category_id = 0
+  </select>
+
+  <select id="getSubProductCategory" resultType="com.alibaba.fastjson.JSONObject">
+    select id, category_name
+    from pin_settings_product_category
+    where parent_category_id = #{parentId}
+  </select>
+
 </mapper>

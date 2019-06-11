@@ -4,11 +4,13 @@ package cn.edu.neu.shop.pin.service;
 import cn.edu.neu.shop.pin.mapper.PinSettingsProductCategoryMapper;
 import cn.edu.neu.shop.pin.model.PinSettingsProductCategory;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -61,6 +63,19 @@ public class ProductCategoryService extends AbstractService<PinSettingsProductCa
             JSONObject categoryJSON = (JSONObject) JSONObject.toJSON(parentCategory);
             categoryJSON.put("subCategories", getProductCategoryByParentId(parentCategory.getId()));
             resultArray.add(categoryJSON);
+        }
+        return resultArray;
+    }
+
+    public JSONArray getProductCategory() {
+        List<JSONObject> parents = pinSettingsProductCategoryMapper.getParentProductCategory();
+        JSONArray resultArray = new JSONArray();
+        for (JSONObject parent : parents) {
+            List<JSONObject> children = pinSettingsProductCategoryMapper.getSubProductCategory(parent.getInteger("id"));
+            JSONObject tempItem = new JSONObject();
+            tempItem.put("parent", parent);
+            tempItem.put("child", children);
+            resultArray.add(tempItem);
         }
         return resultArray;
     }
