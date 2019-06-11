@@ -1,15 +1,13 @@
 package cn.edu.neu.shop.pin.controller.admin;
 
 import cn.edu.neu.shop.pin.mapper.PinProductMapper;
-import cn.edu.neu.shop.pin.mapper.PinSettingsProductCategoryMapper;
 import cn.edu.neu.shop.pin.model.PinProduct;
-import cn.edu.neu.shop.pin.model.PinUser;
+import cn.edu.neu.shop.pin.service.OrderIndividualService;
 import cn.edu.neu.shop.pin.service.ProductCategoryService;
 import cn.edu.neu.shop.pin.service.ProductService;
 import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +27,8 @@ public class AdminProductController {
     ProductService productService;
     @Autowired
     ProductCategoryService productCategoryService;
+    @Autowired
+    OrderIndividualService orderIndividualService;
 
     /**
      * TODO:未测试返回不同存货类型的商品
@@ -41,7 +41,13 @@ public class AdminProductController {
     public JSONObject getProducts(HttpServletRequest req, @RequestBody JSONObject requestObject) {
         try {
             String currentStoreId = req.getHeader("Current-Store");
-            List<PinProduct> products = productMapper.getProductByStoreId(Integer.parseInt(currentStoreId));
+            Integer pageNumber = requestObject.getJSONObject("listQuery").getInteger("pageNumber");
+            Integer pageSize = requestObject.getJSONObject("listQuery").getInteger("pageSize");
+            String key = requestObject.getJSONObject("listQuery").getString("key");
+            //通过关键词搜索和商铺搜索
+            List<PinProduct> products = productMapper.getProductByStoreIdAndKey(Integer.parseInt(currentStoreId), key);
+            //通过传入的一页的size和页码，返回那一页的list
+            List<PinProduct> list = (List<PinProduct>) orderIndividualService.getOrdersByPageNumAndSize(products, pageNumber, pageSize);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
                     productService.judgeQueryType(products, requestObject.getString("queryType")));
         } catch (Exception e) {
@@ -53,6 +59,7 @@ public class AdminProductController {
     /**
      * 商铺所有者管理本店铺的商品
      * 商品分类部分 获取父级、子级分类名及一些商品信息
+     *
      * @param req
      * @return
      */
@@ -72,7 +79,7 @@ public class AdminProductController {
 
     @GetMapping("/category-list")
     public JSONObject getProductCatrgory() {
-        try{
+        try {
             JSONArray array = productCategoryService.getProductCategory();
             JSONObject categoryList = new JSONObject();
             categoryList.put("categoryList", array);
@@ -85,7 +92,7 @@ public class AdminProductController {
 
     @PutMapping("/update-category")
     public JSONObject updateProductCategory(@RequestBody JSONObject requestJSON) {
-        try{
+        try {
             Integer productId = requestJSON.getInteger("productId");
             Integer categoryId = requestJSON.getInteger("categoryId");
             productService.updateProductCategory(productId, categoryId);
