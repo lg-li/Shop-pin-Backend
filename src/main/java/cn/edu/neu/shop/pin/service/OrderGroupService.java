@@ -4,6 +4,7 @@ import cn.edu.neu.shop.pin.mapper.PinOrderGroupMapper;
 import cn.edu.neu.shop.pin.mapper.PinOrderIndividualMapper;
 import cn.edu.neu.shop.pin.model.PinOrderGroup;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
+import cn.edu.neu.shop.pin.model.PinStoreGroupCloseBatch;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
@@ -32,6 +33,8 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
     public static final int STATUS_CREATE_ORDER_GROUP_PERMISSION_DENIED = -2;
     public static final int STATUS_CREATE_ORDER_GROUP_NOT_ALLOWED = -3;
 
+    public static final int GROUP_CLOSE_DELAY_MILLISECOND = 7200000;
+
     @Autowired
     private PinOrderIndividualMapper individualMapper;
 
@@ -55,6 +58,9 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
 
     @Autowired
     private AddressService addressService;
+
+    @Autowired
+    private StoreCloseBatchService storeCloseBatchService;
 
     /**
      * @author flyhero
@@ -168,27 +174,28 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         return new Date();
     }
 
-//    private Date getGroupCloseTimeFromNow(Integer restaurantId) {
-//        // 获设置拼团时间
-//        RestaurantDeliveryBatch recentBatch = restaurantDeliveryBatchService.getRecentDeliveryBatchByRestaurant(restaurantId);
-//        long timeSecondsStampOfClosing;
-//        if(recentBatch == null) {
-//            // 向下取整到整点分钟
-//            // 未指定配送批次则10分钟后收团
-//            timeSecondsStampOfClosing = ((System.currentTimeMillis() + GROUP_CLOSE_DELAY_MILLISECOND) / 60000);
-//            timeSecondsStampOfClosing *= 60000; // 恢复大小到毫秒
-//        } else {
-//            // 已指定配送批次，选择最近时间收团
-//            //Calendar zeroCalendar = Calendar.getInstance();
-//            //            zeroCalendar.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
-//            //            zeroCalendar.set(zeroCalendar.get(Calendar.YEAR), zeroCalendar.get(Calendar.MONTH), zeroCalendar.get(Calendar.DAY_OF_MONTH), 0, 0, 0);
-//            //            timeSecondsStampOfClosing = zeroCalendar.getTime().getTime() + recentBatch.getTriggerTime().getTime();
-//            long current = System.currentTimeMillis() + 8*1000*3600; // 添加时区offset
-//            long zero = current/(1000*3600*24)*(1000*3600*24);
-//            timeSecondsStampOfClosing = zero + recentBatch.getTriggerTime().getTime();
-//        }
-//        return new Date(timeSecondsStampOfClosing);
-//    }
+    private Date getGroupCloseTimeFromNow(Integer storeId) {
+        // 获设置拼团时间
+        PinStoreGroupCloseBatch recentBatch = storeCloseBatchService.getRecentGroupCloseBatchTime(storeId);
+        long timeSecondsStampOfClosing;
+        if(recentBatch == null) {
+            // 向下取整到整点分钟
+            // 未指定配送批次则2小时后收团
+            timeSecondsStampOfClosing = ((System.currentTimeMillis() + GROUP_CLOSE_DELAY_MILLISECOND) / 60000);
+            timeSecondsStampOfClosing *= 60000; // 恢复大小到毫秒
+        } else if(recentBatch.getTime().before(new Date(new Date().getTime() + 600000))) {
+            // 返回的是下一天的第一批
+            long current = System.currentTimeMillis() + 8*1000*3600; // 添加时区offset
+            long zero = current/(1000*3600*24)*(1000*3600*24);
+            timeSecondsStampOfClosing = zero + recentBatch.getTime().getTime();
+        } else {
+            // 已指定配送批次，选择最近时间收团
+            long current = System.currentTimeMillis() + 8*1000*3600; // 添加时区offset
+            long zero = current/(1000*3600*24)*(1000*3600*24);
+            timeSecondsStampOfClosing = zero + recentBatch.getTime().getTime();
+        }
+        return new Date(timeSecondsStampOfClosing);
+    }
 
     public List<PinOrderGroup> getAllWithOrderIndividual(Integer storeId) {
         return pinOrderGroupMapper.getAllWithOrderIndividual(storeId);
