@@ -52,6 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/sign-in/wechat-mini-program").permitAll()
                 .antMatchers("/commons/product/**").permitAll()
                 .antMatchers("/sign-up/**").permitAll()
+                .antMatchers("/pin-websocket/**").permitAll()
                 .anyRequest().authenticated();
 
         // If a user try to access a resource without having enough permissions

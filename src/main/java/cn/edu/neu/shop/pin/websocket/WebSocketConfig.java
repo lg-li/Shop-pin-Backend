@@ -1,7 +1,12 @@
 package cn.edu.neu.shop.pin.websocket;
 
+import cn.edu.neu.shop.pin.mapper.PinOrderIndividualMapper;
+import cn.edu.neu.shop.pin.model.PinOrderGroup;
+import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.model.PinRole;
 import cn.edu.neu.shop.pin.model.PinUser;
+import cn.edu.neu.shop.pin.service.OrderGroupService;
+import cn.edu.neu.shop.pin.service.OrderIndividualService;
 import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +41,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private OrderGroupService orderGroupService;
 
+    @Autowired
+    private PinOrderIndividualMapper pinOrderIndividualMapper;
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
@@ -45,19 +54,17 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
              * websocket握手
              */
             @Override
-            public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) throws Exception {
+            public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler, Map<String, Object> attributes) {
                 ServletServerHttpRequest req = (ServletServerHttpRequest) request;
                 //获取token认证
                 String src = req.getServletRequest().getParameter("src");
                 String token = req.getServletRequest().getParameter("token");
-                String oii = req.getServletRequest().getParameter("orderIndividualId");
                 String ogi = req.getServletRequest().getParameter("orderGroupId");
                 String si = req.getServletRequest().getParameter("storeId");
-                Integer orderIndividualId = Integer.parseInt(oii != null ? oii : "-1");
-                Integer orderGroupId = Integer.parseInt(ogi != null ? ogi : "-1");
-                Integer storeId = Integer.parseInt(si != null ? si : "-1");
+                Integer orderGroupId = Integer.parseInt(ogi != null && !ogi.equals("undefined") ? ogi : "-1");
+                Integer storeId = Integer.parseInt(si != null  && !si.equals("undefined") ? si : "-1");
                 //解析token获取用户信息
-                Principal user = parseTokenToPrinciple(src, token, orderIndividualId, orderGroupId, storeId);
+                Principal user = parseTokenToPrinciple(src, token, orderGroupId, storeId);
                 if (user == null) { //如果token认证失败user为null，返回false拒绝握手
                     System.out.println("失败连接！！！！");
                     return false;
@@ -87,18 +94,28 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
      * 根据src（source的缩写）判断用户来意（用途），根据token来验证授权
      * @param src
      * @param token
-     * @param orderIndividualId
      * @param orderGroupId
      * @param storeId
      * @return
      */
-    private Principal parseTokenToPrinciple(String src, String token, Integer orderIndividualId, Integer orderGroupId, Integer storeId) {
+    private Principal parseTokenToPrinciple(String src, String token, Integer orderGroupId, Integer storeId) {
         PinUser user = userService.whoDoesThisTokenBelongsTo(token);
         List<PinRole> roles = user.getRoles();
         if(Objects.equals(src, "customer")) {
             for(PinRole role : roles) {
                 if(role.equals(PinRole.ROLE_USER)) {
-                    return new CustomerPrincipal(user.getId(), orderIndividualId, orderGroupId);
+                    PinOrderGroup orderGroup = orderGroupService.findById(orderGroupId);
+                    if(orderGroup == null) {
+                        return null;
+                    }
+                    PinOrderIndividual orderIndividualSample = new PinOrderIndividual();
+                    orderIndividualSample.setUserId(user.getId());
+                    orderIndividualSample.setOrderGroupId(orderGroupId);
+                    PinOrderIndividual orderIndividual =pinOrderIndividualMapper.selectOne(orderIndividualSample);
+                    if(orderIndividual == null) {
+                        return null;
+                    }
+                    return new CustomerPrincipal(user.getId(), orderIndividual.getId(), orderGroupId);
                 }
             }
             return null;
