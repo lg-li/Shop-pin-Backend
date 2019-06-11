@@ -11,6 +11,10 @@ public class PinOrderIndividual {
     public static final String PAY_TYPE_WECHAT = "WECHAT";
     public static final String PAY_TYPE_WECHAT_AND_BALANCE = "WECHAT-BALANCE";
 
+    public static final String DELIVERY_TYPE_ONLINE = "ONLINE";
+    public static final String DELIVERY_TYPE_EXPRESS = "EXPRESS";
+    public static final String DELIVERY_TYPE_OFFLINE = "OFFLINE";
+
     /**
      * 待发货
      */
