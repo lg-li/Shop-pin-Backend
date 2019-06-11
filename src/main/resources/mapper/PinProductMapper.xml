@@ -54,6 +54,8 @@
     <result column="info" jdbcType="VARCHAR" property="info"/>
     <result column="sub_name" jdbcType="VARCHAR" property="childCategoryName"/>
     <result column="parent_name" jdbcType="VARCHAR" property="parentCategoryName"/>
+    <result column="sub_id" jdbcType="INTEGER" property="chileCategoryId"/>
+    <result column="parent_id" jdbcType="INTEGER" property="parentCategoryId"/>
   </resultMap>
 
   <!-- 获取Definition详情 -->
@@ -93,7 +95,7 @@
   </select>
 
   <select id="getProductFromSameStore" resultMap="PinProductFromSameStoreResultMap">
-    select pin_product.id, image_urls, name, info, a1.category_name as sub_name, a2.category_name as parent_name
+    select pin_product.id, image_urls, name, info, a1.category_name as sub_name, a2.category_name as parent_name, a1.id as sub_id, a2.id as parent_id
     from pin_product, pin_settings_product_category as a1, pin_settings_product_category as a2
     where pin_product.store_id = #{storeId}
     and a1.id = pin_product.category_id

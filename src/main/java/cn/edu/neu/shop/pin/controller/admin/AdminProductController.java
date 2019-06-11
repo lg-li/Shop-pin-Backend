@@ -1,8 +1,10 @@
 package cn.edu.neu.shop.pin.controller.admin;
 
 import cn.edu.neu.shop.pin.mapper.PinProductMapper;
+import cn.edu.neu.shop.pin.mapper.PinSettingsProductCategoryMapper;
 import cn.edu.neu.shop.pin.model.PinProduct;
 import cn.edu.neu.shop.pin.model.PinUser;
+import cn.edu.neu.shop.pin.service.ProductCategoryService;
 import cn.edu.neu.shop.pin.service.ProductService;
 import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
@@ -28,6 +30,8 @@ public class AdminProductController {
     PinProductMapper productMapper;
     @Autowired
     ProductService productService;
+    @Autowired
+    ProductCategoryService productCategoryService;
 
     /**
      * TODO:未测试返回不同存货类型的商品
@@ -36,7 +40,7 @@ public class AdminProductController {
      * @param queryType
      * @return
      */
-    @GetMapping("/query-type")
+    @GetMapping("/goods-list")
     public JSONObject getProducts(HttpServletRequest req, @RequestParam String queryType) {
         try {
             PinUser user = userService.whoAmI(req);
@@ -63,6 +67,19 @@ public class AdminProductController {
             JSONObject data = new JSONObject();
             data.put("list", list);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
+    @GetMapping("/category-list")
+    public JSONObject getProductCatrgory() {
+        try{
+            JSONArray array = productCategoryService.getProductCategory();
+            JSONObject categoryList = new JSONObject();
+            categoryList.put("categoryList", array);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, categoryList);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);

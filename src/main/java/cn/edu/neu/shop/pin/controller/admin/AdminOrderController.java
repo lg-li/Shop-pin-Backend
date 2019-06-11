@@ -50,7 +50,7 @@ public class AdminOrderController {
             Integer pageSize = queryType.getInteger("pageSize");
             Integer orderTypeChoice = queryType.getInteger("orderTypeChoice");
             Integer orderDateChoice = queryType.getInteger("orderDateChoice");
-            String keyWord = queryType.getString("keyWord");
+            String keyWord = queryType.getString("key");
             //通过关键词查找得到所有的orders
             List<PinOrderIndividual> orderList = orderIndividualService.getAllWithProductsByKeyWord(keyWord,storeId);
             //得到符合orderType的order

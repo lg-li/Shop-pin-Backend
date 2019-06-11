@@ -10,7 +10,7 @@
     <result column="time" jdbcType="TIME" property="time" />
   </resultMap>
 
-  <select id="getStoreGroupCloseBatchByStoreIdAndTimeDesc" parameterType="INTEGER">
+  <select id="getStoreGroupCloseBatchByStoreIdAndTimeDesc" parameterType="INTEGER" resultType="PinStoreGroupCloseBatch">
     select *
     from pin_store_group_close_batch
     where store_id = #{storeId}
