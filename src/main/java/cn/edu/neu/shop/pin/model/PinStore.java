@@ -50,6 +50,9 @@ public class PinStore {
     @Column(name = "owner_user_id")
     private Integer ownerUserId;
 
+    @Column(name = "people_limit")
+    private Integer peopleLimit;
+
     /**
      * 获取店铺id
      *
@@ -192,6 +195,14 @@ public class PinStore {
      */
     public void setOwnerUserId(Integer ownerUserId) {
         this.ownerUserId = ownerUserId;
+    }
+
+    public Integer getPeopleLimit() {
+        return peopleLimit;
+    }
+
+    public void setPeopleLimit(Integer peopleLimit) {
+        this.peopleLimit = peopleLimit;
     }
 
     @Override

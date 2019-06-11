@@ -14,6 +14,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import tk.mybatis.mapper.annotation.Order;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -50,23 +51,35 @@ public class OrderGroupController {
         PinUser user = userService.whoAmI(httpServletRequest);
         Integer storeId = jsonObject.getInteger("storeId");
         Integer orderIndividualId = jsonObject.getInteger("orderIndividualId");
-        // TODO: 没有加收团时间
         int code = orderGroupService.createOrderGroup(user.getId(), storeId, orderIndividualId);
         if(code == OrderGroupService.STATUS_CREATE_ORDER_GROUP_SUCCESS) {
+            // 创建成功
+            PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
+            JSONObject data = new JSONObject();
+            data.put("orderGroupId", orderIndividual.getOrderGroupId());
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
-                    null);
+                    data);
         } else if(code == OrderGroupService.STATUS_CREATE_ORDER_GROUP_INVALID_ID) {
-            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, PinConstants.ResponseMessage.INVALID_DATA,
+            // 创建失败，店铺ID不符
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, "创团失败，店铺ID有误！",
                     null);
         } else if(code == OrderGroupService.STATUS_CREATE_ORDER_GROUP_PERMISSION_DENIED) {
-            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_CREDENTIAL, PinConstants.ResponseMessage.INVALID_CREDENTIAL,
+            // 创建失败，用户ID不符
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_CREDENTIAL, "创团失败，用户ID有误！",
                     null);
         } else if(code == OrderGroupService.STATUS_CREATE_ORDER_GROUP_NOT_ALLOWED) {
-            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, PinConstants.ResponseMessage.INVALID_DATA,
+            // 创建失败，订单状态不符合创团条件（未付款或已发货）
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, "创团失败，订单不符合条件！",
                      null);
-        } else {
-            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, PinConstants.ResponseMessage.INTERNAL_ERROR, null);
+        } else if(code > 0) {
+            // 创建失败，已经在其他团单中，返回已有团单id
+            JSONObject data = new JSONObject();
+            PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
+            Integer orderGroupId = orderIndividual.getOrderGroupId();
+            data.put("orderGroupId", orderGroupId);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, "创团失败，已经在某一团单中！", data);
         }
+        return null;
     }
 
     /**
@@ -76,7 +89,43 @@ public class OrderGroupController {
      * @return
      */
     @PostMapping("/join")
-    public JSONObject joinOrderGroup(HttpServletRequest httpServletRequest) {
+    public JSONObject joinOrderGroup(HttpServletRequest httpServletRequest, @RequestBody JSONObject jsonObject) {
+        PinUser user = userService.whoAmI(httpServletRequest);
+        Integer storeId = jsonObject.getInteger("storeId");
+        Integer orderIndividualId = jsonObject.getInteger("orderIndividualId");
+        Integer orderGroupId = jsonObject.getInteger("orderGroupId");
+        int code = orderGroupService.joinOrderGroup(user.getId(), storeId, orderIndividualId, orderGroupId);
+        if(code == OrderGroupService.STATUS_JOIN_ORDER_GROUP_SUCCESS) {
+            // 团单加入成功
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
+                    null);
+        } else if(code == OrderGroupService.STATUS_JOIN_ORDER_GROUP_INVALID_ID) {
+            // 店铺ID不符，返回ID错误
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, "加团失败，店铺ID有误！",
+                    null);
+        } else if(code == OrderGroupService.STATUS_JOIN_ORDER_GROUP_PERMISSION_DENIED) {
+            // 创建失败，用户ID不符
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_CREDENTIAL, "加团失败，用户ID有误！",
+                    null);
+        } else if(code == OrderGroupService.STATUS_JOIN_ORDER_GROUP_NOT_ALLOWED) {
+            // 给定的团单不满足情况：1.isPaid不是未付款 2.status不是0-待发货
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, "加团失败，订单不符合条件！",
+                    null);
+        } else if(code == OrderGroupService.STATUS_JOIN_ORDER_GROUP_IS_ENDED) {
+            // 加团失败，给定的团单已结束
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, "加团失败，团单已结束！",
+                    null);
+        } else if(code == OrderGroupService.STATUS_JOIN_ORDER_GROUP_IS_FULL) {
+            // 加团失败，给定的团单人数已满
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, "加团失败，参团人数已满！",
+                    null);
+        } else if(code > 0) {
+            // 加团失败，已经在其他团单中，返回已有团单id
+            JSONObject data = new JSONObject();
+            PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
+            data.put("orderGroupId", orderIndividual.getOrderGroupId());
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, "加团失败，已经在某一团单中！", data);
+        }
         return null;
     }
 
