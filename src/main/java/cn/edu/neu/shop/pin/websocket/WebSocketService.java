@@ -183,19 +183,19 @@ public class WebSocketService {
         simpMessageSendingOperations.convertAndSendToUser(principal.getUserId().toString(), "/" + router, object);
     }
 
-    public void sendAllOrderToProvider(MerchantPrincipal merchantPrincipal, Object data) {
+    public void sendAllOrderToMerchant(MerchantPrincipal merchantPrincipal, Object data) {
         sendSingleMerchant(merchantPrincipal, "hello",
                 ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data));
     }
 
-    public void sendNewGroupToProvider(MerchantPrincipal merchantPrincipal, PinOrderGroup orderGroup, List<PinOrderIndividual> orderIndividualList) {
+    public void sendNewGroupToMerchant(MerchantPrincipal merchantPrincipal, PinOrderGroup orderGroup, List<PinOrderIndividual> orderIndividualList) {
         JSONObject jsonObject = (JSONObject) JSONObject.toJSON(orderGroup);
         jsonObject.put("orderIndividuals", orderIndividualList);
         sendSingleMerchant(merchantPrincipal, "group/new",
                 ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null));
     }
 
-    public void notifyProviderNewGroupHasCreated(MerchantPrincipal merchantPrincipal) {
+    public void notifyMerchantNewOrderGroupHasCreated(MerchantPrincipal merchantPrincipal) {
 //        List<PinOrderGroup> orderGroups = orderGroupService.
 //        List<PinOrderGroup> orderGroups = orderGroupService.findByRestaurantAndStatus(providerPrincipal.getRestaurantId(), OrderGroup.STATUS_NOT_ALL_PAID);
         JSONArray jsonArray =new JSONArray();

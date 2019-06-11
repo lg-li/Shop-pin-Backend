@@ -168,15 +168,12 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         }
         // 上述问题都没有出现，则正常加入团单
         orderIndividual.setOrderGroupId(orderGroupId);
+        // 更新数据库
         orderIndividualService.update(orderIndividual);
-
-        return STATUS_JOIN_ORDER_GROUP_SUCCESS;
-    }
-
-    public void join(CustomerPrincipal customerPrincipal) {
-        PinOrderIndividual orderIndividual = orderIndividualService.findById(customerPrincipal.getOrderIndividualId());
-        Integer orderGroupId = customerPrincipal.getOrderGroupId();
+        // 向房间内的人发送消息
+        CustomerPrincipal customerPrincipal = new CustomerPrincipal(userId, orderIndividualId, orderGroupId);
         webSocketService.sendGroupNotifyMessage(customerPrincipal, "有人适才加入了房间");
+        return STATUS_JOIN_ORDER_GROUP_SUCCESS;
     }
 
     /**
