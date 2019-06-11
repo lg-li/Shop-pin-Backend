@@ -16,12 +16,17 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Method;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * @author LLG
+ * 互斥锁切面
+ * 根据注解注入执行方法，若互斥则停止执行
+ */
 @Component
 @Slf4j
 @Aspect
 public class MutexLockAspect {
 
-    private static Logger log = LoggerFactory.getLogger(MutexLockAspect.class);
+    private static Logger logger = LoggerFactory.getLogger(MutexLockAspect.class);
 
     @Autowired
     private RedisTemplate redisTemplate;
@@ -33,7 +38,7 @@ public class MutexLockAspect {
         //确认此注解是用在方法上
         Signature signature = pjp.getSignature();
         if (!(signature instanceof MethodSignature)) {
-            log.error("Lockable注解需要设置到方法上");
+            logger.error("Lockable注解需要设置到方法上");
             return resultObject;
         }
 
