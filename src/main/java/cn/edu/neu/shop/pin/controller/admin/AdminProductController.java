@@ -35,7 +35,7 @@ public class AdminProductController {
      * @param queryType
      * @return
      */
-    @GetMapping("/query-type")
+    @GetMapping("/goods-list")
     public JSONObject getProducts(HttpServletRequest req, @RequestParam String queryType) {
         try {
             PinUser user = userService.whoAmI(req);
