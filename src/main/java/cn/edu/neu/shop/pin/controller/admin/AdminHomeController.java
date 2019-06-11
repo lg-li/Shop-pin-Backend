@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
  * 包括 该店铺近七天内的交易数、评论数、浏览量等
  */
 @RestController
-@RequestMapping("/manager/store")
 public class AdminHomeController {
 
     @Autowired
@@ -37,7 +36,7 @@ public class AdminHomeController {
     /**
      * 显示近七天内的评论数 交易数 浏览量
      */
-    @GetMapping("/oojh")
+    @GetMapping("/home")
     public JSONObject getCommentSevenDays(HttpServletRequest httpServletRequest) {
         try{
             int storeId = getCurrentStoreIdFromHeader(httpServletRequest);
