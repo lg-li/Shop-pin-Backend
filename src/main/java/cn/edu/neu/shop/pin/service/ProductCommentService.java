@@ -1,11 +1,13 @@
 package cn.edu.neu.shop.pin.service;
 
 import cn.edu.neu.shop.pin.mapper.PinUserProductCommentMapper;
+import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.model.PinUserProductComment;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -20,8 +22,11 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
 
     private final PinUserProductCommentMapper pinUserProductCommentMapper;
 
-    public ProductCommentService(PinUserProductCommentMapper pinUserProductCommentMapper) {
+    private final OrderIndividualService orderIndividualService;
+
+    public ProductCommentService(PinUserProductCommentMapper pinUserProductCommentMapper, OrderIndividualService orderIndividualService) {
         this.pinUserProductCommentMapper = pinUserProductCommentMapper;
+        this.orderIndividualService = orderIndividualService;
     }
 
     /**
@@ -40,14 +45,16 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
      */
     public Integer addComment(Integer userId, Integer orderIndividualId, Integer productId, Integer skuId, Integer grade,
                            Integer productScore, Integer serviceScore, String content, String imagesUrls) {
+        PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
         PinUserProductComment commentSample = new PinUserProductComment();
         commentSample.setOrderIndividualId(orderIndividualId);
         commentSample.setSkuId(skuId);
         List<PinUserProductComment> list = pinUserProductCommentMapper.select(commentSample);
-        if(list != null) {
-            // 用户已对此订单中的此商品做出过评论了，不能再评论一次
+        if(list != null || orderIndividual.getStatus() != PinOrderIndividual.STATUS_PENDING_COMMENT) {
+            // 表中已有对此订单的评论，或订单状态不是"待评价"
             return STATUS_ADD_COMMENT_FAILED;
         }
+        // 评论表中新增一条记录
         PinUserProductComment comment = new PinUserProductComment();
         comment.setUserId(userId);
         comment.setOrderIndividualId(orderIndividualId);
@@ -59,6 +66,9 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
         comment.setContent(content);
         comment.setImagesUrls(imagesUrls);
         pinUserProductCommentMapper.insert(comment);
+        // 更新订单状态为已评价
+        orderIndividual.setStatus(PinOrderIndividual.STATUS_PENDING_COMMENT);
+        orderIndividualService.update(orderIndividual);
         return STATUS_ADD_COMMENT_SUCCESS;
     }
 
