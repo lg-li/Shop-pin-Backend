@@ -31,28 +31,39 @@ public class AdminProductController {
     OrderIndividualService orderIndividualService;
 
     /**
-     * TODO:未测试返回不同存货类型的商品
-     *
+     * 返回不同类型商品列表
      * @param req
      * @param requestObject
      * @return
      */
     @PostMapping("/goods-list")
     public JSONObject getProducts(HttpServletRequest req, @RequestBody JSONObject requestObject) {
-        try {
-            String currentStoreId = req.getHeader("Current-Store");
-            Integer pageNumber = requestObject.getJSONObject("listQuery").getInteger("pageNumber");
-            Integer pageSize = requestObject.getJSONObject("listQuery").getInteger("pageSize");
-            String key = requestObject.getJSONObject("listQuery").getString("key");
-            //通过关键词搜索和商铺搜索
-            List<PinProduct> products = productMapper.getProductByStoreIdAndKey(Integer.parseInt(currentStoreId), key);
-            //通过传入的一页的size和页码，返回那一页的list
-            List<PinProduct> list = (List<PinProduct>) orderIndividualService.getOrdersByPageNumAndSize(products, pageNumber, pageSize);
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
-                    productService.judgeQueryType(products, requestObject.getString("queryType")));
+        try{
+            Integer storeId = Integer.valueOf(req.getHeader("Current-Store"));
+            String queryType = requestObject.getString("queryType");
+            JSONObject data = new JSONObject();
+            switch (queryType){
+                case "SALING":
+                    List<JSONObject> saling = productService.getIsShownProductInfo(storeId);
+                    data.put("goodsList", saling);
+                    return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
+                case "Ready":
+                    List<JSONObject> ready = productService.getIsReadyProductInfo(storeId);
+                    data.put("goodList", ready);
+                    return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
+                case "OUT":
+                    List<JSONObject> out = productService.getIsOutProductInfo(storeId);
+                    data.put("goodsList", out);
+                    return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
+                case "AlARM":
+                    List<JSONObject> alarm = productService.getIsAlarmProductInfo(storeId);
+                    data.put("goodsList", alarm);
+                    return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
+                default:
+                    return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, "获取失败", null);
+            }
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, e.getMessage(), null);
         }
     }
 

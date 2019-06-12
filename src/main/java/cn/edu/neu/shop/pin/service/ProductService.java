@@ -7,6 +7,7 @@ import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -151,38 +152,20 @@ public class ProductService extends AbstractService<PinProduct> {
         return list.size() != 0;
     }
 
-    /**
-     * TODO:未测试
-     * 管理端，传入一个商品 queryType，返回满足条件的商品的list
-     *
-     * @param products  传入一系列商品的list
-     * @param queryType 传入条件
-     * @return 返回满足条件的商品list
-     */
-    public List<PinProduct> judgeQueryType(List<PinProduct> products, String queryType) {
-        List<PinProduct> list = new ArrayList<PinProduct>();
-        for (PinProduct item : products) {
-            switch (queryType) {
-                case "OUT":
-                    if (item.getStockCount() == 0)
-                        list.add(item);
-                    break;
-                case "SALING":
-                    if (item.getIsShown())
-                        list.add(item);
-                    break;
-                case "READY":
-                    if ((!item.getIsShown()) && (item.getStockCount() != 0))
-                        list.add(item);
-                    break;
-                case "ALARM":
-                    if (item.getStockCount() <= PinConstants.ProductStatus.ALARM)
-                        list.add(item);
-                    break;
-            }
-        }
-        return list;
+    public List<JSONObject> getIsShownProductInfo(Integer storeId) {
+        return pinProductMapper.getIsShownProductInfo(storeId);
+    }
 
+    public List<JSONObject> getIsReadyProductInfo(Integer storeId) {
+        return pinProductMapper.getIsReadyProductInfo(storeId);
+    }
+
+    public List<JSONObject> getIsOutProductInfo(Integer storeId) {
+        return pinProductMapper.getIsOutProductInfo(storeId);
+    }
+
+    public List<JSONObject> getIsAlarmProductInfo(Integer storeId) {
+        return pinProductMapper.getIsAlarmProductInfo(storeId);
     }
 
     public List<JSONObject> getProductInfoFromSameStore(Integer storeId) {

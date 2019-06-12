@@ -106,17 +106,18 @@ public class AdminOrderController {
             PinUser user = userService.whoAmI(httpServletRequest);
             Integer orderIndividualId = requestJSON.getInteger("orderIndividualId");
             String deliveryType = requestJSON.getString("deliveryType");
+            Date date = new Date();
             switch (deliveryType) {
                 case "ONLINE":
-                    orderIndividualService.updateOrderStatusNotExpress(orderIndividualId, deliveryType);
+                    orderIndividualService.updateOrderStatusNotExpress(orderIndividualId, deliveryType, date);
                     return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
                 case "EXPRESS":
                     String deliveryName = requestJSON.getString("deliveryName");
                     Integer deliveryId = requestJSON.getInteger("deliveryId");
-                    orderIndividualService.updateOrderStatusIsExpress(orderIndividualId, deliveryType, deliveryName, deliveryId);
+                    orderIndividualService.updateOrderStatusIsExpress(orderIndividualId, deliveryType, deliveryName, deliveryId, date);
                     return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
                 case "OFFLINE":
-                    orderIndividualService.updateOrderStatusNotExpress(orderIndividualId, deliveryType);
+                    orderIndividualService.updateOrderStatusNotExpress(orderIndividualId, deliveryType, date);
                     return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
                 default:
                     return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, "发货失败", null);

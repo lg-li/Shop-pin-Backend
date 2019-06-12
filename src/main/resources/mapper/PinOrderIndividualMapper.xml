@@ -163,13 +163,13 @@
 
     <update id="updateOrderDeliveryTypeNotExpress">
         update pin_order_individual
-        set status = 1, delivery_type = #{deliveryType}
+        set status = 1, delivery_type = #{deliveryType}, delivery_time = #{deliveryTime}
         where id = #{orderIndividualId}
     </update>
 
     <update id="updateOrderDeliveryTypeIsExpress">
         update pin_order_individual
-        set status = 1, delivery_name = #{deliveryName}, delivery_id = #{deliveryId}, delivery_type = #{deliveryType}
+        set status = 1, delivery_name = #{deliveryName}, delivery_id = #{deliveryId}, delivery_type = #{deliveryType}, delivery_time = #{deliveryTime}
         where id = #{orderIndividualId}
     </update>
 
