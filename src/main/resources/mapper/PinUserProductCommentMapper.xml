@@ -10,8 +10,8 @@
     <result column="order_individual_id" jdbcType="INTEGER" property="orderIndividualId" />
     <result column="product_id" jdbcType="INTEGER" property="productId" />
     <result column="grade" jdbcType="INTEGER" property="grade" />
-    <result column="product_score" jdbcType="BIT" property="productScore" />
-    <result column="service_score" jdbcType="BIT" property="serviceScore" />
+    <result column="product_score" jdbcType="INTEGER" property="productScore" />
+    <result column="service_score" jdbcType="INTEGER" property="serviceScore" />
     <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="merchant_comment_content" jdbcType="VARCHAR" property="merchantCommentContent" />
@@ -28,9 +28,9 @@
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="order_individual_id" jdbcType="INTEGER" property="orderIndividualId" />
     <result column="product_id" jdbcType="INTEGER" property="productId" />
-    <result column="grade" jdbcType="BIT" property="grade" />
-    <result column="product_score" jdbcType="BIT" property="productScore" />
-    <result column="service_score" jdbcType="BIT" property="serviceScore" />
+    <result column="grade" jdbcType="INTEGER" property="grade" />
+    <result column="product_score" jdbcType="INTEGER" property="productScore" />
+    <result column="service_score" jdbcType="INTEGER" property="serviceScore" />
     <result column="content" jdbcType="VARCHAR" property="content" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="merchant_comment_content" jdbcType="VARCHAR" property="merchantCommentContent" />
@@ -58,7 +58,7 @@
 
   <!-- 根据商品ID 得到该商品全部评论和评论用户的基本信息-->
   <select id="getCommentAndUserInfo" resultMap="PinGetCommentAndUserInfo">
-    select distinct pin_user.nickname, pin_user.avatar_url, pin_product_attribute_value.sku, pin_user_product_comment.*
+    select pin_user.nickname, pin_user.avatar_url, pin_product_attribute_value.sku, pin_user_product_comment.*
     from pin_user, pin_user_product_comment, pin_order_item, pin_product_attribute_value
     where pin_user.id = pin_user_product_comment.user_id
     and pin_user_product_comment.order_individual_id = pin_order_item.order_individual_id

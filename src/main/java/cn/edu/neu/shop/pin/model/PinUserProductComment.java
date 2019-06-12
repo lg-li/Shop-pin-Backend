@@ -39,13 +39,13 @@ public class PinUserProductComment {
      * 商品打分
      */
     @Column(name = "product_score")
-    private Boolean productScore;
+    private Integer productScore;
 
     /**
      * 服务打分
      */
     @Column(name = "service_score")
-    private Boolean serviceScore;
+    private Integer serviceScore;
 
     /**
      * 评论内容
@@ -177,7 +177,7 @@ public class PinUserProductComment {
      *
      * @return product_score - 商品打分
      */
-    public Boolean getProductScore() {
+    public Integer getProductScore() {
         return productScore;
     }
 
@@ -186,7 +186,7 @@ public class PinUserProductComment {
      *
      * @param productScore 商品打分
      */
-    public void setProductScore(Boolean productScore) {
+    public void setProductScore(Integer productScore) {
         this.productScore = productScore;
     }
 
@@ -195,7 +195,7 @@ public class PinUserProductComment {
      *
      * @return service_score - 服务打分
      */
-    public Boolean getServiceScore() {
+    public Integer getServiceScore() {
         return serviceScore;
     }
 
@@ -204,7 +204,7 @@ public class PinUserProductComment {
      *
      * @param serviceScore 服务打分
      */
-    public void setServiceScore(Boolean serviceScore) {
+    public void setServiceScore(Integer serviceScore) {
         this.serviceScore = serviceScore;
     }
 
