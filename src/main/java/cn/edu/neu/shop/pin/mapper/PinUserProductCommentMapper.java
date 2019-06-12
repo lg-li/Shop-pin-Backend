@@ -13,7 +13,7 @@ public interface PinUserProductCommentMapper extends BaseMapper<PinUserProductCo
 
     Integer getNumberOfComment(Date fromTime, Date toTime, Integer storeId);
 
-    JSONObject getCommentAndUserInfo(Integer productId);
+    List<JSONObject> getCommentAndUserInfo(Integer productId);
 
     Integer getNumberOfMerchantNotComment(Integer storeId);
 

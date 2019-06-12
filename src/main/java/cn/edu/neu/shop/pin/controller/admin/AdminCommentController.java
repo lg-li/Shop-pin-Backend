@@ -5,9 +5,7 @@ import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -18,11 +16,18 @@ public class AdminCommentController {
     @Autowired
     private ProductCommentService productCommentService;
 
-    @GetMapping("/comment/goods-comment")
-    public JSONObject getCommentByProductId(HttpServletRequest httpServletRequest, @PathVariable(value = "pageNum") Integer pageNum, @PathVariable(value = "pageSize") Integer pageSize) {
+    @PostMapping("/comment/goods-comment")
+    public JSONObject getCommentByProductId(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try{
-            Integer productId = Integer.valueOf(httpServletRequest.getParameter("productId"));
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productCommentService.getCommentAndUserInfoByPage(productId, pageNum, pageSize));
+            Integer productId = requestJSON.getInteger("productId");
+            Integer pageNum = requestJSON.getInteger("pageNumber");
+            Integer pageSize = requestJSON.getInteger("pageSize");
+            List<JSONObject> comment = productCommentService.getCommentAndUserInfoByPage(productId);
+            List<JSONObject> list = (List<JSONObject>) productCommentService.getCommentsByPageNumAndSize(comment, pageNum, pageSize);
+            JSONObject data = new JSONObject();
+            data.put("total", comment.size());
+            data.put("list", list);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
         } catch (Exception e) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }

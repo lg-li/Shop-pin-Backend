@@ -69,15 +69,17 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
     /**
      * 管理端
      * 分页获取商品评论信息 包括评论用户昵称和头像 购买商品类型
-     * @param productId
-     * @param pageNum
-     * @param pageSize
-     * @return
      */
-    public PageInfo<PinUserProductComment> getCommentAndUserInfoByPage(Integer productId, Integer pageNum, Integer pageSize) {
-        return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> {
-            pinUserProductCommentMapper.getCommentAndUserInfo(productId);
-        });
+    public List<JSONObject> getCommentAndUserInfoByPage(Integer productId) {
+        return pinUserProductCommentMapper.getCommentAndUserInfo(productId);
+    }
+
+    public List<?> getCommentsByPageNumAndSize(List<?> list, Integer pageNumber, Integer pageSize) {
+        if (pageNumber * pageSize < list.size()) {
+            return list.subList((pageNumber - 1) * pageSize, pageNumber * pageSize);
+        } else {
+            return list.subList((pageNumber - 1) * pageSize, list.size());
+        }
     }
 
     /**
