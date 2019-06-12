@@ -1,5 +1,6 @@
 package cn.edu.neu.shop.pin.service;
 
+import cn.edu.neu.shop.pin.exception.InvalidOperationException;
 import cn.edu.neu.shop.pin.exception.PermissionDeniedException;
 import cn.edu.neu.shop.pin.exception.RecordNotFoundException;
 import cn.edu.neu.shop.pin.mapper.PinOrderItemMapper;
@@ -238,13 +239,27 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
         return list;
     }
 
-    public void changeOrderItemAmount(Integer userId, Integer orderItemId, Integer amount) throws PermissionDeniedException, RecordNotFoundException {
+    /**
+     *
+     * @param userId 用户ID
+     * @param orderItemId 购物车记录ID
+     * @param amount 商品数量
+     * @throws PermissionDeniedException
+     * @throws RecordNotFoundException
+     */
+    public void changeOrderItemAmount(Integer userId, Integer orderItemId, Integer amount) throws PermissionDeniedException, RecordNotFoundException, InvalidOperationException {
         PinOrderItem orderItem = this.findById(orderItemId);
         if(orderItem == null) {
             throw new RecordNotFoundException("Caused by OrderItemService.changeOrderItemAmount: OrderItem记录不存在！");
         } else if(userId != orderItem.getUserId()) {
             throw new PermissionDeniedException("Caused by OrderItemService.changeOrderItemAmount: 用户ID不符");
+        } else if(amount < 1) {
+            throw new InvalidOperationException("Caused by OrderItemService.changeOrderItemAmount: 购买数量不能小于1！");
         }
+        PinProductAttributeValue ppav = pinProductAttributeValueMapper.selectByPrimaryKey(orderItem.getSkuId());
+        // 更新总价和成本价
+        orderItem.setTotalPrice(ppav.getPrice().multiply(BigDecimal.valueOf(amount)));
+        orderItem.setTotalCost(ppav.getCost().multiply(BigDecimal.valueOf(amount)));
         orderItem.setAmount(amount);
         this.update(orderItem);
     }

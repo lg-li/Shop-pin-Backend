@@ -128,6 +128,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
             // orderGroupId不为空，已在某一团单中，返回团单ID
             return orderIndividual.getOrderGroupId();
         }
+        // 新建OrderGroup记录
         PinOrderGroup orderGroup = new PinOrderGroup();
         orderGroup.setOwnerUserId(userId);
         orderGroup.setStoreId(storeId);
@@ -135,6 +136,9 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         orderGroup.setCreateTime(new Date());
         orderGroup.setCloseTime(getOrderGroupCloseTimeFromNow(storeId));
         orderGroupService.save(orderGroup);
+        // 将orderGroup挂载到orderIndividual上
+        orderIndividual.setOrderGroupId(orderIndividualId);
+        orderIndividualService.update(orderIndividual);
         return STATUS_SUCCESS;
     }
 

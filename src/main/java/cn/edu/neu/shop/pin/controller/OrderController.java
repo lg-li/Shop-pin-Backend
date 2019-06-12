@@ -1,9 +1,6 @@
 package cn.edu.neu.shop.pin.controller;
 
-import cn.edu.neu.shop.pin.exception.OrderItemsAreNotInTheSameStoreException;
-import cn.edu.neu.shop.pin.exception.PermissionDeniedException;
-import cn.edu.neu.shop.pin.exception.ProductSoldOutException;
-import cn.edu.neu.shop.pin.exception.RecordNotFoundException;
+import cn.edu.neu.shop.pin.exception.*;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.model.PinOrderItem;
 import cn.edu.neu.shop.pin.model.PinUser;
@@ -201,6 +198,8 @@ public class OrderController {
         } catch (PermissionDeniedException e) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_CREDENTIAL, e.getMessage(), null);
         } catch (RecordNotFoundException e) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, e.getMessage(), null);
+        } catch (InvalidOperationException e) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, e.getMessage(), null);
         }
     }
