@@ -175,16 +175,46 @@ public class AdminProductController {
     }
 
     @PostMapping("/create-sku-definition")
-    public JSONObject createSku(@RequestBody JSONObject requestJSON) {
+    public JSONObject createSkuDefinition(@RequestBody JSONObject requestJSON) {
         try {
             Integer productId = requestJSON.getInteger("productId");
             String property;
             String value;
-            for (int i = 0; i < requestJSON.size(); i++) {
+            PinProductAttributeDefinition attributeDefinition;
+            for (int i = 0; i < requestJSON.getJSONArray("attribute").size(); i++) {
                 property = requestJSON.getJSONArray("attribute").getJSONObject(i).getString("attributeName");
                 value = requestJSON.getJSONArray("attribute").getJSONObject(i).getString("attributeValues");
-                PinProductAttributeDefinition attributeDefinition = new PinProductAttributeDefinition(productId, property, value);
+                attributeDefinition = new PinProductAttributeDefinition(productId, property, value);
                 definitionService.save(attributeDefinition);
+            }
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
+    @PostMapping("/create-sku")
+    public JSONObject createSku(@RequestBody JSONObject requestJSON) {
+        try {
+            Integer storeId = requestJSON.getInteger("productId");
+            JSONObject object;
+            String sku;
+            Integer stock;
+            BigDecimal price;
+            String base64Img;
+            String imageUrl;
+            BigDecimal cost;
+            PinProductAttributeValue attributeValue;
+            for (int i = 0; i < requestJSON.getJSONArray("list").size(); i++) {
+                object = requestJSON.getJSONArray("list").getJSONObject(i);
+                sku = object.getString("sku");
+                stock = object.getInteger("stock");
+                price = new BigDecimal(object.getString("price"));
+                base64Img = object.getString("image");
+                imageUrl = ImgUtil.upload(base64Img, "https://sm.ms/api/upload").getBody().getJSONObject("data").getString("url");
+                cost = new BigDecimal(object.getString("cost"));
+                attributeValue = new PinProductAttributeValue(storeId,sku,stock,price,imageUrl,cost);
             }
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
         } catch (Exception e) {
