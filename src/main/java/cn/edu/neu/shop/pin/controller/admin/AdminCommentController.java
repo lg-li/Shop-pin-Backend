@@ -18,9 +18,10 @@ public class AdminCommentController {
     @Autowired
     private ProductCommentService productCommentService;
 
-    @GetMapping("/comment/goods-comment/{productId}")
-    public JSONObject getCommentByProductId(@PathVariable(value = "productId") Integer productId, @PathVariable(value = "pageNum") Integer pageNum, @PathVariable(value = "pageSize") Integer pageSize) {
+    @GetMapping("/comment/goods-comment")
+    public JSONObject getCommentByProductId(HttpServletRequest httpServletRequest, @PathVariable(value = "pageNum") Integer pageNum, @PathVariable(value = "pageSize") Integer pageSize) {
         try{
+            Integer productId = Integer.valueOf(httpServletRequest.getParameter("productId"));
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productCommentService.getCommentAndUserInfoByPage(productId, pageNum, pageSize));
         } catch (Exception e) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
