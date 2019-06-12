@@ -218,8 +218,8 @@ public class PinOrderIndividual {
     /**
      * 卖家发货申请时间
      */
-    @Column(name = "deliver_time")
-    private Date deliverTime;
+    @Column(name = "delivery_time")
+    private Date deliveryTime;
 
     private PinUser user;
 
@@ -271,11 +271,11 @@ public class PinOrderIndividual {
     }
 
     public Date getDeliverTime() {
-        return deliverTime;
+        return deliveryTime;
     }
 
     public void setDeliverTime(Date deliverTime) {
-        this.deliverTime = deliverTime;
+        this.deliveryTime = deliverTime;
     }
 
     /**

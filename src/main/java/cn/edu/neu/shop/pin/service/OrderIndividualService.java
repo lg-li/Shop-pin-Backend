@@ -4,10 +4,7 @@ import cn.edu.neu.shop.pin.exception.OrderItemsAreNotInTheSameStoreException;
 import cn.edu.neu.shop.pin.exception.ProductSoldOutException;
 import cn.edu.neu.shop.pin.exception.RecordNotFoundException;
 import cn.edu.neu.shop.pin.mapper.PinOrderIndividualMapper;
-import cn.edu.neu.shop.pin.model.PinOrderIndividual;
-import cn.edu.neu.shop.pin.model.PinOrderItem;
-import cn.edu.neu.shop.pin.model.PinUser;
-import cn.edu.neu.shop.pin.model.PinUserAddress;
+import cn.edu.neu.shop.pin.model.*;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -338,6 +335,16 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
         } else {
             return list.subList((pageNumber - 1) * pageSize, list.size());
         }
+    }
+
+    /**
+     * @author flyhero
+     * 确认收获
+     *
+     */
+    public void confirmReceiveProduct(Integer orderIndividualId) {
+        PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
+        orderIndividual.setStatus();
     }
 
 //    public void kickOutAnOrder(Integer orderIndividualId) {
