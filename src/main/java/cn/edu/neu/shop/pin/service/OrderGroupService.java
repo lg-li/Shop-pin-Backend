@@ -15,14 +15,13 @@ import cn.edu.neu.shop.pin.websocket.WebSocketService;
 import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 /**
  * @author flyhero
- * @Description 获取OrderGroup（当前团单信息）表中的内容
+ * 获取OrderGroup（当前团单信息）表中的内容
  */
 @Service
 public class OrderGroupService extends AbstractService<PinOrderGroup> {
@@ -44,37 +43,40 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
     //    public static final int STATUS_QUIT_ORDER_GROUP_SUCCESS = -10;
     public static final int STATUS_QUIT_ORDER_GROUP_FAILED = -11;
 
-    public static final int GROUP_CLOSE_DELAY_MILLISECOND = 7200000;
+    private static final int GROUP_CLOSE_DELAY_MILLISECOND = 7200000;
 
-    @Autowired
-    private PinOrderIndividualMapper individualMapper;
+    private final PinOrderIndividualMapper individualMapper;
 
-    @Autowired
-    private PinOrderGroupMapper pinOrderGroupMapper;
+    private final PinOrderGroupMapper pinOrderGroupMapper;
 
-    @Autowired
-    private StoreService storeService;
+    private final StoreService storeService;
 
-    @Autowired
-    private OrderItemService orderItemService;
+    private final OrderItemService orderItemService;
 
-    @Autowired
-    private OrderIndividualService orderIndividualService;
+    private final OrderIndividualService orderIndividualService;
 
-    @Autowired
-    private OrderGroupService orderGroupService;
+    private final OrderGroupService orderGroupService;
 
-    @Autowired
-    private WebSocketService webSocketService;
+    private final WebSocketService webSocketService;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private StoreCloseBatchService storeCloseBatchService;
+    private final StoreCloseBatchService storeCloseBatchService;
+
+    public OrderGroupService(PinOrderIndividualMapper individualMapper, PinOrderGroupMapper pinOrderGroupMapper, StoreService storeService, OrderItemService orderItemService, OrderIndividualService orderIndividualService, OrderGroupService orderGroupService, WebSocketService webSocketService, UserService userService, StoreCloseBatchService storeCloseBatchService) {
+        this.individualMapper = individualMapper;
+        this.pinOrderGroupMapper = pinOrderGroupMapper;
+        this.storeService = storeService;
+        this.orderItemService = orderItemService;
+        this.orderIndividualService = orderIndividualService;
+        this.orderGroupService = orderGroupService;
+        this.webSocketService = webSocketService;
+        this.userService = userService;
+        this.storeCloseBatchService = storeCloseBatchService;
+    }
 
     /**
-     * @return
+     * @return OrderGroup的list
      * @author flyhero
      * 获取某一店铺当前活跃的前十条拼团数据
      */
@@ -83,7 +85,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
     }
 
     /**
-     * @param orderGroupId
+     * @param orderGroupId 团单ID
      * @return 拼单的人的list
      * @author flyhero
      * 传入orderGroup 返回拼单的人
@@ -94,8 +96,8 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
     }
 
     /**
-     * @param orderGroupId
-     * @return
+     * @param orderGroupId 团单ID
+     * @return 团单中的人数
      * @author flyhero
      * 返回在某一团单中的人数
      */
@@ -104,7 +106,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
     }
 
     /**
-     * @param orderIndividualId
+     * @param orderIndividualId 订单ID
      * @author flyhero
      * 新建一个团单
      */
@@ -158,6 +160,16 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         if (!orderIndividual.getPaid() || orderIndividual.getStatus() != 0) {
             // 给定的订单不满足加团条件：1.isPaid不是未付款 2.status不是0-待发货
             return STATUS_NOT_ALLOWED;
+        }
+        PinOrderGroup sample = new PinOrderGroup();
+        sample.setOwnerUserId(userId);
+        sample.setStoreId(storeId);
+        List<PinOrderGroup> orderGroups = pinOrderGroupMapper.select(sample);
+        for(PinOrderGroup orderGroup1 : orderGroups) {
+            // 找到了此店铺此人创建的正在可用的团，则无法再用其他订单新建一个团
+            if(orderGroup1.getStatus() == 0) {
+                return STATUS_NOT_ALLOWED;
+            }
         }
         if (orderIndividual.getOrderGroupId() != null) {
             // orderGroupId不为空，已在某一团单中，返回团单ID
