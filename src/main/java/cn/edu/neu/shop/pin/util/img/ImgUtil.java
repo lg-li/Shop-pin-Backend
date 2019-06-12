@@ -5,10 +5,10 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import sun.misc.BASE64Decoder;
 
 import java.io.*;
 import java.util.Arrays;
+import java.util.Base64;
 
 public class ImgUtil {
     public static String getSuffix(byte[] source) {
@@ -29,27 +29,22 @@ public class ImgUtil {
     }
 
     public static JSONObject upload(String image, String url) {
-        try {
-            BASE64Decoder decoder = new BASE64Decoder();
-            byte[] rawBytes = decoder.decodeBuffer(image);
-            String suffix = getSuffix(rawBytes);//获取图片的后缀名，也可以是其他任意文件名
-            String fileName = "myImage" + suffix;
-            ByteArrayResource fileResource = new ByteArrayResource(rawBytes);
-            MultiValueMap<String, Object> postParameters = new LinkedMultiValueMap<String, Object>();
-            postParameters.add("smfile", fileResource);
-            RestTemplate restTemplate = new RestTemplate();
-            JSONObject response = new JSONObject();
-            try{
-                response = restTemplate.postForObject(url, postParameters, JSONObject.class);
-                System.out.println(response);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-            return response;
-        } catch (IOException e) {
+        Base64.Decoder decoder = Base64.getDecoder();
+        byte[] rawBytes = decoder.decode(image);
+        String suffix = getSuffix(rawBytes);//获取图片的后缀名，也可以是其他任意文件名
+        String fileName = "myImage" + suffix;
+        ByteArrayResource fileResource = new ByteArrayResource(rawBytes);
+        MultiValueMap<String, Object> postParameters = new LinkedMultiValueMap<String, Object>();
+        postParameters.add("smfile", fileResource);
+        RestTemplate restTemplate = new RestTemplate();
+        JSONObject response = new JSONObject();
+        try{
+            response = restTemplate.postForObject(url, postParameters, JSONObject.class);
+            System.out.println(response);
+        }catch (Exception e){
             e.printStackTrace();
-            return null;
         }
+        return response;
     }
 
     public static String bytesToHexString(byte[] src) {
