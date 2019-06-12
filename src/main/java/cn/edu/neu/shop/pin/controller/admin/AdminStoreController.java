@@ -131,7 +131,7 @@ public class AdminStoreController {
     public JSONObject addGroupCloseBatchTime(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try{
             Integer storeId = Integer.valueOf(httpServletRequest.getHeader("Current-Store"));
-            Date date = requestJSON.getDate("time");
+            Date date = requestJSON.getDate("closeBatch");
             storeCloseBatchService.addGroupCloseBatch(storeId, date);
             JSONObject data = new JSONObject();
             data.put("closeBatch", data);
