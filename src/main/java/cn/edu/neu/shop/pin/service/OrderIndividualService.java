@@ -342,13 +342,13 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
             // 用户ID不符
             return STATUS_CONFIRM_PERMISSION_DENIED;
         }
-        if(orderIndividual.getStatus() != 2) {
+        if(orderIndividual.getStatus() != PinOrderIndividual.STATUS_SHIPPED) {
             // 订单状态不符合确认收货条件
             return STATUS_CONFIRM_FAILED;
         }
         // 执行确认收货操作
         orderIndividual.setConfirmReceiptTime(new Date());
-        orderIndividual.setStatus(2);
+        orderIndividual.setStatus(PinOrderIndividual.STATUS_PENDING_COMMENT);
         orderIndividualService.update(orderIndividual);
         // TODO: 给商家推送确认收货
         return STATUS_CONFIRM_SUCCESS;

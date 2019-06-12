@@ -55,16 +55,15 @@ public class UserService extends AbstractService<PinUser> {
 
     /**
      * 登录接口
-     *
-     * @param id       用户 ID
+     * @param userId 用户 ID
      * @param password 密码明文
      * @return 生成的token
      * @throws CredentialException 凭据错误异常
      */
-    public String signIn(Integer id, String password) throws CredentialException {
+    public String signIn(Integer userId, String password) throws CredentialException {
         try {
-            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(id, password));
-            return jwtTokenProvider.createToken(id, userRoleListTransferService.findById(id).getRoles());
+            authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userId, password));
+            return jwtTokenProvider.createToken(userId, userRoleListTransferService.findById(userId).getRoles());
         } catch (AuthenticationException e) {
             e.printStackTrace();
             throw new CredentialException("Invalid id/password supplied", HttpStatus.UNPROCESSABLE_ENTITY);
@@ -76,17 +75,12 @@ public class UserService extends AbstractService<PinUser> {
         if (pinUser == null) {
             return null;
         }
-        return jwtTokenProvider.createToken(
-                pinUser.getId(),
-                userRoleListTransferService
-                        .findById(pinUser.getId())
-                        .getRoles());
+        return jwtTokenProvider.createToken(pinUser.getId(), userRoleListTransferService.findById(pinUser.getId()).getRoles());
     }
 
 
     /**
      * 注册并获取新用户token
-     *
      * @param phone     手机号
      * @param email     邮箱
      * @param password  密码
@@ -103,7 +97,6 @@ public class UserService extends AbstractService<PinUser> {
 
     /**
      * 注册并获取新用户实体对象
-     *
      * @param phone     手机号
      * @param email     邮箱
      * @param password  密码
@@ -126,7 +119,6 @@ public class UserService extends AbstractService<PinUser> {
 
     /**
      * 注册用户
-     *
      * @param user 用户信息（密码传入时保持明文）
      * @return 登录后 Token
      */
@@ -177,11 +169,11 @@ public class UserService extends AbstractService<PinUser> {
         return data;
     }
 
-    public PinUser findByEmail(String email) {
+    private PinUser findByEmail(String email) {
         return findBy("email", email);
     }
 
-    public PinUser findByPhone(String phone) {
+    private PinUser findByPhone(String phone) {
         return findBy("phone", phone);
     }
 
@@ -200,8 +192,8 @@ public class UserService extends AbstractService<PinUser> {
     /**
      * @author flyhero
      * 根据orderGroupId查找团单内所有orderIndividual对应的用户
-     * @param orderGroupId
-     * @return
+     * @param orderGroupId 团单ID
+     * @return User List
      */
     public List<PinUser> getUsersByOrderGroupId(Integer orderGroupId) {
         List<PinOrderIndividual> list = orderIndividualService.getOrderIndividualsByOrderGroupId(orderGroupId);
@@ -210,5 +202,91 @@ public class UserService extends AbstractService<PinUser> {
             userList.add(userService.findById(individual.getUserId()));
         }
         return userList;
+    }
+
+    /**
+     * @author flyhero
+     * 更新电话号码
+     * @param userId 用户ID
+     * @param phone 电话号码
+     * @return 是否更新成功
+     */
+    public Boolean updatePhone(Integer userId, String phone) {
+        // 因发生某些错误，前端传过来的phone值为空，更新失败
+        if(phone == null) return false;
+        PinUser user = userService.findById(userId);
+        user.setPhone(phone);
+        // 成功更新
+        userService.update(user);
+        return true;
+    }
+
+    /**
+     * @author flyhero
+     * 更新密码
+     * @param userId 用户ID
+     * @param password 密码
+     * @return 是否更新成功
+     */
+    public Boolean updatePassword(Integer userId, String password) {
+        // 因发生某些错误，前端传过来的password值为空，更新失败
+        if(password == null) return false;
+        PinUser user = userService.findById(userId);
+        // 将密码加密
+        String passwordHash = passwordEncoder.encode(password);
+        user.setPhone(passwordHash);
+        // 成功更新
+        userService.update(user);
+        return true;
+    }
+
+    /**
+     * @author flyhero
+     * 更新电子邮箱
+     * @param userId 用户ID
+     * @param email 电子邮箱地址
+     * @return 是否更新成功
+     */
+    public Boolean updateEmail(Integer userId, String email) {
+        // 因发生某些错误，前端传过来的email值为空，更新失败
+        if(email == null) return false;
+        PinUser user = userService.findById(userId);
+        user.setEmail(email);
+        // 成功更新
+        userService.update(user);
+        return true;
+    }
+
+    /**
+     * @author flyhero
+     * 更新用户头像
+     * @param userId 用户ID
+     * @param avatarUrl 头像图片链接
+     * @return 是否更新成功
+     */
+    public Boolean updateAvatarUrl(Integer userId, String avatarUrl) {
+        // 因发生某些错误，前端传过来的avatarUrl值为空，更新失败
+        if(avatarUrl == null) return false;
+        PinUser user = userService.findById(userId);
+        user.setAvatarUrl(avatarUrl);
+        // 成功更新
+        userService.update(user);
+        return true;
+    }
+
+    /**
+     * @author flyhero
+     * 更新其余一些常规的信息
+     * @param userId 传入userID
+     * @param userInfoToUpdate 传入附带有一些字段的User对象，表示待更新的信息
+     * @return 是否成功更新
+     */
+    public Boolean updateCommonUserInfo(Integer userId, PinUser userInfoToUpdate) {
+        // 因发生某些错误，前端传过来的userInfoToUpdate对象为空，更新失败
+        if(userInfoToUpdate == null) return false;
+        userInfoToUpdate.setId(userId);
+        // 成功更新
+        userService.update(userInfoToUpdate);
+        return true;
     }
 }
