@@ -99,7 +99,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
      * @author flyhero
      * 返回在某一团单中的人数
      */
-    public Integer getUserNumberInAOrderGroup(Integer orderGroupId) {
+    private Integer getUserNumberInAOrderGroup(Integer orderGroupId) {
         return getUsersByOrderGroup(orderGroupId).size();
     }
 
@@ -204,13 +204,12 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
     /**
      * @author flyhero
      * 退出团单
-     * @param userId
-     * @param storeId
-     * @param orderIndividualId
-     * @param orderGroupId
-     * @return
+     * @param userId 用户ID
+     * @param orderIndividualId 订单ID
+     * @param orderGroupId 团单ID
+     * @return 退出状态
      */
-    public Integer quitOrderGroup(Integer userId, Integer storeId, Integer orderIndividualId, Integer orderGroupId) {
+    public Integer quitOrderGroup(Integer userId, Integer orderIndividualId, Integer orderGroupId) {
         PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
         PinOrderGroup orderGroup = this.findById(orderGroupId);
         if (!Objects.equals(userId, orderIndividual.getUserId())) {
@@ -274,12 +273,12 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
     }
 
     /**
-     * @param storeId
-     * @return
+     * @param storeId 店铺ID
+     * @return 返回距离现在最近的收团时间
      * @author flyhero
      * 设置拼团的截止时间
      */
-    private Date getOrderGroupCloseTimeFromNow(Integer storeId) {
+    public Date getOrderGroupCloseTimeFromNow(Integer storeId) {
         // 获设置拼团时间
         PinStoreGroupCloseBatch recentBatch = storeCloseBatchService.getRecentGroupCloseBatchTime(storeId);
         long timeSecondsStampOfClosing;
@@ -290,12 +289,12 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
             timeSecondsStampOfClosing *= 60000; // 恢复大小到毫秒
         } else if (recentBatch.getTime().before(new Date(new Date().getTime() + 600000))) {
             // 返回的是下一天的第一批
-            long current = System.currentTimeMillis() + 8 * 1000 * 3600; // 添加时区offset
+            long current = System.currentTimeMillis();
             long zero = (current / (1000 * 3600 * 24) + 1) * (1000 * 3600 * 24);
             timeSecondsStampOfClosing = zero + recentBatch.getTime().getTime();
         } else {
             // 已指定配送批次，选择最近时间收团
-            long current = System.currentTimeMillis() + 8 * 1000 * 3600; // 添加时区offset
+            long current = System.currentTimeMillis();
             long zero = current / (1000 * 3600 * 24) * (1000 * 3600 * 24);
             timeSecondsStampOfClosing = zero + recentBatch.getTime().getTime();
         }
@@ -339,7 +338,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
                 if (item.getCreateTime().getTime() <= end.getTime())
                     returnList.add(item);
             }
-        } else if (end == null && begin != null) {
+        } else if (begin != null) {
             for (PinOrderGroup item : list) {
                 if (item.getCreateTime().getTime() >= begin.getTime())
                     returnList.add(item);
