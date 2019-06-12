@@ -63,7 +63,7 @@ public class OrderController {
 
     /**
      * @author flyhero
-     * 获取所有订单信息
+     * 获取购物车中所有OrderItem的信息
      * @param httpServletRequest HttpServlet请求体
      * @return 获取OrderItem的成功标志
      */
