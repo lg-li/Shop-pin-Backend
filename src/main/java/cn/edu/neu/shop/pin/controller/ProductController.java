@@ -96,7 +96,7 @@ public class ProductController {
     public JSONObject getProductById(@PathVariable(value = "productId") Integer productId) {
         try {
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
-                    productService.getProductById(productId));
+                    productService.getProductByIdWithOneComment(productId));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);

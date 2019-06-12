@@ -6,6 +6,7 @@ import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,11 +26,14 @@ public class ProductService extends AbstractService<PinProduct> {
 
     private final PinUserProductCollectionMapper pinUserProductCollectionMapper;
 
-    public ProductService(PinProductMapper pinProductMapper, PinProductAttributeDefinitionMapper pinProductAttributeDefinitionMapper, PinProductAttributeValueMapper pinProductAttributeValueMapper, PinUserProductCollectionMapper pinUserProductCollectionMapper) {
+    private final PinUserProductCommentMapper pinUserProductCommentMapper;
+
+    public ProductService(PinProductMapper pinProductMapper, PinProductAttributeDefinitionMapper pinProductAttributeDefinitionMapper, PinProductAttributeValueMapper pinProductAttributeValueMapper, PinUserProductCollectionMapper pinUserProductCollectionMapper, PinUserProductCommentMapper pinUserProductCommentMapper) {
         this.pinProductMapper = pinProductMapper;
         this.pinProductAttributeDefinitionMapper = pinProductAttributeDefinitionMapper;
         this.pinProductAttributeValueMapper = pinProductAttributeValueMapper;
         this.pinUserProductCollectionMapper = pinUserProductCollectionMapper;
+        this.pinUserProductCommentMapper = pinUserProductCommentMapper;
     }
 
     /**
@@ -48,6 +52,22 @@ public class ProductService extends AbstractService<PinProduct> {
         pinProduct.setProductAttributeDefinitions(defList);
         pinProduct.setProductAttributeValues(valList);
         return pinProduct;
+    }
+
+    /**
+     * 根据商品Id 获取商品详情信息
+     * @param productId 商品 ID
+     * @return JSON 包装了Product和一条grade为0的（好评）评论
+     */
+    public JSONObject getProductByIdWithOneComment(Integer productId) {
+        PinProduct product = getProductById(productId);
+        PinUserProductComment commentSample = new PinUserProductComment();
+        commentSample.setGrade(0);
+        PinUserProductComment comment = pinUserProductCommentMapper.selectOne(commentSample);
+        JSONObject returnJSON = new JSONObject();
+        returnJSON.put("productInfo", product);
+        returnJSON.put("comment", comment);
+        return returnJSON;
     }
 
     /**
