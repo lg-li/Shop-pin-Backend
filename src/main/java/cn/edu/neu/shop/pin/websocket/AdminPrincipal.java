@@ -6,11 +6,7 @@ public class AdminPrincipal implements Principal {
 
     private Integer userId;
 
-    public AdminPrincipal() {
-        super();
-    }
-
-    public AdminPrincipal(Integer userId) {
+    AdminPrincipal(Integer userId) {
         this.userId = userId;
     }
 
