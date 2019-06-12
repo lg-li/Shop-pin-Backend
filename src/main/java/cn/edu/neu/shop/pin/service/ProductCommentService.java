@@ -6,7 +6,6 @@ import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -19,11 +18,11 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
     public static final int STATUS_ADD_COMMENT_SUCCESS = 0;
     public static final int STATUS_ADD_COMMENT_FAILED = -1;
 
-    @Autowired
-    private PinUserProductCommentMapper pinUserProductCommentMapper;
+    private final PinUserProductCommentMapper pinUserProductCommentMapper;
 
-    @Autowired
-    private ProductCommentService productCommentService;
+    public ProductCommentService(PinUserProductCommentMapper pinUserProductCommentMapper) {
+        this.pinUserProductCommentMapper = pinUserProductCommentMapper;
+    }
 
     /**
      * @author flyhero
