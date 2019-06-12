@@ -38,7 +38,13 @@ public class ImgUtil {
             MultiValueMap<String, Object> postParameters = new LinkedMultiValueMap<String, Object>();
             postParameters.add("smfile", fileResource);
             RestTemplate restTemplate = new RestTemplate();
-            JSONObject response = restTemplate.postForObject(url, postParameters, JSONObject.class);
+            JSONObject response = new JSONObject();
+            try{
+                response = restTemplate.postForObject(url, postParameters, JSONObject.class);
+                System.out.println(response);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
             return response;
         } catch (IOException e) {
             e.printStackTrace();
