@@ -84,4 +84,11 @@
     and pin_product.store_id = #{storeId}
     group by pin_product.name
   </select>
+
+  <!-- 商家回复评论-->
+  <update id="updateMerchantComment">
+    update pin_user_product_comment
+    set merchant_comment_content = #{commentContent}, merchant_comment_time = #{commentTime}
+    where id = #{commentId}
+  </update>
 </mapper>

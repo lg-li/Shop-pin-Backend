@@ -107,4 +107,8 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
     public List<JSONObject> getProductWithComment(Integer storeId) {
         return pinUserProductCommentMapper.getAllProductWithComment(storeId);
     }
+
+    public void updateMerchantCommentContent(Integer commentId, String commentContent, Date commentTime){
+        pinUserProductCommentMapper.updateMerchantComment(commentId, commentContent, commentTime);
+    }
 }

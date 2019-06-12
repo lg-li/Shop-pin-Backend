@@ -18,4 +18,6 @@ public interface PinUserProductCommentMapper extends BaseMapper<PinUserProductCo
     Integer getNumberOfMerchantNotComment(Integer storeId);
 
     List<JSONObject> getAllProductWithComment(Integer storeId);
+
+    void updateMerchantComment(Integer commentId, String commentContent, Date commentTime);
 }
