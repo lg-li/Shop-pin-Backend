@@ -11,7 +11,6 @@ import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,11 +22,14 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping(value = "/commons/payment")
 public class PaymentController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private PaymentService paymentService;
+    private final PaymentService paymentService;
+
+    public PaymentController(UserService userService, PaymentService paymentService) {
+        this.userService = userService;
+        this.paymentService = paymentService;
+    }
 
     @PostMapping(value = "/unified-pay")
     public JSONObject unifiedPay(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestObject) {
