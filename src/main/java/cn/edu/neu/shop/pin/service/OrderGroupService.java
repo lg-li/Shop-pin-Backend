@@ -55,21 +55,18 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
 
     private final OrderIndividualService orderIndividualService;
 
-    private final OrderGroupService orderGroupService;
-
     private final WebSocketService webSocketService;
 
     private final UserService userService;
 
     private final StoreCloseBatchService storeCloseBatchService;
 
-    public OrderGroupService(PinOrderIndividualMapper individualMapper, PinOrderGroupMapper pinOrderGroupMapper, StoreService storeService, OrderItemService orderItemService, OrderIndividualService orderIndividualService, OrderGroupService orderGroupService, WebSocketService webSocketService, UserService userService, StoreCloseBatchService storeCloseBatchService) {
+    public OrderGroupService(PinOrderIndividualMapper individualMapper, PinOrderGroupMapper pinOrderGroupMapper, StoreService storeService, OrderItemService orderItemService, OrderIndividualService orderIndividualService, WebSocketService webSocketService, UserService userService, StoreCloseBatchService storeCloseBatchService) {
         this.individualMapper = individualMapper;
         this.pinOrderGroupMapper = pinOrderGroupMapper;
         this.storeService = storeService;
         this.orderItemService = orderItemService;
         this.orderIndividualService = orderIndividualService;
-        this.orderGroupService = orderGroupService;
         this.webSocketService = webSocketService;
         this.userService = userService;
         this.storeCloseBatchService = storeCloseBatchService;
@@ -135,7 +132,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         orderGroup.setStatus(0);
         orderGroup.setCreateTime(new Date());
         orderGroup.setCloseTime(getOrderGroupCloseTimeFromNow(storeId));
-        orderGroupService.save(orderGroup);
+        this.save(orderGroup);
         // 将orderGroup挂载到orderIndividual上
         orderIndividual.setOrderGroupId(orderIndividualId);
         orderIndividualService.update(orderIndividual);
@@ -152,7 +149,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
      */
     public Integer joinOrderGroup(Integer userId, Integer storeId, Integer orderIndividualId, Integer orderGroupId) {
         PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
-        PinOrderGroup orderGroup = orderGroupService.findById(orderGroupId);
+        PinOrderGroup orderGroup = this.findById(orderGroupId);
         if (!Objects.equals(userId, orderIndividual.getUserId())) {
             // 用户ID不符，返回权限不够
             return STATUS_PERMISSION_DENIED;
@@ -183,7 +180,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
             // 指定的团单已结束
             return STATUS_JOIN_ORDER_GROUP_IS_ENDED;
         }
-        Integer userNum = orderGroupService.getUserNumberInAOrderGroup(orderGroupId);
+        Integer userNum = this.getUserNumberInAOrderGroup(orderGroupId);
         Integer limit = storeService.getStoreById(storeId).getPeopleLimit();
         if (userNum >= limit) {
             // 指定的团单人数已满
@@ -212,7 +209,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
      */
     public Integer quitOrderGroup(Integer userId, Integer storeId, Integer orderIndividualId, Integer orderGroupId) {
         PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
-        PinOrderGroup orderGroup = orderGroupService.findById(orderGroupId);
+        PinOrderGroup orderGroup = this.findById(orderGroupId);
         if (!Objects.equals(userId, orderIndividual.getUserId())) {
             // 用户ID不符，返回权限不够
             return STATUS_PERMISSION_DENIED;
@@ -240,7 +237,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
      * @param customerPrincipal 客户principal
      */
     public void sendGroupInitMessageToSingle(CustomerPrincipal customerPrincipal) {
-        PinOrderGroup orderGroup = orderGroupService.findById(customerPrincipal.getOrderGroupId());
+        PinOrderGroup orderGroup = this.findById(customerPrincipal.getOrderGroupId());
         PinOrderIndividual orderIndividualOfCurrentUser = orderIndividualService.findById(customerPrincipal.getOrderIndividualId());
         if (orderGroup == null || orderIndividualOfCurrentUser == null) {
             webSocketService.sendSingleErrorMessage(customerPrincipal,
