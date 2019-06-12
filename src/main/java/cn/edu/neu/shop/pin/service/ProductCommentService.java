@@ -1,5 +1,7 @@
 package cn.edu.neu.shop.pin.service;
 
+import cn.edu.neu.shop.pin.exception.CommentFailedException;
+import cn.edu.neu.shop.pin.exception.PermissionDeniedException;
 import cn.edu.neu.shop.pin.mapper.PinUserProductCommentMapper;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.model.PinUserProductComment;
@@ -7,21 +9,28 @@ import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class ProductCommentService extends AbstractService<PinUserProductComment> {
 
     public static final int STATUS_ADD_COMMENT_SUCCESS = 0;
     public static final int STATUS_ADD_COMMENT_FAILED = -1;
+    public static final int STATUS_ADD_COMMENT_PERMISSION_DENIED = -2;
 
     private final PinUserProductCommentMapper pinUserProductCommentMapper;
 
     private final OrderIndividualService orderIndividualService;
+
+    @Autowired
+    private ProductService productService;
 
     public ProductCommentService(PinUserProductCommentMapper pinUserProductCommentMapper, OrderIndividualService orderIndividualService) {
         this.pinUserProductCommentMapper = pinUserProductCommentMapper;
@@ -32,43 +41,41 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
      * @author flyhero
      * 为商品添加评论
      * @param userId 用户ID
-     * @param orderIndividualId 订单ID
-     * @param productId 产品ID
-     * @param skuId skuID
-     * @param grade 0-好评，1-中评，2-差评
-     * @param productScore 产品评分（1～5）
-     * @param serviceScore 服务评分（1～5）
-     * @param content 评论内容
-     * @param imagesUrls 评论图片
-     * @return 添加评论成功与否的状态
+     * @param comments 评论对象集合
      */
-    public Integer addComment(Integer userId, Integer orderIndividualId, Integer productId, Integer skuId, Integer grade,
-                           Integer productScore, Integer serviceScore, String content, String imagesUrls) {
+    @Transactional
+    public void addComment(Integer userId, List<PinUserProductComment> comments) throws PermissionDeniedException, CommentFailedException {
+        // 传进来数组为空
+        if(comments == null || comments.size() == 0) return;
+        // 得到orderIndividual
+        Integer orderIndividualId = comments.get(0).getOrderIndividualId();
+        Integer skuId = comments.get(0).getSkuId();
         PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
-        PinUserProductComment commentSample = new PinUserProductComment();
-        commentSample.setOrderIndividualId(orderIndividualId);
-        commentSample.setSkuId(skuId);
-        List<PinUserProductComment> list = pinUserProductCommentMapper.select(commentSample);
-        if(list != null || orderIndividual.getStatus() != PinOrderIndividual.STATUS_PENDING_COMMENT) {
-            // 表中已有对此订单的评论，或订单状态不是"待评价"
-            return STATUS_ADD_COMMENT_FAILED;
+        if(!Objects.equals(userId, orderIndividual.getUserId())) { // 用户ID不符
+            throw new PermissionDeniedException("Caused by ProductCommentService: 评论用户与订单所属用户ID不符！");
+        } else if(orderIndividual.getStatus() != PinOrderIndividual.STATUS_PENDING_COMMENT) {
+            // 订单状态不是"待评价"
+            throw new CommentFailedException("Caused by ProductCommentService: 添加评论失败，订单状态异常！");
         }
-        // 评论表中新增一条记录
-        PinUserProductComment comment = new PinUserProductComment();
-        comment.setUserId(userId);
-        comment.setOrderIndividualId(orderIndividualId);
-        comment.setProductId(productId);
-        comment.setSkuId(skuId);
-        comment.setGrade(grade);
-        comment.setProductScore(productScore);
-        comment.setServiceScore(serviceScore);
-        comment.setContent(content);
-        comment.setImagesUrls(imagesUrls);
-        pinUserProductCommentMapper.insert(comment);
-        // 更新订单状态为已评价
-        orderIndividual.setStatus(PinOrderIndividual.STATUS_PENDING_COMMENT);
-        orderIndividualService.update(orderIndividual);
-        return STATUS_ADD_COMMENT_SUCCESS;
+        // 评价此订单中的所有商品（精确到sku）
+        for(PinUserProductComment comment : comments) {
+            // 检查是否已评论
+            PinUserProductComment commentSample = new PinUserProductComment();
+            commentSample.setOrderIndividualId(orderIndividualId);
+            commentSample.setSkuId(skuId);
+            PinUserProductComment checkIfExists = pinUserProductCommentMapper.selectOne(commentSample);
+            if(checkIfExists != null) { // 如果评论已存在，则覆盖更新这条评论
+                comment.setId(checkIfExists.getId());
+                this.update(comment);
+            } else { // 新鲜的评论
+                // 由于前端只返回了skuId而没有返回productId，因此需要根据skuId找到其对应的productId
+                comment.setProductId(productService.findBy("skuId", skuId).getId());
+                pinUserProductCommentMapper.insert(comment); // 评论表中新增一条记录
+                // 更新订单状态为已评价
+                orderIndividual.setStatus(PinOrderIndividual.STATUS_COMMENTED);
+                orderIndividualService.update(orderIndividual);
+            }
+        }
     }
 
     /**
