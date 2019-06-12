@@ -136,4 +136,9 @@ public class AdminProductController {
         }
     }
 
+    @PostMapping("/create-product")
+    public JSONObject createProduct(@RequestBody JSONObject requestJSON){
+        return null;
+    }
+
 }

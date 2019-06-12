@@ -85,9 +85,7 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
      */
     public PageInfo<PinUserProductComment> getCommentByProductIdByPage(Integer productId, Integer pageNum, Integer pageSize) {
         return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> {
-            PinUserProductComment pinUserProductComment = new PinUserProductComment();
-            pinUserProductComment.setProductId(productId);
-            pinUserProductCommentMapper.select(pinUserProductComment);
+            pinUserProductCommentMapper.getCommentAndUserInfo(productId);
         });
     }
 
