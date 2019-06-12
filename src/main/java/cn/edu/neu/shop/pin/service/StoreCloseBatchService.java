@@ -17,12 +17,12 @@ public class StoreCloseBatchService extends AbstractService<PinStoreGroupCloseBa
     private PinStoreGroupCloseBatchMapper pinStoreGroupCloseBatchMapper;
 
     public List<PinStoreGroupCloseBatch> getGroupCloseBatchTime(Integer storeId) {
-        return pinStoreGroupCloseBatchMapper.getStoreGroupCloseBatchByStoreIdAndTimeDesc(storeId);
+        return pinStoreGroupCloseBatchMapper.getStoreGroupCloseBatchByStoreIdAndTimeAsc(storeId);
     }
 
     public PinStoreGroupCloseBatch getRecentGroupCloseBatchTime(Integer storeId) {
         List<PinStoreGroupCloseBatch> list = getGroupCloseBatchTime(storeId);
-        if(list.size() == 0) return null;
+        if(list == null || list.size() == 0) return null;
         for(PinStoreGroupCloseBatch batch : list) {
             Date nowPlusTenMinutes = new Date(new Date().getTime() + 600000);
             if(nowPlusTenMinutes.before(batch.getTime())) {

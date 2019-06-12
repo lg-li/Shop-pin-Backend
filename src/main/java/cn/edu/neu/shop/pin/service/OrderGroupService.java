@@ -283,21 +283,43 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         PinStoreGroupCloseBatch recentBatch = storeCloseBatchService.getRecentGroupCloseBatchTime(storeId);
         long timeSecondsStampOfClosing;
         if (recentBatch == null) {
-            // 向下取整到整点分钟
+            // 向下取整到整点分钟，测试通过
             // 未指定配送批次则2小时后收团
             timeSecondsStampOfClosing = ((System.currentTimeMillis() + GROUP_CLOSE_DELAY_MILLISECOND) / 60000);
             timeSecondsStampOfClosing *= 60000; // 恢复大小到毫秒
-        } else if (recentBatch.getTime().before(new Date(new Date().getTime() + 600000))) {
-            // 返回的是下一天的第一批
-            long current = System.currentTimeMillis();
-            long zero = (current / (1000 * 3600 * 24) + 1) * (1000 * 3600 * 24);
-            timeSecondsStampOfClosing = zero + recentBatch.getTime().getTime();
-        } else {
-            // 已指定配送批次，选择最近时间收团
+        }
+        else {
             long current = System.currentTimeMillis();
             long zero = current / (1000 * 3600 * 24) * (1000 * 3600 * 24);
-            timeSecondsStampOfClosing = zero + recentBatch.getTime().getTime();
+            if(zero + recentBatch.getTime().getTime() > new Date().getTime() + 600000) {
+                // 返回的是下一天的第一批
+                current = System.currentTimeMillis();
+                zero = (current / (1000 * 3600 * 24) + 1) * (1000 * 3600 * 24);
+                timeSecondsStampOfClosing = zero + recentBatch.getTime().getTime();
+                System.out.println("date: " + new Date(timeSecondsStampOfClosing));
+            }
+            else {
+                current = System.currentTimeMillis();
+                zero = current / (1000 * 3600 * 24) * (1000 * 3600 * 24);
+                timeSecondsStampOfClosing = zero + recentBatch.getTime().getTime();
+                System.out.println("选择最近时间: " + new Date(timeSecondsStampOfClosing));
+            }
         }
+//        else if (recentBatch.getTime().before(new Date(new Date().getTime() + 600000))) {
+//            System.out.println("batch time: " + recentBatch.getTime());
+//
+//            // 返回的是下一天的第一批
+//            long current = System.currentTimeMillis();
+//            long zero = (current / (1000 * 3600 * 24) + 1) * (1000 * 3600 * 24);
+//            timeSecondsStampOfClosing = zero + recentBatch.getTime().getTime();
+//            System.out.println("date: " + new Date(timeSecondsStampOfClosing));
+//        } else {
+//            // 已指定配送批次，选择最近时间收团，测试通过
+//            long current = System.currentTimeMillis();
+//            long zero = current / (1000 * 3600 * 24) * (1000 * 3600 * 24);
+//            timeSecondsStampOfClosing = zero + recentBatch.getTime().getTime();
+//            System.out.println("选择最近时间: " + new Date(timeSecondsStampOfClosing));
+//        }
         return new Date(timeSecondsStampOfClosing);
     }
 

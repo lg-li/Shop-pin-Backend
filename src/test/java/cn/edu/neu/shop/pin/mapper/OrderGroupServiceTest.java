@@ -3,7 +3,6 @@ package cn.edu.neu.shop.pin.mapper;
 import cn.edu.neu.shop.pin.service.OrderGroupService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
