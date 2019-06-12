@@ -469,7 +469,7 @@ public class UsersController {
     public JSONObject updatePassword(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         PinUser user = userService.whoAmI(httpServletRequest);
         String password = requestJSON.getString("password");
-        Boolean updateSuccess = userService.updatePhone(user.getId(), password);
+        Boolean updateSuccess = userService.updatePassword(user.getId(), password);
         if(updateSuccess) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "密码更新成功！", null);
         } else {
@@ -488,7 +488,7 @@ public class UsersController {
     public JSONObject updateAvatarUrl(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         PinUser user = userService.whoAmI(httpServletRequest);
         String avatarUrl = requestJSON.getString("avatarUrl");
-        Boolean updateSuccess = userService.updatePhone(user.getId(), avatarUrl);
+        Boolean updateSuccess = userService.updateAvatarUrl(user.getId(), avatarUrl);
         if(updateSuccess) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "头像更换成功！", null);
         } else {
