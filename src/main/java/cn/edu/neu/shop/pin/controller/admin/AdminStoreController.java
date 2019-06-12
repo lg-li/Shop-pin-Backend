@@ -7,6 +7,7 @@ import cn.edu.neu.shop.pin.service.StoreService;
 import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
+import cn.edu.neu.shop.pin.util.img.ImgUtil;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -97,6 +98,12 @@ public class AdminStoreController {
         } catch (Exception e) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
+    }
+
+    @PostMapping("/upload")
+    public JSONObject uploadStoreInfo(HttpServletRequest httpServletRequest,@RequestBody JSONObject uploadingInfo){
+        String base64Img = uploadingInfo.getString("image");
+        return ImgUtil.upload(base64Img,"https://sm.ms/api/upload");
     }
 
 }

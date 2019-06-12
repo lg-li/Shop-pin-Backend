@@ -35,7 +35,7 @@ public class PinOrderIndividualMapperTest {
 
     @Test
     public void getOrdersByKeyWord(){
-        List<PinOrderIndividual> list = pinOrderIndividualMapper.getAllWithProductsByKeyWord("Rica",1);
+        List<PinOrderIndividual> list = pinOrderIndividualMapper.getAllWithProductsByKeyWord("沈阳",1);
         System.out.println("pause");
     }
 }
