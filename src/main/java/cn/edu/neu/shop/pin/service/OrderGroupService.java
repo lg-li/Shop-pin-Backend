@@ -34,7 +34,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
     public static final int STATUS_PERMISSION_DENIED = -2;
     public static final int STATUS_NOT_ALLOWED = -3;
 
-    //    public static final int STATUS_JOIN_ORDER_GROUP_SUCCESS = -4;
+//    public static final int STATUS_JOIN_ORDER_GROUP_SUCCESS = -4;
 //    public static final int STATUS_JOIN_ORDER_GROUP_INVALID_ID = -5;
 //    public static final int STATUS_JOIN_ORDER_GROUP_PERMISSION_DENIED = -6;
 //    public static final int STATUS_JOIN_ORDER_GROUP_NOT_ALLOWED = -7;
@@ -136,7 +136,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         orderGroup.setCloseTime(getOrderGroupCloseTimeFromNow(storeId));
         this.save(orderGroup);
         // 将orderGroup挂载到orderIndividual上
-        orderIndividual.setOrderGroupId(orderIndividualId);
+        orderIndividual.setOrderGroupId(pinOrderGroupMapper.select(orderGroup).get(0).getId());
         orderIndividual.setIsGroup(true);
         orderIndividualService.update(orderIndividual);
         return STATUS_SUCCESS;
