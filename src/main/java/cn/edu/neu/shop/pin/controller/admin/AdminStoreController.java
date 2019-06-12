@@ -61,6 +61,7 @@ public class AdminStoreController {
             String description = requestJSON.getString("description");
             String phone = requestJSON.getString("phone");
             String email = requestJSON.getString("email");
+
             String logoUrl = requestJSON.getString("logoUrl");
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
                     storeService.addStoreInfo(storeName, description, phone, email, logoUrl, user.getId()));
