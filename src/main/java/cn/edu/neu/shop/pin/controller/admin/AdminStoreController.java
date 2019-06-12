@@ -9,6 +9,7 @@ import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import cn.edu.neu.shop.pin.util.img.ImgUtil;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,9 +62,10 @@ public class AdminStoreController {
             String description = requestJSON.getString("description");
             String phone = requestJSON.getString("phone");
             String email = requestJSON.getString("email");
-            String logoUrl = requestJSON.getString("logoUrl");
+            String base64Img = requestJSON.getString("logo");
+            String url = ImgUtil.upload(base64Img, "https://sm.ms/api/upload").getBody().getJSONObject("data").getString("url");
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
-                    storeService.addStoreInfo(storeName, description, phone, email, logoUrl, user.getId()));
+                    storeService.addStoreInfo(storeName, description, phone, email, url, user.getId()));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
@@ -94,7 +96,7 @@ public class AdminStoreController {
 
     @GetMapping("/close-batch")
     public JSONObject getGruopCloseBatchTime(HttpServletRequest httpServletRequest) {
-        try{
+        try {
             String store = httpServletRequest.getHeader("current-store");
             Integer storeId = Integer.parseInt(store);
             JSONObject data = new JSONObject();
@@ -106,10 +108,10 @@ public class AdminStoreController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<JSONObject> uploadStoreInfo(HttpServletRequest httpServletRequest, @RequestBody JSONObject uploadingInfo){
+    public ResponseEntity<JSONObject> uploadStoreInfo(HttpServletRequest httpServletRequest, @RequestBody JSONObject uploadingInfo) {
         //截掉 "data:image/png;base64,"
-        String base64Img = uploadingInfo.getString("image").substring(22);
-        return ImgUtil.upload(base64Img,"https://sm.ms/api/upload");
+        String base64Img = uploadingInfo.getString("image");
+        return ImgUtil.upload(base64Img, "https://sm.ms/api/upload");
     }
 
     @DeleteMapping("/close-batch")
@@ -129,7 +131,7 @@ public class AdminStoreController {
 
     @PostMapping("/close-batch")
     public JSONObject addGroupCloseBatchTime(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
-        try{
+        try {
             Integer storeId = Integer.valueOf(httpServletRequest.getHeader("Current-Store"));
             Date date = requestJSON.getDate("closeBatch");
             storeCloseBatchService.addGroupCloseBatch(storeId, date);
