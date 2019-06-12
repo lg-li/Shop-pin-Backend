@@ -171,7 +171,7 @@
 
     <update id="updateOrderDeliveryTypeIsExpress">
         update pin_order_individual
-        set status = 1, delivery_name = #{deliveryName}
+        set status = 1, delivery_name = #{deliveryName}, delivery_id = #{deliveryId}
         where delivery_type = #{deliveryType}
         and id = #{orderIndividualId}
     </update>

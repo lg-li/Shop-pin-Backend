@@ -26,5 +26,5 @@ public interface PinOrderIndividualMapper extends BaseMapper<PinOrderIndividual>
 
     void updateOrderDeliveryTypeNotExpress(Integer orderIndividualId, String deliveryType);
 
-    void updateOrderDeliveryTypeIsExpress(Integer orderIndividualId, String deliveryType, String deliveryName);
+    void updateOrderDeliveryTypeIsExpress(Integer orderIndividualId, String deliveryType, String deliveryName, Integer deliveryId);
 }

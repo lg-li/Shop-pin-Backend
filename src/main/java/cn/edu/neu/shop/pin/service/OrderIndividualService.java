@@ -350,7 +350,7 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
         pinOrderIndividualMapper.updateOrderDeliveryTypeNotExpress(orderIndividualId, deliveryType);
     }
 
-    public void updateOrderStatusIsExpress(Integer orderIndividualId, String deliveryType, String deliveryName) {
-        pinOrderIndividualMapper.updateOrderDeliveryTypeIsExpress(orderIndividualId, deliveryType, deliveryName);
+    public void updateOrderStatusIsExpress(Integer orderIndividualId, String deliveryType, String deliveryName, Integer deliveryId) {
+        pinOrderIndividualMapper.updateOrderDeliveryTypeIsExpress(orderIndividualId, deliveryType, deliveryName, deliveryId);
     }
 }

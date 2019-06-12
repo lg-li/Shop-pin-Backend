@@ -112,7 +112,8 @@ public class AdminOrderController {
                     return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
                 case "EXPRESS":
                     String deliveryName = requestJSON.getString("deliveryName");
-                    orderIndividualService.updateOrderStatusIsExpress(orderIndividualId, deliveryType, deliveryName);
+                    Integer deliveryId = requestJSON.getInteger("deliveryId");
+                    orderIndividualService.updateOrderStatusIsExpress(orderIndividualId, deliveryType, deliveryName, deliveryId);
                     return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
                 case "OFFLINE":
                     orderIndividualService.updateOrderStatusNotExpress(orderIndividualId, deliveryType);
