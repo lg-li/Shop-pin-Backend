@@ -92,6 +92,40 @@
         </collection>
     </resultMap>
 
+    <resultMap id="ProductResultMap" type="PinProduct">
+        <id column="id_1" jdbcType="INTEGER" property="id"/>
+        <result column="store_id" jdbcType="INTEGER" property="storeId"/>
+        <result column="category_id" jdbcType="INTEGER" property="categoryId"/>
+        <result column="image_urls" jdbcType="VARCHAR" property="imageUrls"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="info" jdbcType="VARCHAR" property="info"/>
+        <result column="keyword" jdbcType="VARCHAR" property="keyword"/>
+        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="price_before_discount" jdbcType="DECIMAL" property="priceBeforeDiscount"/>
+        <result column="unit_name" jdbcType="VARCHAR" property="unitName"/>
+        <result column="stock_count" jdbcType="INTEGER" property="stockCount"/>
+        <result column="sold_count" jdbcType="INTEGER" property="soldCount"/>
+        <result column="is_shown" jdbcType="BIT" property="isShown"/>
+        <result column="is_hot" jdbcType="BIT" property="isHot"/>
+        <result column="is_new" jdbcType="BIT" property="isNew"/>
+        <result column="shipping_fee" jdbcType="DECIMAL" property="shippingFee"/>
+        <result column="is_free_shipping" jdbcType="BIT" property="isFreeShipping"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="credit_to_give" jdbcType="INTEGER" property="creditToGive"/>
+        <result column="cost" jdbcType="DECIMAL" property="cost"/>
+        <result column="visit_count" jdbcType="INTEGER" property="visitCount"/>
+        <result column="description" jdbcType="LONGVARCHAR" property="description"/>
+        <collection property="productAttributeValues" ofType="PinProductAttributeValue">
+            <id column="id_2" jdbcType="INTEGER" property="id"/>
+            <result column="product_id" jdbcType="INTEGER" property="productId"/>
+            <result column="sku" jdbcType="VARCHAR" property="sku"/>
+            <result column="stock" jdbcType="VARCHAR" property="stock"/>
+            <result column="changedAmount" jdbcType="DECIMAL" property="changedAmount"/>
+            <result column="image_url" jdbcType="VARCHAR" property="imageUrl"/>
+            <result column="cost" jdbcType="DECIMAL" property="cost"/>
+        </collection>
+    </resultMap>
+
     <!-- 获取Definition详情 -->
     <select id="getPinProductAttributeDefinitionsByProductId" parameterType="PinProductAttributeDefinition"
             resultMap="PinProductAttributeDefinitionResultMap">
@@ -186,5 +220,53 @@
         where id = #{productId}
     </update>
 
+    <select id="getIsShownProductInfo" resultMap="ProductResultMap">
+        select pin_product.*,
+               pin_product.id                 as id_1,
+               pin_product_attribute_value.*,
+               pin_product_attribute_value.id as id_2
+        from pin_product,
+             pin_product_attribute_value
+        where pin_product.id = pin_product_attribute_value.product_id
+          and pin_product.is_shown = 1
+          and pin_product_attribute_value.stock != 0
+          and pin_product.store_id = #{storeId}
+    </select>
+
+    <select id="getIsReadyProductInfo" resultMap="ProductResultMap">
+        select pin_product.*,
+               pin_product.id                 as id_1,
+               pin_product_attribute_value.*,
+               pin_product_attribute_value.id as id_2
+        from pin_product,
+             pin_product_attribute_value
+        where pin_product.id = pin_product_attribute_value.product_id
+          and pin_product.is_shown = 0
+          and pin_product.store_id = #{storeId}
+    </select>
+
+    <select id="getIsOutProductInfo" resultMap="ProductResultMap">
+        select pin_product.*,
+               pin_product.id                 as id_1,
+               pin_product_attribute_value.*,
+               pin_product_attribute_value.id as id_2
+        from pin_product,
+             pin_product_attribute_value
+        where pin_product.id = pin_product_attribute_value.product_id
+          and pin_product_attribute_value.stock = 0
+          and pin_product.store_id = #{storeId}
+    </select>
+
+    <select id="getIsAlarmProductInfo" resultMap="ProductResultMap">
+        select pin_product.*,
+               pin_product.id                 as id_1,
+               pin_product_attribute_value.*,
+               pin_product_attribute_value.id as id_2
+        from pin_product,
+             pin_product_attribute_value
+        where pin_product.id = pin_product_attribute_value.product_id
+          and pin_product_attribute_value.stock &lt; 10
+          and pin_product.store_id = #{storeId}
+    </select>
 
 </mapper>

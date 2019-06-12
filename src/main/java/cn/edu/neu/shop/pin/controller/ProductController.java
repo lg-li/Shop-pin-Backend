@@ -4,6 +4,7 @@ import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.service.ProductCategoryService;
 import cn.edu.neu.shop.pin.service.ProductCommentService;
 import cn.edu.neu.shop.pin.service.ProductService;
+import cn.edu.neu.shop.pin.service.ProductVisitRecordService;
 import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
@@ -11,6 +12,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 
 /**
  * @author LLG
@@ -27,11 +29,14 @@ public class ProductController {
 
     private final ProductCommentService productCommentService;
 
-    public ProductController(UserService userService, ProductCategoryService productCategoryService, ProductService productService, ProductCommentService productCommentService) {
+    private final ProductVisitRecordService productVisitRecordService;
+
+    public ProductController(UserService userService, ProductCategoryService productCategoryService, ProductService productService, ProductCommentService productCommentService, ProductVisitRecordService productVisitRecordService) {
         this.userService = userService;
         this.productCategoryService = productCategoryService;
         this.productService = productService;
         this.productCommentService = productCommentService;
+        this.productVisitRecordService = productVisitRecordService;
     }
 
     /**
@@ -133,7 +138,6 @@ public class ProductController {
 
     /**
      * 获取全新商品信息，支持分页操作
-     *
      * @param pageNum  分页号
      * @param pageSize 分页大小
      * @return 分页的商品规范JSON
@@ -164,6 +168,26 @@ public class ProductController {
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS,
                     PinConstants.ResponseMessage.SUCCESS,
                     productService.isCollected(user.getId(), productId));
+        } catch (Exception e) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
+    /**
+     * 增加商品访问量 && 创建一条商品访问记录
+     * @param httpServletRequest HttpServlet请求体
+     * @param requestJSON 包含productId和visitTime（Date格式）
+     * @return 响应JSON
+     */
+    @PostMapping("/create-visit-record")
+    public JSONObject createVisitRecord(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
+        PinUser user = userService.whoAmI(httpServletRequest);
+        Integer productId = requestJSON.getInteger("productId");
+        Date visitTime = requestJSON.getDate("visitTime");
+        String visitIp = httpServletRequest.getRemoteAddr();
+        try {
+            productVisitRecordService.createVisitRecord(user.getId(), productId, visitTime, visitIp);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
         } catch (Exception e) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
