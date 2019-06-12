@@ -50,11 +50,11 @@ public interface PinProductMapper extends BaseMapper<PinProduct> {
 
     void updateProductCategory(Integer productId, Integer categoryId);
 
-    List<JSONObject> getIsShownProductInfo(Integer storeId);
+    List<PinProduct> getIsShownProductInfo(Integer storeId);
 
-    List<JSONObject> getIsReadyProductInfo(Integer storeId);
+    List<PinProduct> getIsReadyProductInfo(Integer storeId);
 
-    List<JSONObject> getIsOutProductInfo(Integer storeId);
+    List<PinProduct> getIsOutProductInfo(Integer storeId);
 
-    List<JSONObject> getIsAlarmProductInfo(Integer storeId);
+    List<PinProduct> getIsAlarmProductInfo(Integer storeId);
 }

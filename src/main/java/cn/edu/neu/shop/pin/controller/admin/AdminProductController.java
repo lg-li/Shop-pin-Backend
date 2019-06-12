@@ -2,6 +2,7 @@ package cn.edu.neu.shop.pin.controller.admin;
 
 import cn.edu.neu.shop.pin.mapper.PinProductMapper;
 import cn.edu.neu.shop.pin.model.PinProduct;
+import cn.edu.neu.shop.pin.model.PinProductAttributeValue;
 import cn.edu.neu.shop.pin.service.OrderIndividualService;
 import cn.edu.neu.shop.pin.service.ProductCategoryService;
 import cn.edu.neu.shop.pin.service.ProductService;
@@ -32,31 +33,53 @@ public class AdminProductController {
 
     /**
      * 返回不同类型商品列表
+     *
      * @param req
      * @param requestObject
      * @return
      */
     @PostMapping("/goods-list")
     public JSONObject getProducts(HttpServletRequest req, @RequestBody JSONObject requestObject) {
-        try{
+        try {
             Integer storeId = Integer.valueOf(req.getHeader("Current-Store"));
             String queryType = requestObject.getString("queryType");
             JSONObject data = new JSONObject();
-            switch (queryType){
+            switch (queryType) {
                 case "SALING":
-                    List<JSONObject> saling = productService.getIsShownProductInfo(storeId);
+                    List<PinProduct> saling = productService.getIsShownProductInfo(storeId);
                     data.put("goodsList", saling);
                     return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
-                case "Ready":
-                    List<JSONObject> ready = productService.getIsReadyProductInfo(storeId);
-                    data.put("goodList", ready);
+                case "READY":
+                    List<PinProduct> ready = productService.getIsReadyProductInfo(storeId);
+                    data.put("goodsList", ready);
                     return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
                 case "OUT":
-                    List<JSONObject> out = productService.getIsOutProductInfo(storeId);
+                    List<PinProduct> out = productService.getIsOutProductInfo(storeId);
+                    int flag;
+                    //删除掉 每一个库存都有的product
+                    for (PinProduct item : out) {
+                        flag = 0;
+                        for (PinProductAttributeValue inner : item.getProductAttributeValues()) {
+                            if (inner.getStock() == 0)
+                                flag = 1;
+                        }
+                        if (flag == 0)
+                            out.remove(item);
+                    }
                     data.put("goodsList", out);
                     return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
                 case "AlARM":
-                    List<JSONObject> alarm = productService.getIsAlarmProductInfo(storeId);
+                    List<PinProduct> alarm = productService.getIsAlarmProductInfo(storeId);
+                    //删除掉 每一个库存都有的product
+                    for (PinProduct item : alarm) {
+                        flag = 0;
+                        for (PinProductAttributeValue inner : item.getProductAttributeValues()) {
+                            if (inner.getStock() <= 10)
+                                flag = 1;
+                        }
+                        if (flag == 0)
+                            alarm.remove(item);
+                    }
                     data.put("goodsList", alarm);
                     return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
                 default:

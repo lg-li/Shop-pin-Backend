@@ -8,6 +8,7 @@ import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import cn.edu.neu.shop.pin.util.img.ImgUtil;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -108,4 +109,18 @@ public class AdminStoreController {
         return ImgUtil.upload(base64Img,"https://sm.ms/api/upload");
     }
 
+    @DeleteMapping("/close-batch")
+    public JSONObject deleteGroupCloseBatchTime(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
+        try {
+            Integer storeId = Integer.valueOf(httpServletRequest.getHeader("Current-Store"));
+            JSONArray array = requestJSON.getJSONArray("closeBatch");
+            for (int i = 0; i < array.size(); i++) {
+                Integer id = array.getJSONObject(i).getInteger("id");
+                storeCloseBatchService.deleteGroupCloseBatch(storeId, id);
+            }
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
+        } catch (Exception e) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, e.getMessage(), null);
+        }
+    }
 }

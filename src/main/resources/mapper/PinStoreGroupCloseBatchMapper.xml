@@ -16,4 +16,10 @@
     where store_id = #{storeId}
     order by `time` DESC
   </select>
+
+  <delete id="deleteStoreGroupCloseBatch">
+    delete from pin_store_group_close_batch
+    where store_id = #{storeId}
+    and id = #{id}
+  </delete>
 </mapper>
