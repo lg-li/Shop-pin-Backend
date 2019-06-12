@@ -8,12 +8,12 @@ import java.util.List;
 @Table(name = "pin_order_individual")
 public class PinOrderIndividual {
     public static final String PAY_TYPE_BALANCE = "BALANCE";
-    public static final String PAY_TYPE_WECHAT = "WECHAT";
-    public static final String PAY_TYPE_WECHAT_AND_BALANCE = "WECHAT-BALANCE";
-
-    public static final String DELIVERY_TYPE_ONLINE = "ONLINE";
-    public static final String DELIVERY_TYPE_EXPRESS = "EXPRESS";
-    public static final String DELIVERY_TYPE_OFFLINE = "OFFLINE";
+//    public static final String PAY_TYPE_WECHAT = "WECHAT";
+//    public static final String PAY_TYPE_WECHAT_AND_BALANCE = "WECHAT-BALANCE";
+//
+//    public static final String DELIVERY_TYPE_ONLINE = "ONLINE";
+//    public static final String DELIVERY_TYPE_EXPRESS = "EXPRESS";
+//    public static final String DELIVERY_TYPE_OFFLINE = "OFFLINE";
 
     /**
      * 待发货
@@ -31,18 +31,18 @@ public class PinOrderIndividual {
      * 已评价（订单已完成）
      */
     public static final int STATUS_COMMENTED = 3;
-    /**
-     * 已退款（订单退款关闭）
-     */
-    public static final int STATUS_REFUND_SUCCESS = 4;
-    /**
-     * 退款被拒绝
-     */
-    public static final int STATUS_REFUND_REFUSED = 5;
-    /**
-     * 订单未申请退款（默认状态）
-     */
-    public static final int REFUND_STATUS_NOT_APPLIED = 0;
+//    /**
+//     * 已退款（订单退款关闭）
+//     */
+//    public static final int STATUS_REFUND_SUCCESS = 4;
+//    /**
+//     * 退款被拒绝
+//     */
+//    public static final int STATUS_REFUND_REFUSED = 5;
+//    /**
+//     * 订单未申请退款（默认状态）
+//     */
+//    public static final int REFUND_STATUS_NOT_APPLIED = 0;
     /**
      * 订单退款申请中
      */
@@ -54,7 +54,7 @@ public class PinOrderIndividual {
     /**
      * 存储其包含的所有OrderItem
      */
-    List<PinOrderItem> orderItems;
+    private List<PinOrderItem> orderItems;
     /**
      * 订单ID
      */
