@@ -1,6 +1,5 @@
 package cn.edu.neu.shop.pin.controller;
 
-import cn.edu.neu.shop.pin.exception.CheckInFailedException;
 import cn.edu.neu.shop.pin.exception.CommentFailedException;
 import cn.edu.neu.shop.pin.exception.PermissionDeniedException;
 import cn.edu.neu.shop.pin.model.PinUser;
@@ -12,7 +11,6 @@ import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
