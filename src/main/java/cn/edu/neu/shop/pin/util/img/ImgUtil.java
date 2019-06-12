@@ -2,6 +2,9 @@ package cn.edu.neu.shop.pin.util.img;
 
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
@@ -34,16 +37,19 @@ public class ImgUtil {
         String suffix = getSuffix(rawBytes);//获取图片的后缀名，也可以是其他任意文件名
         String fileName = "myImage" + suffix;
         ByteArrayResource fileResource = new ByteArrayResource(rawBytes);
-        MultiValueMap<String, Object> postParameters = new LinkedMultiValueMap<String, Object>();
-        postParameters.add("smfile", fileResource);
+
+        HttpHeaders requestHeaders = new HttpHeaders();
+        requestHeaders.add("api-version", "1.0");
+
+        MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<String, Object>();
+        requestBody.add("smfile", fileResource);
+
+        HttpEntity<MultiValueMap> requestEntity = new HttpEntity<MultiValueMap>(requestBody, requestHeaders);
+
         RestTemplate restTemplate = new RestTemplate();
         JSONObject response = new JSONObject();
-        try{
-            response = restTemplate.postForObject(url, postParameters, JSONObject.class);
-            System.out.println(response);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        ResponseEntity<JSONObject> responseEntity = restTemplate.postForEntity(url, requestEntity, JSONObject.class);
+        System.out.println(response);
         return response;
     }
 
