@@ -11,13 +11,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+//import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
 public class OrderIndividualService extends AbstractService<PinOrderIndividual> {
+
+    public static final int STATUS_CONFIRM_SUCCESS = 0;
+    public static final int STATUS_CONFIRM_PERMISSION_DENIED = -1;
+    public static final int STATUS_CONFIRM_FAILED = -2;
+
 
     @Autowired
     private UserRoleListTransferService userRoleListTransferService;
@@ -42,8 +48,7 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
 
     /**
      * 获取最近三个月的OrderIndividual信息
-     *
-     * @param userId
+     * @param userId 用户ID
      * @return
      */
     public List<PinOrderIndividual> getRecentThreeMonthsOrderIndividuals(Integer userId) {
@@ -58,7 +63,6 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
 
     /**
      * 传入一串PinOrderIndividual，返回它们对应的用户list
-     *
      * @param list 一串PinOrderIndividual
      * @return 返回它们对应的用户list
      */
@@ -72,7 +76,6 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
 
     /**
      * 提交订单，即把一条OrderItem记录变为Submitted
-     *
      * @param user
      * @param list
      * @param addressId
@@ -105,7 +108,7 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
                     orderItemService.getProductAmount(list), totalPrice/*总价格 邮费加本来的费用*/,
                     shippingFee, null, /*卖家可以改动实际支付的邮费，修改的时候总价格也要修改，余额支付，实际支付也要改*/
                     null, null, false, null,
-                    new Date(System.currentTimeMillis()), 0, 0, null, null, null,
+                    new Date(), 0, 0, null, null, null,
                     null, null, null, null, null, null, null, userRemark, null, totalCost);
             this.save(orderIndividual);
             //将list中的PinOrderItem挂载到PinOrderIndividual上
@@ -118,14 +121,10 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
     }
 
     /**
-     * @param orderGroupId
+     * @author flyhero
+     * 根据OrderGroupId获取在此团单内的OrderIndividual的List
+     * @param orderGroupId 团单ID
      * @return
-     * @author flyhero
-     * 根据OrderGroupId获取在此团单内的OrderIndividual的List
-     * @author flyhero
-     * 根据OrderGroupId获取在此团单内的OrderIndividual的List
-     * @author flyhero
-     * 根据OrderGroupId获取在此团单内的OrderIndividual的List
      */
     public List<PinOrderIndividual> getOrderIndividualsByOrderGroupId(Integer orderGroupId) {
         PinOrderIndividual orderIndividual = new PinOrderIndividual();
@@ -136,7 +135,6 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
 
     /**
      * 获取订单数
-     *
      * @param storeId 商店ID
      * @return
      */
@@ -172,7 +170,6 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
 
     /**
      * TODO：待测试
-     *
      * @param list      待过滤的PinOrderIndividual的数组
      * @param orderType 传过来的orderType
      * @return 返回过滤过后的list
@@ -230,7 +227,6 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
 
     /**
      * TODO: 待测试
-     *
      * @param list      待过滤的PinOrderIndividual的数组
      * @param orderDate 时间条件对应的码
      * @param queryType 前端传入的json
@@ -311,7 +307,6 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
 
     /**
      * 未发货商品数量
-     *
      * @param storeId
      * @return
      */
@@ -342,9 +337,21 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
      * 确认收获
      *
      */
-    public void confirmReceiveProduct(Integer orderIndividualId) {
+    public Integer confirmReceipt(Integer userId, Integer orderIndividualId) {
         PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
-        orderIndividual.setStatus();
+        if(userId != orderIndividual.getUserId()) {
+            // 用户ID不符
+            return STATUS_CONFIRM_PERMISSION_DENIED;
+        }
+        if(orderIndividual.getStatus() != 2) {
+            // 订单状态不符合确认收货条件
+            return STATUS_CONFIRM_FAILED;
+        }
+        // 执行确认收获操作
+        orderIndividual.setConfirmReceiptTime(new Date());
+        orderIndividual.setStatus(2);
+        orderIndividualService.update(orderIndividual);
+        return STATUS_CONFIRM_SUCCESS;
     }
 
 //    public void kickOutAnOrder(Integer orderIndividualId) {

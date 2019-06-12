@@ -161,4 +161,27 @@ public class OrderController {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
     }
+
+    /**
+     * @author flyhero
+     * 确认收货
+     * @param httpServletRequest
+     * @param requestJSON: 包含orderIndividualId——以此来确认该订单已收货
+     * @return
+     */
+    @PostMapping("/order-individual/confirm-receipt")
+    public JSONObject confirmReceipt(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
+        PinUser user = userService.whoAmI(httpServletRequest);
+        Integer orderIndividualId = requestJSON.getInteger("orderIndividualId");
+        int code = orderIndividualService.confirmReceipt(user.getId(), orderIndividualId);
+        if(code == OrderIndividualService.STATUS_CONFIRM_SUCCESS) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "确认收货成功！", null);
+        } else if(code == OrderIndividualService.STATUS_CONFIRM_FAILED) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, "无法确认收货！请检查订单状态！", null);
+        } else if(code == OrderIndividualService.STATUS_CONFIRM_PERMISSION_DENIED) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_CREDENTIAL, "用户权限不够！", null);
+        } else {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, PinConstants.ResponseMessage.INTERNAL_ERROR, null);
+        }
+    }
 }
