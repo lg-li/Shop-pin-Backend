@@ -70,6 +70,7 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
             } else { // 新鲜的评论
                 // 由于前端只返回了skuId而没有返回productId，因此需要根据skuId找到其对应的productId
                 comment.setProductId(productService.findBy("skuId", skuId).getId());
+                comment.setCreateTime(new Date());
                 pinUserProductCommentMapper.insert(comment); // 评论表中新增一条记录
                 // 更新订单状态为已评价
                 orderIndividual.setStatus(PinOrderIndividual.STATUS_COMMENTED);

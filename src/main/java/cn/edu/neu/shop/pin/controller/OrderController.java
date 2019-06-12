@@ -1,7 +1,9 @@
 package cn.edu.neu.shop.pin.controller;
 
 import cn.edu.neu.shop.pin.exception.OrderItemsAreNotInTheSameStoreException;
+import cn.edu.neu.shop.pin.exception.PermissionDeniedException;
 import cn.edu.neu.shop.pin.exception.ProductSoldOutException;
+import cn.edu.neu.shop.pin.exception.RecordNotFoundException;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.model.PinOrderItem;
 import cn.edu.neu.shop.pin.model.PinUser;
@@ -154,7 +156,6 @@ public class OrderController {
             data.put("orderIndividuals", list);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
     }
@@ -179,6 +180,28 @@ public class OrderController {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_CREDENTIAL, "用户权限不够！", null);
         } else {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, PinConstants.ResponseMessage.INTERNAL_ERROR, null);
+        }
+    }
+
+    /**
+     * @author flyhero
+     * 修改购物车中某商品的数量
+     * @param httpServletRequest HttpServlet请求体
+     * @param requestJSON 包含：orderItemId, amount
+     * @return 响应JSON
+     */
+    @PostMapping("/order-item/change-amount")
+    public JSONObject changeOrderItemAmount(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
+        PinUser user = userService.whoAmI(httpServletRequest);
+        Integer orderItemId = requestJSON.getInteger("orderItemId");
+        Integer amount = requestJSON.getInteger("amount");
+        try {
+            orderItemService.changeOrderItemAmount(user.getId(), orderItemId, amount);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "商品数量修改成功！", null);
+        } catch (PermissionDeniedException e) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_CREDENTIAL, e.getMessage(), null);
+        } catch (RecordNotFoundException e) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, e.getMessage(), null);
         }
     }
 }

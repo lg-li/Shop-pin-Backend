@@ -86,4 +86,13 @@ public class PinProductAttributeDefinition {
     public void setAttributeValues(String attributeValues) {
         this.attributeValues = attributeValues;
     }
+
+    public PinProductAttributeDefinition() {
+    }
+
+    public PinProductAttributeDefinition(Integer productId, String attributeName, String attributeValues) {
+        this.productId = productId;
+        this.attributeName = attributeName;
+        this.attributeValues = attributeValues;
+    }
 }

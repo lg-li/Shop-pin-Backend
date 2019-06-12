@@ -1,5 +1,7 @@
 package cn.edu.neu.shop.pin.service;
 
+import cn.edu.neu.shop.pin.exception.PermissionDeniedException;
+import cn.edu.neu.shop.pin.exception.RecordNotFoundException;
 import cn.edu.neu.shop.pin.mapper.PinOrderItemMapper;
 import cn.edu.neu.shop.pin.mapper.PinProductAttributeValueMapper;
 import cn.edu.neu.shop.pin.mapper.PinProductMapper;
@@ -234,6 +236,17 @@ public class OrderItemService extends AbstractService<PinOrderItem> {
             o.setProductAttributeValue(pinProductAttributeValue);
         }
         return list;
+    }
+
+    public void changeOrderItemAmount(Integer userId, Integer orderItemId, Integer amount) throws PermissionDeniedException, RecordNotFoundException {
+        PinOrderItem orderItem = this.findById(orderItemId);
+        if(orderItem == null) {
+            throw new RecordNotFoundException("Caused by OrderItemService.changeOrderItemAmount: OrderItem记录不存在！");
+        } else if(userId != orderItem.getUserId()) {
+            throw new PermissionDeniedException("Caused by OrderItemService.changeOrderItemAmount: 用户ID不符");
+        }
+        orderItem.setAmount(amount);
+        this.update(orderItem);
     }
 
     /**
