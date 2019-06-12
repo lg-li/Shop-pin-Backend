@@ -132,7 +132,7 @@ public class AdminStoreController {
         try{
             Integer storeId = Integer.valueOf(httpServletRequest.getHeader("Current-Store"));
             Date date = requestJSON.getDate("time");
-            List<PinStoreGroupCloseBatch> list = storeCloseBatchService.addGroupCloseBatch(storeId, date);
+            storeCloseBatchService.addGroupCloseBatch(storeId, date);
             JSONObject data = new JSONObject();
             data.put("closeBatch", data);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
