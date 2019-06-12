@@ -1,12 +1,16 @@
 package cn.edu.neu.shop.pin.controller;
 
 import cn.edu.neu.shop.pin.exception.CheckInFailedException;
+import cn.edu.neu.shop.pin.exception.CommentFailedException;
+import cn.edu.neu.shop.pin.exception.PermissionDeniedException;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.model.PinUserAddress;
+import cn.edu.neu.shop.pin.model.PinUserProductComment;
 import cn.edu.neu.shop.pin.service.*;
 import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping("/commons/user")
@@ -343,10 +348,7 @@ public class UsersController {
         try {
             userCreditRecordService.dailyCheckIn(user.getId());
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
-        } catch (CheckInFailedException e) {
-            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
     }
@@ -388,35 +390,23 @@ public class UsersController {
 
     /**
      * @author flyhero
-     * 为某一商品订单添加评论，同一订单只能添加一次
+     * 为某一商品订单中的一组商品添加评论，同一订单只能添加一次
      * @param httpServletRequest HttpServlet请求体
-     * @param requestJSON
-     * 包含：orderIndividualId, productId, skuId, grade, productScore, serviceScore, content, imagesUrls
+     * @param requestJSON 包含一个对订单中每件sku的评论的数组，执行后将对其中每件商品都执行评论操作
      * @return 响应JSON
      */
     @RequestMapping("/add-comment")
     public JSONObject addComment(HttpServletRequest httpServletRequest, JSONObject requestJSON) {
+        JSONArray jsonArray = requestJSON.getJSONArray("comments");
+        List<PinUserProductComment> comments = jsonArray.toJavaList(PinUserProductComment.class);
         PinUser user = userService.whoAmI(httpServletRequest);
-        Integer orderIndividualId = requestJSON.getInteger("orderIndividualId");
-        Integer productId = requestJSON.getInteger("productId");
-        Integer skuId = requestJSON.getInteger("skuId");
-        Integer grade = requestJSON.getInteger("grade");
-        Integer productScore = requestJSON.getInteger("productScore");
-        Integer serviceScore = requestJSON.getInteger("serviceScore");
-        String content = requestJSON.getString("content");
-        String imagesUrls = requestJSON.getString("imagesUrls");
-        // 执行添加评论
-        int code = productCommentService.addComment(user.getId(), orderIndividualId, productId, skuId,
-                grade, productScore, serviceScore, content, imagesUrls);
-        if(code == ProductCommentService.STATUS_ADD_COMMENT_SUCCESS) {
-            // 评论成功
+        try {
+            productCommentService.addComment(user.getId(), comments);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "评论成功！", null);
-        } else if(code == ProductCommentService.STATUS_ADD_COMMENT_FAILED) {
-            // 评论失败
-            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, "评论失败，已经评论过了！", null);
-        } else {
-            // 发生未知错误，正常情况下不会进入
-            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, PinConstants.ResponseMessage.INTERNAL_ERROR, null);
+        } catch (PermissionDeniedException e) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.PERMISSION_DENIED, e.getMessage(), null);
+        } catch (CommentFailedException e) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, e.getMessage(), null);
         }
     }
 
