@@ -8,7 +8,6 @@ import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import cn.edu.neu.shop.pin.util.wechat.WeChatCredentialExchangeException;
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,17 +20,19 @@ import javax.servlet.http.HttpServletRequest;
 @CrossOrigin
 public class SignInController {
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    WechatUserService wechatUserService;
+    private final WechatUserService wechatUserService;
+
+    public SignInController(UserService userService, WechatUserService wechatUserService) {
+        this.userService = userService;
+        this.wechatUserService = wechatUserService;
+    }
 
     /**
      * 默认登录
-     *
-     * @param loginJSON
-     * @return
+     * @param loginJSON 登录JSON
+     * @return 响应JSON
      */
     @PostMapping(value = "/default")
     public JSONObject defaultLogin(@RequestBody JSONObject loginJSON) {
@@ -64,13 +65,12 @@ public class SignInController {
 
     /**
      * 微信小程序登录
-     *
-     * @param request
-     * @param loginJSON
-     * @return
+     * @param httpServletRequest HttpServlet请求体
+     * @param loginJSON 登录JSON
+     * @return 响应JSON
      */
     @PostMapping(value = "/wechat-mini-program")
-    public JSONObject wechatMiniProgramLogin(HttpServletRequest request, @RequestBody JSONObject loginJSON) {
+    public JSONObject wechatMiniProgramLogin(HttpServletRequest httpServletRequest, @RequestBody JSONObject loginJSON) {
         String code = loginJSON.getString("code");
         String name = loginJSON.getString("nickName");
         Integer gender = loginJSON.getInteger("gender");
@@ -80,27 +80,12 @@ public class SignInController {
         String city = loginJSON.getString("city");
         String language = loginJSON.getString("language");
         try {
-            return ResponseWrapper.wrap(
-                    PinConstants.StatusCode.SUCCESS,
-                    PinConstants.ResponseMessage.SUCCESS,
-                    wechatUserService.signInFormWechatMiniProgram(
-                            code,
-                            name,
-                            gender,
-                            avatarUrl,
-                            country,
-                            province,
-                            city,
-                            language,
-                            request.getRemoteAddr()
-                    )
-            );
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
+                    wechatUserService.signInFormWechatMiniProgram(code, name, gender, avatarUrl, country,
+                            province, city, language, httpServletRequest.getRemoteAddr()));
         } catch (WeChatCredentialExchangeException e) {
             e.printStackTrace();
-            return ResponseWrapper.wrap(
-                    PinConstants.StatusCode.INVALID_CREDENTIAL,
-                    PinConstants.ResponseMessage.INVALID_CREDENTIAL,
-                    null);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_CREDENTIAL, PinConstants.ResponseMessage.INVALID_CREDENTIAL, null);
         }
     }
 }
