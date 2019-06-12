@@ -3,7 +3,6 @@ package cn.edu.neu.shop.pin.service;
 import cn.edu.neu.shop.pin.mapper.PinStoreMapper;
 import cn.edu.neu.shop.pin.model.PinStore;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
