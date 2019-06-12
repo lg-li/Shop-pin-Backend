@@ -22,18 +22,20 @@ import java.util.List;
 @Service
 public class WechatUserService extends AbstractService<PinWechatUser> {
 
-    @Autowired
-    UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    PinUserMapper pinUserMapper;
+    private final PinUserMapper pinUserMapper;
 
-    @Autowired
-    PinWechatUserMapper pinWechatUserMapper;
+    private final PinWechatUserMapper pinWechatUserMapper;
+
+    public WechatUserService(UserService userService, PinUserMapper pinUserMapper, PinWechatUserMapper pinWechatUserMapper) {
+        this.userService = userService;
+        this.pinUserMapper = pinUserMapper;
+        this.pinWechatUserMapper = pinWechatUserMapper;
+    }
 
     /**
      * 使用微信小程序登录
-     *
      * @param code
      * @param name
      * @param gender

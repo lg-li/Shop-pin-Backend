@@ -3,7 +3,6 @@ package cn.edu.neu.shop.pin.service;
 import cn.edu.neu.shop.pin.mapper.PinUserProductVisitRecordMapper;
 import cn.edu.neu.shop.pin.model.PinProduct;
 import cn.edu.neu.shop.pin.model.PinUserProductVisitRecord;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
