@@ -47,9 +47,9 @@ public class AdminProductController {
                     List<JSONObject> saling = productService.getIsShownProductInfo(storeId);
                     data.put("goodsList", saling);
                     return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
-                case "Ready":
+                case "READY":
                     List<JSONObject> ready = productService.getIsReadyProductInfo(storeId);
-                    data.put("goodList", ready);
+                    data.put("goodsList", ready);
                     return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
                 case "OUT":
                     List<JSONObject> out = productService.getIsOutProductInfo(storeId);

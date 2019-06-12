@@ -1,6 +1,7 @@
 package cn.edu.neu.shop.pin.controller.admin;
 
 import cn.edu.neu.shop.pin.model.PinStore;
+import cn.edu.neu.shop.pin.model.PinStoreGroupCloseBatch;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.service.StoreCloseBatchService;
 import cn.edu.neu.shop.pin.service.StoreService;
@@ -8,11 +9,13 @@ import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import cn.edu.neu.shop.pin.util.img.ImgUtil;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/manager/store")
@@ -88,8 +91,8 @@ public class AdminStoreController {
     }
 
     @GetMapping("/close-batch")
-    public JSONObject getGruopCloseBatchTime(HttpServletRequest httpServletRequest) {
-        try{
+    public JSONObject getGroupCloseBatchTime(HttpServletRequest httpServletRequest) {
+        try {
             String store = httpServletRequest.getHeader("current-store");
             Integer storeId = Integer.parseInt(store);
             JSONObject data = new JSONObject();
@@ -101,9 +104,23 @@ public class AdminStoreController {
     }
 
     @PostMapping("/upload")
-    public JSONObject uploadStoreInfo(HttpServletRequest httpServletRequest,@RequestBody JSONObject uploadingInfo){
+    public JSONObject uploadStoreInfo(HttpServletRequest httpServletRequest, @RequestBody JSONObject uploadingInfo) {
         String base64Img = uploadingInfo.getString("image");
-        return ImgUtil.upload(base64Img,"https://sm.ms/api/upload");
+        return ImgUtil.upload(base64Img, "https://sm.ms/api/upload");
     }
 
+    @DeleteMapping("/close-batch")
+    public JSONObject deleteGroupCloseBatchTime(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
+        try {
+            Integer storeId = Integer.valueOf(httpServletRequest.getHeader("Current-Store"));
+            JSONArray array = requestJSON.getJSONArray("closeBatch");
+            for (int i = 0; i < array.size(); i++) {
+                Integer id = array.getJSONObject(i).getInteger("id");
+                storeCloseBatchService.deleteGroupCloseBatch(storeId, id);
+            }
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
+        } catch (Exception e) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, e.getMessage(), null);
+        }
+    }
 }

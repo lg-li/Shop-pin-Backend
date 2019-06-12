@@ -30,4 +30,8 @@ public class StoreCloseBatchService extends AbstractService<PinStoreGroupCloseBa
         }
         return list.get(0);
     }
+
+    public void deleteGroupCloseBatch(Integer storeId, Integer id) {
+        pinStoreGroupCloseBatchMapper.deleteStoreGroupCloseBatch(storeId, id);
+    }
 }
