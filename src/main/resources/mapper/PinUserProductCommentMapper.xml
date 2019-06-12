@@ -9,6 +9,7 @@
     <result column="user_id" jdbcType="INTEGER" property="userId" />
     <result column="order_individual_id" jdbcType="INTEGER" property="orderIndividualId" />
     <result column="product_id" jdbcType="INTEGER" property="productId" />
+    <result column="sku_id" jdbcType="INTEGER" property="skuId" />
     <result column="grade" jdbcType="INTEGER" property="grade" />
     <result column="product_score" jdbcType="INTEGER" property="productScore" />
     <result column="service_score" jdbcType="INTEGER" property="serviceScore" />

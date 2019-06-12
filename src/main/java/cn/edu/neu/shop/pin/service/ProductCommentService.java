@@ -20,17 +20,51 @@ import java.util.List;
 @Service
 public class ProductCommentService extends AbstractService<PinUserProductComment> {
 
+    public static final int STATUS_ADD_COMMENT_SUCCESS = 0;
+    public static final int STATUS_ADD_COMMENT_FAILED = -1;
+
     @Autowired
     private PinUserProductCommentMapper pinUserProductCommentMapper;
 
-    public void addComment(Integer userId, Integer orderIndividualId, Integer productId, Integer grade,
-                           Integer productScore, Integer serviceScore, String content, String imageUrl) {
+    @Autowired
+    private ProductCommentService productCommentService;
+
+    /**
+     * @author flyhero
+     * 为商品添加评论
+     * @param userId 用户ID
+     * @param orderIndividualId 订单ID
+     * @param productId 产品ID
+     * @param skuId skuID
+     * @param grade 0-好评，1-中评，2-差评
+     * @param productScore 产品评分（1～5）
+     * @param serviceScore 服务评分（1～5）
+     * @param content 评论内容
+     * @param imagesUrls 评论图片
+     * @return
+     */
+    public Integer addComment(Integer userId, Integer orderIndividualId, Integer productId, Integer skuId, Integer grade,
+                           Integer productScore, Integer serviceScore, String content, String imagesUrls) {
+        PinUserProductComment commentSample = new PinUserProductComment();
+        commentSample.setOrderIndividualId(orderIndividualId);
+        commentSample.setSkuId(skuId);
+        List<PinUserProductComment> list = pinUserProductCommentMapper.select(commentSample);
+        if(list != null) {
+            // 用户已对此订单中的此商品做出过评论了，不能再评论一次
+            return STATUS_ADD_COMMENT_FAILED;
+        }
         PinUserProductComment comment = new PinUserProductComment();
         comment.setUserId(userId);
         comment.setOrderIndividualId(orderIndividualId);
         comment.setProductId(productId);
+        comment.setSkuId(skuId);
         comment.setGrade(grade);
-
+        comment.setProductScore(productScore);
+        comment.setServiceScore(serviceScore);
+        comment.setContent(content);
+        comment.setImagesUrls(imagesUrls);
+        pinUserProductCommentMapper.insert(comment);
+        return STATUS_ADD_COMMENT_SUCCESS;
     }
 
     /**
@@ -74,6 +108,13 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
         return pinUserProductCommentMapper.getCommentAndUserInfo(productId);
     }
 
+    /**
+     *
+     * @param list
+     * @param pageNumber
+     * @param pageSize
+     * @return
+     */
     public List<?> getCommentsByPageNumAndSize(List<?> list, Integer pageNumber, Integer pageSize) {
         if (pageNumber * pageSize < list.size()) {
             return list.subList((pageNumber - 1) * pageSize, pageNumber * pageSize);

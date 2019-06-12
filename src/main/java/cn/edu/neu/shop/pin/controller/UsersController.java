@@ -43,6 +43,9 @@ public class UsersController {
     private OrderIndividualService orderIndividualService;
 
     @Autowired
+    private ProductCommentService productCommentService;
+
+    @Autowired
     private UserCreditRecordService userCreditRecordService;
 
     /**
@@ -371,10 +374,10 @@ public class UsersController {
     }
 
     /**
-     * @param httpServletRequest
-     * @return
      * @author flyhero
      * 判断某一用户今日是否已经签到
+     * @param httpServletRequest
+     * @return
      */
     @GetMapping("/has-checked-in")
     public JSONObject hasCheckedIn(HttpServletRequest httpServletRequest) {
@@ -386,4 +389,39 @@ public class UsersController {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, "未签到", null);
         }
     }
+
+    /**
+     * @author flyhero
+     * 为某一商品订单添加评论，同一订单只能添加一次
+     * @param httpServletRequest
+     * @param requestJSON
+     * 包含：orderIndividualId, productId, skuId, grade, productScore, serviceScore, content, imagesUrls
+     * @return
+     */
+    @RequestMapping("/add-comment")
+    public JSONObject addComment(HttpServletRequest httpServletRequest, JSONObject requestJSON) {
+        PinUser user = userService.whoAmI(httpServletRequest);
+        Integer orderIndividualId = requestJSON.getInteger("orderIndividualId");
+        Integer productId = requestJSON.getInteger("productId");
+        Integer skuId = requestJSON.getInteger("skuId");
+        Integer grade = requestJSON.getInteger("grade");
+        Integer productScore = requestJSON.getInteger("productScore");
+        Integer serviceScore = requestJSON.getInteger("serviceScore");
+        String content = requestJSON.getString("content");
+        String imagesUrls = requestJSON.getString("imagesUrls");
+        // 执行添加评论
+        int code = productCommentService.addComment(user.getId(), orderIndividualId, productId, skuId,
+                grade, productScore, serviceScore, content, imagesUrls);
+        if(code == ProductCommentService.STATUS_ADD_COMMENT_SUCCESS) {
+            // 评论成功
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "评论成功！", null);
+        } else if(code == ProductCommentService.STATUS_ADD_COMMENT_FAILED) {
+            // 评论失败
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, "评论失败，已经评论过了！", null);
+        } else {
+            // 发生未知错误，正常情况下不会进入
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, PinConstants.ResponseMessage.INTERNAL_ERROR, null);
+        }
+    }
 }
+

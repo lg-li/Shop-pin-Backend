@@ -31,6 +31,12 @@ public class PinUserProductComment {
     private Integer productId;
 
     /**
+     * 具体某规格的产品ID
+     */
+    @Column(name = "sku_id")
+    private Integer skuId;
+
+    /**
      * 0: 好评；1：中评；2：差评
      */
     private Integer grade;
@@ -314,5 +320,13 @@ public class PinUserProductComment {
      */
     public void setImagesUrls(String imagesUrls) {
         this.imagesUrls = imagesUrls;
+    }
+
+    public Integer getSkuId() {
+        return skuId;
+    }
+
+    public void setSkuId(Integer skuId) {
+        this.skuId = skuId;
     }
 }
