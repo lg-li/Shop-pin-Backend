@@ -75,7 +75,7 @@ public class AdminProductController {
                     }
                     data.put("goodsList", out);
                     return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
-                case "AlARM":
+                case "ALARM":
                     List<PinProduct> alarm = productService.getIsAlarmProductInfo(storeId);
                     //删除掉 每一个库存都有的product
                     for (PinProduct item : alarm) {
