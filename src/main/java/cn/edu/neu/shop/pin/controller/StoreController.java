@@ -45,9 +45,9 @@ public class StoreController {
      * @return JSONObject
      */
     @GetMapping("/{storeId}")
-    public JSONObject getStoreInfoByStoreId(@PathVariable(value = "storeId") Integer storeId) {
+    public JSONObject getStoreInfoByStoreId(@PathVariable Integer storeId) {
         try {
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, storeService.getStoreById(storeId));
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, storeService.findById(storeId));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
