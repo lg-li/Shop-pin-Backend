@@ -61,9 +61,12 @@ public class ProductService extends AbstractService<PinProduct> {
      */
     public JSONObject getProductByIdWithOneComment(Integer productId) {
         PinProduct product = getProductById(productId);
+        JSONObject returnJSON = new JSONObject();
+        returnJSON.put("product", product);
         List<JSONObject> list = pinUserProductCommentMapper.getCommentAndUserInfo(productId);
-        if(list == null || list.size() == 0) return null;
-        return list.get(0);
+        if(list == null || list.size() == 0) returnJSON.put("comment", null);
+        else returnJSON.put("comment", list.get(0));
+        return returnJSON;
     }
 
     /**
