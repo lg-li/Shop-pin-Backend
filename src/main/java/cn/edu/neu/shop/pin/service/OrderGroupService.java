@@ -137,6 +137,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         this.save(orderGroup);
         // 将orderGroup挂载到orderIndividual上
         orderIndividual.setOrderGroupId(orderIndividualId);
+        orderIndividual.setIsGroup(true);
         orderIndividualService.update(orderIndividual);
         return STATUS_SUCCESS;
     }
