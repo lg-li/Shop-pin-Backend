@@ -18,7 +18,7 @@ public class AdminCommentController {
     @Autowired
     private ProductCommentService productCommentService;
 
-    @GetMapping("/comment/goods-comment")
+    @GetMapping("/comment/goods-comment/{productId}")
     public JSONObject getCommentByProductId(@PathVariable(value = "productId") Integer productId, @PathVariable(value = "pageNum") Integer pageNum, @PathVariable(value = "pageSize") Integer pageSize) {
         try{
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productCommentService.getCommentAndUserInfoByPage(productId, pageNum, pageSize));

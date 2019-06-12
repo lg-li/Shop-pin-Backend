@@ -162,4 +162,18 @@
           and store_id = #{storeId}
     </select>
 
+    <update id="updateOrderDeliveryTypeNotExpress">
+        update pin_order_individual
+        set status = 1
+        where delivery_type = #{deliveryType}
+        and id = #{orderIndividualId}
+    </update>
+
+    <update id="updateOrderDeliveryTypeIsExpress">
+        update pin_order_individual
+        set status = 1, delivery_name = #{deliveryName}
+        where delivery_type = #{deliveryType}
+        and id = #{orderIndividualId}
+    </update>
+
 </mapper>

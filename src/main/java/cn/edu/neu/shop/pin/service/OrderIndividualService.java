@@ -345,4 +345,12 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
 //        orderIndividual.setOrderGroupId(null);
 //        orderIndividual.setStatus(0);
 //    }
+
+    public void updateOrderStatusNotExpress(Integer orderIndividualId, String deliveryType) {
+        pinOrderIndividualMapper.updateOrderDeliveryTpyeNotExpress(orderIndividualId, deliveryType);
+    }
+
+    public void updateOrderStatusIsExpress(Integer orderIndividualId, String deliveryType, String deliveryName) {
+        pinOrderIndividualMapper.updateOrderDeliveryTypeIsExpress(orderIndividualId, deliveryType, deliveryName);
+    }
 }
