@@ -19,7 +19,6 @@ import java.util.List;
 /**
  * @author LLG, CQF, LYF
  */
-@Service
 @Component
 public class ProductService extends AbstractService<PinProduct> {
 
