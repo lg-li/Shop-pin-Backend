@@ -8,6 +8,8 @@ import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +33,9 @@ public class UsersController {
 
     private final UserCreditRecordService userCreditRecordService;
 
-    public UsersController(UserService userService, AddressService addressService, UserProductRecordService userProductRecordService, UserStoreCollectionService userStoreCollectionService, UserProductCollectionService userProductCollectionService, ProductCommentService productCommentService, UserCreditRecordService userCreditRecordService) {
+    private final PasswordEncoder passwordEncoder;
+
+    public UsersController(UserService userService, AddressService addressService, UserProductRecordService userProductRecordService, UserStoreCollectionService userStoreCollectionService, UserProductCollectionService userProductCollectionService, ProductCommentService productCommentService, UserCreditRecordService userCreditRecordService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.addressService = addressService;
         this.userProductRecordService = userProductRecordService;
@@ -39,6 +43,7 @@ public class UsersController {
         this.userProductCollectionService = userProductCollectionService;
         this.productCommentService = productCommentService;
         this.userCreditRecordService = userCreditRecordService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -410,6 +415,103 @@ public class UsersController {
             // 评论失败
             return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, "评论失败，已经评论过了！", null);
         } else {
+            // 发生未知错误，正常情况下不会进入
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, PinConstants.ResponseMessage.INTERNAL_ERROR, null);
+        }
+    }
+
+    /**
+     * @author flyhero
+     * 更新电话号码信息
+     * @param httpServletRequest HttpServlet请求体
+     * @param requestJSON 包含：phone: 待更新的电话号码
+     * @return 响应JSON
+     */
+    @PostMapping("/update-phone")
+    public JSONObject updatePhone(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
+        PinUser user = userService.whoAmI(httpServletRequest);
+        String phone = requestJSON.getString("phone");
+        Boolean updateSuccess = userService.updatePhone(user.getId(), phone);
+        if(updateSuccess) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "用户电话信息更新成功！", null);
+        } else {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, PinConstants.ResponseMessage.INTERNAL_ERROR, null);
+        }
+    }
+
+    /**
+     * @author flyhero
+     * 更新电子邮箱信息
+     * @param httpServletRequest HttpServlet请求体
+     * @param requestJSON 包含：email: 待更新的邮箱地址
+     * @return 响应JSON
+     */
+    @PostMapping("/update-email")
+    public JSONObject updateEmail(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
+        PinUser user = userService.whoAmI(httpServletRequest);
+        String email = requestJSON.getString("email");
+        Boolean updateSuccess = userService.updateEmail(user.getId(), email);
+        if(updateSuccess) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "用户邮箱信息更新成功！", null);
+        } else {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, PinConstants.ResponseMessage.INTERNAL_ERROR, null);
+        }
+    }
+
+    /**
+     * @author flyhero
+     * 更新密码
+     * @param httpServletRequest HttpServlet请求体
+     * @param requestJSON 包含password: 待更新的用户密码信息（传过来时是明文，在Service中再加密）
+     * @return 响应JSON
+     */
+    @PostMapping("/update-password")
+    public JSONObject updatePassword(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
+        PinUser user = userService.whoAmI(httpServletRequest);
+        String password = requestJSON.getString("password");
+        Boolean updateSuccess = userService.updatePhone(user.getId(), password);
+        if(updateSuccess) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "密码更新成功！", null);
+        } else {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, PinConstants.ResponseMessage.INTERNAL_ERROR, null);
+        }
+    }
+
+    /**
+     * @author flyhero
+     * 更新用户头像
+     * @param httpServletRequest HttpServlet请求体
+     * @param requestJSON 包含：avatarUrl: 待更新的头像图片链接地址
+     * @return 响应JSON
+     */
+    @PostMapping("/update-avatar-url")
+    public JSONObject updateAvatarUrl(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
+        PinUser user = userService.whoAmI(httpServletRequest);
+        String avatarUrl = requestJSON.getString("avatarUrl");
+        Boolean updateSuccess = userService.updatePhone(user.getId(), avatarUrl);
+        if(updateSuccess) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "头像更换成功！", null);
+        } else {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, PinConstants.ResponseMessage.INTERNAL_ERROR, null);
+        }
+    }
+
+    /**
+     * @author flyhero
+     * 更新一些常规信息
+     * @param httpServletRequest HttpServlet请求体
+     * @param requestJSON 包含需要更改的User信息的字段（不含手机，邮箱等等，前端限制）
+     * @return 响应JSON
+     */
+    @PostMapping("/update-common-user-info")
+    public JSONObject updateCommonUserInfo(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
+        PinUser user = userService.whoAmI(httpServletRequest);
+        PinUser userInfoToUpdate = JSONObject.toJavaObject(requestJSON, PinUser.class);
+        try {
+            // 用户信息更新成功
+            userService.updateCommonUserInfo(user.getId(), userInfoToUpdate);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "用户信息更新成功！", null);
+        } catch (Exception e) {
             // 发生未知错误，正常情况下不会进入
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, PinConstants.ResponseMessage.INTERNAL_ERROR, null);
         }
