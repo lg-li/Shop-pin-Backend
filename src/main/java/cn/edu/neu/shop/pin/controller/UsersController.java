@@ -11,7 +11,6 @@ import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -36,9 +35,7 @@ public class UsersController {
 
     private final UserCreditRecordService userCreditRecordService;
 
-    private final PasswordEncoder passwordEncoder;
-
-    public UsersController(UserService userService, AddressService addressService, UserProductRecordService userProductRecordService, UserStoreCollectionService userStoreCollectionService, UserProductCollectionService userProductCollectionService, ProductCommentService productCommentService, UserCreditRecordService userCreditRecordService, PasswordEncoder passwordEncoder) {
+    public UsersController(UserService userService, AddressService addressService, UserProductRecordService userProductRecordService, UserStoreCollectionService userStoreCollectionService, UserProductCollectionService userProductCollectionService, ProductCommentService productCommentService, UserCreditRecordService userCreditRecordService) {
         this.userService = userService;
         this.addressService = addressService;
         this.userProductRecordService = userProductRecordService;
@@ -46,7 +43,6 @@ public class UsersController {
         this.userProductCollectionService = userProductCollectionService;
         this.productCommentService = productCommentService;
         this.userCreditRecordService = userCreditRecordService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     /**
