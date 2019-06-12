@@ -11,7 +11,6 @@ import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,17 +21,18 @@ import java.util.List;
 @RequestMapping("/commons/order")
 public class OrderController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private ProductService productService;
+    private final OrderItemService orderItemService;
 
-    @Autowired
-    private OrderItemService orderItemService;
+    private final OrderIndividualService orderIndividualService;
 
-    @Autowired
-    private OrderIndividualService orderIndividualService;
+    public OrderController(UserService userService, OrderItemService orderItemService, OrderIndividualService orderIndividualService) {
+        this.userService = userService;
+        this.orderItemService = orderItemService;
+        this.orderIndividualService = orderIndividualService;
+    }
+
 
     /**
      * @author YDY LLG

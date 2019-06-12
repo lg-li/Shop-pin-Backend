@@ -11,7 +11,6 @@ import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,25 +23,28 @@ import java.util.List;
 @RequestMapping(value = "/commons/order-group")
 public class OrderGroupController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private OrderIndividualService orderIndividualService;
+    private final OrderIndividualService orderIndividualService;
 
-    @Autowired
-    private OrderGroupService orderGroupService;
+    private final OrderGroupService orderGroupService;
 
-    @Autowired
-    private StoreService storeService;
+    private final StoreService storeService;
+
+    public OrderGroupController(UserService userService, OrderIndividualService orderIndividualService, OrderGroupService orderGroupService, StoreService storeService) {
+        this.userService = userService;
+        this.orderIndividualService = orderIndividualService;
+        this.orderGroupService = orderGroupService;
+        this.storeService = storeService;
+    }
 
     /**
      * @author flyhero
      * 新建一个团单
      * 将storeId和orderIndividualId传入
-     * @param httpServletRequest
-     * @param jsonObject
-     * @return
+     * @param httpServletRequest HttpServlet请求体
+     * @param jsonObject 包含storeId和orderIndividualId
+     * @return 响应JSON
      */
     @PostMapping("/create")
     public JSONObject createOrderGroup(HttpServletRequest httpServletRequest, @RequestBody JSONObject jsonObject) {
@@ -83,8 +85,8 @@ public class OrderGroupController {
     /**
      * @author flyhero
      * 加入团单
-     * @param httpServletRequest: 包括
-     * @return
+     * @param httpServletRequest HttpServlet请求体
+     * @return 响应JSON
      */
     @PostMapping("/join")
     public JSONObject joinOrderGroup(HttpServletRequest httpServletRequest, @RequestBody JSONObject jsonObject) {
@@ -130,9 +132,9 @@ public class OrderGroupController {
     /**
      * @author flyhero
      * 退出团单
-     * @param httpServletRequest
+     * @param httpServletRequest HttpServlet请求体
      * @param jsonObject: 包括storeId, orderIndividualId, orderGroupId
-     * @return
+     * @return 响应JSON
      */
     @PostMapping("/quit")
     public JSONObject quitOrderGroup(HttpServletRequest httpServletRequest, @RequestBody JSONObject jsonObject) {
@@ -154,8 +156,8 @@ public class OrderGroupController {
     /**
      * @author flyhero
      * 根据团单编号获取团单
-     * @param orderGroupId
-     * @return
+     * @param orderGroupId 团单ID
+     * @return 响应JSON
      */
     @GetMapping("/by-order-group-id/{orderGroupId}")
     public JSONObject getOrderGroupByOrderGroupId(@PathVariable(value = "orderGroupId") Integer orderGroupId) {
