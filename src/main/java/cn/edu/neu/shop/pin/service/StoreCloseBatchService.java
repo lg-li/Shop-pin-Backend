@@ -38,7 +38,7 @@ public class StoreCloseBatchService extends AbstractService<PinStoreGroupCloseBa
     }
 
     @Transactional
-    public List<PinStoreGroupCloseBatch> addGroupCloseBatch(Integer storeId, Date time) {
-        return pinStoreGroupCloseBatchMapper.addStoreGroupCloseBatch(storeId, time);
+    public void addGroupCloseBatch(Integer storeId, Date time) {
+        pinStoreGroupCloseBatchMapper.addStoreGroupCloseBatch(storeId, time);
     }
 }

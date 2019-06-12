@@ -34,7 +34,7 @@ public class ImgUtil {
 
     public static ResponseEntity<JSONObject> upload(String image, String url) {
         Base64.Decoder decoder = Base64.getDecoder();
-        byte[] rawBytes = decoder.decode(image);
+        byte[] rawBytes = decoder.decode(image.substring(22));
 
         String fileName = "" + System.currentTimeMillis() + ".png";
         File file = new File("D://" + fileName);

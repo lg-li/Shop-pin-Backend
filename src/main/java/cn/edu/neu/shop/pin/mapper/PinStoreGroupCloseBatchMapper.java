@@ -13,5 +13,5 @@ public interface PinStoreGroupCloseBatchMapper extends BaseMapper<PinStoreGroupC
 
     void deleteStoreGroupCloseBatch(Integer storeId, Integer id);
 
-    List<PinStoreGroupCloseBatch> addStoreGroupCloseBatch(Integer storeId, Date time);
+    void addStoreGroupCloseBatch(Integer storeId, Date time);
 }
