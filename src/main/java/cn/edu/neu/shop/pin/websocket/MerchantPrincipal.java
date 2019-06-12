@@ -1,6 +1,5 @@
 package cn.edu.neu.shop.pin.websocket;
 
-import javax.security.auth.Subject;
 import java.security.Principal;
 
 public class MerchantPrincipal implements Principal {
@@ -8,11 +7,7 @@ public class MerchantPrincipal implements Principal {
 
     private Integer storeId;
 
-    public MerchantPrincipal() {
-        super();
-    }
-
-    public MerchantPrincipal(Integer userId, Integer storeId) {
+    MerchantPrincipal(Integer userId, Integer storeId) {
         this.userId = userId;
         this.storeId = storeId;
     }
@@ -29,11 +24,6 @@ public class MerchantPrincipal implements Principal {
         ans += "storeId: " + storeId.toString() + "\n";
         return ans;
     }
-
-//    @Override
-//    public boolean implies(Subject subject) {
-//        return false;
-//    }
 
     public Integer getUserId() {
         return userId;

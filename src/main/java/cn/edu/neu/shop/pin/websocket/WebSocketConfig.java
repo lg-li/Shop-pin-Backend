@@ -7,7 +7,6 @@ import cn.edu.neu.shop.pin.model.PinRole;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.service.OrderGroupService;
 import cn.edu.neu.shop.pin.service.security.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -25,25 +24,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-/**
- * @author flyhero
- * @ClassName WebSocketConfig
- * @Description TODO 配置WebSocket
- */
-
 @Configuration
 @EnableWebSocketMessageBroker
 // 注解开启STOMP协议来传输基于代理（message broker）的消息，这是控制器支持使用@MessageMaping，就像使用@RequestMapping一样
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private OrderGroupService orderGroupService;
+    private final OrderGroupService orderGroupService;
 
-    @Autowired
-    private PinOrderIndividualMapper pinOrderIndividualMapper;
+    private final PinOrderIndividualMapper pinOrderIndividualMapper;
+
+    public WebSocketConfig(UserService userService, OrderGroupService orderGroupService, PinOrderIndividualMapper pinOrderIndividualMapper) {
+        this.userService = userService;
+        this.orderGroupService = orderGroupService;
+        this.pinOrderIndividualMapper = pinOrderIndividualMapper;
+    }
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
@@ -88,11 +84,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     }
 
     /**
-     * @param src
-     * @param token
-     * @param orderGroupId
-     * @param storeId
-     * @return
+     * @param src 用户来源是商户还是买家
+     * @param token 验证用户身份
+     * @param orderGroupId 团单ID
+     * @param storeId 店铺ID
+     * @return 解析出来的Principal变量
      * @author flyhero
      * 根据src（source的缩写）判断用户来意（用途），根据token来验证授权
      */

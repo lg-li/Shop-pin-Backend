@@ -1,6 +1,5 @@
 package cn.edu.neu.shop.pin.websocket;
 
-import javax.security.auth.Subject;
 import java.security.Principal;
 
 public class CustomerPrincipal implements Principal {
@@ -10,10 +9,6 @@ public class CustomerPrincipal implements Principal {
     private Integer orderIndividualId;
 
     private Integer orderGroupId;
-
-    public CustomerPrincipal() {
-        super();
-    }
 
     public CustomerPrincipal(Integer userId, Integer orderIndividualId, Integer orderGroupId) {
         this.userId = userId;
@@ -34,11 +29,6 @@ public class CustomerPrincipal implements Principal {
         ans += "orderGroupId: " + orderGroupId.toString() + "\n";
         return ans;
     }
-
-//    @Override
-//    public boolean implies(Subject subject) {
-//        return false;
-//    }
 
     public Integer getUserId() {
         return userId;

@@ -8,7 +8,6 @@ import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,41 +17,34 @@ import java.util.Date;
 @RequestMapping("/commons/user")
 public class UsersController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private AddressService addressService;
+    private final AddressService addressService;
 
-    @Autowired
-    private ProductService productService;
+    private final UserProductRecordService userProductRecordService;
 
-    @Autowired
-    private OrderItemService orderItemService;
+    private final UserStoreCollectionService userStoreCollectionService;
 
-    @Autowired
-    private UserProductRecordService userProductRecordService;
+    private final UserProductCollectionService userProductCollectionService;
 
-    @Autowired
-    private UserStoreCollectionService userStoreCollectionService;
+    private final ProductCommentService productCommentService;
 
-    @Autowired
-    private UserProductCollectionService userProductCollectionService;
+    private final UserCreditRecordService userCreditRecordService;
 
-    @Autowired
-    private OrderIndividualService orderIndividualService;
-
-    @Autowired
-    private ProductCommentService productCommentService;
-
-    @Autowired
-    private UserCreditRecordService userCreditRecordService;
+    public UsersController(UserService userService, AddressService addressService, UserProductRecordService userProductRecordService, UserStoreCollectionService userStoreCollectionService, UserProductCollectionService userProductCollectionService, ProductCommentService productCommentService, UserCreditRecordService userCreditRecordService) {
+        this.userService = userService;
+        this.addressService = addressService;
+        this.userProductRecordService = userProductRecordService;
+        this.userStoreCollectionService = userStoreCollectionService;
+        this.userProductCollectionService = userProductCollectionService;
+        this.productCommentService = productCommentService;
+        this.userCreditRecordService = userCreditRecordService;
+    }
 
     /**
      * 获取用户信息
-     *
-     * @param httpServletRequest
-     * @return
+     * @param httpServletRequest HttpServlet请求体
+     * @return 包含用户信息以及结果状态的JSONObject
      */
     @GetMapping("/info")
     public JSONObject getUserInfo(HttpServletRequest httpServletRequest) {
@@ -67,8 +59,8 @@ public class UsersController {
     }
 
     /**
-     * @param httpServletRequest
-     * @return
+     * @param httpServletRequest HttpServlet请求体
+     * @return 包含地址以及结果状态的JSONObject
      * @author flyhero
      * 获取某用户的默认地址
      */
@@ -87,9 +79,8 @@ public class UsersController {
 
     /**
      * 根据用户ID，查询该用户的所有收货地址
-     *
-     * @param httpServletRequest
-     * @return
+     * @param httpServletRequest HttpServlet请求体
+     * @return 包含地址以及结果状态的JSONObject
      */
     @GetMapping("/address")
     public JSONObject getAllAddresses(HttpServletRequest httpServletRequest) {
@@ -105,11 +96,11 @@ public class UsersController {
     }
 
     /**
-     * @param httpServletRequest
-     * @param requestJSON
-     * @return
+     * @param httpServletRequest HttpServlet请求体
+     * @param requestJSON 包含传入的地址
+     * @return 创建地址状态
      * @author flyhero
-     * 增加地址，增加了对isDefault的检查
+     * 创建地址，增加了对isDefault的检查
      */
     @PostMapping("/address")
     public JSONObject createAddress(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
@@ -128,11 +119,11 @@ public class UsersController {
     }
 
     /**
-     * @param httpServletRequest
-     * @param requestJSON
-     * @return
+     * @param httpServletRequest HttpServlet请求体
+     * @param requestJSON 请求体JSON，包含地址ID
+     * @return 删除结果状态 JSON
      * @author flyhero
-     * 删除地址
+     * 删除地址，会检查是否删除了默认地址
      */
     @DeleteMapping("/address")
     public JSONObject deleteAddress(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
@@ -158,11 +149,11 @@ public class UsersController {
     }
 
     /**
-     * @param httpServletRequest
-     * @param requestJSON
-     * @return
+     * @param httpServletRequest HttpServlet请求体
+     * @param requestJSON 请求体JSON，包含地址信息
+     * @return 更新结果状态 JSON
      * @author flyhero
-     * 更新地址
+     * 更新地址，会检查是否将其设置为默认地址，若是则替换掉原来的默认地址
      */
     @PutMapping("/address")
     public JSONObject updateAddress(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
@@ -185,10 +176,10 @@ public class UsersController {
     }
 
     /**
+     * @author flyhero
      * 获取商品浏览记录
-     *
-     * @param httpServletRequest
-     * @return
+     * @param httpServletRequest HttpServlet请求体
+     * @return 用户商品浏览记录 JSON
      */
     @GetMapping("/product-visit-record")
     public JSONObject getUserProductRecord(HttpServletRequest httpServletRequest) {
@@ -242,9 +233,9 @@ public class UsersController {
     }
 
     /**
-     * @param httpServletRequest
-     * @param requestJSON
-     * @return
+     * @param httpServletRequest HttpServlet请求体
+     * @param requestJSON 请求体JSON 包含要收藏的商品productId
+     * @return 添加收藏状态 JSON
      * @author flyhero
      * 添加商品收藏
      */
@@ -263,9 +254,9 @@ public class UsersController {
     }
 
     /**
-     * @param httpServletRequest
-     * @param productId
-     * @return
+     * @param httpServletRequest HttpServlet请求体
+     * @param productId 收藏的商品ID
+     * @return 响应JSON
      * @author flyhero
      * 删除商品收藏
      */
@@ -289,9 +280,9 @@ public class UsersController {
     }
 
     /**
-     * @param httpServletRequest
-     * @param requestJSON
-     * @return
+     * @param httpServletRequest HttpServlet请求体
+     * @param requestJSON 请求体JSON
+     * @return 响应JSON
      * @author flyhero
      * 添加店铺收藏
      */
@@ -310,9 +301,9 @@ public class UsersController {
     }
 
     /**
-     * @param httpServletRequest
-     * @param storeId
-     * @return
+     * @param httpServletRequest HttpServlet请求体
+     * @param storeId 收藏的店铺ID
+     * @return 响应JSON
      * @author flyhero
      * 删除店铺收藏
      */
@@ -336,8 +327,8 @@ public class UsersController {
     }
 
     /**
-     * @param httpServletRequest
-     * @return
+     * @param httpServletRequest HttpServlet请求体
+     * @return 响应JSON
      * @author flyhero
      * 签到功能
      */
@@ -356,8 +347,8 @@ public class UsersController {
     }
 
     /**
-     * @param httpServletRequest
-     * @return
+     * @param httpServletRequest HttpServlet请求体
+     * @return 响应JSON
      * @author flyhero
      * 获取用户签到详细信息历史记录
      */
@@ -376,8 +367,8 @@ public class UsersController {
     /**
      * @author flyhero
      * 判断某一用户今日是否已经签到
-     * @param httpServletRequest
-     * @return
+     * @param httpServletRequest HttpServlet请求体
+     * @return 响应JSON
      */
     @GetMapping("/has-checked-in")
     public JSONObject hasCheckedIn(HttpServletRequest httpServletRequest) {
@@ -393,10 +384,10 @@ public class UsersController {
     /**
      * @author flyhero
      * 为某一商品订单添加评论，同一订单只能添加一次
-     * @param httpServletRequest
+     * @param httpServletRequest HttpServlet请求体
      * @param requestJSON
      * 包含：orderIndividualId, productId, skuId, grade, productScore, serviceScore, content, imagesUrls
-     * @return
+     * @return 响应JSON
      */
     @RequestMapping("/add-comment")
     public JSONObject addComment(HttpServletRequest httpServletRequest, JSONObject requestJSON) {

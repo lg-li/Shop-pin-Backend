@@ -1,22 +1,8 @@
 package cn.edu.neu.shop.pin.websocket;
 
-import cn.edu.neu.shop.pin.model.PinOrderGroup;
-import cn.edu.neu.shop.pin.model.PinOrderIndividual;
-import cn.edu.neu.shop.pin.model.PinOrderItem;
-import cn.edu.neu.shop.pin.service.AddressService;
-import cn.edu.neu.shop.pin.service.OrderGroupService;
-import cn.edu.neu.shop.pin.service.OrderIndividualService;
-import cn.edu.neu.shop.pin.service.security.UserService;
-import cn.edu.neu.shop.pin.util.PinConstants;
-import cn.edu.neu.shop.pin.util.ResponseWrapper;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * @author flyhero
@@ -24,41 +10,38 @@ import java.util.List;
 @Component
 public class WebSocketService {
 
-    @Autowired
-    private SimpMessageSendingOperations simpMessageSendingOperations;
+    private final SimpMessageSendingOperations simpMessageSendingOperations;
 
-    @Autowired
-    private OrderGroupService orderGroupService;
-
-    @Autowired
-    private OrderIndividualService orderIndividualService;
+    public WebSocketService(SimpMessageSendingOperations simpMessageSendingOperations) {
+        this.simpMessageSendingOperations = simpMessageSendingOperations;
+    }
 
     /**
      * @author flyhero
      * 点对点发送错误信息
-     * @param principal
-     * @param errorInfo
+     * @param principal 用户principal
+     * @param errorInfo 错误信息
      */
     public void sendSingleErrorMessage(CustomerPrincipal principal, JSONObject errorInfo) {
         sendSingleMessage(principal, "error", errorInfo);
     }
 
-    /**
-     * @author flyhero
-     * 向同一Group内的用户发送错误信息
-     * @param principal
-     * @param errorInfo
-     */
-    public void sendGroupErrorMessage(CustomerPrincipal principal, JSONObject errorInfo) {
-        sendGroupMessage(principal, "error", errorInfo);
-
-    }
+//    /**
+//     * @author flyhero
+//     * 向同一Group内的用户发送错误信息
+//     * @param principal 用户principal
+//     * @param errorInfo 错误信息
+//     */
+//    public void sendGroupErrorMessage(CustomerPrincipal principal, JSONObject errorInfo) {
+//        sendGroupMessage(principal, "error", errorInfo);
+//
+//    }
 
     /**
      * @author flyhero
      * 点对点发送通知信息
-     * @param principal
-     * @param jsonObject
+     * @param principal 用户principal
+     * @param jsonObject 需要发送的信息JSON
      */
     public void sendSingleUpdateMessage(CustomerPrincipal principal, JSONObject jsonObject) {
         sendSingleMessage(principal, "update", jsonObject);
@@ -67,21 +50,21 @@ public class WebSocketService {
     /**
      * @author flyhero
      * 在同一个Group内发送通知信息
-     * @param principal
-     * @param jsonObject
+     * @param principal 用户principal
+     * @param jsonObject 需要发送的信息JSON
      */
     public void sendGroupUpdateMessage(CustomerPrincipal principal, JSONObject jsonObject) {
         sendGroupMessage(principal, "update", jsonObject);
     }
 
-    /**
-     * @author flyhero
-     * 点对点发送Hello消息
-     * @param principal
-     */
-    public void sendSingleHelloMessage(CustomerPrincipal principal, JSONObject jsonObject) {
-        sendSingleMessage(principal, "hello", jsonObject);
-    }
+//    /**
+//     * @author flyhero
+//     * 点对点发送Hello消息
+//     * @param principal 用户principle
+//     */
+//    public void sendSingleHelloMessage(CustomerPrincipal principal, JSONObject jsonObject) {
+//        sendSingleMessage(principal, "hello", jsonObject);
+//    }
 
 //    /**
 //     * @author flyhero
@@ -112,9 +95,9 @@ public class WebSocketService {
     /**
      * @author flyhero
      * 点对点发送消息
-     * @param principal
-     * @param router
-     * @param object
+     * @param principal 用户principal
+     * @param router 路由地址
+     * @param object 待传对象
      */
     private void sendSingleMessage(CustomerPrincipal principal, String router, Object object) {
         simpMessageSendingOperations.convertAndSendToUser(principal.getUserId().toString(), "/" + router, object);
@@ -123,22 +106,22 @@ public class WebSocketService {
     /**
      * @author flyhero
      * 向/group/{orderGroupId}/notify地址发送广播消息，属于同一团内的用户订阅这个地址
-     * @param principal
-     * @param router
-     * @param object
+     * @param principal 用户principal
+     * @param router 路由地址
+     * @param object 待传对象
      */
     private void sendGroupMessage(CustomerPrincipal principal, String router, Object object) {
         simpMessageSendingOperations.convertAndSend("/group/" + principal.getOrderGroupId() + "/" + router, object);
     }
 
-    /**
-     * @author flyhero
-     * 在一个Group内发送广播消息
-     * @param orderGroupId
-     * @param router
-     * @param object
-     */
-    private void sendGroupMessage(Integer orderGroupId, String router, Object object) {
-        simpMessageSendingOperations.convertAndSend("/group/" + orderGroupId + "/" + router, object);
-    }
+//    /**
+//     * @author flyhero
+//     * 在一个Group内发送广播消息
+//     * @param orderGroupId 团单ID
+//     * @param router 路由地址
+//     * @param object 待传对象
+//     */
+//    private void sendGroupMessage(Integer orderGroupId, String router, Object object) {
+//        simpMessageSendingOperations.convertAndSend("/group/" + orderGroupId + "/" + router, object);
+//    }
 }

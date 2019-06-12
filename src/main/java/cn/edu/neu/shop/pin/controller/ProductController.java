@@ -8,7 +8,6 @@ import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,17 +19,20 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/commons/product")
 public class ProductController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private ProductCategoryService productCategoryService;
+    private final ProductCategoryService productCategoryService;
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
-    @Autowired
-    private ProductCommentService productCommentService;
+    private final ProductCommentService productCommentService;
+
+    public ProductController(UserService userService, ProductCategoryService productCategoryService, ProductService productService, ProductCommentService productCommentService) {
+        this.userService = userService;
+        this.productCategoryService = productCategoryService;
+        this.productService = productService;
+        this.productCommentService = productCommentService;
+    }
 
     /**
      * 层级获取商品分类表
@@ -151,9 +153,9 @@ public class ProductController {
     /**
      * 判断某一商品是否已被收藏
      *
-     * @param httpServletRequest
-     * @param productId
-     * @return
+     * @param httpServletRequest HttpServlet请求体
+     * @param productId 商品ID
+     * @return 响应JSON
      */
     @GetMapping(value = "/{productId}/is-collected")
     public JSONObject isCollected(HttpServletRequest httpServletRequest, @PathVariable(value = "productId") Integer productId) {

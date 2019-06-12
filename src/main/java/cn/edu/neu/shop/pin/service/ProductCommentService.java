@@ -6,13 +6,8 @@ import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.*;
-import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -23,11 +18,11 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
     public static final int STATUS_ADD_COMMENT_SUCCESS = 0;
     public static final int STATUS_ADD_COMMENT_FAILED = -1;
 
-    @Autowired
-    private PinUserProductCommentMapper pinUserProductCommentMapper;
+    private final PinUserProductCommentMapper pinUserProductCommentMapper;
 
-    @Autowired
-    private ProductCommentService productCommentService;
+    public ProductCommentService(PinUserProductCommentMapper pinUserProductCommentMapper) {
+        this.pinUserProductCommentMapper = pinUserProductCommentMapper;
+    }
 
     /**
      * @author flyhero
@@ -41,7 +36,7 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
      * @param serviceScore 服务评分（1～5）
      * @param content 评论内容
      * @param imagesUrls 评论图片
-     * @return
+     * @return 添加评论成功与否的状态
      */
     public Integer addComment(Integer userId, Integer orderIndividualId, Integer productId, Integer skuId, Integer grade,
                            Integer productScore, Integer serviceScore, String content, String imagesUrls) {
@@ -83,10 +78,10 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
     /**
      * 从当前时间算起，获取之前7天内每天的评论数
      * @param storeId 店铺ID
-     * @return
+     * @return 获取评论数成功与否的状态
      */
     public Integer[] getComments(Integer storeId) {
-        Integer comment[] = new Integer[7];
+        Integer[] comment = new Integer[7];
         Date date = new Date();
         date = getDateByOffset(date, 1);
         for(int i = 0; i < 7; i++) {
@@ -109,11 +104,10 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
     }
 
     /**
-     *
-     * @param list
-     * @param pageNumber
-     * @param pageSize
-     * @return
+     * @param list 列表长度
+     * @param pageNumber 分页数量
+     * @param pageSize 页面长度
+     * @return 评论列表
      */
     public List<?> getCommentsByPageNumAndSize(List<?> list, Integer pageNumber, Integer pageSize) {
         if (pageNumber * pageSize < list.size()) {
@@ -125,8 +119,8 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
 
     /**
      * 获取该店铺商家未评论总数
-     * @param storeId
-     * @return
+     * @param storeId 店铺ID
+     * @return 未评论的店家数量
      */
     public Integer getMerchantNotComment(Integer storeId) {
         return pinUserProductCommentMapper.getNumberOfMerchantNotComment(storeId);
@@ -136,7 +130,7 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
      * 指定偏移的天数，计算某天的日期
      * @param today 当前时间
      * @param delta 偏移量
-     * @return
+     * @return 希望得到的日期
      */
     private java.util.Date getDateByOffset(java.util.Date today, Integer delta) {
         Calendar calendar = Calendar.getInstance();
@@ -145,6 +139,11 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
         return calendar.getTime();
     }
 
+    /**
+     * 获取某一店铺内尚未评论的产品列表
+     * @param storeId 店铺ID
+     * @return 商品列表
+     */
     public List<JSONObject> getProductWithComment(Integer storeId) {
         return pinUserProductCommentMapper.getAllProductWithComment(storeId);
     }

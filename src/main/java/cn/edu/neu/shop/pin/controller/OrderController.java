@@ -2,7 +2,6 @@ package cn.edu.neu.shop.pin.controller;
 
 import cn.edu.neu.shop.pin.exception.OrderItemsAreNotInTheSameStoreException;
 import cn.edu.neu.shop.pin.exception.ProductSoldOutException;
-import cn.edu.neu.shop.pin.model.PinOrderGroup;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.model.PinOrderItem;
 import cn.edu.neu.shop.pin.model.PinUser;
@@ -12,7 +11,6 @@ import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,26 +21,25 @@ import java.util.List;
 @RequestMapping("/commons/order")
 public class OrderController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private ProductService productService;
+    private final OrderItemService orderItemService;
 
-    @Autowired
-    private OrderItemService orderItemService;
+    private final OrderIndividualService orderIndividualService;
 
-    @Autowired
-    private OrderIndividualService orderIndividualService;
-
+    public OrderController(UserService userService, OrderItemService orderItemService, OrderIndividualService orderIndividualService) {
+        this.userService = userService;
+        this.orderItemService = orderItemService;
+        this.orderIndividualService = orderIndividualService;
+    }
 
 
     /**
+     * @author YDY LLG
+     * 创建一个pinOrderIndividual
      * @param httpServletRequest 请求对象
      * @param requestObject      请求体JSON对象
      * @return 返回JSON
-     * @author YDY LLG
-     * 创建一个pinOrderIndividual
      */
     @PostMapping("/order-individual")
     public JSONObject createOrderIndividual(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestObject) {
@@ -66,9 +63,9 @@ public class OrderController {
 
     /**
      * @author flyhero
-     * 获取所有订单信息
-     * @param httpServletRequest
-     * @return
+     * 获取购物车中所有OrderItem的信息
+     * @param httpServletRequest HttpServlet请求体
+     * @return 获取OrderItem的成功标志
      */
     @GetMapping("/order-items")
     public JSONObject getAllOrderItems(HttpServletRequest httpServletRequest) {
@@ -88,11 +85,11 @@ public class OrderController {
 
 
     /**
-     * @param httpServletRequest
-     * @param requestJSON
-     * @return
      * @author flyhero
      * 将商品添加到购物车中（新建一条OrderItem记录）
+     * @param httpServletRequest HttpServlet请求体
+     * @param requestJSON 请求体JSON
+     * @return 获取OrderItem的成功标志
      */
     @PostMapping("/order-item")
     public JSONObject addOrderItem(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
@@ -115,16 +112,16 @@ public class OrderController {
     }
 
     /**
-     * @param httpServletRequest HTTP请求对象
-     * @param jsonObject         请求体JSON
-     * @return
      * @author flyhero
      * 删除订单信息
+     * @param httpServletRequest HTTP请求对象
+     * @param requestJSON 请求体JSON
+     * @return 删除OrderItem成功与否
      */
     @DeleteMapping("/order-items")
-    public JSONObject deleteOrderItems(HttpServletRequest httpServletRequest, @RequestBody JSONObject jsonObject) {
+    public JSONObject deleteOrderItems(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try {
-            JSONArray array = jsonObject.getJSONArray("orderItems");
+            JSONArray array = requestJSON.getJSONArray("orderItems");
             List<Integer> list = array.toJavaList(Integer.class);
             PinUser user = userService.whoAmI(httpServletRequest);
             int code = orderItemService.deleteOrderItems(user.getId(), list);
@@ -143,10 +140,10 @@ public class OrderController {
     }
 
     /**
-     * @param httpServletRequest HTTP请求对象
-     * @return
      * @author flyhero
      * 获取近三个月所有的orderIndividuals
+     * @param httpServletRequest HTTP请求对象
+     * @return 请求体JSON
      */
     @GetMapping("/order-individual/recent")
     public JSONObject getRecentThreeMonthsOrderIndividuals(HttpServletRequest httpServletRequest) {
@@ -165,9 +162,9 @@ public class OrderController {
     /**
      * @author flyhero
      * 确认收货
-     * @param httpServletRequest
+     * @param httpServletRequest HttpServlet请求体
      * @param requestJSON: 包含orderIndividualId——以此来确认该订单已收货
-     * @return
+     * @return 收货成功与否结果 JSON
      */
     @PostMapping("/order-individual/confirm-receipt")
     public JSONObject confirmReceipt(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
