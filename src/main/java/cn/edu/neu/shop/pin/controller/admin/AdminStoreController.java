@@ -10,6 +10,7 @@ import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import cn.edu.neu.shop.pin.util.img.ImgUtil;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -101,8 +102,9 @@ public class AdminStoreController {
     }
 
     @PostMapping("/upload")
-    public JSONObject uploadStoreInfo(HttpServletRequest httpServletRequest,@RequestBody JSONObject uploadingInfo){
-        String base64Img = uploadingInfo.getString("image");
+    public ResponseEntity<JSONObject> uploadStoreInfo(HttpServletRequest httpServletRequest, @RequestBody JSONObject uploadingInfo){
+        //截掉 "data:image/png;base64,"
+        String base64Img = uploadingInfo.getString("image").substring(22);
         return ImgUtil.upload(base64Img,"https://sm.ms/api/upload");
     }
 
