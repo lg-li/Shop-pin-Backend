@@ -21,8 +21,11 @@ import javax.servlet.http.HttpServletRequest;
 @Api(tags = "user")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     //这里在登录，得到token
     @GetMapping("/sign-in")
