@@ -22,4 +22,9 @@
     where store_id = #{storeId}
     and id = #{id}
   </delete>
+
+  <insert id="addStoreGroupCloseBatch" useGeneratedKeys="true" keyProperty="id">
+    insert into pin_store_group_close_batch
+    values (null, #{storeId}, #{time})
+  </insert>
 </mapper>

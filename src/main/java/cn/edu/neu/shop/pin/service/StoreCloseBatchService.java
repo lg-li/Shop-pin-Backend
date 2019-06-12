@@ -5,6 +5,7 @@ import cn.edu.neu.shop.pin.model.PinStoreGroupCloseBatch;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -31,7 +32,13 @@ public class StoreCloseBatchService extends AbstractService<PinStoreGroupCloseBa
         return list.get(0);
     }
 
+    @Transactional
     public void deleteGroupCloseBatch(Integer storeId, Integer id) {
         pinStoreGroupCloseBatchMapper.deleteStoreGroupCloseBatch(storeId, id);
+    }
+
+    @Transactional
+    public List<PinStoreGroupCloseBatch> addGroupCloseBatch(Integer storeId, Date time) {
+        return pinStoreGroupCloseBatchMapper.addStoreGroupCloseBatch(storeId, time);
     }
 }
