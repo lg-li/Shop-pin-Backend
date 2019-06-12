@@ -4,12 +4,10 @@ import cn.edu.neu.shop.pin.mapper.*;
 import cn.edu.neu.shop.pin.model.*;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,20 +60,24 @@ public class ProductService extends AbstractService<PinProduct> {
      * 根据店铺Id，获取该店铺所有在售商品信息
      *
      * @param storeId 店铺 ID
+     * @param pageNum 分页页码
+     * @param pageSize 分页大小
      * @return 商品列表
      */
-    public List<PinProduct> getProductByStoreId(Integer storeId) {
-        PinProduct pinProduct = new PinProduct();
-        pinProduct.setStoreId(storeId);
-        return pinProductMapper.select(pinProduct);
+    public PageInfo<PinProduct> getProductByStoreIdByPage(Integer storeId, Integer pageNum, Integer pageSize) {
+        return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> {
+            PinProduct pinProduct = new PinProduct();
+            pinProduct.setStoreId(storeId);
+            pinProductMapper.select(pinProduct);
+        });
     }
 
     /**
      * 根据分类ID，获取该分类下所有在售商品信息
      *
      * @param categoryId 分类ID
-     * @param pageNum
-     * @param pageSize
+     * @param pageNum 分页页码
+     * @param pageSize 分页大小
      * @return 商品分页列表
      */
     public PageInfo<PinProduct> getProductByCategoryIdByPage(Integer categoryId, Integer pageNum, Integer pageSize) {
@@ -189,6 +191,7 @@ public class ProductService extends AbstractService<PinProduct> {
 
     /**
      * 店铺库存预警商品个数
+     *
      * @param storeId
      * @return
      */

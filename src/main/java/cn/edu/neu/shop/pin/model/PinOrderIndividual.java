@@ -205,6 +205,18 @@ public class PinOrderIndividual {
     @Column(name = "total_cost")
     private BigDecimal totalCost;
 
+    /**
+     * 买家确认收货时间
+     */
+    @Column(name = "confirm_receipt_time")
+    private Date confirmReceiptTime;
+
+    /**
+     * 卖家发货申请时间
+     */
+    @Column(name = "delivery_time")
+    private Date deliveryTime;
+
     private PinUser user;
 
     private PinStore store;

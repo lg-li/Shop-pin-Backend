@@ -28,12 +28,10 @@ public class StoreController {
      * @param storeId
      * @return JSONObject
      */
-    @GetMapping("/{storeId}/products")
-    public JSONObject getProductInfoByStoreId(@PathVariable(value = "storeId") Integer storeId) {
+    @GetMapping("/{storeId}/products/{pageNum}/{pageSize}")
+    public JSONObject getProductInfoByStoreId(@PathVariable(value = "storeId") Integer storeId, @PathVariable(value = "pageNum") Integer pageNum, @PathVariable(value = "pageSize") Integer pageSize) {
         try {
-            JSONObject data = new JSONObject();
-            data.put("list", productService.getProductByStoreId(storeId));
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productService.getProductByStoreIdByPage(storeId, pageNum, pageSize));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
