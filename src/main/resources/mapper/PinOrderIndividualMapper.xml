@@ -164,16 +164,14 @@
 
     <update id="updateOrderDeliveryTypeNotExpress">
         update pin_order_individual
-        set status = 1
-        where delivery_type = #{deliveryType}
-        and id = #{orderIndividualId}
+        set status = 1, delivery_type = #{deliveryType}
+        where id = #{orderIndividualId}
     </update>
 
     <update id="updateOrderDeliveryTypeIsExpress">
         update pin_order_individual
-        set status = 1, delivery_name = #{deliveryName}, delivery_id = #{deliveryId}
-        where delivery_type = #{deliveryType}
-        and id = #{orderIndividualId}
+        set status = 1, delivery_name = #{deliveryName}, delivery_id = #{deliveryId}, delivery_type = #{deliveryType}
+        where id = #{orderIndividualId}
     </update>
 
 </mapper>
