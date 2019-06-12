@@ -334,7 +334,7 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
 
     /**
      * @author flyhero
-     * 确认收获
+     * 确认收货
      *
      */
     public Integer confirmReceipt(Integer userId, Integer orderIndividualId) {
@@ -347,10 +347,11 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
             // 订单状态不符合确认收货条件
             return STATUS_CONFIRM_FAILED;
         }
-        // 执行确认收获操作
+        // 执行确认收货操作
         orderIndividual.setConfirmReceiptTime(new Date());
         orderIndividual.setStatus(2);
         orderIndividualService.update(orderIndividual);
+        // TODO: 给商家推送确认收货
         return STATUS_CONFIRM_SUCCESS;
     }
 
