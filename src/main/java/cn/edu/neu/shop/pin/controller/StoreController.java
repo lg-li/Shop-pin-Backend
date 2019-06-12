@@ -6,7 +6,6 @@ import cn.edu.neu.shop.pin.service.StoreService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,16 +15,18 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/commons/store")
 public class StoreController {
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
-    @Autowired
-    private StoreService storeService;
+    private final StoreService storeService;
+
+    public StoreController(ProductService productService, StoreService storeService) {
+        this.productService = productService;
+        this.storeService = storeService;
+    }
 
     /**
      * 根据店铺Id 获取该店铺的所有在售商品信息
-     *
-     * @param storeId
+     * @param storeId 店铺ID
      * @return JSONObject
      */
     @GetMapping("/{storeId}/products/{pageNum}/{pageSize}")
@@ -40,8 +41,7 @@ public class StoreController {
 
     /**
      * 根据店铺ID 获取该店铺的详细信息
-     *
-     * @param storeId
+     * @param storeId 店铺ID
      * @return JSONObject
      */
     @GetMapping("/{storeId}")
