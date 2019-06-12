@@ -218,8 +218,8 @@ public class PinOrderIndividual {
     /**
      * 卖家发货申请时间
      */
-    @Column(name = "delivery_time")
-    private Date deliveryTime;
+    @Column(name = "deliver_time")
+    private Date deliverTime;
 
     private PinUser user;
 
@@ -260,6 +260,22 @@ public class PinOrderIndividual {
         this.userRemark = userRemark;
         this.isGroup = isGroup;
         this.totalCost = totalCost;
+    }
+
+    public Date getConfirmReceiptTime() {
+        return confirmReceiptTime;
+    }
+
+    public void setConfirmReceiptTime(Date confirmReceiptTime) {
+        this.confirmReceiptTime = confirmReceiptTime;
+    }
+
+    public Date getDeliverTime() {
+        return deliverTime;
+    }
+
+    public void setDeliverTime(Date deliverTime) {
+        this.deliverTime = deliverTime;
     }
 
     /**
