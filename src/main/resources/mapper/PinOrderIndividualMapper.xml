@@ -173,4 +173,10 @@
         where id = #{orderIndividualId}
     </update>
 
+    <update id="updateMerchantRemark">
+        update pin_order_individual
+        set merchant_remark = #{merchantRemark}
+        where id = #{orderIndividualId}
+    </update>
+
 </mapper>

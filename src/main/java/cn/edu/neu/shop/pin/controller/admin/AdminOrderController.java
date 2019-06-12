@@ -126,4 +126,16 @@ public class AdminOrderController {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
     }
+
+    @PutMapping("/order/order-remark")
+    public JSONObject updateMerchantRemark(@RequestBody JSONObject requestJSON) {
+        try{
+            Integer orderIndividualId = requestJSON.getInteger("orderIndividualId");
+            String remark = requestJSON.getString("merchantRemark");
+            orderIndividualService.updateMerchantRemark(orderIndividualId, remark);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
+        } catch (Exception e) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, e.getMessage(), null);
+        }
+    }
 }
