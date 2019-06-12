@@ -209,6 +209,18 @@ public class PinOrderIndividual {
     @Column(name = "total_cost")
     private BigDecimal totalCost;
 
+    /**
+     * 买家确认收货时间
+     */
+    @Column(name = "confirm_receipt_time")
+    private Date confirmReceiptTime;
+
+    /**
+     * 卖家发货申请时间
+     */
+    @Column(name = "deliver_time")
+    private Date deliverTime;
+
     private PinUser user;
 
     private PinStore store;
@@ -248,6 +260,22 @@ public class PinOrderIndividual {
         this.userRemark = userRemark;
         this.isGroup = isGroup;
         this.totalCost = totalCost;
+    }
+
+    public Date getConfirmReceiptTime() {
+        return confirmReceiptTime;
+    }
+
+    public void setConfirmReceiptTime(Date confirmReceiptTime) {
+        this.confirmReceiptTime = confirmReceiptTime;
+    }
+
+    public Date getDeliverTime() {
+        return deliverTime;
+    }
+
+    public void setDeliverTime(Date deliverTime) {
+        this.deliverTime = deliverTime;
     }
 
     /**

@@ -36,6 +36,10 @@
         <result column="user_remark" jdbcType="VARCHAR" property="userRemark"/>
         <result column="is_group" jdbcType="BIT" property="isGroup"/>
         <result column="total_cost" jdbcType="DECIMAL" property="totalCost"/>
+
+        <result column="confirm_receipt_time" jdbcType="TIMESTAMP" property="confirmReceiptTime"/>
+        <result column="deliver_time" jdbcType="TIMESTAMP" property="deliverTime"/>
+
     </resultMap>
 
     <select id="selectByOrderGroupId" resultMap="BaseResultMap">
