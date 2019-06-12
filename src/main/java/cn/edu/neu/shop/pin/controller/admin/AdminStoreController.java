@@ -1,6 +1,7 @@
 package cn.edu.neu.shop.pin.controller.admin;
 
 import cn.edu.neu.shop.pin.model.PinStore;
+import cn.edu.neu.shop.pin.model.PinStoreGroupCloseBatch;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.service.StoreCloseBatchService;
 import cn.edu.neu.shop.pin.service.StoreService;
@@ -15,6 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/manager/store")
@@ -113,14 +116,28 @@ public class AdminStoreController {
     public JSONObject deleteGroupCloseBatchTime(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try {
             Integer storeId = Integer.valueOf(httpServletRequest.getHeader("Current-Store"));
-            JSONArray array = requestJSON.getJSONArray("closeBatch");
+            JSONArray array = requestJSON.getJSONArray("closeBatchList");
             for (int i = 0; i < array.size(); i++) {
                 Integer id = array.getJSONObject(i).getInteger("id");
                 storeCloseBatchService.deleteGroupCloseBatch(storeId, id);
             }
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
         } catch (Exception e) {
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, e.getMessage(), null);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
+    @PostMapping("/close-batch")
+    public JSONObject addGroupCloseBatchTime(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
+        try{
+            Integer storeId = Integer.valueOf(httpServletRequest.getHeader("Current-Store"));
+            Date date = requestJSON.getDate("time");
+            List<PinStoreGroupCloseBatch> list = storeCloseBatchService.addGroupCloseBatch(storeId, date);
+            JSONObject data = new JSONObject();
+            data.put("closeBatch", data);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
+        } catch (Exception e) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
     }
 }
