@@ -1,9 +1,10 @@
 package cn.edu.neu.shop.pin.util.img;
 
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -31,15 +32,32 @@ public class ImgUtil {
 
     }
 
-    public static JSONObject upload(String image, String url) {
+    public static ResponseEntity<JSONObject> upload(String image, String url) {
         Base64.Decoder decoder = Base64.getDecoder();
         byte[] rawBytes = decoder.decode(image);
-        String suffix = getSuffix(rawBytes);//获取图片的后缀名，也可以是其他任意文件名
-        String fileName = "myImage" + suffix;
-        ByteArrayResource fileResource = new ByteArrayResource(rawBytes);
+
+        String fileName = "" + System.currentTimeMillis() + ".png";
+        File file = new File("D://" + fileName);
+
+        BufferedOutputStream bos = null;
+        java.io.FileOutputStream fos = null;
+        try {
+            fos = new java.io.FileOutputStream(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        bos = new BufferedOutputStream(fos);
+        try {
+            bos.write(rawBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        FileSystemResource fileResource = new FileSystemResource(new File("D://" + fileName));
 
         HttpHeaders requestHeaders = new HttpHeaders();
-        requestHeaders.add("api-version", "1.0");
+        requestHeaders.add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36");
+        requestHeaders.setContentType(MediaType.parseMediaType("multipart/form-data; charset=UTF-8"));
 
         MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<String, Object>();
         requestBody.add("smfile", fileResource);
@@ -47,10 +65,8 @@ public class ImgUtil {
         HttpEntity<MultiValueMap> requestEntity = new HttpEntity<MultiValueMap>(requestBody, requestHeaders);
 
         RestTemplate restTemplate = new RestTemplate();
-        JSONObject response = new JSONObject();
         ResponseEntity<JSONObject> responseEntity = restTemplate.postForEntity(url, requestEntity, JSONObject.class);
-        System.out.println(response);
-        return response;
+        return responseEntity;
     }
 
     public static String bytesToHexString(byte[] src) {
