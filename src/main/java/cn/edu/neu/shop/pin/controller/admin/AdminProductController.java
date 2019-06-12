@@ -44,19 +44,19 @@ public class AdminProductController {
             JSONObject data = new JSONObject();
             switch (queryType){
                 case "SALING":
-                    List<JSONObject> saling = productService.getIsShownProductInfo(storeId);
+                    List<PinProduct> saling = productService.getIsShownProductInfo(storeId);
                     data.put("goodsList", saling);
                     return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
                 case "READY":
-                    List<JSONObject> ready = productService.getIsReadyProductInfo(storeId);
+                    List<PinProduct> ready = productService.getIsReadyProductInfo(storeId);
                     data.put("goodsList", ready);
                     return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
                 case "OUT":
-                    List<JSONObject> out = productService.getIsOutProductInfo(storeId);
+                    List<PinProduct> out = productService.getIsOutProductInfo(storeId);
                     data.put("goodsList", out);
                     return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
                 case "AlARM":
-                    List<JSONObject> alarm = productService.getIsAlarmProductInfo(storeId);
+                    List<PinProduct> alarm = productService.getIsAlarmProductInfo(storeId);
                     data.put("goodsList", alarm);
                     return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
                 default:

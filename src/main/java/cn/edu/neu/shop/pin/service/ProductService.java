@@ -145,7 +145,7 @@ public class ProductService extends AbstractService<PinProduct> {
      * @param storeId 店铺ID
      * @return 商品信息JSON list
      */
-    public List<JSONObject> getIsShownProductInfo(Integer storeId) {
+    public List<PinProduct> getIsShownProductInfo(Integer storeId) {
         return pinProductMapper.getIsShownProductInfo(storeId);
     }
 
@@ -154,7 +154,7 @@ public class ProductService extends AbstractService<PinProduct> {
      * @param storeId 店铺ID
      * @return 商品信息JSON list
      */
-    public List<JSONObject> getIsReadyProductInfo(Integer storeId) {
+    public List<PinProduct> getIsReadyProductInfo(Integer storeId) {
         return pinProductMapper.getIsReadyProductInfo(storeId);
     }
 
@@ -163,7 +163,7 @@ public class ProductService extends AbstractService<PinProduct> {
      * @param storeId 店铺ID
      * @return 商品信息JSON list
      */
-    public List<JSONObject> getIsOutProductInfo(Integer storeId) {
+    public List<PinProduct> getIsOutProductInfo(Integer storeId) {
         return pinProductMapper.getIsOutProductInfo(storeId);
     }
 
@@ -172,7 +172,7 @@ public class ProductService extends AbstractService<PinProduct> {
      * @param storeId 店铺ID
      * @return 商品信息JSON list
      */
-    public List<JSONObject> getIsAlarmProductInfo(Integer storeId) {
+    public List<PinProduct> getIsAlarmProductInfo(Integer storeId) {
         return pinProductMapper.getIsAlarmProductInfo(storeId);
     }
 
