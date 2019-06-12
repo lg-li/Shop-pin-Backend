@@ -67,7 +67,8 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
             if(checkIfExists != null) { // 如果评论已存在，则覆盖更新这条评论
                 comment.setId(checkIfExists.getId());
                 this.update(comment);
-            } else { // 新鲜的评论
+            }
+            else { // 新鲜的评论
                 // 由于前端只返回了skuId而没有返回productId，因此需要根据skuId找到其对应的productId
                 comment.setProductId(productService.findBy("skuId", skuId).getId());
                 comment.setCreateTime(new Date());
