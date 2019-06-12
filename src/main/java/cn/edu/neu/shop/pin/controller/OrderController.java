@@ -164,7 +164,7 @@ public class OrderController {
      * 确认收货
      * @param httpServletRequest HttpServlet请求体
      * @param requestJSON: 包含orderIndividualId——以此来确认该订单已收货
-     * @return 请求体JSON
+     * @return 收货成功与否结果 JSON
      */
     @PostMapping("/order-individual/confirm-receipt")
     public JSONObject confirmReceipt(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
