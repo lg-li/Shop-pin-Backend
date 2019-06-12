@@ -16,6 +16,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -110,6 +111,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
      * @author flyhero
      * 新建一个团单
      */
+    @Transactional
     public Integer createOrderGroup(Integer userId, Integer storeId, Integer orderIndividualId) {
         PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
         if (!Objects.equals(userId, orderIndividual.getUserId())) {
@@ -236,7 +238,6 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
     /**
      * @author flyhero
      * Stomp 初始化页面消息
-     *
      * @param customerPrincipal 客户principal
      */
     public void sendGroupInitMessageToSingle(CustomerPrincipal customerPrincipal) {
@@ -256,8 +257,8 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
     /**
      * @author flyhero
      * 生成返回的JSON格式的orderGroup，由于多个地方会用到，因此将其抽离出来
-     * @param orderGroup
-     * @return
+     * @param orderGroup 团单对象
+     * @return 响应JSON
      */
     private JSONObject generateOrderGroupJSON(PinOrderGroup orderGroup) {
         JSONObject orderGroupJSON = (JSONObject) JSONObject.toJSON(orderGroup);
