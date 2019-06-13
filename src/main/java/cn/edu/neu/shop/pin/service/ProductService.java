@@ -28,12 +28,15 @@ public class ProductService extends AbstractService<PinProduct> {
 
     private final PinUserProductCommentMapper pinUserProductCommentMapper;
 
-    public ProductService(PinProductMapper pinProductMapper, PinProductAttributeDefinitionMapper pinProductAttributeDefinitionMapper, PinProductAttributeValueMapper pinProductAttributeValueMapper, PinUserProductCollectionMapper pinUserProductCollectionMapper, PinUserProductCommentMapper pinUserProductCommentMapper) {
+    private final StoreService storeService;
+
+    public ProductService(PinProductMapper pinProductMapper, PinProductAttributeDefinitionMapper pinProductAttributeDefinitionMapper, PinProductAttributeValueMapper pinProductAttributeValueMapper, PinUserProductCollectionMapper pinUserProductCollectionMapper, PinUserProductCommentMapper pinUserProductCommentMapper, StoreService storeService) {
         this.pinProductMapper = pinProductMapper;
         this.pinProductAttributeDefinitionMapper = pinProductAttributeDefinitionMapper;
         this.pinProductAttributeValueMapper = pinProductAttributeValueMapper;
         this.pinUserProductCollectionMapper = pinUserProductCollectionMapper;
         this.pinUserProductCommentMapper = pinUserProductCommentMapper;
+        this.storeService = storeService;
     }
 
     /**
@@ -61,6 +64,8 @@ public class ProductService extends AbstractService<PinProduct> {
      */
     public JSONObject getProductByIdWithOneComment(Integer productId) {
         PinProduct product = getProductById(productId);
+        PinStore store = storeService.findById(product.getStoreId());
+        product.setStore(store);
         JSONObject returnJSON = new JSONObject();
         returnJSON.put("product", product);
         List<JSONObject> list = pinUserProductCommentMapper.getCommentAndUserInfo(productId);
