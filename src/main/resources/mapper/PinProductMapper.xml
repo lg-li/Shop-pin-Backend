@@ -269,4 +269,16 @@
           and pin_product.store_id = #{storeId}
     </select>
 
+    <update id="updateIsShownStatus">
+        update pin_product
+        set is_shown = 1
+        where id = #{productId}
+    </update>
+
+    <update id="updateIsNotShownStatus">
+        update pin_product
+        set is_shown = 0
+        where id = #{productId}
+    </update>
+
 </mapper>

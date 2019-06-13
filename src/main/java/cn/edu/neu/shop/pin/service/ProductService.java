@@ -222,4 +222,14 @@ public class ProductService extends AbstractService<PinProduct> {
     public void updateProductCategory(Integer productId, Integer categoryId) {
         pinProductMapper.updateProductCategory(productId, categoryId);
     }
+
+    @Transactional
+    public void updateProductIsShownStatus(Integer productId) {
+        pinProductMapper.updateIsShownStatus(productId);
+    }
+
+    @Transactional
+    public void updateProductIsNotShownStatus(Integer productId) {
+        pinProductMapper.updateIsNotShownStatus(productId);
+    }
 }
