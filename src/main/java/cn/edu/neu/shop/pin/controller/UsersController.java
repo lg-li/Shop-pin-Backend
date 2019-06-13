@@ -395,7 +395,7 @@ public class UsersController {
         List<PinUserProductComment> comments = jsonArray.toJavaList(PinUserProductComment.class);
         PinUser user = userService.whoAmI(httpServletRequest);
         try {
-            productCommentService.addComment(user.getId(), comments);
+            productCommentService.addComments(user.getId(), comments);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "评论成功！", null);
         } catch (PermissionDeniedException e) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.PERMISSION_DENIED, e.getMessage(), null);
