@@ -9,7 +9,7 @@
     <result column="product_id" jdbcType="INTEGER" property="productId" />
     <result column="sku" jdbcType="VARCHAR" property="sku" />
     <result column="stock" jdbcType="VARCHAR" property="stock" />
-    <result column="changedAmount" jdbcType="DECIMAL" property="changedAmount" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
     <result column="image_url" jdbcType="VARCHAR" property="imageUrl" />
     <result column="cost" jdbcType="DECIMAL" property="cost" />
   </resultMap>

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Component
 public interface PinStoreGroupCloseBatchMapper extends BaseMapper<PinStoreGroupCloseBatch> {
-    List<PinStoreGroupCloseBatch> getStoreGroupCloseBatchByStoreIdAndTimeDesc(Integer storeId);
+    List<PinStoreGroupCloseBatch> getStoreGroupCloseBatchByStoreIdAndTimeAsc(Integer storeId);
 
     void deleteStoreGroupCloseBatch(Integer storeId, Integer id);
 

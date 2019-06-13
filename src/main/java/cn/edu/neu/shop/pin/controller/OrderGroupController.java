@@ -142,7 +142,7 @@ public class OrderGroupController {
         Integer storeId = jsonObject.getInteger("storeId");
         Integer orderIndividualId = jsonObject.getInteger("orderIndividualId");
         Integer orderGroupId = jsonObject.getInteger("orderGroupId");
-        int code = orderGroupService.quitOrderGroup(user.getId(), storeId, orderIndividualId, orderGroupId);
+        int code = orderGroupService.quitOrderGroup(user.getId(), orderIndividualId, orderGroupId);
         if(code == OrderGroupService.STATUS_SUCCESS) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "团单退出成功！",
                     null);
@@ -167,8 +167,7 @@ public class OrderGroupController {
             JSONObject data = new JSONObject();
             data.put("orderGroup", orderGroup);
             data.put("users", list);
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
-                    data);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);

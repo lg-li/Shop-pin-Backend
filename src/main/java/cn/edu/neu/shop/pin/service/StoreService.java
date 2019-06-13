@@ -3,7 +3,6 @@ package cn.edu.neu.shop.pin.service;
 import cn.edu.neu.shop.pin.mapper.PinStoreMapper;
 import cn.edu.neu.shop.pin.model.PinStore;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,24 +11,23 @@ import java.util.List;
 @Service
 public class StoreService extends AbstractService<PinStore> {
 
-    @Autowired
-    private PinStoreMapper pinStoreMapper;
+    private final PinStoreMapper pinStoreMapper;
+
+    public StoreService(PinStoreMapper pinStoreMapper) {
+        this.pinStoreMapper = pinStoreMapper;
+    }
 
     /**
      * 根据店铺ID 获取该店铺的详细信息
-     *
-     * @param storeId
+     * @param storeId 店铺ID
      * @return PinStore类
      */
     public PinStore getStoreById(Integer storeId) {
-        PinStore pinStore = new PinStore();
-        pinStore.setId(storeId);
-        return pinStoreMapper.selectOne(pinStore);
+        return pinStoreMapper.selectByPrimaryKey(storeId);
     }
 
     /**
      * 根据店铺所有者的id返回店铺的list
-     *
      * @param id 店铺所有者的id
      * @return store list
      */
@@ -39,14 +37,13 @@ public class StoreService extends AbstractService<PinStore> {
 
     /**
      * 管理端用户店主新增店铺
-     *
-     * @param name
-     * @param description
-     * @param phone
-     * @param email
-     * @param logoUrl
-     * @param userId
-     * @return
+     * @param name 姓名
+     * @param description 秒数
+     * @param phone 手机号
+     * @param email 邮箱
+     * @param logoUrl 图标地址
+     * @param userId 用户ID
+     * @return 返回店铺信息
      */
     @Transactional
     public PinStore addStoreInfo(String name, String description, String phone, String email, String logoUrl, Integer userId) {
@@ -63,9 +60,8 @@ public class StoreService extends AbstractService<PinStore> {
 
     /**
      * 管理端 修改店铺信息
-     *
-     * @param pinStore
-     * @return
+     * @param pinStore 店铺
+     * @return 返回店铺信息
      */
     @Transactional
     public PinStore updateStoreInfo(PinStore pinStore) {

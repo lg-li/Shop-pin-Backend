@@ -1,11 +1,11 @@
 package cn.edu.neu.shop.pin.websocket;
 
+import cn.edu.neu.shop.pin.mapper.PinOrderGroupMapper;
 import cn.edu.neu.shop.pin.mapper.PinOrderIndividualMapper;
 import cn.edu.neu.shop.pin.model.PinOrderGroup;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.model.PinRole;
 import cn.edu.neu.shop.pin.model.PinUser;
-import cn.edu.neu.shop.pin.service.OrderGroupService;
 import cn.edu.neu.shop.pin.service.security.UserService;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
@@ -31,13 +31,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     private final UserService userService;
 
-    private final OrderGroupService orderGroupService;
+    private final PinOrderGroupMapper pinOrderGroupMapper;
 
     private final PinOrderIndividualMapper pinOrderIndividualMapper;
 
-    public WebSocketConfig(UserService userService, OrderGroupService orderGroupService, PinOrderIndividualMapper pinOrderIndividualMapper) {
+    public WebSocketConfig(UserService userService, PinOrderGroupMapper pinOrderGroupMapper, PinOrderIndividualMapper pinOrderIndividualMapper) {
         this.userService = userService;
-        this.orderGroupService = orderGroupService;
+        this.pinOrderGroupMapper = pinOrderGroupMapper;
         this.pinOrderIndividualMapper = pinOrderIndividualMapper;
     }
 
@@ -98,7 +98,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         if (Objects.equals(src, "customer")) {
             for (PinRole role : roles) {
                 if (role.equals(PinRole.ROLE_USER)) {
-                    PinOrderGroup orderGroup = orderGroupService.findById(orderGroupId);
+                    PinOrderGroup orderGroup = pinOrderGroupMapper.selectByPrimaryKey(orderGroupId);
                     if (orderGroup == null) {
                         return null;
                     }

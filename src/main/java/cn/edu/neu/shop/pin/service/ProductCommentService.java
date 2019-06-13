@@ -9,7 +9,6 @@ import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,20 +20,16 @@ import java.util.Objects;
 @Service
 public class ProductCommentService extends AbstractService<PinUserProductComment> {
 
-    public static final int STATUS_ADD_COMMENT_SUCCESS = 0;
-    public static final int STATUS_ADD_COMMENT_FAILED = -1;
-    public static final int STATUS_ADD_COMMENT_PERMISSION_DENIED = -2;
-
     private final PinUserProductCommentMapper pinUserProductCommentMapper;
 
     private final OrderIndividualService orderIndividualService;
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
-    public ProductCommentService(PinUserProductCommentMapper pinUserProductCommentMapper, OrderIndividualService orderIndividualService) {
+    public ProductCommentService(PinUserProductCommentMapper pinUserProductCommentMapper, OrderIndividualService orderIndividualService, ProductService productService) {
         this.pinUserProductCommentMapper = pinUserProductCommentMapper;
         this.orderIndividualService = orderIndividualService;
+        this.productService = productService;
     }
 
     /**
@@ -67,7 +62,8 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
             if(checkIfExists != null) { // 如果评论已存在，则覆盖更新这条评论
                 comment.setId(checkIfExists.getId());
                 this.update(comment);
-            } else { // 新鲜的评论
+            }
+            else { // 新鲜的评论
                 // 由于前端只返回了skuId而没有返回productId，因此需要根据skuId找到其对应的productId
                 comment.setProductId(productService.findBy("skuId", skuId).getId());
                 comment.setCreateTime(new Date());
@@ -85,9 +81,7 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
      * @return List
      */
     public PageInfo<PinUserProductComment> getCommentByProductIdByPage(Integer productId, Integer pageNum, Integer pageSize) {
-        return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> {
-            pinUserProductCommentMapper.getCommentAndUserInfo(productId);
-        });
+        return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> pinUserProductCommentMapper.getCommentAndUserInfo(productId));
     }
 
     /**
