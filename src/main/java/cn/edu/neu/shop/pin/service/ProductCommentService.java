@@ -39,7 +39,7 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
      * @param comments 评论对象集合
      */
     @Transactional
-    public void addComment(Integer userId, List<PinUserProductComment> comments) throws PermissionDeniedException, CommentFailedException {
+    public void addComments(Integer userId, List<PinUserProductComment> comments) throws PermissionDeniedException, CommentFailedException {
         // 传进来数组为空
         if(comments == null || comments.size() == 0) return;
         // 得到orderIndividual
@@ -66,6 +66,7 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
             else { // 新鲜的评论
                 // 由于前端只返回了skuId而没有返回productId，因此需要根据skuId找到其对应的productId
                 comment.setProductId(productService.findBy("skuId", skuId).getId());
+                comment.setUserId(userId);
                 comment.setCreateTime(new Date());
                 pinUserProductCommentMapper.insert(comment); // 评论表中新增一条记录
                 // 更新订单状态为已评价
