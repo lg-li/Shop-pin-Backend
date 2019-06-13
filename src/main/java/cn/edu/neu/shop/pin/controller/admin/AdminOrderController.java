@@ -100,7 +100,7 @@ public class AdminOrderController {
         }
     }
 
-    @PutMapping("/order")
+    @PutMapping("/order/deliver-product")
     public JSONObject updateProductStatueToShip(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try{
             PinUser user = userService.whoAmI(httpServletRequest);
