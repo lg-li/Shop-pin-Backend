@@ -148,10 +148,11 @@ public class AdminProductController {
         try {
             Integer storeId = Integer.parseInt(req.getHeader("Current-Store"));
             String base64Img = requestJSON.getString("image");
-            String url = ImgUtil.upload(base64Img, "https://sm.ms/api/upload").getBody().getJSONObject("data").getString("url");
+            String url = "http://ww1.sinaimg.cn/large/9d167ea7ly1g3hyzea2xdj20a00a0q33.jpg";
+            //String url = ImgUtil.upload(base64Img, "https://sm.ms/api/upload").getBody().getJSONObject("data").getString("url");
             String name = requestJSON.getString("name");
             String info = requestJSON.getString("info");
-            String keyWord = requestJSON.getString("keyWord");
+            String keyword = requestJSON.getString("keyword");
             BigDecimal price = new BigDecimal(requestJSON.getString("price"));
             BigDecimal priceBeforeDiscount = new BigDecimal(requestJSON.getString("priceBeforeDiscount"));
             String unitName = requestJSON.getString("unitName");
@@ -163,7 +164,7 @@ public class AdminProductController {
 
 
             PinProduct pinProduct = new PinProduct(storeId, 1, url, name,
-                    info, keyWord, price, priceBeforeDiscount, unitName, stockCount,
+                    info, keyword, price, priceBeforeDiscount, unitName, stockCount,
                     0, false, false, true, shippingFee,
                     false, new Date(), creditToGive, cost, 0, description);
             productService.save(pinProduct);
@@ -183,7 +184,7 @@ public class AdminProductController {
             PinProductAttributeDefinition attributeDefinition;
             for (int i = 0; i < requestJSON.getJSONArray("attribute").size(); i++) {
                 property = requestJSON.getJSONArray("attribute").getJSONObject(i).getString("attributeName");
-                value = requestJSON.getJSONArray("attribute").getJSONObject(i).getString("attributeValues");
+                value = requestJSON.getJSONArray("attribute").getJSONObject(i).getString("attributeValue");
                 attributeDefinition = new PinProductAttributeDefinition(productId, property, value);
                 definitionService.save(attributeDefinition);
             }
