@@ -34,7 +34,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
     public static final int STATUS_PERMISSION_DENIED = -2;
     public static final int STATUS_NOT_ALLOWED = -3;
 
-    //    public static final int STATUS_JOIN_ORDER_GROUP_SUCCESS = -4;
+//    public static final int STATUS_JOIN_ORDER_GROUP_SUCCESS = -4;
 //    public static final int STATUS_JOIN_ORDER_GROUP_INVALID_ID = -5;
 //    public static final int STATUS_JOIN_ORDER_GROUP_PERMISSION_DENIED = -6;
 //    public static final int STATUS_JOIN_ORDER_GROUP_NOT_ALLOWED = -7;
@@ -99,7 +99,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
      * @author flyhero
      * 返回在某一团单中的人数
      */
-    public Integer getUserNumberInAOrderGroup(Integer orderGroupId) {
+    private Integer getUserNumberInAOrderGroup(Integer orderGroupId) {
         return getUsersByOrderGroup(orderGroupId).size();
     }
 
@@ -136,7 +136,8 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         orderGroup.setCloseTime(getOrderGroupCloseTimeFromNow(storeId));
         this.save(orderGroup);
         // 将orderGroup挂载到orderIndividual上
-        orderIndividual.setOrderGroupId(orderIndividualId);
+        orderIndividual.setOrderGroupId(pinOrderGroupMapper.select(orderGroup).get(0).getId());
+        orderIndividual.setIsGroup(true);
         orderIndividualService.update(orderIndividual);
         return STATUS_SUCCESS;
     }
@@ -203,13 +204,12 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
     /**
      * @author flyhero
      * 退出团单
-     * @param userId
-     * @param storeId
-     * @param orderIndividualId
-     * @param orderGroupId
-     * @return
+     * @param userId 用户ID
+     * @param orderIndividualId 订单ID
+     * @param orderGroupId 团单ID
+     * @return 退出状态
      */
-    public Integer quitOrderGroup(Integer userId, Integer storeId, Integer orderIndividualId, Integer orderGroupId) {
+    public Integer quitOrderGroup(Integer userId, Integer orderIndividualId, Integer orderGroupId) {
         PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
         PinOrderGroup orderGroup = this.findById(orderGroupId);
         if (!Objects.equals(userId, orderIndividual.getUserId())) {
@@ -273,31 +273,57 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
     }
 
     /**
-     * @param storeId
-     * @return
+     * @param storeId 店铺ID
+     * @return 返回距离现在最近的收团时间
      * @author flyhero
      * 设置拼团的截止时间
      */
-    private Date getOrderGroupCloseTimeFromNow(Integer storeId) {
+    public Date getOrderGroupCloseTimeFromNow(Integer storeId) {
         // 获设置拼团时间
         PinStoreGroupCloseBatch recentBatch = storeCloseBatchService.getRecentGroupCloseBatchTime(storeId);
         long timeSecondsStampOfClosing;
         if (recentBatch == null) {
-            // 向下取整到整点分钟
+            // 向下取整到整点分钟，测试通过
             // 未指定配送批次则2小时后收团
             timeSecondsStampOfClosing = ((System.currentTimeMillis() + GROUP_CLOSE_DELAY_MILLISECOND) / 60000);
             timeSecondsStampOfClosing *= 60000; // 恢复大小到毫秒
-        } else if (recentBatch.getTime().before(new Date(new Date().getTime() + 600000))) {
-            // 返回的是下一天的第一批
-            long current = System.currentTimeMillis() + 8 * 1000 * 3600; // 添加时区offset
-            long zero = (current / (1000 * 3600 * 24) + 1) * (1000 * 3600 * 24);
-            timeSecondsStampOfClosing = zero + recentBatch.getTime().getTime();
-        } else {
-            // 已指定配送批次，选择最近时间收团
-            long current = System.currentTimeMillis() + 8 * 1000 * 3600; // 添加时区offset
-            long zero = current / (1000 * 3600 * 24) * (1000 * 3600 * 24);
-            timeSecondsStampOfClosing = zero + recentBatch.getTime().getTime();
         }
+        else {
+            long current = System.currentTimeMillis();
+            long zero = (current/(1000 * 3600 * 24)) * (1000 * 3600 * 24);
+//            System.out.println("zero: " + new Date(zero));
+//            System.out.println("batchTime: " + new Date(zero + recentBatch.getTime().getTime()));
+//            System.out.println("compareToTenMinutesLater: " + new Date(new Date().getTime() + 600000));
+            if(zero + recentBatch.getTime().getTime() < new Date().getTime() + 600000) {
+                // 最近发货时间比当前时间早，返回的是下一天的第一批
+                current = System.currentTimeMillis();
+                zero = (current / (1000 * 3600 * 24) + 1) * (1000 * 3600 * 24);
+                timeSecondsStampOfClosing = zero + recentBatch.getTime().getTime();
+//                System.out.println("date: " + new Date(timeSecondsStampOfClosing));
+            }
+            else {
+                // 返回接下来最近的一个收团时间
+                current = System.currentTimeMillis();
+                zero = current / (1000 * 3600 * 24) * (1000 * 3600 * 24);
+                timeSecondsStampOfClosing = zero + recentBatch.getTime().getTime();
+//                System.out.println("选择最近时间: " + new Date(timeSecondsStampOfClosing));
+            }
+        }
+//        else if (recentBatch.getTime().before(new Date(new Date().getTime() + 600000))) {
+//            System.out.println("batch time: " + recentBatch.getTime());
+//
+//            // 返回的是下一天的第一批
+//            long current = System.currentTimeMillis();
+//            long zero = (current / (1000 * 3600 * 24) + 1) * (1000 * 3600 * 24);
+//            timeSecondsStampOfClosing = zero + recentBatch.getTime().getTime();
+//            System.out.println("date: " + new Date(timeSecondsStampOfClosing));
+//        } else {
+//            // 已指定配送批次，选择最近时间收团，测试通过
+//            long current = System.currentTimeMillis();
+//            long zero = current / (1000 * 3600 * 24) * (1000 * 3600 * 24);
+//            timeSecondsStampOfClosing = zero + recentBatch.getTime().getTime();
+//            System.out.println("选择最近时间: " + new Date(timeSecondsStampOfClosing));
+//        }
         return new Date(timeSecondsStampOfClosing);
     }
 
@@ -338,7 +364,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
                 if (item.getCreateTime().getTime() <= end.getTime())
                     returnList.add(item);
             }
-        } else if (end == null && begin != null) {
+        } else if (begin != null) {
             for (PinOrderGroup item : list) {
                 if (item.getCreateTime().getTime() >= begin.getTime())
                     returnList.add(item);
