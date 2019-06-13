@@ -390,8 +390,8 @@ public class UsersController {
      * @param requestJSON 包含一个对订单中每件sku的评论的数组，执行后将对其中每件商品都执行评论操作
      * @return 响应JSON
      */
-    @RequestMapping("/add-comment")
-    public JSONObject addComment(HttpServletRequest httpServletRequest, JSONObject requestJSON) {
+    @PostMapping("/add-comment")
+    public JSONObject addComment(HttpServletRequest httpServletRequest,@RequestBody JSONObject requestJSON) {
         PinUser user = userService.whoAmI(httpServletRequest);
         JSONArray jsonArray = requestJSON.getJSONArray("comments");
         List<PinUserProductComment> comments = new ArrayList<>();

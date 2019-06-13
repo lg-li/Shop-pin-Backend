@@ -2,13 +2,16 @@ package cn.edu.neu.shop.pin.service;
 
 import cn.edu.neu.shop.pin.exception.CommentFailedException;
 import cn.edu.neu.shop.pin.exception.PermissionDeniedException;
+import cn.edu.neu.shop.pin.mapper.PinProductAttributeValueMapper;
 import cn.edu.neu.shop.pin.mapper.PinUserProductCommentMapper;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
+import cn.edu.neu.shop.pin.model.PinProductAttributeValue;
 import cn.edu.neu.shop.pin.model.PinUserProductComment;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,10 +29,14 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
 
     private final ProductService productService;
 
-    public ProductCommentService(PinUserProductCommentMapper pinUserProductCommentMapper, OrderIndividualService orderIndividualService, ProductService productService) {
+    private final PinProductAttributeValueMapper pinProductAttributeValueMapper;
+
+    @Autowired
+    public ProductCommentService(PinUserProductCommentMapper pinUserProductCommentMapper, OrderIndividualService orderIndividualService, ProductService productService, PinProductAttributeValueMapper pinProductAttributeValueMapper) {
         this.pinUserProductCommentMapper = pinUserProductCommentMapper;
         this.orderIndividualService = orderIndividualService;
         this.productService = productService;
+        this.pinProductAttributeValueMapper = pinProductAttributeValueMapper;
     }
 
     /**
@@ -65,7 +72,7 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
             }
             else { // 新鲜的评论
                 // 由于前端只返回了skuId而没有返回productId，因此需要根据skuId找到其对应的productId
-                comment.setProductId(productService.findBy("skuId", skuId).getId());
+                comment.setProductId(pinProductAttributeValueMapper.selectByPrimaryKey(skuId).getProductId());
                 comment.setUserId(userId);
                 comment.setCreateTime(new Date());
                 pinUserProductCommentMapper.insert(comment); // 评论表中新增一条记录

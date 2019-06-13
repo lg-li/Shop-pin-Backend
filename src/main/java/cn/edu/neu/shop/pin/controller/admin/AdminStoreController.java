@@ -94,7 +94,7 @@ public class AdminStoreController {
     @GetMapping("/close-batch")
     public JSONObject getGruopCloseBatchTime(HttpServletRequest httpServletRequest) {
         try {
-            String store = httpServletRequest.getHeader("current-store");
+            String store = httpServletRequest.getHeader("Current-Store");
             Integer storeId = Integer.parseInt(store);
             JSONObject data = new JSONObject();
             data.put("list", storeCloseBatchService.getGroupCloseBatchTime(storeId));
