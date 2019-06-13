@@ -28,8 +28,12 @@ public class MutexLockAspect {
 
     private static Logger logger = LoggerFactory.getLogger(MutexLockAspect.class);
 
+    private final RedisTemplate redisTemplate;
+
     @Autowired
-    private RedisTemplate redisTemplate;
+    public MutexLockAspect(RedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     @Around("@annotation(cn.edu.neu.shop.pin.annotation.MutexLock)")
     public Object distributeLock(ProceedingJoinPoint pjp) {

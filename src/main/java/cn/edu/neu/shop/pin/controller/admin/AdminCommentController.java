@@ -5,11 +5,13 @@ import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
+
 
 @RestController
 public class AdminCommentController {
@@ -17,6 +19,8 @@ public class AdminCommentController {
     @Autowired
     private ProductCommentService productCommentService;
 
+
+    @PreAuthorize("hasRole('ROLE_MERCHANT')")
     @PostMapping("/comment/goods-comment")
     public JSONObject getCommentByProductId(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try{
@@ -34,6 +38,7 @@ public class AdminCommentController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_MERCHANT')")
     @GetMapping("/goods/goods-with-comment")
     public JSONObject getAllProductWithComment(HttpServletRequest httpServletRequest) {
         try{
@@ -48,6 +53,7 @@ public class AdminCommentController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_MERCHANT')")
     @PostMapping("/comment/reply-comment")
     public JSONObject updateMerchantReplyComment(@RequestBody JSONObject requestJSON) {
         try{
