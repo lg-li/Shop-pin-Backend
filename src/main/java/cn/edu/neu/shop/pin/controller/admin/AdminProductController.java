@@ -211,8 +211,9 @@ public class AdminProductController {
                 sku = object.getString("sku");
                 stock = object.getInteger("stock");
                 price = new BigDecimal(object.getString("price"));
-                base64Img = object.getString("image");
-                imageUrl = ImgUtil.upload(base64Img, "https://sm.ms/api/upload").getBody().getJSONObject("data").getString("url");
+                //base64Img = object.getString("image");
+                //imageUrl = ImgUtil.upload(base64Img, "https://sm.ms/api/upload").getBody().getJSONObject("data").getString("url");
+                imageUrl = "http://ww1.sinaimg.cn/large/9d167ea7ly1g3hyzea2xdj20a00a0q33.jpg";
                 cost = new BigDecimal(object.getString("cost"));
                 attributeValue = new PinProductAttributeValue(storeId,sku,stock,price,imageUrl,cost);
                 valueService.save(attributeValue);
