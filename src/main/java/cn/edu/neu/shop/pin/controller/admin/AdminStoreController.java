@@ -132,9 +132,9 @@ public class AdminStoreController {
             Integer storeId = Integer.valueOf(httpServletRequest.getHeader("Current-Store"));
             Date date = requestJSON.getDate("closeBatch");
             storeCloseBatchService.addGroupCloseBatch(storeId, date);
-            JSONObject data = new JSONObject();
-            data.put("closeBatch", data);
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
+//            JSONObject data = new JSONObject();
+//            data.put("closeBatch", data);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
         } catch (Exception e) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
