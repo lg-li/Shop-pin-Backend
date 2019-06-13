@@ -14,7 +14,7 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.Base64;
 
-public class ImgUti {
+public class ImgUtil {
     public static String getSuffix(byte[] source) {
 
         byte[] byteSuffix = Arrays.copyOf(source, 3);
