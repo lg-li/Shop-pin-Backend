@@ -290,22 +290,23 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         }
         else {
             long current = System.currentTimeMillis();
-            long zero = (current/(1000 * 3600 * 24) + 1) * (1000 * 3600 * 24);
-            System.out.println("zero: " + new Date(zero));
-            System.out.println("batchTime: " + new Date(zero + recentBatch.getTime().getTime()));
-            System.out.println("compareToTenMinutesLater: " + new Date(new Date().getTime() + 600000));
-            if(zero + recentBatch.getTime().getTime() > new Date().getTime() + 600000) {
-                // 返回的是下一天的第一批
+            long zero = (current/(1000 * 3600 * 24)) * (1000 * 3600 * 24);
+//            System.out.println("zero: " + new Date(zero));
+//            System.out.println("batchTime: " + new Date(zero + recentBatch.getTime().getTime()));
+//            System.out.println("compareToTenMinutesLater: " + new Date(new Date().getTime() + 600000));
+            if(zero + recentBatch.getTime().getTime() < new Date().getTime() + 600000) {
+                // 最近发货时间比当前时间早，返回的是下一天的第一批
                 current = System.currentTimeMillis();
                 zero = (current / (1000 * 3600 * 24) + 1) * (1000 * 3600 * 24);
                 timeSecondsStampOfClosing = zero + recentBatch.getTime().getTime();
-                System.out.println("date: " + new Date(timeSecondsStampOfClosing));
+//                System.out.println("date: " + new Date(timeSecondsStampOfClosing));
             }
             else {
+                // 返回接下来最近的一个收团时间
                 current = System.currentTimeMillis();
                 zero = current / (1000 * 3600 * 24) * (1000 * 3600 * 24);
                 timeSecondsStampOfClosing = zero + recentBatch.getTime().getTime();
-                System.out.println("选择最近时间: " + new Date(timeSecondsStampOfClosing));
+//                System.out.println("选择最近时间: " + new Date(timeSecondsStampOfClosing));
             }
         }
 //        else if (recentBatch.getTime().before(new Date(new Date().getTime() + 600000))) {
