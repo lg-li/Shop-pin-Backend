@@ -57,4 +57,8 @@ public interface PinProductMapper extends BaseMapper<PinProduct> {
     List<PinProduct> getIsOutProductInfo(Integer storeId);
 
     List<PinProduct> getIsAlarmProductInfo(Integer storeId);
+
+    void updateIsShownStatus(Integer productId);
+
+    void updateIsNotShownStatus(Integer productId);
 }
