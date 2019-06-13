@@ -4,10 +4,7 @@ import cn.edu.neu.shop.pin.mapper.PinProductMapper;
 import cn.edu.neu.shop.pin.model.PinProduct;
 import cn.edu.neu.shop.pin.model.PinProductAttributeDefinition;
 import cn.edu.neu.shop.pin.model.PinProductAttributeValue;
-import cn.edu.neu.shop.pin.service.OrderIndividualService;
-import cn.edu.neu.shop.pin.service.ProductAttributeDefinitionService;
-import cn.edu.neu.shop.pin.service.ProductCategoryService;
-import cn.edu.neu.shop.pin.service.ProductService;
+import cn.edu.neu.shop.pin.service.*;
 import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
@@ -37,6 +34,8 @@ public class AdminProductController {
     OrderIndividualService orderIndividualService;
     @Autowired
     ProductAttributeDefinitionService definitionService;
+    @Autowired
+    PinProductAttributeValueService valueService;
 
     /**
      * 返回不同类型商品列表
@@ -216,8 +215,9 @@ public class AdminProductController {
                 imageUrl = ImgUtil.upload(base64Img, "https://sm.ms/api/upload").getBody().getJSONObject("data").getString("url");
                 cost = new BigDecimal(object.getString("cost"));
                 attributeValue = new PinProductAttributeValue(storeId,sku,stock,price,imageUrl,cost);
+                valueService.save(attributeValue);
             }
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, "创建成功");
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
