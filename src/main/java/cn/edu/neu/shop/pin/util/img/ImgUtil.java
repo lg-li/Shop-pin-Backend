@@ -14,7 +14,7 @@ import java.io.*;
 import java.util.Arrays;
 import java.util.Base64;
 
-public class ImgUti {
+public class ImgUtil {
     public static String getSuffix(byte[] source) {
 
         byte[] byteSuffix = Arrays.copyOf(source, 3);
@@ -24,8 +24,8 @@ public class ImgUti {
         switch (hexSuffix) {
             case "89504e":
                 return ".png";
-            case "ffd8ff":
-                return ".jpg";
+//            case "ffd8ff":
+//                return ".jpg";
             default:
                 return ".jpg";
         }
