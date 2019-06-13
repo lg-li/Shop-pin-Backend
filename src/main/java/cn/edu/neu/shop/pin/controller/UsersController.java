@@ -14,6 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -391,11 +392,25 @@ public class UsersController {
      */
     @RequestMapping("/add-comment")
     public JSONObject addComment(HttpServletRequest httpServletRequest, JSONObject requestJSON) {
-        JSONArray jsonArray = requestJSON.getJSONArray("comments");
-        List<PinUserProductComment> comments = jsonArray.toJavaList(PinUserProductComment.class);
         PinUser user = userService.whoAmI(httpServletRequest);
+        JSONArray jsonArray = requestJSON.getJSONArray("comments");
+        List<PinUserProductComment> comments = new ArrayList<>();
+        for(int i = 0; i < jsonArray.size(); i++) {
+            JSONObject jo = jsonArray.getJSONObject(i);
+            PinUserProductComment comment = new PinUserProductComment();
+            comment.setUserId(user.getId());
+            comment.setOrderIndividualId(jo.getInteger("orderIndividualId"));
+            comment.setSkuId(jo.getInteger("skuId"));
+            comment.setGrade(jo.getInteger("grade"));
+            comment.setProductScore(jo.getInteger("productScore"));
+            comment.setServiceScore(jo.getInteger("serviceScore"));
+            comment.setContent(jo.getString("content"));
+            comment.setImagesUrls(jo.getString("imagesUrls"));
+            comments.add(comment);
+        }
+//        List<PinUserProductComment> comments = jsonArray.toJavaList(PinUserProductComment.class);
         try {
-            productCommentService.addComment(user.getId(), comments);
+            productCommentService.addComments(user.getId(), comments);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "评论成功！", null);
         } catch (PermissionDeniedException e) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.PERMISSION_DENIED, e.getMessage(), null);

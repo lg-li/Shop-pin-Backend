@@ -24,8 +24,8 @@ public class ImgUtil {
         switch (hexSuffix) {
             case "89504e":
                 return ".png";
-            case "ffd8ff":
-                return ".jpg";
+//            case "ffd8ff":
+//                return ".jpg";
             default:
                 return ".jpg";
         }
