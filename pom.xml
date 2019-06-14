@@ -9,8 +9,8 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>cn.edu.neu.shop</groupId>
-    <artifactId>pin</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>Pin</artifactId>
+    <version>SNAPSHOT</version>
     <name>pin</name>
     <description>Group shopping CMS backend based on Spring Boot</description>
 
