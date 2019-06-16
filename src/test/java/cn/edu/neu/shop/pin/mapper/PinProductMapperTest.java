@@ -33,6 +33,22 @@ public class PinProductMapperTest {
 //    private ProductService productService;
 
     @Test
+    public void testGetProductByStoreIdAndKey() {
+        List<PinProduct> list = pinProductMapper.getProductByStoreIdAndKey(1, "");
+        for(PinProduct p : list) {
+            System.out.println(p.getName());
+        }
+    }
+
+    @Test
+    public void testGetIsShownProductInfo() {
+        List<PinProduct> list = pinProductMapper.getIsShownProductInfo(1);
+        for(PinProduct p : list) {
+            System.out.println(p.getName());
+        }
+    }
+
+    @Test
     public void testPage() {
         PageHelper.startPage(1, 10);
         List<PinProduct> list = pinProductMapper.getHotProducts();
