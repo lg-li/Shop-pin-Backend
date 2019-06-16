@@ -1,6 +1,5 @@
 package cn.edu.neu.shop.pin.schedule;
 
-import cn.edu.neu.shop.pin.aspect.MutexLockAspect;
 import cn.edu.neu.shop.pin.model.PinOrderGroup;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.service.OrderGroupService;
@@ -19,6 +18,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
+ * @author LLG
  * 团单定时关闭器
  * 关闭已经结束的团单
  */
@@ -27,7 +27,6 @@ import java.util.concurrent.Executors;
 public class GroupClosingScheduler {
 
     private static Logger logger = LoggerFactory.getLogger(GroupClosingScheduler.class);
-
     @Autowired
     private OrderGroupService orderGroupService;
     @Autowired
@@ -42,10 +41,11 @@ public class GroupClosingScheduler {
     public void closeTimeoutOrderGroup() {
         List<PinOrderGroup> orderGroups = orderGroupService.getOrdersByStatus(PinOrderGroup.STATUS_PINGING);
         final Date currentDate = new Date();
+        logger.info("触发收团定时任务。");
         orderGroups.forEach(orderGroup -> {
             executorService.submit(()->{
                 // 并发更新团单状态
-                if(orderGroup.getCloseTime().compareTo(currentDate) >= 0) {
+                if(orderGroup.getCloseTime().compareTo(currentDate) <= 0) {
                     finishGroupOrder(orderGroup);
                 }
             });
@@ -65,7 +65,7 @@ public class GroupClosingScheduler {
             if(!orderIndividual.getPaid()) {
                 logger.error("异常团单 #" + orderGroup.getId() + "。团单中存在未支付的订单");
             }
-            finalAmountOfMoney = finalAmountOfMoney.add(finalAmountOfMoney);
+            finalAmountOfMoney = finalAmountOfMoney.add(orderIndividual.getTotalPrice());
         }
         orderGroup.setTotalAmountOfMoneyPaid(finalAmountOfMoney);
         orderGroup.setActualFinishTime(new Date());

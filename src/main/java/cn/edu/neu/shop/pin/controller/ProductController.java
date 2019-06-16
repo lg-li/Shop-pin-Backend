@@ -77,7 +77,7 @@ public class ProductController {
      * 层级获取商品分类表
      * @return JSONObject
      */
-    @GetMapping("/by-category/{categoryId}/{pageNum}/{pageSize} ")
+    @GetMapping("/by-category/{categoryId}/{pageNum}/{pageSize}")
     public JSONObject geProductByCategoryId(@PathVariable(value = "categoryId") Integer categoryId, @PathVariable(value = "pageNum") Integer pageNum, @PathVariable(value = "pageSize") Integer pageSize) {
         try {
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, productService.getProductByCategoryIdByPage(categoryId, pageNum, pageSize));

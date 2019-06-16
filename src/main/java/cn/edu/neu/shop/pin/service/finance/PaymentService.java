@@ -4,8 +4,11 @@ import cn.edu.neu.shop.pin.exception.InsufficientBalanceException;
 import cn.edu.neu.shop.pin.exception.PermissionDeniedException;
 import cn.edu.neu.shop.pin.exception.RecordNotFoundException;
 import cn.edu.neu.shop.pin.exception.RepeatPaymentException;
+import cn.edu.neu.shop.pin.lock.annotation.LockKeyVariable;
+import cn.edu.neu.shop.pin.lock.annotation.MutexLock;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.service.OrderIndividualService;
+import cn.edu.neu.shop.pin.util.PinConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +38,8 @@ public class PaymentService {
      * @throws InsufficientBalanceException 余额不足（支付失败）
      */
     @Transactional
-    public void payIndividualOrderByBalance(Integer individualOrderId, Integer userId) throws PermissionDeniedException, RecordNotFoundException, InsufficientBalanceException, RepeatPaymentException {
+    @MutexLock(key = PinConstants.LOCK_KEY_ORDER_INDIVIDUAL)
+    public void payIndividualOrderByBalance(@LockKeyVariable Integer individualOrderId, Integer userId) throws PermissionDeniedException, RecordNotFoundException, InsufficientBalanceException, RepeatPaymentException {
         PinOrderIndividual orderIndividual = orderIndividualService.findById(individualOrderId);
         if (orderIndividual == null) {
             throw new RecordNotFoundException("指定的个人订单不存在");

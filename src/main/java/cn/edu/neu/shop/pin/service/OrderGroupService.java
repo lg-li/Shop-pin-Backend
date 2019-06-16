@@ -1,5 +1,7 @@
 package cn.edu.neu.shop.pin.service;
 
+import cn.edu.neu.shop.pin.lock.annotation.LockKeyVariable;
+import cn.edu.neu.shop.pin.lock.annotation.MutexLock;
 import cn.edu.neu.shop.pin.mapper.PinOrderGroupMapper;
 import cn.edu.neu.shop.pin.mapper.PinOrderIndividualMapper;
 import cn.edu.neu.shop.pin.model.PinOrderGroup;
@@ -136,7 +138,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         orderGroup.setCloseTime(getOrderGroupCloseTimeFromNow(storeId));
         this.save(orderGroup);
         // 将orderGroup挂载到orderIndividual上
-        orderIndividual.setOrderGroupId(pinOrderGroupMapper.select(orderGroup).get(0).getId());
+        orderIndividual.setOrderGroupId(orderGroup.getId());
         orderIndividual.setIsGroup(true);
         orderIndividualService.update(orderIndividual);
         return STATUS_SUCCESS;
@@ -150,7 +152,9 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
      * @author flyhero
      * 按照orderGroupId加入团单
      */
-    public Integer joinOrderGroup(Integer userId, Integer storeId, Integer orderIndividualId, Integer orderGroupId) {
+    @Transactional
+    @MutexLock(key = PinConstants.LOCK_KEY_ORDER_GROUP)
+    public Integer joinOrderGroup(Integer userId, Integer storeId, Integer orderIndividualId, @LockKeyVariable Integer orderGroupId) {
         PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
         PinOrderGroup orderGroup = this.findById(orderGroupId);
         if (!Objects.equals(userId, orderIndividual.getUserId())) {
