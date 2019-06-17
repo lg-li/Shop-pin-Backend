@@ -8,7 +8,6 @@ import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.model.PinUserCreditRecord;
 import cn.edu.neu.shop.pin.service.security.UserService;
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -19,23 +18,26 @@ import java.util.List;
 @Service
 public class UserCreditRecordService {
 
-    @Autowired
-    private PinUserCreditRecordMapper pinUserCreditRecordMapper;
+    private final PinUserCreditRecordMapper pinUserCreditRecordMapper;
 
-    @Autowired
-    private PinUserMapper pinUserMapper;
+    private final PinUserMapper pinUserMapper;
 
-    @Autowired
-    private PinSettingsConstantMapper pinSettingsConstantMapper;
+    private final PinSettingsConstantMapper pinSettingsConstantMapper;
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
+
+    public UserCreditRecordService(PinUserCreditRecordMapper pinUserCreditRecordMapper, PinUserMapper pinUserMapper, PinSettingsConstantMapper pinSettingsConstantMapper, UserService userService) {
+        this.pinUserCreditRecordMapper = pinUserCreditRecordMapper;
+        this.pinUserMapper = pinUserMapper;
+        this.pinSettingsConstantMapper = pinSettingsConstantMapper;
+        this.userService = userService;
+    }
 
     /**
      * 按照需求规约中格式，获取用户签到记录
      *
-     * @param userId
-     * @return
+     * @param userId 用户ID
+     * @return 响应JSON
      */
     public JSONObject getUserCreditData(Integer userId) {
         JSONObject data = new JSONObject();
@@ -54,8 +56,8 @@ public class UserCreditRecordService {
     /**
      * 每日签到
      *
-     * @param userId
-     * @throws Exception
+     * @param userId 用户ID
+     * @throws Exception 异常
      */
     public void dailyCheckIn(Integer userId) throws Exception {
         List<PinUserCreditRecord> list = pinUserCreditRecordMapper.getCheckInDaysInfo(userId);
@@ -74,13 +76,13 @@ public class UserCreditRecordService {
             userService.update(user);
             user = pinUserMapper.selectByPrimaryKey(userId);
             System.out.println("after update: " + user.getCredit());
-        } else if(hasCheckedIn(userId)) { // 今日已签到
+        } else if (hasCheckedIn(userId)) { // 今日已签到
             throw new CheckInFailedException("您已签到，明天再来吧。");
         } else {
-            Date yesterday = this.getYesterday(new Date());
+            this.getYesterday(new Date());
             Integer note = getContinuousCheckInDaysNum(userId);
             Integer deltaCredit = (creditValue + note * incrementValue > limitValue) ? limitValue : creditValue + note * incrementValue;
-            record = new PinUserCreditRecord(userId, deltaCredit, PinUserCreditRecord.TYPE_FROM_CHECK_IN, new Date(), note+1);
+            record = new PinUserCreditRecord(userId, deltaCredit, PinUserCreditRecord.TYPE_FROM_CHECK_IN, new Date(), note + 1);
             // 插入一条积分变更记录
             pinUserCreditRecordMapper.insert(record);
             // 更新用户积分
@@ -91,8 +93,9 @@ public class UserCreditRecordService {
 
     /**
      * 判断今天是否签到了
-     * @param userId
-     * @return
+     *
+     * @param userId 用户ID
+     * @return 是否已签到
      */
     public Boolean hasCheckedIn(Integer userId) {
         List<PinUserCreditRecord> list = pinUserCreditRecordMapper.getCheckInDaysInfo(userId);
@@ -108,76 +111,61 @@ public class UserCreditRecordService {
     /**
      * 获取某一用户的连续签到天数（用到了DP思想）
      *
-     * @param userId
-     * @return
+     * @param userId 用户ID
+     * @return 连续签到天数
      */
-    public Integer getContinuousCheckInDaysNum(Integer userId) {
+    private Integer getContinuousCheckInDaysNum(Integer userId) {
         List<PinUserCreditRecord> list = pinUserCreditRecordMapper.getCheckInDaysInfo(userId);
         if (list.size() == 0) {
             return 0;
         } else {
             PinUserCreditRecord p = list.get(0);
             Date date = p.getCreateTime(), yesterday = this.getYesterday(new Date());
-            Integer note = (isTheSameDay(date, new Date()) || isTheSameDay(date, yesterday))
+            return (isTheSameDay(date, new Date()) || isTheSameDay(date, yesterday))
                     ? p.getNote() : 1;
-            return note;
         }
     }
 
     /**
      * 获取Constant表中的check_in_credit值，为了简化代码
      *
-     * @return
+     * @return Constant表中的check_in_credit值
      */
-    public Integer getCreditValueInDatabase() {
+    private Integer getCreditValueInDatabase() {
         return Integer.parseInt(pinSettingsConstantMapper
-                .selectByPrimaryKey(new String("check_in_credit"))
+                .selectByPrimaryKey("check_in_credit")
                 .getConstantValue());
     }
 
     /**
      * 获取Constant表中的check_in_credit_increment值，为了简化代码
      *
-     * @return
+     * @return Constant表中的check_in_credit_increment值
      */
     private Integer getIncrementValueInDatabase() {
         return Integer.parseInt(pinSettingsConstantMapper
-                .selectByPrimaryKey(new String("check_in_credit_increment"))
+                .selectByPrimaryKey("check_in_credit_increment")
                 .getConstantValue());
     }
 
     /**
      * 获取Constant表中的check_in_credit_limit值，为了简化代码
      *
-     * @return
+     * @return Constant表中的check_in_credit_limit值
      */
     private Integer getLimitValueInDatabase() {
         return Integer.parseInt(pinSettingsConstantMapper
-                .selectByPrimaryKey(new String("check_in_credit_limit"))
+                .selectByPrimaryKey("check_in_credit_limit")
                 .getConstantValue());
-    }
-
-    /**
-     * 判断时间是不是今天
-     *
-     * @param date
-     * @return 是返回true，不是返回false
-     */
-    private boolean isNow(Date date) {
-        Date now = new Date(); // 当前时间
-        SimpleDateFormat sf = new SimpleDateFormat("yyyyMMdd");
-        String nowDay = sf.format(now); // 获取今天的日期
-        String day = sf.format(date); // 对比的时间
-        return day.equals(nowDay);
     }
 
     /**
      * 给定今天日期，判断昨天日期
      *
-     * @param today
-     * @return
+     * @param today 今天日期
+     * @return 昨天日期
      */
-    public Date getYesterday(Date today) {
+    private Date getYesterday(Date today) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(today);
         calendar.set(Calendar.DATE, calendar.get(Calendar.DATE) - 1);
@@ -187,11 +175,11 @@ public class UserCreditRecordService {
     /**
      * 判断两个Date类型的日期是否相同
      *
-     * @param date1
-     * @param date2
-     * @return
+     * @param date1 日期1
+     * @param date2 日期2
+     * @return 是否是同一天
      */
-    public Boolean isTheSameDay(Date date1, Date date2) {
+    private Boolean isTheSameDay(Date date1, Date date2) {
         SimpleDateFormat sf = new SimpleDateFormat("yyyyMMdd");
         String day1 = sf.format(date1), day2 = sf.format(date2);
         return day1.equals(day2);

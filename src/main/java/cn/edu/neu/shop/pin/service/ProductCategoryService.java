@@ -4,25 +4,25 @@ package cn.edu.neu.shop.pin.service;
 import cn.edu.neu.shop.pin.mapper.PinSettingsProductCategoryMapper;
 import cn.edu.neu.shop.pin.model.PinSettingsProductCategory;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ProductCategoryService extends AbstractService<PinSettingsProductCategory> {
 
-    @Autowired
-    private PinSettingsProductCategoryMapper pinSettingsProductCategoryMapper;
+    private final PinSettingsProductCategoryMapper pinSettingsProductCategoryMapper;
+
+    public ProductCategoryService(PinSettingsProductCategoryMapper pinSettingsProductCategoryMapper) {
+        this.pinSettingsProductCategoryMapper = pinSettingsProductCategoryMapper;
+    }
 
     /**
      * 层级获取商品分类表
      *
-     * @param layer
+     * @param layer 层
      * @return List
      */
     public List<PinSettingsProductCategory> getProductCategoryByLayer(Integer layer) {
@@ -37,10 +37,10 @@ public class ProductCategoryService extends AbstractService<PinSettingsProductCa
     /**
      * 根据父分类获取商品分类表
      *
-     * @param parentId
+     * @param parentId 父级分类ID
      * @return List
      */
-    public List<PinSettingsProductCategory> getProductCategoryByParentId(Integer parentId) {
+    private List<PinSettingsProductCategory> getProductCategoryByParentId(Integer parentId) {
         if (parentId == null || parentId.equals(0)) {
             return pinSettingsProductCategoryMapper.getAllParentProductCategory();
         } else {

@@ -30,8 +30,8 @@ public abstract class AbstractService<T> {
         return mapper.insertList(models);
     }
 
-    public Integer deleteById(Integer id) {
-        return mapper.deleteByPrimaryKey(id);
+    public void deleteById(Integer id) {
+        mapper.deleteByPrimaryKey(id);
     }
 
     public Integer deleteByIds(String ids) {
@@ -46,8 +46,7 @@ public abstract class AbstractService<T> {
         return mapper.selectByPrimaryKey(id);
     }
 
-    @SuppressWarnings("unchecked")
-    public T findBy(String fieldName, Object value) {
+    protected T findBy(String fieldName, Object value) {
         try {
             T model = modelClass.getDeclaredConstructor().newInstance();
             Field field = modelClass.getDeclaredField(fieldName);

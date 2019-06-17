@@ -21,14 +21,13 @@ public class ImgUtil {
 
         String hexSuffix = bytesToHexString(byteSuffix);
 
-        switch (hexSuffix) {
-            case "89504e":
-                return ".png";
+        assert hexSuffix != null;
+        if ("89504e".equals(hexSuffix)) {
+            return ".png";
 //            case "ffd8ff":
 //                return ".jpg";
-            default:
-                return ".jpg";
         }
+        return ".jpg";
 
     }
 

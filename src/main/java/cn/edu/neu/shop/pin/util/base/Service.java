@@ -11,22 +11,16 @@ public interface Service<T> {
 
     /**
      * 插入数据
-     *
-     * @param model
      */
     Integer save(T model);
 
     /**
      * 批量插入数据
-     *
-     * @param models
      */
     Integer save(List<T> models);
 
     /**
      * 通过主鍵刪除
-     *
-     * @param id
      */
     Integer deleteById(Integer id);
 
@@ -39,16 +33,11 @@ public interface Service<T> {
 
     /**
      * 更新
-     *
-     * @param model
      */
     Integer update(T model);
 
     /**
      * 通过ID查找
-     *
-     * @param id
-     * @return
      */
     T findById(Integer id);
 
@@ -65,22 +54,17 @@ public interface Service<T> {
      * 通过多个ID查找
      *
      * @param ids eg：ids -> "1,2,3,4"
-     * @return
+     * @return list
      */
     List<T> findByIds(String ids);
 
     /**
      * 根据条件查找
-     *
-     * @param condition
-     * @return
      */
     List<T> findByCondition(Condition condition);
 
     /**
      * 获取所有
-     *
-     * @return
      */
     List<T> findAll();
 

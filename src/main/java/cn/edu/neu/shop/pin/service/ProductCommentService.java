@@ -5,7 +5,6 @@ import cn.edu.neu.shop.pin.exception.PermissionDeniedException;
 import cn.edu.neu.shop.pin.mapper.PinProductAttributeValueMapper;
 import cn.edu.neu.shop.pin.mapper.PinUserProductCommentMapper;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
-import cn.edu.neu.shop.pin.model.PinProductAttributeValue;
 import cn.edu.neu.shop.pin.model.PinUserProductComment;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONObject;
@@ -27,50 +26,46 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
 
     private final OrderIndividualService orderIndividualService;
 
-    private final ProductService productService;
-
     private final PinProductAttributeValueMapper pinProductAttributeValueMapper;
 
     @Autowired
-    public ProductCommentService(PinUserProductCommentMapper pinUserProductCommentMapper, OrderIndividualService orderIndividualService, ProductService productService, PinProductAttributeValueMapper pinProductAttributeValueMapper) {
+    public ProductCommentService(PinUserProductCommentMapper pinUserProductCommentMapper, OrderIndividualService orderIndividualService, PinProductAttributeValueMapper pinProductAttributeValueMapper) {
         this.pinUserProductCommentMapper = pinUserProductCommentMapper;
         this.orderIndividualService = orderIndividualService;
-        this.productService = productService;
         this.pinProductAttributeValueMapper = pinProductAttributeValueMapper;
     }
 
     /**
+     * @param userId   用户ID
+     * @param comments 评论对象集合
      * @author flyhero
      * 为商品添加评论
-     * @param userId 用户ID
-     * @param comments 评论对象集合
      */
     @Transactional
     public void addComments(Integer userId, List<PinUserProductComment> comments) throws PermissionDeniedException, CommentFailedException {
         // 传进来数组为空
-        if(comments == null || comments.size() == 0) return;
+        if (comments == null || comments.size() == 0) return;
         // 得到orderIndividual
         Integer orderIndividualId = comments.get(0).getOrderIndividualId();
         Integer skuId = comments.get(0).getSkuId();
         PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
-        if(!Objects.equals(userId, orderIndividual.getUserId())) { // 用户ID不符
+        if (!Objects.equals(userId, orderIndividual.getUserId())) { // 用户ID不符
             throw new PermissionDeniedException("Caused by ProductCommentService: 评论用户与订单所属用户ID不符！");
-        } else if(orderIndividual.getStatus() != PinOrderIndividual.STATUS_PENDING_COMMENT) {
+        } else if (orderIndividual.getStatus() != PinOrderIndividual.STATUS_PENDING_COMMENT) {
             // 订单状态不是"待评价"
             throw new CommentFailedException("Caused by ProductCommentService: 添加评论失败，订单状态异常！");
         }
         // 评价此订单中的所有商品（精确到sku）
-        for(PinUserProductComment comment : comments) {
+        for (PinUserProductComment comment : comments) {
             // 检查是否已评论
             PinUserProductComment commentSample = new PinUserProductComment();
             commentSample.setOrderIndividualId(orderIndividualId);
             commentSample.setSkuId(skuId);
             PinUserProductComment checkIfExists = pinUserProductCommentMapper.selectOne(commentSample);
-            if(checkIfExists != null) { // 如果评论已存在，则覆盖更新这条评论
+            if (checkIfExists != null) { // 如果评论已存在，则覆盖更新这条评论
                 comment.setId(checkIfExists.getId());
                 this.update(comment);
-            }
-            else { // 新鲜的评论
+            } else { // 新鲜的评论
                 // 由于前端只返回了skuId而没有返回productId，因此需要根据skuId找到其对应的productId
                 comment.setProductId(pinProductAttributeValueMapper.selectByPrimaryKey(skuId).getProductId());
                 comment.setUserId(userId);
@@ -85,6 +80,7 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
 
     /**
      * 根据商品ID 获取该商品评论信息
+     *
      * @param productId 商品 ID
      * @return List
      */
@@ -94,6 +90,7 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
 
     /**
      * 从当前时间算起，获取之前7天内每天的评论数
+     *
      * @param storeId 店铺ID
      * @return 获取评论数成功与否的状态
      */
@@ -101,7 +98,7 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
         Integer[] comment = new Integer[7];
         Date date = new Date();
         date = getDateByOffset(date, 1);
-        for(int i = 0; i < 7; i++) {
+        for (int i = 0; i < 7; i++) {
             Date toDate = date;
             date = getDateByOffset(date, -1);
             Date fromDate = date;
@@ -121,9 +118,9 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
     }
 
     /**
-     * @param list 列表长度
+     * @param list       列表长度
      * @param pageNumber 分页数量
-     * @param pageSize 页面长度
+     * @param pageSize   页面长度
      * @return 评论列表
      */
     public List getCommentsByPageNumAndSize(List list, Integer pageNumber, Integer pageSize) {
@@ -136,6 +133,7 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
 
     /**
      * 获取该店铺商家未评论总数
+     *
      * @param storeId 店铺ID
      * @return 未评论的店家数量
      */
@@ -145,6 +143,7 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
 
     /**
      * 指定偏移的天数，计算某天的日期
+     *
      * @param today 当前时间
      * @param delta 偏移量
      * @return 希望得到的日期
@@ -158,6 +157,7 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
 
     /**
      * 获取某一店铺内尚未评论的产品列表
+     *
      * @param storeId 店铺ID
      * @return 商品列表
      */
@@ -165,7 +165,7 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
         return pinUserProductCommentMapper.getAllProductWithComment(storeId);
     }
 
-    public void updateMerchantCommentContent(Integer commentId, String commentContent, Date commentTime){
+    public void updateMerchantCommentContent(Integer commentId, String commentContent, Date commentTime) {
         pinUserProductCommentMapper.updateMerchantComment(commentId, commentContent, commentTime);
     }
 }

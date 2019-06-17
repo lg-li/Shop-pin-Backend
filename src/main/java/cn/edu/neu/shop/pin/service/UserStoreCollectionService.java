@@ -4,12 +4,12 @@ import cn.edu.neu.shop.pin.mapper.PinStoreMapper;
 import cn.edu.neu.shop.pin.mapper.PinUserStoreCollectionMapper;
 import cn.edu.neu.shop.pin.model.PinStore;
 import cn.edu.neu.shop.pin.model.PinUserStoreCollection;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author flyhero
@@ -19,23 +19,26 @@ import java.util.List;
 @Service
 public class UserStoreCollectionService {
 
-    public static final int STATUS_ADD_STORE_SUCCESS = 0;
-    public static final int STATUS_ADD_STORE_INVALID_ID = -1;
+    private static final int STATUS_ADD_STORE_SUCCESS = 0;
+    private static final int STATUS_ADD_STORE_INVALID_ID = -1;
     public static final int STATUS_DELETE_STORE_SUCCESS = 0;
     public static final int STATUS_DELETE_STORE_INVALID_ID = -1;
     public static final int STATUS_DELETE_STORE_PERMISSION_DENIED = -2;
 
-    @Autowired
-    private PinStoreMapper pinStoreMapper;
+    private final PinStoreMapper pinStoreMapper;
 
-    @Autowired
-    private PinUserStoreCollectionMapper pinUserStoreCollectionMapper;
+    private final PinUserStoreCollectionMapper pinUserStoreCollectionMapper;
+
+    public UserStoreCollectionService(PinStoreMapper pinStoreMapper, PinUserStoreCollectionMapper pinUserStoreCollectionMapper) {
+        this.pinStoreMapper = pinStoreMapper;
+        this.pinUserStoreCollectionMapper = pinUserStoreCollectionMapper;
+    }
 
     /**
      * 根据用户id获取其收藏的商品列表及商品信息、店铺信息
      *
-     * @param userId
-     * @return
+     * @param userId 用户ID
+     * @return 店铺收藏 List
      */
     public List<PinUserStoreCollection> getUserStoreCollection(Integer userId) {
         return pinUserStoreCollectionMapper.getUserStoreCollection(userId);
@@ -44,9 +47,9 @@ public class UserStoreCollectionService {
     /**
      * 插入一条新的店铺收藏
      *
-     * @param userId
-     * @param storeId
-     * @return
+     * @param userId  用户ID
+     * @param storeId 店铺ID
+     * @return 状态码
      */
     @Transactional
     public Integer addStoreToCollection(Integer userId, Integer storeId) {
@@ -62,9 +65,9 @@ public class UserStoreCollectionService {
     /**
      * 根据userId和storeId删除一条店铺收藏
      *
-     * @param userId
-     * @param storeId
-     * @return
+     * @param userId  用户ID
+     * @param storeId 店铺ID
+     * @return 状态码
      */
     @Transactional
     public Integer deleteStoreCollection(Integer userId, Integer storeId) {
@@ -76,9 +79,9 @@ public class UserStoreCollectionService {
         List<PinUserStoreCollection> list = pinUserStoreCollectionMapper.select(p);
         if (list.size() == 0) return STATUS_DELETE_STORE_INVALID_ID;
         for (PinUserStoreCollection pp : list) {
-            if (pp.getUserId() != userId)
+            if (!Objects.equals(pp.getUserId(), userId))
                 return STATUS_DELETE_STORE_PERMISSION_DENIED;
-            if (pp.getStoreId() != storeId)
+            if (!Objects.equals(pp.getStoreId(), storeId))
                 return STATUS_DELETE_STORE_INVALID_ID;
             pinUserStoreCollectionMapper.delete(pp);
         }

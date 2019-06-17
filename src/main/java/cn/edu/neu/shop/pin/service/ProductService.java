@@ -6,7 +6,6 @@ import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,6 +40,7 @@ public class ProductService extends AbstractService<PinProduct> {
 
     /**
      * 根据商品Id 获取商品详情信息
+     *
      * @param productId 商品 ID
      * @return 单个PinProduct类实体
      */
@@ -59,6 +59,7 @@ public class ProductService extends AbstractService<PinProduct> {
 
     /**
      * 根据商品Id 获取商品详情信息
+     *
      * @param productId 商品 ID
      * @return JSON 包装了Product和一条grade为0的（好评）评论
      */
@@ -69,15 +70,16 @@ public class ProductService extends AbstractService<PinProduct> {
         JSONObject returnJSON = new JSONObject();
         returnJSON.put("product", product);
         List<JSONObject> list = pinUserProductCommentMapper.getCommentAndUserInfo(productId);
-        if(list == null || list.size() == 0) returnJSON.put("comment", null);
+        if (list == null || list.size() == 0) returnJSON.put("comment", null);
         else returnJSON.put("comment", list.get(0));
         return returnJSON;
     }
 
     /**
      * 根据店铺Id，获取该店铺所有在售商品信息
-     * @param storeId 店铺 ID
-     * @param pageNum 分页页码
+     *
+     * @param storeId  店铺 ID
+     * @param pageNum  分页页码
      * @param pageSize 分页大小
      * @return 商品列表
      */
@@ -91,9 +93,10 @@ public class ProductService extends AbstractService<PinProduct> {
 
     /**
      * 根据分类ID，获取该分类下所有在售商品信息
+     *
      * @param categoryId 分类ID
-     * @param pageNum 分页页码
-     * @param pageSize 分页大小
+     * @param pageNum    分页页码
+     * @param pageSize   分页大小
      * @return 商品分页列表
      */
     public PageInfo<PinProduct> getProductByCategoryIdByPage(Integer categoryId, Integer pageNum, Integer pageSize) {
@@ -107,6 +110,7 @@ public class ProductService extends AbstractService<PinProduct> {
 
     /**
      * 返回热门商品，支持分页操作
+     *
      * @param pageNum  页面编号
      * @param pageSize 页面大小
      * @return 商品分页列表
@@ -135,6 +139,7 @@ public class ProductService extends AbstractService<PinProduct> {
     /**
      * TODO:ydy未测试
      * 判断传入的 order_item 是否属于同一家店铺
+     *
      * @param list 传入的数组，由order_item组成
      * @return 如果都属于同一家店铺，则返回true
      */
@@ -152,7 +157,8 @@ public class ProductService extends AbstractService<PinProduct> {
 
     /**
      * 根据userId和productId判断某一商品是否被某一用户收藏
-     * @param userId 用户ID
+     *
+     * @param userId    用户ID
      * @param productId 商品ID
      * @return 是否被收藏
      */
@@ -166,6 +172,7 @@ public class ProductService extends AbstractService<PinProduct> {
 
     /**
      * 获取正在上架的商品信息
+     *
      * @param storeId 店铺ID
      * @return 商品信息JSON list
      */
@@ -175,6 +182,7 @@ public class ProductService extends AbstractService<PinProduct> {
 
     /**
      * 获取已就绪但未上架的商品信息
+     *
      * @param storeId 店铺ID
      * @return 商品信息JSON list
      */
@@ -184,6 +192,7 @@ public class ProductService extends AbstractService<PinProduct> {
 
     /**
      * 获取已售空的商品信息
+     *
      * @param storeId 店铺ID
      * @return 商品信息JSON list
      */
@@ -193,6 +202,7 @@ public class ProductService extends AbstractService<PinProduct> {
 
     /**
      * 获取库存预警的商品信息
+     *
      * @param storeId 店铺ID
      * @return 商品信息JSON list
      */
@@ -202,6 +212,7 @@ public class ProductService extends AbstractService<PinProduct> {
 
     /**
      * 获取同一店铺的商品信息
+     *
      * @param storeId 店铺ID
      * @return 商品信息JSON list
      */
@@ -220,7 +231,8 @@ public class ProductService extends AbstractService<PinProduct> {
 
     /**
      * 更新商品目录
-     * @param productId 商品ID
+     *
+     * @param productId  商品ID
      * @param categoryId 类别ID
      */
     @Transactional
