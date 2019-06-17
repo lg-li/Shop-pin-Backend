@@ -6,7 +6,6 @@ import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.*;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author ydy
  */
 
+@SuppressWarnings("ALL")
 @RestController
 @RequestMapping("/user")
 @Api(tags = "user")
@@ -62,7 +62,7 @@ public class UserController {
             @ApiResponse(code = 403, message = "Access denied"), //
             @ApiResponse(code = 404, message = "The user doesn't exist"), //
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-    public Integer delete(@ApiParam("Id") @PathVariable Integer id) {
+    public Integer delete(@ApiParam("Id") @PathVariable Integer id, @PathVariable("UserController.delete") String parameter) {
         System.out.println("123");
         userService.delete(id);
         return id;
