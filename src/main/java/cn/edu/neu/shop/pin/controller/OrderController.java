@@ -197,9 +197,7 @@ public class OrderController {
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "商品数量修改成功！", null);
         } catch (PermissionDeniedException e) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_CREDENTIAL, e.getMessage(), null);
-        } catch (RecordNotFoundException e) {
-            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, e.getMessage(), null);
-        } catch (InvalidOperationException e) {
+        } catch (RecordNotFoundException | InvalidOperationException e) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, e.getMessage(), null);
         }
     }

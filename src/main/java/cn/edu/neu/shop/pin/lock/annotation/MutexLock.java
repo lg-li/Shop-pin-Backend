@@ -14,8 +14,10 @@ import java.lang.annotation.Target;
 public @interface MutexLock {
     // redis缓存key
     String key();
+
     // redis缓存key中的数据
     String value() default "";
+
     // 过期时间(秒)，默认为一分钟
     long expire() default 60;
 }

@@ -121,7 +121,7 @@ public class PinProduct {
     /**
      * 购买将获得的积分
      */
-@Column(name = "credit_to_give")
+    @Column(name = "credit_to_give")
     private Integer creditToGive;
 
     /**
@@ -145,6 +145,33 @@ public class PinProduct {
     private List<PinProductAttributeDefinition> productAttributeDefinitions;
 
     private List<PinProductAttributeValue> productAttributeValues;
+
+    public PinProduct() {
+    }
+
+    public PinProduct(Integer storeId, Integer categoryId, String imageUrls, String name, String info, String keyword, BigDecimal price, BigDecimal priceBeforeDiscount, String unitName, Integer stockCount, Integer soldCount, Boolean isShown, Boolean isHot, Boolean isNew, BigDecimal shippingFee, Boolean isFreeShipping, Date createTime, Integer creditToGive, BigDecimal cost, Integer visitCount, String description) {
+        this.storeId = storeId;
+        this.categoryId = categoryId;
+        this.imageUrls = imageUrls;
+        this.name = name;
+        this.info = info;
+        this.keyword = keyword;
+        this.price = price;
+        this.priceBeforeDiscount = priceBeforeDiscount;
+        this.unitName = unitName;
+        this.stockCount = stockCount;
+        this.soldCount = soldCount;
+        this.isShown = isShown;
+        this.isHot = isHot;
+        this.isNew = isNew;
+        this.shippingFee = shippingFee;
+        this.isFreeShipping = isFreeShipping;
+        this.createTime = createTime;
+        this.creditToGive = creditToGive;
+        this.cost = cost;
+        this.visitCount = visitCount;
+        this.description = description;
+    }
 
     /**
      * 获取商品id
@@ -524,6 +551,14 @@ public class PinProduct {
         this.visitCount = visitCount;
     }
 
+//    public String getCategoryName() {
+//        return categoryName;
+//    }
+//
+//    public void setCategoryName(String categoryName) {
+//        this.categoryName = categoryName;
+//    }
+
     /**
      * 获取产品描述
      *
@@ -541,14 +576,6 @@ public class PinProduct {
     public void setDescription(String description) {
         this.description = description;
     }
-
-//    public String getCategoryName() {
-//        return categoryName;
-//    }
-//
-//    public void setCategoryName(String categoryName) {
-//        this.categoryName = categoryName;
-//    }
 
     public PinStore getStore() {
         return store;
@@ -572,32 +599,5 @@ public class PinProduct {
 
     public void setProductAttributeValues(List<PinProductAttributeValue> productAttributeValues) {
         this.productAttributeValues = productAttributeValues;
-    }
-
-    public PinProduct() {
-    }
-
-    public PinProduct(Integer storeId, Integer categoryId, String imageUrls, String name, String info, String keyword, BigDecimal price, BigDecimal priceBeforeDiscount, String unitName, Integer stockCount, Integer soldCount, Boolean isShown, Boolean isHot, Boolean isNew, BigDecimal shippingFee, Boolean isFreeShipping, Date createTime, Integer creditToGive, BigDecimal cost, Integer visitCount, String description) {
-        this.storeId = storeId;
-        this.categoryId = categoryId;
-        this.imageUrls = imageUrls;
-        this.name = name;
-        this.info = info;
-        this.keyword = keyword;
-        this.price = price;
-        this.priceBeforeDiscount = priceBeforeDiscount;
-        this.unitName = unitName;
-        this.stockCount = stockCount;
-        this.soldCount = soldCount;
-        this.isShown = isShown;
-        this.isHot = isHot;
-        this.isNew = isNew;
-        this.shippingFee = shippingFee;
-        this.isFreeShipping = isFreeShipping;
-        this.createTime = createTime;
-        this.creditToGive = creditToGive;
-        this.cost = cost;
-        this.visitCount = visitCount;
-        this.description = description;
     }
 }

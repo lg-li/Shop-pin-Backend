@@ -6,7 +6,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Base64;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -39,8 +37,11 @@ public class JwtTokenProvider {
     @Value("${security.jwt.token.expire-length:3600000}")
     private long validityInMilliseconds = 3600000 * 2; // 1h
 
-    @Autowired
-    private MyUserDetails myUserDetails;
+    private final MyUserDetails myUserDetails;
+
+    public JwtTokenProvider(MyUserDetails myUserDetails) {
+        this.myUserDetails = myUserDetails;
+    }
 
     @PostConstruct
     protected void init() {
@@ -56,7 +57,6 @@ public class JwtTokenProvider {
                         s -> new SimpleGrantedAuthority(
                                 s.getAuthority()
                         ))
-                .filter(Objects::nonNull)
                 .collect(Collectors.toList()));
 
         Date now = new Date();

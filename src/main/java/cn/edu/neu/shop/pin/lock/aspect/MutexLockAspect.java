@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit;
  * 互斥锁切面
  * 根据注解注入执行方法，若互斥则停止执行
  */
+@SuppressWarnings("ALL")
 @Component
 @Slf4j
 @Aspect
@@ -30,7 +31,6 @@ public class MutexLockAspect {
 
     private static Logger logger = LoggerFactory.getLogger(MutexLockAspect.class);
 
-    @Autowired
     private final RedisTemplate<String, String> redisTemplate;
 
     @Autowired
@@ -60,9 +60,9 @@ public class MutexLockAspect {
         // 初始key值
         StringBuilder keyBuilder = new StringBuilder(mutexLock.key());
         // 将LockKeyVariable注解对应的变量值使用横杠连接作为锁的key
-        for(int index = 0; index < parameters.length; index ++) {
+        for (int index = 0; index < parameters.length; index++) {
             LockKeyVariable lockKeyVariable = parameters[index].getAnnotation(LockKeyVariable.class);
-            if(lockKeyVariable!=null) {
+            if (lockKeyVariable != null) {
                 // 若此参数存在LockKeyVariable注解，则将其叠加变量注解到key中
                 keyBuilder.append("-").append(args[index].toString());
             }

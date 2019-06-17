@@ -5,7 +5,6 @@ import cn.edu.neu.shop.pin.mapper.PinUserMapper;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.model.PinUserBalanceRecord;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,8 +18,11 @@ import java.util.Date;
 @Service
 public class UserBalanceService extends AbstractService<PinUserBalanceRecord> {
 
-    @Autowired
-    PinUserMapper userMapper;
+    private final PinUserMapper userMapper;
+
+    public UserBalanceService(PinUserMapper userMapper) {
+        this.userMapper = userMapper;
+    }
 
     /**
      * 扣除用户余额（用于抵扣支付订单）
@@ -29,7 +31,7 @@ public class UserBalanceService extends AbstractService<PinUserBalanceRecord> {
      * @param balanceToReduce 减少金额（正数）
      */
     @Transactional
-    boolean reduceUserBalanceFromDiscountOnIndividualOrder(Integer userId, Integer fromOrderIndividualId, BigDecimal balanceToReduce) throws InsufficientBalanceException {
+    void reduceUserBalanceFromDiscountOnIndividualOrder(Integer userId, Integer fromOrderIndividualId, BigDecimal balanceToReduce) throws InsufficientBalanceException {
         PinUser userToOperate = userMapper.findById(userId);
         // 减少用户记录的余额
         userToOperate.setBalance(userToOperate.getBalance().subtract(balanceToReduce));
@@ -45,7 +47,6 @@ public class UserBalanceService extends AbstractService<PinUserBalanceRecord> {
         newBalanceRecord.setChangedAmount(balanceToReduce.negate());
         newBalanceRecord.setType(PinUserBalanceRecord.TYPE_DISCOUNT_ON_ORDER);
         save(newBalanceRecord);
-        return true;
     }
 
     /**

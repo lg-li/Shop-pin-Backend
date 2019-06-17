@@ -31,6 +31,7 @@ public class SignInController {
 
     /**
      * 默认登录
+     *
      * @param loginJSON 登录JSON
      * @return 响应JSON
      */
@@ -65,8 +66,9 @@ public class SignInController {
 
     /**
      * 微信小程序登录
+     *
      * @param httpServletRequest HttpServlet请求体
-     * @param loginJSON 登录JSON
+     * @param loginJSON          登录JSON
      * @return 响应JSON
      */
     @PostMapping(value = "/wechat-mini-program")

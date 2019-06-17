@@ -7,7 +7,6 @@ import cn.edu.neu.shop.pin.service.OrderIndividualService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -27,12 +26,17 @@ import java.util.concurrent.Executors;
 public class GroupClosingScheduler {
 
     private static Logger logger = LoggerFactory.getLogger(GroupClosingScheduler.class);
-    @Autowired
-    private OrderGroupService orderGroupService;
-    @Autowired
-    private OrderIndividualService orderIndividualService;
+
+    private final OrderGroupService orderGroupService;
+
+    private final OrderIndividualService orderIndividualService;
 
     private ExecutorService executorService = Executors.newCachedThreadPool();
+
+    public GroupClosingScheduler(OrderGroupService orderGroupService, OrderIndividualService orderIndividualService) {
+        this.orderGroupService = orderGroupService;
+        this.orderIndividualService = orderIndividualService;
+    }
 
     /**
      * cron字符串决定看门狗每1分钟执行一次清理任务
@@ -42,18 +46,17 @@ public class GroupClosingScheduler {
         List<PinOrderGroup> orderGroups = orderGroupService.getOrdersByStatus(PinOrderGroup.STATUS_PINGING);
         final Date currentDate = new Date();
         logger.info("触发收团定时任务。");
-        orderGroups.forEach(orderGroup -> {
-            executorService.submit(()->{
-                // 并发更新团单状态
-                if(orderGroup.getCloseTime().compareTo(currentDate) <= 0) {
-                    finishGroupOrder(orderGroup);
-                }
-            });
-        });
+        orderGroups.forEach(orderGroup -> executorService.submit(() -> {
+            // 并发更新团单状态
+            if (orderGroup.getCloseTime().compareTo(currentDate) <= 0) {
+                finishGroupOrder(orderGroup);
+            }
+        }));
     }
 
     /**
      * 关闭指定的团单（设置为已结束，并标记结束时间）
+     *
      * @param orderGroup 团单实体
      */
     private void finishGroupOrder(PinOrderGroup orderGroup) {
@@ -61,8 +64,8 @@ public class GroupClosingScheduler {
         List<PinOrderIndividual> orderIndividuals = orderIndividualService.getOrderIndividualsByOrderGroupId(orderGroup.getId());
         // 计算团单内最终总价
         BigDecimal finalAmountOfMoney = new BigDecimal(0);
-        for(PinOrderIndividual orderIndividual:orderIndividuals) {
-            if(!orderIndividual.getPaid()) {
+        for (PinOrderIndividual orderIndividual : orderIndividuals) {
+            if (!orderIndividual.getPaid()) {
                 logger.error("异常团单 #" + orderGroup.getId() + "。团单中存在未支付的订单");
             }
             finalAmountOfMoney = finalAmountOfMoney.add(orderIndividual.getTotalPrice());

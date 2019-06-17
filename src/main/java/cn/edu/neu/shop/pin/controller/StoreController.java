@@ -26,6 +26,7 @@ public class StoreController {
 
     /**
      * 根据店铺Id 获取该店铺的所有在售商品信息
+     *
      * @param storeId 店铺ID
      * @return JSONObject
      */
@@ -41,6 +42,7 @@ public class StoreController {
 
     /**
      * 根据店铺ID 获取该店铺的详细信息
+     *
      * @param storeId 店铺ID
      * @return JSONObject
      */
