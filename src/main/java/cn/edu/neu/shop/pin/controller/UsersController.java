@@ -48,6 +48,7 @@ public class UsersController {
 
     /**
      * 获取用户信息
+     *
      * @param httpServletRequest HttpServlet请求体
      * @return 包含用户信息以及结果状态的JSONObject
      */
@@ -84,6 +85,7 @@ public class UsersController {
 
     /**
      * 根据用户ID，查询该用户的所有收货地址
+     *
      * @param httpServletRequest HttpServlet请求体
      * @return 包含地址以及结果状态的JSONObject
      */
@@ -102,7 +104,7 @@ public class UsersController {
 
     /**
      * @param httpServletRequest HttpServlet请求体
-     * @param requestJSON 包含传入的地址
+     * @param requestJSON        包含传入的地址
      * @return 创建地址状态
      * @author flyhero
      * 创建地址，增加了对isDefault的检查
@@ -125,7 +127,7 @@ public class UsersController {
 
     /**
      * @param httpServletRequest HttpServlet请求体
-     * @param requestJSON 请求体JSON，包含地址ID
+     * @param requestJSON        请求体JSON，包含地址ID
      * @return 删除结果状态 JSON
      * @author flyhero
      * 删除地址，会检查是否删除了默认地址
@@ -155,7 +157,7 @@ public class UsersController {
 
     /**
      * @param httpServletRequest HttpServlet请求体
-     * @param requestJSON 请求体JSON，包含地址信息
+     * @param requestJSON        请求体JSON，包含地址信息
      * @return 更新结果状态 JSON
      * @author flyhero
      * 更新地址，会检查是否将其设置为默认地址，若是则替换掉原来的默认地址
@@ -181,10 +183,10 @@ public class UsersController {
     }
 
     /**
-     * @author flyhero
-     * 获取商品浏览记录
      * @param httpServletRequest HttpServlet请求体
      * @return 用户商品浏览记录 JSON
+     * @author flyhero
+     * 获取商品浏览记录
      */
     @GetMapping("/product-visit-record")
     public JSONObject getUserProductRecord(HttpServletRequest httpServletRequest) {
@@ -239,7 +241,7 @@ public class UsersController {
 
     /**
      * @param httpServletRequest HttpServlet请求体
-     * @param requestJSON 请求体JSON 包含要收藏的商品productId
+     * @param requestJSON        请求体JSON 包含要收藏的商品productId
      * @return 添加收藏状态 JSON
      * @author flyhero
      * 添加商品收藏
@@ -260,7 +262,7 @@ public class UsersController {
 
     /**
      * @param httpServletRequest HttpServlet请求体
-     * @param productId 收藏的商品ID
+     * @param productId          收藏的商品ID
      * @return 响应JSON
      * @author flyhero
      * 删除商品收藏
@@ -286,7 +288,7 @@ public class UsersController {
 
     /**
      * @param httpServletRequest HttpServlet请求体
-     * @param requestJSON 请求体JSON
+     * @param requestJSON        请求体JSON
      * @return 响应JSON
      * @author flyhero
      * 添加店铺收藏
@@ -307,7 +309,7 @@ public class UsersController {
 
     /**
      * @param httpServletRequest HttpServlet请求体
-     * @param storeId 收藏的店铺ID
+     * @param storeId            收藏的店铺ID
      * @return 响应JSON
      * @author flyhero
      * 删除店铺收藏
@@ -367,10 +369,10 @@ public class UsersController {
     }
 
     /**
-     * @author flyhero
-     * 判断某一用户今日是否已经签到
      * @param httpServletRequest HttpServlet请求体
      * @return 响应JSON
+     * @author flyhero
+     * 判断某一用户今日是否已经签到
      */
     @GetMapping("/has-checked-in")
     public JSONObject hasCheckedIn(HttpServletRequest httpServletRequest) {
@@ -384,18 +386,18 @@ public class UsersController {
     }
 
     /**
+     * @param httpServletRequest HttpServlet请求体
+     * @param requestJSON        包含一个对订单中每件sku的评论的数组，执行后将对其中每件商品都执行评论操作
+     * @return 响应JSON
      * @author flyhero
      * 为某一商品订单中的一组商品添加评论，同一订单只能添加一次
-     * @param httpServletRequest HttpServlet请求体
-     * @param requestJSON 包含一个对订单中每件sku的评论的数组，执行后将对其中每件商品都执行评论操作
-     * @return 响应JSON
      */
     @PostMapping("/add-comment")
-    public JSONObject addComment(HttpServletRequest httpServletRequest,@RequestBody JSONObject requestJSON) {
+    public JSONObject addComment(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         PinUser user = userService.whoAmI(httpServletRequest);
         JSONArray jsonArray = requestJSON.getJSONArray("comments");
         List<PinUserProductComment> comments = new ArrayList<>();
-        for(int i = 0; i < jsonArray.size(); i++) {
+        for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject jo = jsonArray.getJSONObject(i);
             PinUserProductComment comment = new PinUserProductComment();
             comment.setUserId(user.getId());
@@ -420,18 +422,18 @@ public class UsersController {
     }
 
     /**
+     * @param httpServletRequest HttpServlet请求体
+     * @param requestJSON        包含：phone: 待更新的电话号码
+     * @return 响应JSON
      * @author flyhero
      * 更新电话号码信息
-     * @param httpServletRequest HttpServlet请求体
-     * @param requestJSON 包含：phone: 待更新的电话号码
-     * @return 响应JSON
      */
     @PostMapping("/update-phone")
     public JSONObject updatePhone(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         PinUser user = userService.whoAmI(httpServletRequest);
         String phone = requestJSON.getString("phone");
         Boolean updateSuccess = userService.updatePhone(user.getId(), phone);
-        if(updateSuccess) {
+        if (updateSuccess) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "用户电话信息更新成功！", null);
         } else {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, PinConstants.ResponseMessage.INTERNAL_ERROR, null);
@@ -439,18 +441,18 @@ public class UsersController {
     }
 
     /**
+     * @param httpServletRequest HttpServlet请求体
+     * @param requestJSON        包含：email: 待更新的邮箱地址
+     * @return 响应JSON
      * @author flyhero
      * 更新电子邮箱信息
-     * @param httpServletRequest HttpServlet请求体
-     * @param requestJSON 包含：email: 待更新的邮箱地址
-     * @return 响应JSON
      */
     @PostMapping("/update-email")
     public JSONObject updateEmail(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         PinUser user = userService.whoAmI(httpServletRequest);
         String email = requestJSON.getString("email");
         Boolean updateSuccess = userService.updateEmail(user.getId(), email);
-        if(updateSuccess) {
+        if (updateSuccess) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "用户邮箱信息更新成功！", null);
         } else {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, PinConstants.ResponseMessage.INTERNAL_ERROR, null);
@@ -458,18 +460,18 @@ public class UsersController {
     }
 
     /**
+     * @param httpServletRequest HttpServlet请求体
+     * @param requestJSON        包含password: 待更新的用户密码信息（传过来时是明文，在Service中再加密）
+     * @return 响应JSON
      * @author flyhero
      * 更新密码
-     * @param httpServletRequest HttpServlet请求体
-     * @param requestJSON 包含password: 待更新的用户密码信息（传过来时是明文，在Service中再加密）
-     * @return 响应JSON
      */
     @PostMapping("/update-password")
     public JSONObject updatePassword(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         PinUser user = userService.whoAmI(httpServletRequest);
         String password = requestJSON.getString("password");
         Boolean updateSuccess = userService.updatePassword(user.getId(), password);
-        if(updateSuccess) {
+        if (updateSuccess) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "密码更新成功！", null);
         } else {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, PinConstants.ResponseMessage.INTERNAL_ERROR, null);
@@ -477,18 +479,18 @@ public class UsersController {
     }
 
     /**
+     * @param httpServletRequest HttpServlet请求体
+     * @param requestJSON        包含：avatarUrl: 待更新的头像图片链接地址
+     * @return 响应JSON
      * @author flyhero
      * 更新用户头像
-     * @param httpServletRequest HttpServlet请求体
-     * @param requestJSON 包含：avatarUrl: 待更新的头像图片链接地址
-     * @return 响应JSON
      */
     @PostMapping("/update-avatar-url")
     public JSONObject updateAvatarUrl(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         PinUser user = userService.whoAmI(httpServletRequest);
         String avatarUrl = requestJSON.getString("avatarUrl");
         Boolean updateSuccess = userService.updateAvatarUrl(user.getId(), avatarUrl);
-        if(updateSuccess) {
+        if (updateSuccess) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "头像更换成功！", null);
         } else {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, PinConstants.ResponseMessage.INTERNAL_ERROR, null);
@@ -496,11 +498,11 @@ public class UsersController {
     }
 
     /**
+     * @param httpServletRequest HttpServlet请求体
+     * @param requestJSON        包含需要更改的User信息的字段（不含手机，邮箱等等，前端限制）
+     * @return 响应JSON
      * @author flyhero
      * 更新一些常规信息
-     * @param httpServletRequest HttpServlet请求体
-     * @param requestJSON 包含需要更改的User信息的字段（不含手机，邮箱等等，前端限制）
-     * @return 响应JSON
      */
     @PostMapping("/update-common-user-info")
     public JSONObject updateCommonUserInfo(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {

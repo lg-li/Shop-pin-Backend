@@ -2,7 +2,6 @@ package cn.edu.neu.shop.pin.mapper;
 
 import cn.edu.neu.shop.pin.model.PinProduct;
 import cn.edu.neu.shop.pin.util.base.BaseMapper;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
@@ -15,8 +14,8 @@ public interface PinProductMapper extends BaseMapper<PinProduct> {
     /**
      * 根据商品ID获取商品详情
      *
-     * @param productId
-     * @return
+     * @param productId 商品ID
+     * @return 商品
      * @author cqf
      */
     PinProduct getProductById(Integer productId);
@@ -24,7 +23,7 @@ public interface PinProductMapper extends BaseMapper<PinProduct> {
     /**
      * 筛选所有is_hot属性为true的商品，显示在"热门商品"中
      *
-     * @return
+     * @return 热门商品List
      * @author flyhero
      */
     List<PinProduct> getHotProducts();
@@ -32,19 +31,15 @@ public interface PinProductMapper extends BaseMapper<PinProduct> {
     /**
      * 筛选所有is_new属性为true的商品，显示在"新品"中
      *
-     * @return
+     * @return 新品List
      * @author flyhero
      */
     List<PinProduct> getNewProducts();
 
     //模糊查询
-    List<PinProduct> getProductByStoreIdAndKey(@Param("storeId") Integer storeId,@Param("keyWord") String keyWord);
-
-    List<PinProduct> getProductByCategoryId(Integer categoryId);
+    List<PinProduct> getProductByStoreIdAndKey(@Param("storeId") Integer storeId, @Param("keyWord") String keyWord);
 
     List<JSONObject> getProductFromSameStore(Integer storeId);
-
-    List<PinProduct> getProductIsShown(Integer storeId);
 
     Integer getNumberOfProductLessStock(Integer storeId);
 

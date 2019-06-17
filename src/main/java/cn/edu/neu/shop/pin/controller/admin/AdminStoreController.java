@@ -10,24 +10,29 @@ import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import cn.edu.neu.shop.pin.util.img.ImgUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.Objects;
 
 @RestController
 @RequestMapping(value = "/manager/store")
 public class AdminStoreController {
 
-    @Autowired
-    UserService userService;
-    @Autowired
-    StoreService storeService;
+    private final UserService userService;
 
-    @Autowired
-    StoreCloseBatchService storeCloseBatchService;
+    private final StoreService storeService;
+
+
+    private final StoreCloseBatchService storeCloseBatchService;
+
+    public AdminStoreController(UserService userService, StoreService storeService, StoreCloseBatchService storeCloseBatchService) {
+        this.userService = userService;
+        this.storeService = storeService;
+        this.storeCloseBatchService = storeCloseBatchService;
+    }
 
     /**
      * 得到这个商人所有的商铺
@@ -60,7 +65,7 @@ public class AdminStoreController {
             String phone = requestJSON.getString("phone");
             String email = requestJSON.getString("email");
             String base64Img = requestJSON.getString("image");
-            String url = ImgUtil.upload(base64Img, "https://sm.ms/api/upload").getBody().getJSONObject("data").getString("url");
+            String url = Objects.requireNonNull(ImgUtil.upload(base64Img, "https://sm.ms/api/upload").getBody()).getJSONObject("data").getString("url");
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
                     storeService.addStoreInfo(storeName, description, phone, email, url, user.getId()));
         } catch (Exception e) {
@@ -72,14 +77,12 @@ public class AdminStoreController {
     /**
      * 修改店铺信息
      *
-     * @param httpServletRequest
-     * @param requestJSON
-     * @return
+     * @param requestJSON 请求体JSON
+     * @return 响应JSON
      */
     @PutMapping("/storeInfo")
-    public JSONObject updateStoreInfo(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
+    public JSONObject updateStoreInfo(@RequestBody JSONObject requestJSON) {
         try {
-            PinUser user = userService.whoAmI(httpServletRequest);
             PinStore store = JSONObject.toJavaObject(requestJSON, PinStore.class);
             if (storeService.update(store) == null) {
                 return ResponseWrapper.wrap(PinConstants.StatusCode.PERMISSION_DENIED, PinConstants.ResponseMessage.PERMISSION_DENIED, null);
@@ -105,7 +108,7 @@ public class AdminStoreController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<JSONObject> uploadStoreInfo(HttpServletRequest httpServletRequest, @RequestBody JSONObject uploadingInfo) {
+    public ResponseEntity<JSONObject> uploadStoreInfo(@RequestBody JSONObject uploadingInfo) {
         //截掉 "data:image/png;base64,"
         String base64Img = uploadingInfo.getString("image");
         return ImgUtil.upload(base64Img, "https://sm.ms/api/upload");

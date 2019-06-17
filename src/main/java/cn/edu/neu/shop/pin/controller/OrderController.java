@@ -34,11 +34,11 @@ public class OrderController {
 
 
     /**
-     * @author YDY LLG
-     * 创建一个pinOrderIndividual
      * @param httpServletRequest 请求对象
      * @param requestObject      请求体JSON对象
      * @return 返回JSON
+     * @author flyhero
+     * 创建一个pinOrderIndividual
      */
     @PostMapping("/order-individual")
     public JSONObject createOrderIndividual(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestObject) {
@@ -61,10 +61,10 @@ public class OrderController {
     }
 
     /**
-     * @author flyhero
-     * 获取购物车中所有OrderItem的信息
      * @param httpServletRequest HttpServlet请求体
      * @return 获取OrderItem的成功标志
+     * @author flyhero
+     * 获取购物车中所有OrderItem的信息
      */
     @GetMapping("/order-items")
     public JSONObject getAllOrderItems(HttpServletRequest httpServletRequest) {
@@ -84,11 +84,11 @@ public class OrderController {
 
 
     /**
+     * @param httpServletRequest HttpServlet请求体
+     * @param requestJSON        请求体JSON
+     * @return 获取OrderItem的成功标志
      * @author flyhero
      * 将商品添加到购物车中（新建一条OrderItem记录）
-     * @param httpServletRequest HttpServlet请求体
-     * @param requestJSON 请求体JSON
-     * @return 获取OrderItem的成功标志
      */
     @PostMapping("/order-item")
     public JSONObject addOrderItem(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
@@ -98,7 +98,7 @@ public class OrderController {
             Integer skuId = requestJSON.getInteger("skuId");
             Integer amount = requestJSON.getInteger("amount");
             int code = orderItemService.createOrderItem(user.getId(), productId, skuId, amount);
-            if(code == OrderItemService.STATUS_ADD_ORDER_ITEM_SUCCESS) {
+            if (code == OrderItemService.STATUS_ADD_ORDER_ITEM_SUCCESS) {
                 return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
             } else if (code == OrderItemService.STATUS_ADD_ORDER_ITEM_INVALID_ID) {
                 return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, "添加购物车失败", null);
@@ -111,11 +111,11 @@ public class OrderController {
     }
 
     /**
+     * @param httpServletRequest HTTP请求对象
+     * @param requestJSON        请求体JSON
+     * @return 删除OrderItem成功与否
      * @author flyhero
      * 删除订单信息
-     * @param httpServletRequest HTTP请求对象
-     * @param requestJSON 请求体JSON
-     * @return 删除OrderItem成功与否
      */
     @DeleteMapping("/order-items")
     public JSONObject deleteOrderItems(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
@@ -139,10 +139,10 @@ public class OrderController {
     }
 
     /**
-     * @author flyhero
-     * 获取近三个月所有的orderIndividuals
      * @param httpServletRequest HTTP请求对象
      * @return 请求体JSON
+     * @author flyhero
+     * 获取近三个月所有的orderIndividuals
      */
     @GetMapping("/order-individual/recent")
     public JSONObject getRecentThreeMonthsOrderIndividuals(HttpServletRequest httpServletRequest) {
@@ -158,22 +158,22 @@ public class OrderController {
     }
 
     /**
+     * @param httpServletRequest HttpServlet请求体
+     * @param requestJSON        包含orderIndividualId——以此来确认该订单已收货
+     * @return 收货成功与否结果 JSON
      * @author flyhero
      * 确认收货
-     * @param httpServletRequest HttpServlet请求体
-     * @param requestJSON: 包含orderIndividualId——以此来确认该订单已收货
-     * @return 收货成功与否结果 JSON
      */
     @PostMapping("/order-individual/confirm-receipt")
     public JSONObject confirmReceipt(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         PinUser user = userService.whoAmI(httpServletRequest);
         Integer orderIndividualId = requestJSON.getInteger("orderIndividualId");
         int code = orderIndividualService.confirmReceipt(user.getId(), orderIndividualId);
-        if(code == OrderIndividualService.STATUS_CONFIRM_SUCCESS) {
+        if (code == OrderIndividualService.STATUS_CONFIRM_SUCCESS) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "确认收货成功！", null);
-        } else if(code == OrderIndividualService.STATUS_CONFIRM_FAILED) {
+        } else if (code == OrderIndividualService.STATUS_CONFIRM_FAILED) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, "无法确认收货！请检查订单状态！", null);
-        } else if(code == OrderIndividualService.STATUS_CONFIRM_PERMISSION_DENIED) {
+        } else if (code == OrderIndividualService.STATUS_CONFIRM_PERMISSION_DENIED) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_CREDENTIAL, "用户权限不够！", null);
         } else {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, PinConstants.ResponseMessage.INTERNAL_ERROR, null);
@@ -181,11 +181,11 @@ public class OrderController {
     }
 
     /**
+     * @param httpServletRequest HttpServlet请求体
+     * @param requestJSON        包含：orderItemId, amount
+     * @return 响应JSON
      * @author flyhero
      * 修改购物车中某商品的数量
-     * @param httpServletRequest HttpServlet请求体
-     * @param requestJSON 包含：orderItemId, amount
-     * @return 响应JSON
      */
     @PostMapping("/order-item/change-amount")
     public JSONObject changeOrderItemAmount(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
@@ -197,9 +197,7 @@ public class OrderController {
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "商品数量修改成功！", null);
         } catch (PermissionDeniedException e) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_CREDENTIAL, e.getMessage(), null);
-        } catch (RecordNotFoundException e) {
-            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, e.getMessage(), null);
-        } catch (InvalidOperationException e) {
+        } catch (RecordNotFoundException | InvalidOperationException e) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, e.getMessage(), null);
         }
     }

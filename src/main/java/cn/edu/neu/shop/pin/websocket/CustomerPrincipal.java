@@ -50,7 +50,4 @@ public class CustomerPrincipal implements Principal {
         return orderGroupId;
     }
 
-    public void setOrderGroupId(Integer orderGroupId) {
-        this.orderGroupId = orderGroupId;
-    }
 }

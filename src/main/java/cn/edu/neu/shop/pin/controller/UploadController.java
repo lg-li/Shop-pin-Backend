@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 public class UploadController {
     @PostMapping("/image/base64")
-    public ResponseEntity<JSONObject> uploadStoreInfo(@RequestBody JSONObject uploadingInfo){
+    public ResponseEntity<JSONObject> uploadStoreInfo(@RequestBody JSONObject uploadingInfo) {
         String base64Img = uploadingInfo.getString("image");
-        return ImgUtil.upload(base64Img,"https://sm.ms/api/upload");
+        return ImgUtil.upload(base64Img, "https://sm.ms/api/upload");
     }
 }

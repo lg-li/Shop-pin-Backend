@@ -156,11 +156,14 @@
              pin_product_attribute_value as P2
         where store_id = #{storeId}
           and P2.product_id = P1.id
-          and P1.id LIKE CONCAT('%', #{keyWord}, '%')
-          and P1.name LIKE CONCAT('%', #{keyWord}, '%')
-          and P1.info LIKE CONCAT('%', #{keyWord}, '%')
-          and P1.keyword LIKE CONCAT('%', #{keyWord}, '%')
-          and P1.description LIKE CONCAT('%', #{keyWord}, '%')
+          and
+          (
+                 P1.id LIKE CONCAT('%', #{keyWord}, '%')
+              or P1.name LIKE CONCAT('%', #{keyWord}, '%')
+              or P1.info LIKE CONCAT('%', #{keyWord}, '%')
+              or P1.keyword LIKE CONCAT('%', #{keyWord}, '%')
+              or P1.description LIKE CONCAT('%', #{keyWord}, '%')
+          )
     </select>
 
     <select id="getProductByCategoryId" parameterType="java.lang.Integer" resultMap="BaseResultMap">

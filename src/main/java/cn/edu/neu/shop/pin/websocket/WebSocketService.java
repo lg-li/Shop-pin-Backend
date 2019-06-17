@@ -17,10 +17,10 @@ public class WebSocketService {
     }
 
     /**
-     * @author flyhero
-     * 点对点发送错误信息
      * @param principal 用户principal
      * @param errorInfo 错误信息
+     * @author flyhero
+     * 点对点发送错误信息
      */
     public void sendSingleErrorMessage(CustomerPrincipal principal, JSONObject errorInfo) {
         sendSingleMessage(principal, "error", errorInfo);
@@ -38,20 +38,20 @@ public class WebSocketService {
 //    }
 
     /**
+     * @param principal  用户principal
+     * @param jsonObject 需要发送的信息JSON
      * @author flyhero
      * 点对点发送通知信息
-     * @param principal 用户principal
-     * @param jsonObject 需要发送的信息JSON
      */
     public void sendSingleUpdateMessage(CustomerPrincipal principal, JSONObject jsonObject) {
         sendSingleMessage(principal, "update", jsonObject);
     }
 
     /**
+     * @param principal  用户principal
+     * @param jsonObject 需要发送的信息JSON
      * @author flyhero
      * 在同一个Group内发送通知信息
-     * @param principal 用户principal
-     * @param jsonObject 需要发送的信息JSON
      */
     public void sendGroupUpdateMessage(CustomerPrincipal principal, JSONObject jsonObject) {
         sendGroupMessage(principal, "update", jsonObject);
@@ -93,22 +93,22 @@ public class WebSocketService {
 //    }
 
     /**
+     * @param principal 用户principal
+     * @param router    路由地址
+     * @param object    待传对象
      * @author flyhero
      * 点对点发送消息
-     * @param principal 用户principal
-     * @param router 路由地址
-     * @param object 待传对象
      */
     private void sendSingleMessage(CustomerPrincipal principal, String router, Object object) {
         simpMessageSendingOperations.convertAndSendToUser(principal.getUserId().toString(), "/" + router, object);
     }
 
     /**
+     * @param principal 用户principal
+     * @param router    路由地址
+     * @param object    待传对象
      * @author flyhero
      * 向/group/{orderGroupId}/notify地址发送广播消息，属于同一团内的用户订阅这个地址
-     * @param principal 用户principal
-     * @param router 路由地址
-     * @param object 待传对象
      */
     private void sendGroupMessage(CustomerPrincipal principal, String router, Object object) {
         simpMessageSendingOperations.convertAndSend("/group/" + principal.getOrderGroupId() + "/" + router, object);

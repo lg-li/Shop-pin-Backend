@@ -84,10 +84,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     }
 
     /**
-     * @param src 用户来源是商户还是买家
-     * @param token 验证用户身份
+     * @param src          用户来源是商户还是买家
+     * @param token        验证用户身份
      * @param orderGroupId 团单ID
-     * @param storeId 店铺ID
+     * @param storeId      店铺ID
      * @return 解析出来的Principal变量
      * @author flyhero
      * 根据src（source的缩写）判断用户来意（用途），根据token来验证授权

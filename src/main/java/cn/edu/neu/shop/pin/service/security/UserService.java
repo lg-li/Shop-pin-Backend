@@ -4,12 +4,10 @@ import cn.edu.neu.shop.pin.exception.CredentialException;
 import cn.edu.neu.shop.pin.mapper.PinUserRoleMapper;
 import cn.edu.neu.shop.pin.model.*;
 import cn.edu.neu.shop.pin.security.JwtTokenProvider;
-import cn.edu.neu.shop.pin.service.OrderIndividualService;
 import cn.edu.neu.shop.pin.service.UserCreditRecordService;
 import cn.edu.neu.shop.pin.service.UserRoleListTransferService;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,7 +18,6 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,33 +26,34 @@ import java.util.List;
 @Service
 public class UserService extends AbstractService<PinUser> {
 
-    @Autowired
-    private UserRoleListTransferService userRoleListTransferService;
+    private final UserRoleListTransferService userRoleListTransferService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private JwtTokenProvider jwtTokenProvider;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private UserCreditRecordService userCreditRecordService;
+    private final UserCreditRecordService userCreditRecordService;
 
-    @Autowired
-    private PinUserRoleMapper pinUserRoleMapper;
+    private final PinUserRoleMapper pinUserRoleMapper;
 
-    @Autowired
-    private OrderIndividualService orderIndividualService;
+    private final UserService userService;
 
-    @Autowired
-    private UserService userService;
+    public UserService(UserRoleListTransferService userRoleListTransferService, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, AuthenticationManager authenticationManager, UserCreditRecordService userCreditRecordService, PinUserRoleMapper pinUserRoleMapper, UserService userService) {
+        this.userRoleListTransferService = userRoleListTransferService;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.authenticationManager = authenticationManager;
+        this.userCreditRecordService = userCreditRecordService;
+        this.pinUserRoleMapper = pinUserRoleMapper;
+        this.userService = userService;
+    }
 
     /**
      * 登录接口
-     * @param userId 用户 ID
+     *
+     * @param userId   用户 ID
      * @param password 密码明文
      * @return 生成的token
      * @throws CredentialException 凭据错误异常
@@ -81,6 +79,7 @@ public class UserService extends AbstractService<PinUser> {
 
     /**
      * 注册并获取新用户token
+     *
      * @param phone     手机号
      * @param email     邮箱
      * @param password  密码
@@ -97,6 +96,7 @@ public class UserService extends AbstractService<PinUser> {
 
     /**
      * 注册并获取新用户实体对象
+     *
      * @param phone     手机号
      * @param email     邮箱
      * @param password  密码
@@ -119,6 +119,7 @@ public class UserService extends AbstractService<PinUser> {
 
     /**
      * 注册用户
+     *
      * @param user 用户信息（密码传入时保持明文）
      * @return 登录后 Token
      */
@@ -190,30 +191,15 @@ public class UserService extends AbstractService<PinUser> {
     }
 
     /**
-     * @author flyhero
-     * 根据orderGroupId查找团单内所有orderIndividual对应的用户
-     * @param orderGroupId 团单ID
-     * @return User List
-     */
-    public List<PinUser> getUsersByOrderGroupId(Integer orderGroupId) {
-        List<PinOrderIndividual> list = orderIndividualService.getOrderIndividualsByOrderGroupId(orderGroupId);
-        List<PinUser> userList = new ArrayList<>();
-        for(PinOrderIndividual individual : list) {
-            userList.add(userService.findById(individual.getUserId()));
-        }
-        return userList;
-    }
-
-    /**
+     * @param userId 用户ID
+     * @param phone  电话号码
+     * @return 是否更新成功
      * @author flyhero
      * 更新电话号码
-     * @param userId 用户ID
-     * @param phone 电话号码
-     * @return 是否更新成功
      */
     public Boolean updatePhone(Integer userId, String phone) {
         // 因发生某些错误，前端传过来的phone值为空，更新失败
-        if(phone == null) return false;
+        if (phone == null) return false;
         PinUser user = userService.findById(userId);
         user.setPhone(phone);
         // 成功更新
@@ -222,15 +208,15 @@ public class UserService extends AbstractService<PinUser> {
     }
 
     /**
-     * @author flyhero
-     * 更新密码
-     * @param userId 用户ID
+     * @param userId   用户ID
      * @param password 密码
      * @return 是否更新成功
+     * @author flyhero
+     * 更新密码
      */
     public Boolean updatePassword(Integer userId, String password) {
         // 因发生某些错误，前端传过来的password值为空，更新失败
-        if(password == null) return false;
+        if (password == null) return false;
         PinUser user = userService.findById(userId);
         // 将密码加密
         String passwordHash = passwordEncoder.encode(password);
@@ -241,15 +227,15 @@ public class UserService extends AbstractService<PinUser> {
     }
 
     /**
+     * @param userId 用户ID
+     * @param email  电子邮箱地址
+     * @return 是否更新成功
      * @author flyhero
      * 更新电子邮箱
-     * @param userId 用户ID
-     * @param email 电子邮箱地址
-     * @return 是否更新成功
      */
     public Boolean updateEmail(Integer userId, String email) {
         // 因发生某些错误，前端传过来的email值为空，更新失败
-        if(email == null) return false;
+        if (email == null) return false;
         PinUser user = userService.findById(userId);
         user.setEmail(email);
         // 成功更新
@@ -258,15 +244,15 @@ public class UserService extends AbstractService<PinUser> {
     }
 
     /**
-     * @author flyhero
-     * 更新用户头像
-     * @param userId 用户ID
+     * @param userId    用户ID
      * @param avatarUrl 头像图片链接
      * @return 是否更新成功
+     * @author flyhero
+     * 更新用户头像
      */
     public Boolean updateAvatarUrl(Integer userId, String avatarUrl) {
         // 因发生某些错误，前端传过来的avatarUrl值为空，更新失败
-        if(avatarUrl == null) return false;
+        if (avatarUrl == null) return false;
         PinUser user = userService.findById(userId);
         user.setAvatarUrl(avatarUrl);
         // 成功更新
@@ -275,18 +261,16 @@ public class UserService extends AbstractService<PinUser> {
     }
 
     /**
+     * @param userId           传入userID
+     * @param userInfoToUpdate 传入附带有一些字段的User对象，表示待更新的信息
      * @author flyhero
      * 更新其余一些常规的信息
-     * @param userId 传入userID
-     * @param userInfoToUpdate 传入附带有一些字段的User对象，表示待更新的信息
-     * @return 是否成功更新
      */
-    public Boolean updateCommonUserInfo(Integer userId, PinUser userInfoToUpdate) {
+    public void updateCommonUserInfo(Integer userId, PinUser userInfoToUpdate) {
         // 因发生某些错误，前端传过来的userInfoToUpdate对象为空，更新失败
-        if(userInfoToUpdate == null) return false;
+        if (userInfoToUpdate == null) return;
         userInfoToUpdate.setId(userId);
         // 成功更新
         userService.update(userInfoToUpdate);
-        return true;
     }
 }

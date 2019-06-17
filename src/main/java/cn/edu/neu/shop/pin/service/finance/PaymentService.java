@@ -9,7 +9,6 @@ import cn.edu.neu.shop.pin.lock.annotation.MutexLock;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.service.OrderIndividualService;
 import cn.edu.neu.shop.pin.util.PinConstants;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,18 +22,23 @@ import java.util.Date;
 @Service
 public class PaymentService {
 
-    @Autowired
-    private UserBalanceService userBalanceService;
-    @Autowired
-    private OrderIndividualService orderIndividualService;
+    private final UserBalanceService userBalanceService;
+
+    private final OrderIndividualService orderIndividualService;
+
+    public PaymentService(UserBalanceService userBalanceService, OrderIndividualService orderIndividualService) {
+        this.userBalanceService = userBalanceService;
+        this.orderIndividualService = orderIndividualService;
+    }
 
     /**
      * 使用余额支付个人订单
      * 若支付成功将正常返回
+     *
      * @param individualOrderId 个人订单ID
-     * @param userId 当前操作用户ID
-     * @throws PermissionDeniedException 权限不足（操作了他人的个人订单）
-     * @throws RecordNotFoundException 记录不存在（个人订单ID无效）
+     * @param userId            当前操作用户ID
+     * @throws PermissionDeniedException    权限不足（操作了他人的个人订单）
+     * @throws RecordNotFoundException      记录不存在（个人订单ID无效）
      * @throws InsufficientBalanceException 余额不足（支付失败）
      */
     @Transactional
@@ -47,17 +51,17 @@ public class PaymentService {
         if (!orderIndividual.getUserId().equals(userId)) {
             throw new PermissionDeniedException("非法操作");
         }
-        if(orderIndividual.getPaid()) {
+        if (orderIndividual.getPaid()) {
             // 已经支付 重复支付错误
             throw new RepeatPaymentException("此订单已经支付");
         }
         userBalanceService.reduceUserBalanceFromDiscountOnIndividualOrder(userId, individualOrderId, orderIndividual.getTotalPrice());
         // 余额扣款成功(不成功会抛出异常)。
         // 在此余额支付了所有款项，实际进帐金额为0元
-        updateOrderIndividualPaymentStatusToSuccess(orderIndividual, orderIndividual.getTotalPrice(), PinOrderIndividual.PAY_TYPE_BALANCE);
+        updateOrderIndividualPaymentStatusToSuccess(orderIndividual, orderIndividual.getTotalPrice());
     }
 
-    private void updateOrderIndividualPaymentStatusToSuccess(PinOrderIndividual orderIndividual, BigDecimal balancePaidPrice, String paymentType) {
+    private void updateOrderIndividualPaymentStatusToSuccess(PinOrderIndividual orderIndividual, BigDecimal balancePaidPrice) {
         // 余额扣款成功(不成功会抛出异常)
         orderIndividual.setPaid(true);
         orderIndividual.setPayTime(new Date());
@@ -65,7 +69,7 @@ public class PaymentService {
         orderIndividual.setBalancePaidPrice(balancePaidPrice);
         // 总金额-余额支付抵扣金额 = 实际进帐金额
         orderIndividual.setPayPrice(orderIndividual.getTotalPrice().subtract(balancePaidPrice));
-        orderIndividual.setPayType(paymentType);
+        orderIndividual.setPayType(PinOrderIndividual.PAY_TYPE_BALANCE);
         orderIndividualService.update(orderIndividual);
     }
 

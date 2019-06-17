@@ -23,6 +23,15 @@ public class PinProductAttributeDefinition {
     @Column(name = "attribute_values")
     private String attributeValues;
 
+    public PinProductAttributeDefinition() {
+    }
+
+    public PinProductAttributeDefinition(Integer productId, String attributeName, String attributeValues) {
+        this.productId = productId;
+        this.attributeName = attributeName;
+        this.attributeValues = attributeValues;
+    }
+
     /**
      * @return id
      */
@@ -31,7 +40,7 @@ public class PinProductAttributeDefinition {
     }
 
     /**
-     * @param id
+     * @param id id
      */
     public void setId(Integer id) {
         this.id = id;
@@ -45,7 +54,7 @@ public class PinProductAttributeDefinition {
     }
 
     /**
-     * @param productId
+     * @param productId 商品ID
      */
     public void setProductId(Integer productId) {
         this.productId = productId;
@@ -84,15 +93,6 @@ public class PinProductAttributeDefinition {
      * @param attributeValues 属性类别值（多个用逗号分隔）
      */
     public void setAttributeValues(String attributeValues) {
-        this.attributeValues = attributeValues;
-    }
-
-    public PinProductAttributeDefinition() {
-    }
-
-    public PinProductAttributeDefinition(Integer productId, String attributeName, String attributeValues) {
-        this.productId = productId;
-        this.attributeName = attributeName;
         this.attributeValues = attributeValues;
     }
 }

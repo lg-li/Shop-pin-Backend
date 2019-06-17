@@ -20,7 +20,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * @author flyhero
@@ -36,7 +39,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
     public static final int STATUS_PERMISSION_DENIED = -2;
     public static final int STATUS_NOT_ALLOWED = -3;
 
-//    public static final int STATUS_JOIN_ORDER_GROUP_SUCCESS = -4;
+    //    public static final int STATUS_JOIN_ORDER_GROUP_SUCCESS = -4;
 //    public static final int STATUS_JOIN_ORDER_GROUP_INVALID_ID = -5;
 //    public static final int STATUS_JOIN_ORDER_GROUP_PERMISSION_DENIED = -6;
 //    public static final int STATUS_JOIN_ORDER_GROUP_NOT_ALLOWED = -7;
@@ -173,9 +176,9 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         sample.setOwnerUserId(userId);
         sample.setStoreId(storeId);
         List<PinOrderGroup> orderGroups = pinOrderGroupMapper.select(sample);
-        for(PinOrderGroup orderGroup1 : orderGroups) {
+        for (PinOrderGroup orderGroup1 : orderGroups) {
             // 找到了此店铺此人创建的正在可用的团，则无法再用其他订单新建一个团
-            if(orderGroup1.getStatus() == 0) {
+            if (orderGroup1.getStatus() == 0) {
                 return STATUS_NOT_ALLOWED;
             }
         }
@@ -206,12 +209,12 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
     }
 
     /**
+     * @param userId            用户ID
+     * @param orderIndividualId 订单ID
+     * @param orderGroupId      团单ID
+     * @return 退出状态
      * @author flyhero
      * 退出团单
-     * @param userId 用户ID
-     * @param orderIndividualId 订单ID
-     * @param orderGroupId 团单ID
-     * @return 退出状态
      */
     public Integer quitOrderGroup(Integer userId, Integer orderIndividualId, Integer orderGroupId) {
         PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
@@ -237,9 +240,9 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
     }
 
     /**
+     * @param customerPrincipal 客户principal
      * @author flyhero
      * Stomp 初始化页面消息
-     * @param customerPrincipal 客户principal
      */
     public void sendGroupInitMessageToSingle(CustomerPrincipal customerPrincipal) {
         PinOrderGroup orderGroup = this.findById(customerPrincipal.getOrderGroupId());
@@ -251,15 +254,15 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         }
         JSONObject orderGroupJSON = generateOrderGroupJSON(orderGroup);
         orderGroupJSON.put("message", "hello");
-        logger.info("Sending: "+orderGroupJSON.toJSONString());
+        logger.info("Sending: " + orderGroupJSON.toJSONString());
         webSocketService.sendSingleUpdateMessage(customerPrincipal, orderGroupJSON);
     }
 
     /**
-     * @author flyhero
-     * 生成返回的JSON格式的orderGroup，由于多个地方会用到，因此将其抽离出来
      * @param orderGroup 团单对象
      * @return 响应JSON
+     * @author flyhero
+     * 生成返回的JSON格式的orderGroup，由于多个地方会用到，因此将其抽离出来
      */
     private JSONObject generateOrderGroupJSON(PinOrderGroup orderGroup) {
         JSONObject orderGroupJSON = (JSONObject) JSONObject.toJSON(orderGroup);
@@ -291,21 +294,19 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
             // 未指定配送批次则2小时后收团
             timeSecondsStampOfClosing = ((System.currentTimeMillis() + GROUP_CLOSE_DELAY_MILLISECOND) / 60000);
             timeSecondsStampOfClosing *= 60000; // 恢复大小到毫秒
-        }
-        else {
+        } else {
             long current = System.currentTimeMillis();
-            long zero = (current/(1000 * 3600 * 24)) * (1000 * 3600 * 24);
+            long zero = (current / (1000 * 3600 * 24)) * (1000 * 3600 * 24);
 //            System.out.println("zero: " + new Date(zero));
 //            System.out.println("batchTime: " + new Date(zero + recentBatch.getTime().getTime()));
 //            System.out.println("compareToTenMinutesLater: " + new Date(new Date().getTime() + 600000));
-            if(zero + recentBatch.getTime().getTime() < new Date().getTime() + 600000) {
+            if (zero + recentBatch.getTime().getTime() < new Date().getTime() + 600000) {
                 // 最近发货时间比当前时间早，返回的是下一天的第一批
                 current = System.currentTimeMillis();
                 zero = (current / (1000 * 3600 * 24) + 1) * (1000 * 3600 * 24);
                 timeSecondsStampOfClosing = zero + recentBatch.getTime().getTime();
 //                System.out.println("date: " + new Date(timeSecondsStampOfClosing));
-            }
-            else {
+            } else {
                 // 返回接下来最近的一个收团时间
                 current = System.currentTimeMillis();
                 zero = current / (1000 * 3600 * 24) * (1000 * 3600 * 24);

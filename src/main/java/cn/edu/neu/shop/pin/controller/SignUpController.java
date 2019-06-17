@@ -44,6 +44,7 @@ public class SignUpController {
 
     /**
      * 默认注册
+     *
      * @param signUpInfo 登录信息JSON
      * @return 响应JSON
      */

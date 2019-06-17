@@ -69,14 +69,17 @@
         from pin_order_individual as OIN,
              pin_order_item as OIT,
              pin_product as P
-        where OIN.store_id = #{storeId} and OIN.id = OIT.order_individual_id and OIT.product_id = P.id and
-              OIN.id LIKE CONCAT('%', #{keyWord}, '%')
+        where OIN.store_id = #{storeId} and OIN.id = OIT.order_individual_id and OIT.product_id = P.id
+        and
+        (
+           OIN.id LIKE CONCAT('%', #{keyWord}, '%')
            OR OIN.receiver_name LIKE CONCAT('%', #{keyWord}, '%')
            OR OIN.receiver_phone LIKE CONCAT('%', #{keyWord}, '%')
            OR OIN.delivery_address LIKE CONCAT('%', #{keyWord}, '%')
            OR OIN.delivery_name LIKE CONCAT('%', #{keyWord}, '%')
            OR OIN.merchant_remark LIKE CONCAT('%', #{keyWord}, '%')
            OR OIN.user_remark LIKE CONCAT('%', #{keyWord}, '%')
+        )
     </select>
     <resultMap id="AllWithProductsResultMap" type="PinOrderIndividual">
         <id column="id" jdbcType="INTEGER" property="id"/>

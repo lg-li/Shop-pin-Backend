@@ -1,7 +1,7 @@
 package cn.edu.neu.shop.pin.model;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "pin_store_group_close_batch")
 public class PinStoreGroupCloseBatch {
@@ -28,7 +28,7 @@ public class PinStoreGroupCloseBatch {
     }
 
     /**
-     * @param id
+     * @param id id
      */
     public void setId(Integer id) {
         this.id = id;

@@ -23,6 +23,7 @@ public class ProductVisitRecordService {
 
     /**
      * 获取某一店铺的访问记录
+     *
      * @param storeId 店铺ID
      * @return 访问记录
      */
@@ -30,7 +31,7 @@ public class ProductVisitRecordService {
         Integer[] record = new Integer[7];
         Date date = new Date();
         date = getDateByOffset(date, 1);
-        for(int i = 0; i < 7; i++) {
+        for (int i = 0; i < 7; i++) {
             Date toDate = date;
             date = getDateByOffset(date, -1);
             Date fromDate = date;
@@ -41,10 +42,11 @@ public class ProductVisitRecordService {
 
     /**
      * 添加一条商品浏览记录
-     * @param userId 用户ID
+     *
+     * @param userId    用户ID
      * @param productId 商品ID
      * @param visitTime 访问时间
-     * @param visitIp 访问IP
+     * @param visitIp   访问IP
      */
     @Transactional
     public void createVisitRecord(Integer userId, Integer productId, Date visitTime, String visitIp) {
@@ -57,12 +59,13 @@ public class ProductVisitRecordService {
         pinUserProductVisitRecordMapper.insert(productVisitRecord);
         // 更新商品信息，使其浏览量+1 TODO: 为保证一致性，需要改进改变访问量的写法
         PinProduct product = productService.findById(productId);
-        product.setVisitCount(product.getVisitCount()+1);
+        product.setVisitCount(product.getVisitCount() + 1);
         productService.update(product);
     }
 
     /**
      * 根据给定日期和给定偏移天数，获取目标日期
+     *
      * @param today 给定日期
      * @param delta 偏移天数
      * @return 目标日期

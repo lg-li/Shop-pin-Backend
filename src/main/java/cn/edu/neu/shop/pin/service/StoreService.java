@@ -19,6 +19,7 @@ public class StoreService extends AbstractService<PinStore> {
 
     /**
      * 根据店铺ID 获取该店铺的详细信息
+     *
      * @param storeId 店铺ID
      * @return PinStore类
      */
@@ -28,6 +29,7 @@ public class StoreService extends AbstractService<PinStore> {
 
     /**
      * 根据店铺所有者的id返回店铺的list
+     *
      * @param id 店铺所有者的id
      * @return store list
      */
@@ -37,12 +39,13 @@ public class StoreService extends AbstractService<PinStore> {
 
     /**
      * 管理端用户店主新增店铺
-     * @param name 姓名
+     *
+     * @param name        姓名
      * @param description 秒数
-     * @param phone 手机号
-     * @param email 邮箱
-     * @param logoUrl 图标地址
-     * @param userId 用户ID
+     * @param phone       手机号
+     * @param email       邮箱
+     * @param logoUrl     图标地址
+     * @param userId      用户ID
      * @return 返回店铺信息
      */
     @Transactional
@@ -60,6 +63,7 @@ public class StoreService extends AbstractService<PinStore> {
 
     /**
      * 管理端 修改店铺信息
+     *
      * @param pinStore 店铺
      * @return 返回店铺信息
      */

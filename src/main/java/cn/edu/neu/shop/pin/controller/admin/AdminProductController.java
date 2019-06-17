@@ -1,17 +1,13 @@
 package cn.edu.neu.shop.pin.controller.admin;
 
-import cn.edu.neu.shop.pin.mapper.PinProductMapper;
 import cn.edu.neu.shop.pin.model.PinProduct;
 import cn.edu.neu.shop.pin.model.PinProductAttributeDefinition;
 import cn.edu.neu.shop.pin.model.PinProductAttributeValue;
 import cn.edu.neu.shop.pin.service.*;
-import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
-import cn.edu.neu.shop.pin.util.img.ImgUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,33 +18,34 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/goods")
 public class AdminProductController {
-    @Autowired
-    UserService userService;
-    @Autowired
-    PinProductMapper productMapper;
-    @Autowired
-    ProductService productService;
-    @Autowired
-    ProductCategoryService productCategoryService;
-    @Autowired
-    OrderIndividualService orderIndividualService;
-    @Autowired
-    ProductAttributeDefinitionService definitionService;
-    @Autowired
-    PinProductAttributeValueService valueService;
+
+    private final ProductService productService;
+
+    private final ProductCategoryService productCategoryService;
+
+    private final ProductAttributeDefinitionService definitionService;
+
+    private final PinProductAttributeValueService valueService;
+
+    public AdminProductController(ProductService productService, ProductCategoryService productCategoryService, ProductAttributeDefinitionService definitionService, PinProductAttributeValueService valueService) {
+        this.productService = productService;
+        this.productCategoryService = productCategoryService;
+        this.definitionService = definitionService;
+        this.valueService = valueService;
+    }
 
     /**
      * 返回不同类型商品列表
      *
-     * @param req
-     * @param requestObject
-     * @return
+     * @param httpServletRequest http请求体
+     * @param requestJSON        请求体JSON
+     * @return 响应JSON
      */
     @PostMapping("/goods-list")
-    public JSONObject getProducts(HttpServletRequest req, @RequestBody JSONObject requestObject) {
+    public JSONObject getProducts(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try {
-            Integer storeId = Integer.valueOf(req.getHeader("Current-Store"));
-            String queryType = requestObject.getString("queryType");
+            Integer storeId = Integer.valueOf(httpServletRequest.getHeader("Current-Store"));
+            String queryType = requestJSON.getString("queryType");
             JSONObject data = new JSONObject();
             switch (queryType) {
                 case "SALING":
@@ -100,13 +97,13 @@ public class AdminProductController {
      * 商铺所有者管理本店铺的商品
      * 商品分类部分 获取父级、子级分类名及一些商品信息
      *
-     * @param req
-     * @return
+     * @param httpServletRequest 请求体JSON
+     * @return 响应JSON
      */
     @GetMapping("/goods-category")
-    public JSONObject getProductFromSameStore(HttpServletRequest req) {
+    public JSONObject getProductFromSameStore(HttpServletRequest httpServletRequest) {
         try {
-            String currentStoreId = req.getHeader("Current-Store");
+            String currentStoreId = httpServletRequest.getHeader("Current-Store");
             List<JSONObject> list = productService.getProductInfoFromSameStore(Integer.parseInt(currentStoreId));
             JSONObject data = new JSONObject();
             data.put("list", list);
@@ -146,7 +143,6 @@ public class AdminProductController {
     public JSONObject createProduct(HttpServletRequest req, @RequestBody JSONObject requestJSON) {
         try {
             Integer storeId = Integer.parseInt(req.getHeader("Current-Store"));
-            String base64Img = requestJSON.getString("image");
             String url = "http://ww1.sinaimg.cn/large/9d167ea7ly1g3hyzea2xdj20a00a0q33.jpg";
             //String url = ImgUtil.upload(base64Img, "https://sm.ms/api/upload").getBody().getJSONObject("data").getString("url");
             String name = requestJSON.getString("name");
@@ -202,7 +198,6 @@ public class AdminProductController {
             String sku;
             Integer stock;
             BigDecimal price;
-            String base64Img;
             String imageUrl;
             BigDecimal cost;
             PinProductAttributeValue attributeValue;
@@ -215,7 +210,7 @@ public class AdminProductController {
                 //imageUrl = ImgUtil.upload(base64Img, "https://sm.ms/api/upload").getBody().getJSONObject("data").getString("url");
                 imageUrl = "http://ww1.sinaimg.cn/large/9d167ea7ly1g3hyzea2xdj20a00a0q33.jpg";
                 cost = new BigDecimal(object.getString("cost"));
-                attributeValue = new PinProductAttributeValue(storeId,sku,stock,price,imageUrl,cost);
+                attributeValue = new PinProductAttributeValue(storeId, sku, stock, price, imageUrl, cost);
                 valueService.save(attributeValue);
             }
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, "创建成功");
@@ -227,7 +222,7 @@ public class AdminProductController {
 
     @PutMapping("/is-shown")
     public JSONObject updateProductIsShownStatus(@RequestBody JSONObject requestJSON) {
-        try{
+        try {
             Integer productId = requestJSON.getInteger("productId");
             productService.updateProductIsShownStatus(productId);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
@@ -238,7 +233,7 @@ public class AdminProductController {
 
     @PutMapping("/is-not-shown")
     public JSONObject updateProductIsNotShownStatus(@RequestBody JSONObject requestJSON) {
-        try{
+        try {
             Integer productId = requestJSON.getInteger("productId");
             productService.updateProductIsNotShownStatus(productId);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);

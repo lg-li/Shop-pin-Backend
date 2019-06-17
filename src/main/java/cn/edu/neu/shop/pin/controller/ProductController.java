@@ -41,6 +41,7 @@ public class ProductController {
 
     /**
      * 层级获取商品分类表
+     *
      * @param requestJSON 请求 layer JSON数据
      * @return JSONObject
      */
@@ -59,6 +60,7 @@ public class ProductController {
 
     /**
      * 获取所有商品类别
+     *
      * @return JSONObject
      */
     @GetMapping("/category/all")
@@ -75,6 +77,7 @@ public class ProductController {
 
     /**
      * 层级获取商品分类表
+     *
      * @return JSONObject
      */
     @GetMapping("/by-category/{categoryId}/{pageNum}/{pageSize}")
@@ -89,6 +92,7 @@ public class ProductController {
 
     /**
      * 通过商品Id 获取商品详情
+     *
      * @param productId 商品 ID
      * @return JSONObject
      */
@@ -105,6 +109,7 @@ public class ProductController {
 
     /**
      * 根据商品Id 获取该商品评论信息，支持分页操作
+     *
      * @param productId 商品 ID
      * @return JSONObject
      */
@@ -120,6 +125,7 @@ public class ProductController {
 
     /**
      * 获取热门商品信息，支持分页操作
+     *
      * @param pageNum  分页号
      * @param pageSize 分页大小
      * @return 分页的商品规范JSON
@@ -138,6 +144,7 @@ public class ProductController {
 
     /**
      * 获取全新商品信息，支持分页操作
+     *
      * @param pageNum  分页号
      * @param pageSize 分页大小
      * @return 分页的商品规范JSON
@@ -158,7 +165,7 @@ public class ProductController {
      * 判断某一商品是否已被收藏
      *
      * @param httpServletRequest HttpServlet请求体
-     * @param productId 商品ID
+     * @param productId          商品ID
      * @return 响应JSON
      */
     @GetMapping(value = "/{productId}/is-collected")
@@ -175,8 +182,9 @@ public class ProductController {
 
     /**
      * 增加商品访问量 && 创建一条商品访问记录
+     *
      * @param httpServletRequest HttpServlet请求体
-     * @param requestJSON 包含productId和visitTime（Date格式）
+     * @param requestJSON        包含productId和visitTime（Date格式）
      * @return 响应JSON
      */
     @PostMapping("/create-visit-record")

@@ -4,17 +4,16 @@ import cn.edu.neu.shop.pin.exception.OrderItemsAreNotInTheSameStoreException;
 import cn.edu.neu.shop.pin.exception.ProductSoldOutException;
 import cn.edu.neu.shop.pin.exception.RecordNotFoundException;
 import cn.edu.neu.shop.pin.mapper.PinOrderIndividualMapper;
-import cn.edu.neu.shop.pin.model.*;
+import cn.edu.neu.shop.pin.model.PinOrderIndividual;
+import cn.edu.neu.shop.pin.model.PinOrderItem;
+import cn.edu.neu.shop.pin.model.PinUser;
+import cn.edu.neu.shop.pin.model.PinUserAddress;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class OrderIndividualService extends AbstractService<PinOrderIndividual> {
@@ -24,31 +23,35 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
     public static final int STATUS_CONFIRM_FAILED = -2;
 
 
-    @Autowired
-    private UserRoleListTransferService userRoleListTransferService;
+    private final UserRoleListTransferService userRoleListTransferService;
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
-    @Autowired
-    private StoreService storeService;
+    private final StoreService storeService;
 
-    @Autowired
-    private OrderItemService orderItemService;
+    private final OrderItemService orderItemService;
 
-    @Autowired
-    private OrderIndividualService orderIndividualService;
+    private final OrderIndividualService orderIndividualService;
 
-    @Autowired
-    private AddressService addressService;
+    private final AddressService addressService;
 
-    @Autowired
-    private PinOrderIndividualMapper pinOrderIndividualMapper;
+    private final PinOrderIndividualMapper pinOrderIndividualMapper;
+
+    public OrderIndividualService(UserRoleListTransferService userRoleListTransferService, ProductService productService, StoreService storeService, OrderItemService orderItemService, OrderIndividualService orderIndividualService, AddressService addressService, PinOrderIndividualMapper pinOrderIndividualMapper) {
+        this.userRoleListTransferService = userRoleListTransferService;
+        this.productService = productService;
+        this.storeService = storeService;
+        this.orderItemService = orderItemService;
+        this.orderIndividualService = orderIndividualService;
+        this.addressService = addressService;
+        this.pinOrderIndividualMapper = pinOrderIndividualMapper;
+    }
 
     /**
      * 获取最近三个月的OrderIndividual信息
+     *
      * @param userId 用户ID
-     * @return
+     * @return OrderIndividual的List
      */
     public List<PinOrderIndividual> getRecentThreeMonthsOrderIndividuals(Integer userId) {
         List<PinOrderIndividual> orderIndividuals =
@@ -62,10 +65,11 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
 
     /**
      * 传入一串PinOrderIndividual，返回它们对应的用户list
+     *
      * @param list 一串PinOrderIndividual
      * @return 返回它们对应的用户list
      */
-    public List<PinUser> getUsers(List<PinOrderIndividual> list) {
+    List<PinUser> getUsers(List<PinOrderIndividual> list) {
         List<PinUser> users = new ArrayList<>();
         for (PinOrderIndividual item : list) {
             users.add(userRoleListTransferService.findById(item.getUserId()));
@@ -75,12 +79,13 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
 
     /**
      * 提交订单，即把一条OrderItem记录变为Submitted
-     * @param user
-     * @param list
-     * @param addressId
-     * @return
-     * @throws OrderItemsAreNotInTheSameStoreException
-     * @throws ProductSoldOutException
+     *
+     * @param user      用户
+     * @param list      购物车列表
+     * @param addressId 地址ID
+     * @return 订单信息
+     * @throws OrderItemsAreNotInTheSameStoreException 结算时商品不属于同一家店铺
+     * @throws ProductSoldOutException                 商品已售空
      */
     public PinOrderIndividual addOrderIndividual(PinUser user, List<PinOrderItem> list, Integer addressId, String userRemark) throws OrderItemsAreNotInTheSameStoreException, ProductSoldOutException {
         PinUserAddress address = addressService.findById(addressId);
@@ -120,22 +125,22 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
     }
 
     /**
+     * @param orderGroupId 团单ID
+     * @return 团单list
      * @author flyhero
      * 根据OrderGroupId获取在此团单内的OrderIndividual的List
-     * @param orderGroupId 团单ID
-     * @return
      */
     public List<PinOrderIndividual> getOrderIndividualsByOrderGroupId(Integer orderGroupId) {
         PinOrderIndividual orderIndividual = new PinOrderIndividual();
         orderIndividual.setOrderGroupId(orderGroupId);
-        List<PinOrderIndividual> orderIndividuals = pinOrderIndividualMapper.select(orderIndividual);
-        return orderIndividuals;
+        return pinOrderIndividualMapper.select(orderIndividual);
     }
 
     /**
      * 获取订单数
+     *
      * @param storeId 商店ID
-     * @return
+     * @return 七天内订单树木的数组
      */
     public Integer[] getOrders(Integer storeId) {
         Integer[] order = new Integer[7];
@@ -169,6 +174,7 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
 
     /**
      * TODO：待测试
+     *
      * @param list      待过滤的PinOrderIndividual的数组
      * @param orderType 传过来的orderType
      * @return 返回过滤过后的list
@@ -226,6 +232,7 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
 
     /**
      * TODO: 待测试
+     *
      * @param list      待过滤的PinOrderIndividual的数组
      * @param orderDate 时间条件对应的码
      * @param queryType 前端传入的json
@@ -292,10 +299,10 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
                     } else if (begin == null && end != null) {
                         if (caCreate.getTime().getTime() <= end.getTime())
                             returnList.add(item);
-                    } else if (end == null && begin != null) {
+                    } else if (begin != null) {
                         if (caCreate.getTime().getTime() >= begin.getTime())
                             returnList.add(item);
-                    }else {
+                    } else {
                         returnList.add(item);
                     }
                     break;
@@ -306,8 +313,9 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
 
     /**
      * 未发货商品数量
-     * @param storeId
-     * @return
+     *
+     * @param storeId 店铺ID
+     * @return 未发货商品数量
      */
     public Integer getProductNotShip(Integer storeId) {
         return pinOrderIndividualMapper.getNumberOfOrderNotShip(storeId);
@@ -323,7 +331,7 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
      * @param pageSize   传入一页的size
      * @return 返回要查找的那页
      */
-    public List<?> getOrdersByPageNumAndSize(List<?> list, Integer pageNumber, Integer pageSize) {
+    public List getOrdersByPageNumAndSize(List list, Integer pageNumber, Integer pageSize) {
         if (pageNumber * pageSize < list.size()) {
             return list.subList((pageNumber - 1) * pageSize, pageNumber * pageSize);
         } else {
@@ -334,15 +342,14 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
     /**
      * @author flyhero
      * 确认收货
-     *
      */
     public Integer confirmReceipt(Integer userId, Integer orderIndividualId) {
         PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
-        if(userId != orderIndividual.getUserId()) {
+        if (!Objects.equals(userId, orderIndividual.getUserId())) {
             // 用户ID不符
             return STATUS_CONFIRM_PERMISSION_DENIED;
         }
-        if(orderIndividual.getStatus() != PinOrderIndividual.STATUS_SHIPPED) {
+        if (orderIndividual.getStatus() != PinOrderIndividual.STATUS_SHIPPED) {
             // 订单状态不符合确认收货条件
             return STATUS_CONFIRM_FAILED;
         }
@@ -353,12 +360,6 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
         // TODO: 给商家推送确认收货
         return STATUS_CONFIRM_SUCCESS;
     }
-
-//    public void kickOutAnOrder(Integer orderIndividualId) {
-//        PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
-//        orderIndividual.setOrderGroupId(null);
-//        orderIndividual.setStatus(0);
-//    }
 
     public void updateOrderStatusNotExpress(Integer orderIndividualId, String deliveryType, Date deliveryTime) {
         pinOrderIndividualMapper.updateOrderDeliveryTypeNotExpress(orderIndividualId, deliveryType, deliveryTime);

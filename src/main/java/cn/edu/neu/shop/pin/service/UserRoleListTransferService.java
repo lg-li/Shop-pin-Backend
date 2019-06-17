@@ -4,15 +4,18 @@ import cn.edu.neu.shop.pin.mapper.PinUserMapper;
 import cn.edu.neu.shop.pin.model.PinRole;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
 public class UserRoleListTransferService extends AbstractService<PinUser> {
-    @Autowired
-    PinUserMapper pinUserMapper;
+
+    private final PinUserMapper pinUserMapper;
+
+    public UserRoleListTransferService(PinUserMapper pinUserMapper) {
+        this.pinUserMapper = pinUserMapper;
+    }
 
     //通过id找用户
     @Override
@@ -23,12 +26,6 @@ public class UserRoleListTransferService extends AbstractService<PinUser> {
             pinUser.setRoles(PinUser.transferRoleIntegerToPinRole(roles));
         }
         return pinUser;
-    }
-
-
-    //通过id找用户
-    public PinUser findByIdWithoutRole(Integer id) {
-        return pinUserMapper.findById(id);
     }
 
 

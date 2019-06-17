@@ -2,7 +2,6 @@ package cn.edu.neu.shop.pin.security;
 
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.service.UserRoleListTransferService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,8 +14,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class MyUserDetails implements UserDetailsService {
 
-    @Autowired
-    private UserRoleListTransferService userRoleListTransferService;
+    private final UserRoleListTransferService userRoleListTransferService;
+
+    public MyUserDetails(UserRoleListTransferService userRoleListTransferService) {
+        this.userRoleListTransferService = userRoleListTransferService;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
