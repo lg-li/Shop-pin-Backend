@@ -60,13 +60,11 @@
   <!-- 根据商品ID 得到该商品全部评论和评论用户的基本信息-->
   <select id="getCommentAndUserInfo" resultMap="PinGetCommentAndUserInfo">
     select pin_user.nickname, pin_user.avatar_url, pin_product.name, pin_product_attribute_value.sku, pin_user_product_comment.*
-    from pin_user, pin_user_product_comment, pin_order_item, pin_product_attribute_value, pin_product
+    from pin_user, pin_user_product_comment, pin_product_attribute_value, pin_product
     where pin_user.id = pin_user_product_comment.user_id
-    and pin_user_product_comment.order_individual_id = pin_order_item.order_individual_id
-    and pin_order_item.sku_id = pin_product_attribute_value.id
-    and pin_product.id = pin_product_attribute_value.product_id
-    and pin_user_product_comment.is_deleted = 0
-    and pin_user_product_comment.product_id = #{productId}
+    and pin_user_product_comment.sku_id = pin_product_attribute_value.id
+    and pin_product.id = pin_user_product_comment.product_id
+    and pin_user_product_comment.product_id = 2
   </select>
 
   <select id="getNumberOfMerchantNotComment" resultType="INTEGER">
