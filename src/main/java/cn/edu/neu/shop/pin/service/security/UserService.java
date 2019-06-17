@@ -4,10 +4,8 @@ import cn.edu.neu.shop.pin.exception.CredentialException;
 import cn.edu.neu.shop.pin.mapper.PinUserRoleMapper;
 import cn.edu.neu.shop.pin.model.*;
 import cn.edu.neu.shop.pin.security.JwtTokenProvider;
-import cn.edu.neu.shop.pin.service.UserCreditRecordService;
 import cn.edu.neu.shop.pin.service.UserRoleListTransferService;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
-import com.alibaba.fastjson.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,20 +32,14 @@ public class UserService extends AbstractService<PinUser> {
 
     private final AuthenticationManager authenticationManager;
 
-    private final UserCreditRecordService userCreditRecordService;
-
     private final PinUserRoleMapper pinUserRoleMapper;
 
-    private final UserService userService;
-
-    public UserService(UserRoleListTransferService userRoleListTransferService, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, AuthenticationManager authenticationManager, UserCreditRecordService userCreditRecordService, PinUserRoleMapper pinUserRoleMapper, UserService userService) {
+    public UserService(UserRoleListTransferService userRoleListTransferService, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider, AuthenticationManager authenticationManager, PinUserRoleMapper pinUserRoleMapper) {
         this.userRoleListTransferService = userRoleListTransferService;
         this.passwordEncoder = passwordEncoder;
         this.jwtTokenProvider = jwtTokenProvider;
         this.authenticationManager = authenticationManager;
-        this.userCreditRecordService = userCreditRecordService;
         this.pinUserRoleMapper = pinUserRoleMapper;
-        this.userService = userService;
     }
 
     /**
@@ -162,14 +154,6 @@ public class UserService extends AbstractService<PinUser> {
         return jwtTokenProvider.createToken(id, userRoleListTransferService.findById(id).getRoles());
     }
 
-    public JSONObject getUserInfoByUserId(Integer userId) {
-        JSONObject data = new JSONObject();
-        data.put("user", findById(userId));
-        Boolean hasCheckedIn = userCreditRecordService.hasCheckedIn(userId);
-        data.put("hasCheckedIn", hasCheckedIn);
-        return data;
-    }
-
     private PinUser findByEmail(String email) {
         return findBy("email", email);
     }
@@ -200,10 +184,10 @@ public class UserService extends AbstractService<PinUser> {
     public Boolean updatePhone(Integer userId, String phone) {
         // 因发生某些错误，前端传过来的phone值为空，更新失败
         if (phone == null) return false;
-        PinUser user = userService.findById(userId);
+        PinUser user = this.findById(userId);
         user.setPhone(phone);
         // 成功更新
-        userService.update(user);
+        this.update(user);
         return true;
     }
 
@@ -217,12 +201,12 @@ public class UserService extends AbstractService<PinUser> {
     public Boolean updatePassword(Integer userId, String password) {
         // 因发生某些错误，前端传过来的password值为空，更新失败
         if (password == null) return false;
-        PinUser user = userService.findById(userId);
+        PinUser user = this.findById(userId);
         // 将密码加密
         String passwordHash = passwordEncoder.encode(password);
         user.setPhone(passwordHash);
         // 成功更新
-        userService.update(user);
+        this.update(user);
         return true;
     }
 
@@ -236,10 +220,10 @@ public class UserService extends AbstractService<PinUser> {
     public Boolean updateEmail(Integer userId, String email) {
         // 因发生某些错误，前端传过来的email值为空，更新失败
         if (email == null) return false;
-        PinUser user = userService.findById(userId);
+        PinUser user = this.findById(userId);
         user.setEmail(email);
         // 成功更新
-        userService.update(user);
+        this.update(user);
         return true;
     }
 
@@ -253,10 +237,10 @@ public class UserService extends AbstractService<PinUser> {
     public Boolean updateAvatarUrl(Integer userId, String avatarUrl) {
         // 因发生某些错误，前端传过来的avatarUrl值为空，更新失败
         if (avatarUrl == null) return false;
-        PinUser user = userService.findById(userId);
+        PinUser user = this.findById(userId);
         user.setAvatarUrl(avatarUrl);
         // 成功更新
-        userService.update(user);
+        this.update(user);
         return true;
     }
 
@@ -271,6 +255,6 @@ public class UserService extends AbstractService<PinUser> {
         if (userInfoToUpdate == null) return;
         userInfoToUpdate.setId(userId);
         // 成功更新
-        userService.update(userInfoToUpdate);
+        this.update(userInfoToUpdate);
     }
 }

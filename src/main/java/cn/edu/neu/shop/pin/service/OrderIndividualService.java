@@ -31,18 +31,15 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
 
     private final OrderItemService orderItemService;
 
-    private final OrderIndividualService orderIndividualService;
-
     private final AddressService addressService;
 
     private final PinOrderIndividualMapper pinOrderIndividualMapper;
 
-    public OrderIndividualService(UserRoleListTransferService userRoleListTransferService, ProductService productService, StoreService storeService, OrderItemService orderItemService, OrderIndividualService orderIndividualService, AddressService addressService, PinOrderIndividualMapper pinOrderIndividualMapper) {
+    public OrderIndividualService(UserRoleListTransferService userRoleListTransferService, ProductService productService, StoreService storeService, OrderItemService orderItemService, AddressService addressService, PinOrderIndividualMapper pinOrderIndividualMapper) {
         this.userRoleListTransferService = userRoleListTransferService;
         this.productService = productService;
         this.storeService = storeService;
         this.orderItemService = orderItemService;
-        this.orderIndividualService = orderIndividualService;
         this.addressService = addressService;
         this.pinOrderIndividualMapper = pinOrderIndividualMapper;
     }
@@ -344,7 +341,7 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
      * 确认收货
      */
     public Integer confirmReceipt(Integer userId, Integer orderIndividualId) {
-        PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
+        PinOrderIndividual orderIndividual = this.findById(orderIndividualId);
         if (!Objects.equals(userId, orderIndividual.getUserId())) {
             // 用户ID不符
             return STATUS_CONFIRM_PERMISSION_DENIED;
@@ -356,7 +353,7 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
         // 执行确认收货操作
         orderIndividual.setConfirmReceiptTime(new Date());
         orderIndividual.setStatus(PinOrderIndividual.STATUS_PENDING_COMMENT);
-        orderIndividualService.update(orderIndividual);
+        this.update(orderIndividual);
         // TODO: 给商家推送确认收货
         return STATUS_CONFIRM_SUCCESS;
     }
