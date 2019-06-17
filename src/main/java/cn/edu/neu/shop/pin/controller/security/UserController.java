@@ -35,7 +35,7 @@ public class UserController {
             @ApiResponse(code = 422, message = "Invalid id/password supplied")})
     public String signIn(//
                          @ApiParam("Id") @RequestParam String id, //
-                         @ApiParam("Password") @RequestParam String password) {
+                         @ApiParam("Password") @RequestParam String password, @PathVariable("UserController.signIn") String parameter) {
         return userService.signIn(Integer.parseInt(id), password);
     }
 
@@ -47,7 +47,7 @@ public class UserController {
             @ApiResponse(code = 403, message = "Access denied"), //
             @ApiResponse(code = 422, message = "Id is already in use"), //
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-    public String signUp(@ApiParam("Sign-up User") @RequestBody PinUser user) {
+    public String signUp(@ApiParam("Sign-up User") @RequestBody PinUser user, @PathVariable("UserController.signUpAndGetToken") String parameter) {
 //        PinUser pinUser = new PinUser(user.getId(), user.getPassword(), user.getRoles());
 //        return userService.signUpAndGetToken(pinUser);
         return null;
@@ -76,7 +76,7 @@ public class UserController {
             @ApiResponse(code = 403, message = "Access denied"), //
             @ApiResponse(code = 404, message = "The user doesn't exist"), //
             @ApiResponse(code = 500, message = "Expired or invalid JWT token")})
-    public PinUser search(@ApiParam("Id") @RequestParam Integer id) {
+    public PinUser search(@ApiParam("Id") @RequestParam Integer id, @PathVariable("UserController.search") String parameter) {
         return userService.search(id);
     }
 
