@@ -21,14 +21,20 @@ import java.util.List;
 @RequestMapping("/admin")
 public class AdminOrderController {
 
-    @Autowired
-    private ExpressService expressService;
-    @Autowired
-    OrderIndividualService orderIndividualService;
-    @Autowired
-    OrderGroupService orderGroupService;
-    @Autowired
-    UserService userService;
+    private final ExpressService expressService;
+
+    private final OrderIndividualService orderIndividualService;
+
+    private final OrderGroupService orderGroupService;
+
+    private final UserService userService;
+
+    public AdminOrderController(ExpressService expressService, OrderIndividualService orderIndividualService, OrderGroupService orderGroupService, UserService userService) {
+        this.expressService = expressService;
+        this.orderIndividualService = orderIndividualService;
+        this.orderGroupService = orderGroupService;
+        this.userService = userService;
+    }
 
     @GetMapping("/order/deliverNameList")
     public JSONObject getExpressInfo() {
@@ -53,7 +59,7 @@ public class AdminOrderController {
             Integer orderDateChoice = queryType.getInteger("orderDateChoice");
             String keyWord = queryType.getString("key");
             //通过关键词查找得到所有的orders
-            List<PinOrderIndividual> orderList = orderIndividualService.getAllWithProductsByKeyWord(keyWord,storeId);
+            List<PinOrderIndividual> orderList = orderIndividualService.getAllWithProductsByKeyWord(keyWord, storeId);
             //得到符合orderType的order
             List<PinOrderIndividual> orderTypeList = orderIndividualService.getOrdersByOrderType(orderList, orderTypeChoice);
             //得到符合orderDate的order
@@ -72,7 +78,7 @@ public class AdminOrderController {
     }
 
     @PostMapping("/order/get-group-order-list")
-    public JSONObject getGroupOrderByCondition(HttpServletRequest req,@RequestBody JSONObject queryType) {
+    public JSONObject getGroupOrderByCondition(HttpServletRequest req, @RequestBody JSONObject queryType) {
         try {
             System.out.println(queryType);
             Integer storeId = Integer.parseInt(req.getHeader("Current-Store"));
@@ -88,7 +94,7 @@ public class AdminOrderController {
             //得到符合传入时间段的orderGroups
             List<PinOrderGroup> orderDateGroups = orderGroupService.getOrdersByDate(orderStatusGroups, begin, end);
             //为前端分页处理
-            List<PinOrderIndividual> list = (List<PinOrderIndividual>) orderIndividualService.getOrdersByPageNumAndSize(orderDateGroups, pageNumber, pageSize);
+            List<PinOrderIndividual> list = orderIndividualService.getOrdersByPageNumAndSize(orderDateGroups, pageNumber, pageSize);
 
             JSONObject specificPage = new JSONObject();
             specificPage.put("total", orderDateGroups.size());
@@ -102,7 +108,7 @@ public class AdminOrderController {
 
     @PutMapping("/order/deliver-product")
     public JSONObject updateProductStatueToShip(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
-        try{
+        try {
             PinUser user = userService.whoAmI(httpServletRequest);
             Integer orderIndividualId = requestJSON.getInteger("orderIndividualId");
             String deliveryType = requestJSON.getString("deliveryType");
@@ -129,7 +135,7 @@ public class AdminOrderController {
 
     @PutMapping("/order/order-remark")
     public JSONObject updateMerchantRemark(@RequestBody JSONObject requestJSON) {
-        try{
+        try {
             Integer orderIndividualId = requestJSON.getInteger("orderIndividualId");
             String remark = requestJSON.getString("merchantRemark");
             orderIndividualService.updateMerchantRemark(orderIndividualId, remark);

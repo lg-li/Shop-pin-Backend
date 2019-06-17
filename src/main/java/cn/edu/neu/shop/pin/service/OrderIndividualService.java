@@ -323,7 +323,7 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
      * @param pageSize   传入一页的size
      * @return 返回要查找的那页
      */
-    public List<?> getOrdersByPageNumAndSize(List<?> list, Integer pageNumber, Integer pageSize) {
+    public List getOrdersByPageNumAndSize(List list, Integer pageNumber, Integer pageSize) {
         if (pageNumber * pageSize < list.size()) {
             return list.subList((pageNumber - 1) * pageSize, pageNumber * pageSize);
         } else {

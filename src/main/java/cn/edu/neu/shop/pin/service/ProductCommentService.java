@@ -126,7 +126,7 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
      * @param pageSize 页面长度
      * @return 评论列表
      */
-    public List<?> getCommentsByPageNumAndSize(List<?> list, Integer pageNumber, Integer pageSize) {
+    public List getCommentsByPageNumAndSize(List list, Integer pageNumber, Integer pageSize) {
         if (pageNumber * pageSize < list.size()) {
             return list.subList((pageNumber - 1) * pageSize, pageNumber * pageSize);
         } else {
