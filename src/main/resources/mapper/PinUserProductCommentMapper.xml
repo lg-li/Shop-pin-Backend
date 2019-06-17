@@ -64,7 +64,7 @@
     where pin_user.id = pin_user_product_comment.user_id
     and pin_user_product_comment.sku_id = pin_product_attribute_value.id
     and pin_product.id = pin_user_product_comment.product_id
-    and pin_user_product_comment.product_id = 2
+    and pin_user_product_comment.product_id = #{product}
   </select>
 
   <select id="getNumberOfMerchantNotComment" resultType="INTEGER">
