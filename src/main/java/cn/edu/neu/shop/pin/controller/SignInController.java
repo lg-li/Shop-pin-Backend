@@ -8,6 +8,7 @@ import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import cn.edu.neu.shop.pin.util.wechat.WeChatCredentialExchangeException;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +25,7 @@ public class SignInController {
 
     private final WechatUserService wechatUserService;
 
+    @Autowired
     public SignInController(UserService userService, WechatUserService wechatUserService) {
         this.userService = userService;
         this.wechatUserService = wechatUserService;

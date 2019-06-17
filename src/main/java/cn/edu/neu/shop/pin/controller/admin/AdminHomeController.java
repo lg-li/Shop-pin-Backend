@@ -7,6 +7,7 @@ import cn.edu.neu.shop.pin.service.ProductVisitRecordService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,6 +28,7 @@ public class AdminHomeController {
 
     private final PinProductMapper pinProductMapper;
 
+    @Autowired
     public AdminHomeController(ProductCommentService productCommentService, OrderIndividualService orderIndividualService, ProductVisitRecordService productVisitRecordService, PinProductMapper pinProductMapper) {
         this.productCommentService = productCommentService;
         this.orderIndividualService = orderIndividualService;

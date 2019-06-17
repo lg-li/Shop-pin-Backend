@@ -4,6 +4,7 @@ import cn.edu.neu.shop.pin.service.ProductCommentService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,6 +18,7 @@ public class AdminCommentController {
 
     private final ProductCommentService productCommentService;
 
+    @Autowired
     public AdminCommentController(ProductCommentService productCommentService) {
         this.productCommentService = productCommentService;
     }

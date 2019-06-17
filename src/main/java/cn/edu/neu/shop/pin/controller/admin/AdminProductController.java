@@ -8,6 +8,7 @@ import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +28,7 @@ public class AdminProductController {
 
     private final PinProductAttributeValueService valueService;
 
+    @Autowired
     public AdminProductController(ProductService productService, ProductCategoryService productCategoryService, ProductAttributeDefinitionService definitionService, PinProductAttributeValueService valueService) {
         this.productService = productService;
         this.productCategoryService = productCategoryService;

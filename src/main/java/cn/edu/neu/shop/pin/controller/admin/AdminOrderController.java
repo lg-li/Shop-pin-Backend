@@ -29,6 +29,7 @@ public class AdminOrderController {
 
     private final UserService userService;
 
+    @Autowired
     public AdminOrderController(ExpressService expressService, OrderIndividualService orderIndividualService, OrderGroupService orderGroupService, UserService userService) {
         this.expressService = expressService;
         this.orderIndividualService = orderIndividualService;

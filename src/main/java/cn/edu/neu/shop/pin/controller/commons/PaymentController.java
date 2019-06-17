@@ -1,4 +1,4 @@
-package cn.edu.neu.shop.pin.controller;
+package cn.edu.neu.shop.pin.controller.commons;
 
 
 import cn.edu.neu.shop.pin.exception.InsufficientBalanceException;
@@ -11,6 +11,7 @@ import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,7 @@ public class PaymentController {
 
     private final PaymentService paymentService;
 
+    @Autowired
     public PaymentController(UserService userService, PaymentService paymentService) {
         this.userService = userService;
         this.paymentService = paymentService;

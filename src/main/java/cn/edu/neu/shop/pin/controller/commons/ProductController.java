@@ -1,4 +1,4 @@
-package cn.edu.neu.shop.pin.controller;
+package cn.edu.neu.shop.pin.controller.commons;
 
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.service.ProductCategoryService;
@@ -9,6 +9,7 @@ import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import java.util.Date;
 
 /**
  * @author LLG
+ * 商品基本信息相关 controller
  */
 @RestController
 @RequestMapping("/commons/product")
@@ -23,56 +25,18 @@ public class ProductController {
 
     private final UserService userService;
 
-    private final ProductCategoryService productCategoryService;
-
     private final ProductService productService;
 
     private final ProductCommentService productCommentService;
 
     private final ProductVisitRecordService productVisitRecordService;
 
-    public ProductController(UserService userService, ProductCategoryService productCategoryService, ProductService productService, ProductCommentService productCommentService, ProductVisitRecordService productVisitRecordService) {
+    @Autowired
+    public ProductController(UserService userService, ProductService productService, ProductCommentService productCommentService, ProductVisitRecordService productVisitRecordService) {
         this.userService = userService;
-        this.productCategoryService = productCategoryService;
         this.productService = productService;
         this.productCommentService = productCommentService;
         this.productVisitRecordService = productVisitRecordService;
-    }
-
-    /**
-     * 层级获取商品分类表
-     *
-     * @param requestJSON 请求 layer JSON数据
-     * @return JSONObject
-     */
-    @PostMapping("/category/get-all-by-layer")
-    public JSONObject getCategoryByLayer(@RequestBody JSONObject requestJSON) {
-        try {
-            Integer layer = requestJSON.getInteger("layer");
-            JSONObject data = new JSONObject();
-            data.put("list", productCategoryService.getProductCategoryByLayer(layer));
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
-        }
-    }
-
-    /**
-     * 获取所有商品类别
-     *
-     * @return JSONObject
-     */
-    @GetMapping("/category/all")
-    public JSONObject geAllCategory() {
-        try {
-            JSONObject data = new JSONObject();
-            data.put("list", productCategoryService.getProductCategoryAll());
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
-        }
     }
 
     /**

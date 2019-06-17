@@ -1,4 +1,4 @@
-package cn.edu.neu.shop.pin.controller;
+package cn.edu.neu.shop.pin.controller.commons;
 
 import cn.edu.neu.shop.pin.model.PinOrderGroup;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
@@ -11,6 +11,7 @@ import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +32,7 @@ public class OrderGroupController {
 
     private final StoreService storeService;
 
+    @Autowired
     public OrderGroupController(UserService userService, OrderIndividualService orderIndividualService, OrderGroupService orderGroupService, StoreService storeService) {
         this.userService = userService;
         this.orderIndividualService = orderIndividualService;

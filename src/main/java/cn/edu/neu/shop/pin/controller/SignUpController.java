@@ -12,6 +12,7 @@ import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,6 +35,7 @@ public class SignUpController {
 
     private final PinUserRoleMapper pinUserRoleMapper;
 
+    @Autowired
     public SignUpController(UserService userService, PinUserMapper pinUserMapper, JwtTokenProvider jwtTokenProvider, UserRoleListTransferService userRoleListTransferService, PinUserRoleMapper pinUserRoleMapper) {
         this.userService = userService;
         this.pinUserMapper = pinUserMapper;

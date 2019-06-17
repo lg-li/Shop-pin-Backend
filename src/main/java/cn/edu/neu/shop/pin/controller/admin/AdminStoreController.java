@@ -10,6 +10,7 @@ import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import cn.edu.neu.shop.pin.util.img.ImgUtil;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,9 +26,9 @@ public class AdminStoreController {
 
     private final StoreService storeService;
 
-
     private final StoreCloseBatchService storeCloseBatchService;
 
+    @Autowired
     public AdminStoreController(UserService userService, StoreService storeService, StoreCloseBatchService storeCloseBatchService) {
         this.userService = userService;
         this.storeService = storeService;
