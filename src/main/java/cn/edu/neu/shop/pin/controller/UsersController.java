@@ -56,8 +56,12 @@ public class UsersController {
     public JSONObject getUserInfo(HttpServletRequest httpServletRequest) {
         try {
             PinUser user = userService.whoAmI(httpServletRequest);
+            Boolean hasCheckedIn = userCreditRecordService.hasCheckedIn(user.getId());
+            JSONObject data = new JSONObject();
+            data.put("user", user);
+            data.put("hasCheckedIn", hasCheckedIn);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
-                    userService.getUserInfoByUserId(user.getId()));
+                    data);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
