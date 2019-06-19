@@ -8,10 +8,10 @@
         <version>2.1.5.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>cn.edu.neu.shop</groupId>
-    <artifactId>Pin</artifactId>
+    <groupId>cn.edu.neu.shop.pin</groupId>
+    <artifactId>provider</artifactId>
     <version>SNAPSHOT</version>
-    <name>pin</name>
+    <name>Pin-Provider</name>
     <description>Group shopping backend based on Spring Boot</description>
 
     <properties>

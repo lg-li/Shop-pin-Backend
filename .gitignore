@@ -13,6 +13,7 @@ HELP.md
 
 ### IntelliJ IDEA ###
 .idea
+/.idea
 *.iws
 *.iml
 *.ipr
@@ -35,5 +36,3 @@ mvnw.cmd
 
 ### Mac OS X ###
 .DS_Store
-/.idea/misc.xml
-misc.xml
