@@ -6,7 +6,7 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import tk.mybatis.spring.annotation.MapperScan;
 
-@EnableEurekaClient
+//@EnableEurekaClient
 @SpringBootApplication
 @MapperScan("cn.edu.neu.shop.pin.mapper")
 @EnableScheduling

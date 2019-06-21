@@ -75,12 +75,9 @@ spring:
     password: 8a9p23TP6A
     port: 8512
     timeout: 1000
+  # 远程 Rabbit MQ 消息队列 配置
   rabbitmq:
-    host: 127.0.0.1
+    host: pin.cheelem.com
     port: 5672
     username: guest
     password: guest
-    listener:
-      concurrency: 10
-      max-concurrency:20
-      prefetch: 5
