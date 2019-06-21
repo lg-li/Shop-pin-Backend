@@ -1,6 +1,6 @@
 package cn.edu.neu.shop.pin.controller;
 
-import cn.edu.neu.shop.pin.PinApplication;
+import cn.edu.neu.shop.pin.PinProviderApplication;
 //import cn.edu.neu.shop.pin.customer.controller.UserCredentialNeededTest;
 import cn.edu.neu.shop.pin.service.security.UserService;
 import org.junit.Before;
@@ -19,10 +19,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import static org.junit.Assert.*;
-
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringBootTest(classes = PinApplication.class)
+@SpringBootTest(classes = PinProviderApplication.class)
 @WebAppConfiguration
 @EnableAutoConfiguration
 public class SignUpControllerTest {

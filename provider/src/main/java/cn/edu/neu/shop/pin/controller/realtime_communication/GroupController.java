@@ -1,4 +1,4 @@
-package cn.edu.neu.shop.pin.controller.realtimecommunication;
+package cn.edu.neu.shop.pin.controller.realtime_communication;
 
 import cn.edu.neu.shop.pin.service.OrderGroupService;
 import cn.edu.neu.shop.pin.websocket.CustomerPrincipal;

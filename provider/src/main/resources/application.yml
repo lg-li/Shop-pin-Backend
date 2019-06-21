@@ -1,0 +1,86 @@
+﻿# 以下配置文件已经将MySQL和Redis配置为可用的远程服务器连接
+# 测试时无需本地额外再行部署
+# 东软睿道实训项目
+# “Pin团” 拼团电商平台
+# @author 李林根 李一飞 牛骋 于岱洋 蔡奇峰
+
+server:
+  port: 5688
+
+#############################
+# Eureka 负载均衡配置
+#############################
+eureka:
+  instance:
+    appname: ${spring.application.name}
+    instanceId: ${spring.application.name}
+    preferIpAddress: true
+    ipAddress: 127.0.0.1
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    enabled: true
+    serviceUrl:
+      defaultZone: http://127.0.0.1:5681/eureka
+
+#############################
+# MyBatis 配置
+#############################
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: cn.edu.neu.shop.pin.model
+
+#############################
+# 分页插件配置
+#############################
+pagehelper:
+  reasonable: true
+  supportMethodsArguments: true
+  helper-dialect: mysql
+
+#############################
+# Spring 基本配置
+#############################
+spring:
+  application:
+    name: pin-provider
+  # 远程数据库连接（MySQL）配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    # Hikari 连接池配置
+    hikari:
+      auto-commit: true
+      connection-test-query: SELECT 1
+      connection-timeout: 30000
+      idle-timeout: 30000
+      max-lifetime: 1800000
+      maximum-pool-size: 15
+      minimum-idle: 5
+      pool-name: PinHikariCP
+    password: ShopPin!2019
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://pin.cheelem.com:3306/pin?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&nullCatalogMeansCurrent=true&serverTimezone=Asia/Shanghai
+    username: pin
+  # 远程 Redis 配置
+  redis:
+    database: 8
+    host: pin.cheelem.com
+    # Jedis 连接池配置
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        max-wait: 8000
+        min-idle: 0
+    password: 8a9p23TP6A
+    port: 8512
+    timeout: 1000
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+    listener:
+      concurrency: 10
+      max-concurrency:20
+      prefetch: 5
