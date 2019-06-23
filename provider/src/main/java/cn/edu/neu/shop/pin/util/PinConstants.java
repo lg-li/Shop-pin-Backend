@@ -42,4 +42,9 @@ public class PinConstants {
         public static final int ALARM = 10;
     }
 
+    public class MessageQueueKey {
+        public static final String GROUP = "GROUP";
+        public static final String USER = "USER";
+    }
+
 }

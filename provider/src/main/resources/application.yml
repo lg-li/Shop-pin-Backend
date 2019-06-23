@@ -79,5 +79,5 @@ spring:
   rabbitmq:
     host: pin.cheelem.com
     port: 5672
-    username: guest
-    password: guest
+    username: admin
+    password: pwd

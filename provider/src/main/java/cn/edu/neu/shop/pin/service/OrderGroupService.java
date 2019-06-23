@@ -13,7 +13,7 @@ import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import cn.edu.neu.shop.pin.websocket.CustomerPrincipal;
-import cn.edu.neu.shop.pin.websocket.WebSocketService;
+import cn.edu.neu.shop.pin.websocket.StompMessageService;
 import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,19 +61,19 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
 
     private final OrderIndividualService orderIndividualService;
 
-    private final WebSocketService webSocketService;
+    private final StompMessageService stompMessageService;
 
     private final UserService userService;
 
     private final StoreCloseBatchService storeCloseBatchService;
 
-    public OrderGroupService(PinOrderIndividualMapper individualMapper, PinOrderGroupMapper pinOrderGroupMapper, StoreService storeService, OrderItemService orderItemService, OrderIndividualService orderIndividualService, WebSocketService webSocketService, UserService userService, StoreCloseBatchService storeCloseBatchService) {
+    public OrderGroupService(PinOrderIndividualMapper individualMapper, PinOrderGroupMapper pinOrderGroupMapper, StoreService storeService, OrderItemService orderItemService, OrderIndividualService orderIndividualService, StompMessageService stompMessageService, UserService userService, StoreCloseBatchService storeCloseBatchService) {
         this.individualMapper = individualMapper;
         this.pinOrderGroupMapper = pinOrderGroupMapper;
         this.storeService = storeService;
         this.orderItemService = orderItemService;
         this.orderIndividualService = orderIndividualService;
-        this.webSocketService = webSocketService;
+        this.stompMessageService = stompMessageService;
         this.userService = userService;
         this.storeCloseBatchService = storeCloseBatchService;
     }
@@ -204,7 +204,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         JSONObject orderGroupJSON = generateOrderGroupJSON(orderGroup);
         orderGroupJSON.put("message", "有人适才加入了房间");
         CustomerPrincipal customerPrincipal = new CustomerPrincipal(userId, orderIndividualId, orderGroupId);
-        webSocketService.sendGroupUpdateMessage(customerPrincipal, orderGroupJSON);
+        stompMessageService.sendGroupUpdateMessage(customerPrincipal, orderGroupJSON);
         return STATUS_SUCCESS;
     }
 
@@ -235,7 +235,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         JSONObject orderGroupJSON = generateOrderGroupJSON(orderGroup);
         orderGroupJSON.put("message", "有人适才退出了房间");
         CustomerPrincipal customerPrincipal = new CustomerPrincipal(userId, orderIndividualId, orderGroupId);
-        webSocketService.sendGroupUpdateMessage(customerPrincipal, orderGroupJSON);
+        stompMessageService.sendGroupUpdateMessage(customerPrincipal, orderGroupJSON);
         return STATUS_SUCCESS;
     }
 
@@ -248,14 +248,14 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         PinOrderGroup orderGroup = this.findById(customerPrincipal.getOrderGroupId());
         PinOrderIndividual orderIndividualOfCurrentUser = orderIndividualService.findById(customerPrincipal.getOrderIndividualId());
         if (orderGroup == null || orderIndividualOfCurrentUser == null) {
-            webSocketService.sendSingleErrorMessage(customerPrincipal,
+            stompMessageService.sendSingleErrorMessage(customerPrincipal,
                     ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, PinConstants.ResponseMessage.INVALID_DATA, null));
             return;
         }
         JSONObject orderGroupJSON = generateOrderGroupJSON(orderGroup);
         orderGroupJSON.put("message", "hello");
         logger.info("Sending: " + orderGroupJSON.toJSONString());
-        webSocketService.sendSingleUpdateMessage(customerPrincipal, orderGroupJSON);
+        stompMessageService.sendSingleUpdateMessage(customerPrincipal, orderGroupJSON);
     }
 
     /**

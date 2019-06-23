@@ -1,19 +1,25 @@
 package cn.edu.neu.shop.pin.websocket;
 
+import cn.edu.neu.shop.pin.message_queue.producer.MessageOnQueueProducer;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessageSendingOperations;
 import org.springframework.stereotype.Component;
 
 /**
- * @author flyhero
+ * @author flyhero, LLG
  */
 @Component
-public class WebSocketService {
+public class StompMessageService {
 
     private final SimpMessageSendingOperations simpMessageSendingOperations;
 
-    public WebSocketService(SimpMessageSendingOperations simpMessageSendingOperations) {
+    private final MessageOnQueueProducer messageOnQueueProducer;
+
+    @Autowired
+    public StompMessageService(SimpMessageSendingOperations simpMessageSendingOperations, MessageOnQueueProducer messageOnQueueProducer) {
         this.simpMessageSendingOperations = simpMessageSendingOperations;
+        this.messageOnQueueProducer = messageOnQueueProducer;
     }
 
     /**
@@ -95,23 +101,65 @@ public class WebSocketService {
     /**
      * @param principal 用户principal
      * @param router    路由地址
-     * @param object    待传对象
+     * @param data    待传数据
      * @author flyhero
      * 点对点发送消息
      */
-    private void sendSingleMessage(CustomerPrincipal principal, String router, Object object) {
-        simpMessageSendingOperations.convertAndSendToUser(principal.getUserId().toString(), "/" + router, object);
+    private void sendSingleMessage(CustomerPrincipal principal, String router, JSONObject data) {
+        sendToUserRoute(principal.getUserId().toString(), "/" + router, data);
     }
 
     /**
      * @param principal 用户principal
      * @param router    路由地址
-     * @param object    待传对象
+     * @param data    待传数据
      * @author flyhero
      * 向/group/{orderGroupId}/notify地址发送广播消息，属于同一团内的用户订阅这个地址
      */
-    private void sendGroupMessage(CustomerPrincipal principal, String router, Object object) {
-        simpMessageSendingOperations.convertAndSend("/group/" + principal.getOrderGroupId() + "/" + router, object);
+    private void sendGroupMessage(CustomerPrincipal principal, String router, JSONObject data) {
+        sendToGroupRoute("/group/" + principal.getOrderGroupId() + "/" + router, data);
+    }
+
+    /**
+     * @author LLG
+     * 向个人用户发送信息：抽象分离方法
+     * 向消息队列转发 stomp 信息
+     * @param userId 用户Id
+     * @param route 路由key
+     * @param data 数据
+     */
+    private void sendToUserRoute(String userId, String route, JSONObject data) {
+        messageOnQueueProducer.sendToUser(userId, route, data);
+    }
+
+    /**
+     * @author LLG
+     * 向组内用户发送信息：抽象分离方法
+     * 向消息队列转发 stomp 信息
+     * @param route 路由key
+     * @param data 数据
+     */
+    private void sendToGroupRoute(String route, JSONObject data) {
+        messageOnQueueProducer.sendToGroup(route, data);
+    }
+
+    /**
+     * 处理消息队列的组内消息回调方法
+     * @param route 路由
+     * @param data 数据
+     */
+    public void onReceiveGroupMessageToRoute(String route, JSONObject data) {
+        simpMessageSendingOperations.convertAndSend(route, data);
+    }
+
+    /**
+     * 处理消息队列的用户个人消息回调方法
+     * @param userId 用户Id
+     * @param route 路由
+     * @param data 数据
+     */
+    public void onReceiveUserMessageToRoute(String userId, String route, JSONObject data) {
+        simpMessageSendingOperations.convertAndSendToUser(userId, route, data);
     }
 
 //    /**
