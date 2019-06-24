@@ -8,6 +8,7 @@ import cn.edu.neu.shop.pin.model.PinOrderGroup;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.model.PinStoreGroupCloseBatch;
 import cn.edu.neu.shop.pin.model.PinUser;
+import cn.edu.neu.shop.pin.service.finance.UserBalanceService;
 import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
@@ -20,10 +21,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+
+import static java.lang.Math.pow;
 
 /**
  * @author flyhero
@@ -67,7 +71,9 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
 
     private final StoreCloseBatchService storeCloseBatchService;
 
-    public OrderGroupService(PinOrderIndividualMapper individualMapper, PinOrderGroupMapper pinOrderGroupMapper, StoreService storeService, OrderItemService orderItemService, OrderIndividualService orderIndividualService, StompMessageService stompMessageService, UserService userService, StoreCloseBatchService storeCloseBatchService) {
+    private final UserBalanceService userBalanceService;
+
+    public OrderGroupService(PinOrderIndividualMapper individualMapper, PinOrderGroupMapper pinOrderGroupMapper, StoreService storeService, OrderItemService orderItemService, OrderIndividualService orderIndividualService, StompMessageService stompMessageService, UserService userService, StoreCloseBatchService storeCloseBatchService, UserBalanceService userBalanceService) {
         this.individualMapper = individualMapper;
         this.pinOrderGroupMapper = pinOrderGroupMapper;
         this.storeService = storeService;
@@ -76,6 +82,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         this.stompMessageService = stompMessageService;
         this.userService = userService;
         this.storeCloseBatchService = storeCloseBatchService;
+        this.userBalanceService = userBalanceService;
     }
 
     /**
@@ -330,6 +337,45 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
 //            System.out.println("选择最近时间: " + new Date(timeSecondsStampOfClosing));
 //        }
         return new Date(timeSecondsStampOfClosing);
+    }
+
+    /**
+     * 返利的具体方法
+     *
+     * @param maximumDiscount         最大的返利值
+     * @param maximumDiscountOrderNum 最大返利值对应的 order 的数量
+     * @author ydy
+     */
+    public void returnBonus(Integer orderGroupId, double maximumDiscount, Integer maximumDiscountOrderNum) {
+        List<PinOrderIndividual> list = orderIndividualService.getOrderIndividualsByOrderGroupId(orderGroupId);
+        OrderGroupService.ExponentBonusFunction function = new OrderGroupService.ExponentBonusFunction(maximumDiscount, maximumDiscountOrderNum);
+        for (PinOrderIndividual item : list) {
+            userBalanceService.returnBonusOnBalanceFromIndividualOrder(item.getUserId(), item.getId(), new BigDecimal(function.calculate(list.size())));
+        }
+    }
+
+    /*
+        @author ydy
+        整体是一个指数函数，但是向右移动了1，因为数量为1的时候，返利为0
+        后面就是一条平行于 x 轴的直线，order的数量达到一定程度的时候返利不再增加
+     */
+    class ExponentBonusFunction {
+        double maximumDiscount; //最大的返利值 对应 y 轴
+        Integer maximumDiscountOrderNum;    //最大返利值对应的 order 的数量 对应 x 轴
+        double base; //指数函数的底数
+
+        ExponentBonusFunction(double maximumDiscount, Integer maximumDiscountOrderNum) {
+            this.maximumDiscount = maximumDiscount;
+            this.maximumDiscountOrderNum = maximumDiscountOrderNum - 1;
+            this.base = pow(maximumDiscount, maximumDiscountOrderNum);
+        }
+
+        double calculate(Integer num) {
+            if (num < maximumDiscountOrderNum)
+                return pow(base, num - 1);
+            else
+                return maximumDiscount;
+        }
     }
 
     public List<PinOrderGroup> getAllWithOrderIndividual(Integer storeId) {

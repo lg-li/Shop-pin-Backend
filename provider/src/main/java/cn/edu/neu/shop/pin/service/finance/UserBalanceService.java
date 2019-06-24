@@ -56,7 +56,7 @@ public class UserBalanceService extends AbstractService<PinUserBalanceRecord> {
      * @param bonusAmount 返现金额（正数）
      */
     @Transactional
-    void returnBonusOnBalanceFromIndividualOrder(Integer userId, Integer fromOrderIndividualId, BigDecimal bonusAmount) {
+    public void returnBonusOnBalanceFromIndividualOrder(Integer userId, Integer fromOrderIndividualId, BigDecimal bonusAmount) {
         PinUser userToOperate = userMapper.findById(userId);
         // 增加用户记录的余额
         userToOperate.setBalance(userToOperate.getBalance().add(bonusAmount));

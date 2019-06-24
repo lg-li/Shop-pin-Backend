@@ -9,6 +9,7 @@ import cn.edu.neu.shop.pin.service.OrderIndividualService;
 import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -140,6 +141,19 @@ public class AdminOrderController {
             Integer orderIndividualId = requestJSON.getInteger("orderIndividualId");
             String remark = requestJSON.getString("merchantRemark");
             orderIndividualService.updateMerchantRemark(orderIndividualId, remark);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
+        } catch (Exception e) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, e.getMessage(), null);
+        }
+    }
+
+    @PostMapping("/discount-setting")
+    public JSONObject discountSetting(@RequestBody JSONObject requestJSON) {
+        try {
+            Double maximumDiscount = requestJSON.getDouble("maximumDiscount");
+            Integer maximumDiscountOrderNum = requestJSON.getInteger("maximumDiscountProductNum");
+            Integer orderGroupId = requestJSON.getInteger("orderGroupId");
+            orderGroupService.returnBonus(orderGroupId,maximumDiscount,maximumDiscountOrderNum);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
         } catch (Exception e) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, e.getMessage(), null);
