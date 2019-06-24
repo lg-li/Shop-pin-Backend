@@ -11,7 +11,7 @@
     <groupId>cn.edu.neu.shop.pin</groupId>
     <artifactId>consumer</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>consumer</name>
+    <name>Pin-Consumer</name>
     <description>Consumer of Pin</description>
 
     <properties>
