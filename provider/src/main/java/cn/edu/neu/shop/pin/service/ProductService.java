@@ -2,14 +2,19 @@ package cn.edu.neu.shop.pin.service;
 
 import cn.edu.neu.shop.pin.mapper.*;
 import cn.edu.neu.shop.pin.model.*;
+import cn.edu.neu.shop.pin.mongo.document.ProductRichTextDescription;
+import cn.edu.neu.shop.pin.mongo.repository.ProductRichTextRepository;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author flyhero, LLG, CQF, YDY
@@ -29,13 +34,17 @@ public class ProductService extends AbstractService<PinProduct> {
 
     private final StoreService storeService;
 
-    public ProductService(PinProductMapper pinProductMapper, PinProductAttributeDefinitionMapper pinProductAttributeDefinitionMapper, PinProductAttributeValueMapper pinProductAttributeValueMapper, PinUserProductCollectionMapper pinUserProductCollectionMapper, PinUserProductCommentMapper pinUserProductCommentMapper, StoreService storeService) {
+    private final ProductRichTextRepository productRichTextRepository;
+
+    @Autowired
+    public ProductService(PinProductMapper pinProductMapper, PinProductAttributeDefinitionMapper pinProductAttributeDefinitionMapper, PinProductAttributeValueMapper pinProductAttributeValueMapper, PinUserProductCollectionMapper pinUserProductCollectionMapper, PinUserProductCommentMapper pinUserProductCommentMapper, StoreService storeService, ProductRichTextRepository productRichTextRepository) {
         this.pinProductMapper = pinProductMapper;
         this.pinProductAttributeDefinitionMapper = pinProductAttributeDefinitionMapper;
         this.pinProductAttributeValueMapper = pinProductAttributeValueMapper;
         this.pinUserProductCollectionMapper = pinUserProductCollectionMapper;
         this.pinUserProductCommentMapper = pinUserProductCommentMapper;
         this.storeService = storeService;
+        this.productRichTextRepository = productRichTextRepository;
     }
 
     /**
@@ -218,6 +227,47 @@ public class ProductService extends AbstractService<PinProduct> {
      */
     public List<JSONObject> getProductInfoFromSameStore(Integer storeId) {
         return pinProductMapper.getProductFromSameStore(storeId);
+    }
+
+    /**
+     * @author LLG
+     * 获取来自MongoDB的产品富文描述
+     *
+     * @param productId 产品ID
+     * @return 富文本字符串
+     */
+    public String getProductRichTextDescription(Integer productId) {
+        Optional<ProductRichTextDescription> productRichTextDescriptionOptional = productRichTextRepository.findById(productId);
+        if(productRichTextDescriptionOptional.isPresent()){
+            return productRichTextDescriptionOptional.get().getContent();
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * @author LLG
+     * 将富文本描述保存到 Mongo DB
+     * 
+     * @param productId 产品ID
+     * @param richText 要保存的富文本字符串
+     */
+    public void updateProductRichTextDescription(Integer productId, String richText) {
+        Optional<ProductRichTextDescription> productRichTextDescriptionOptional = productRichTextRepository.findById(productId);
+        Date now = new Date();
+        if(productRichTextDescriptionOptional.isPresent()){
+            ProductRichTextDescription productRichTextDescription = productRichTextDescriptionOptional.get();
+            productRichTextDescription.setContent(richText);
+            productRichTextDescription.setEditTime(now);
+            productRichTextRepository.save(productRichTextDescription);
+        } else {
+            ProductRichTextDescription productRichTextDescription = new ProductRichTextDescription();
+            productRichTextDescription.setEditTime(now);
+            productRichTextDescription.setCreateTime(now);
+            productRichTextDescription.setContent(richText);
+            productRichTextDescription.setProductId(productId);
+            productRichTextRepository.save(productRichTextDescription);
+        }
     }
 
 //    /**

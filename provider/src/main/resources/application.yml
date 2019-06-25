@@ -64,7 +64,6 @@ spring:
   # 远程 Redis 配置
   redis:
     database: 8
-    host: pin.cheelem.com
     # Jedis 连接池配置
     jedis:
       pool:
@@ -73,11 +72,18 @@ spring:
         max-wait: 8000
         min-idle: 0
     password: 8a9p23TP6A
-    port: 8512
     timeout: 1000
+    # Redis 集群配置
+    cluster:
+      nodes: 47.93.218.67:8001,47.93.218.67:8002,47.93.218.67:8003,39.105.81.94:8001,39.105.81.94:8002,39.105.81.94:8003
+      max-redirects: 6
   # 远程 Rabbit MQ 消息队列 配置
   rabbitmq:
     host: pin.cheelem.com
     port: 5672
     username: admin
     password: pwd
+  data:
+    mongodb:
+      uri: mongodb://admin:F5g2i3o9@5io2.com:28018/pin
+      authentication-database: pin
