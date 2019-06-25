@@ -3,8 +3,8 @@
 #############################
 eureka:
   instance:
-    appname: ${spring.application.name}
-    instanceId: ${spring.application.name}
+    appname: Pin-Consumer
+    instanceId: Pin-Consumer
     preferIpAddress: true
     ipAddress: 127.0.0.1
   client:
