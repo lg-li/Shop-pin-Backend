@@ -43,7 +43,7 @@ pagehelper:
 #############################
 spring:
   application:
-    name: pin-provider
+    name: Pin-Provider
   # 远程数据库连接（MySQL）配置
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -84,6 +84,7 @@ spring:
     username: admin
     password: pwd
   data:
+    # Mongo DB 配置
     mongodb:
       uri: mongodb://admin:F5g2i3o9@5io2.com:28018/pin
       authentication-database: pin

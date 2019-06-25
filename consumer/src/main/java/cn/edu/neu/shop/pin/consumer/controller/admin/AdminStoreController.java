@@ -6,45 +6,44 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 @RestController
 @RequestMapping(value = "/manager/store")
 public class AdminStoreController {
     @Autowired
     AdminStoreControllerService adminStoreControllerService;
+
     @GetMapping("/storeList")
-    public JSONObject getProducts(HttpServletRequest req){
-        return adminStoreControllerService.getProducts(req);
+    public JSONObject getProducts() {
+        return adminStoreControllerService.getProducts();
     }
 
     @PostMapping("/storeInfo")
-    public JSONObject addStoreInfo(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON){
-        return adminStoreControllerService.addStoreInfo(httpServletRequest, requestJSON);
+    public JSONObject addStoreInfo(@RequestBody JSONObject requestJSON) {
+        return adminStoreControllerService.addStoreInfo(requestJSON);
     }
 
     @PutMapping("/storeInfo")
-    public JSONObject updateStoreInfo(@RequestBody JSONObject requestJSON){
+    public JSONObject updateStoreInfo(@RequestBody JSONObject requestJSON) {
         return adminStoreControllerService.updateStoreInfo(requestJSON);
     }
 
     @GetMapping("/close-batch")
-    public JSONObject getGruopCloseBatchTime(HttpServletRequest httpServletRequest){
-        return adminStoreControllerService.getGruopCloseBatchTime(httpServletRequest);
+    public JSONObject getGroupCloseBatchTime() {
+        return adminStoreControllerService.getGroupCloseBatchTime();
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<JSONObject> uploadStoreInfo(@RequestBody JSONObject uploadingInfo){
+    public ResponseEntity<JSONObject> uploadStoreInfo(@RequestBody JSONObject uploadingInfo) {
         return adminStoreControllerService.uploadStoreImage(uploadingInfo);
     }
 
     @DeleteMapping("/close-batch")
-    public JSONObject deleteGroupCloseBatchTime(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON){
-        return adminStoreControllerService.deleteGroupCloseBatchTime(httpServletRequest, requestJSON);
+    public JSONObject deleteGroupCloseBatchTime(@RequestBody JSONObject requestJSON) {
+        return adminStoreControllerService.deleteGroupCloseBatchTime(requestJSON);
     }
 
     @PostMapping("/close-batch")
-    public JSONObject addGroupCloseBatchTime(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON){
-        return adminStoreControllerService.addGroupCloseBatchTime(httpServletRequest, requestJSON);
+    public JSONObject addGroupCloseBatchTime(@RequestBody JSONObject requestJSON) {
+        return adminStoreControllerService.addGroupCloseBatchTime(requestJSON);
     }
 }

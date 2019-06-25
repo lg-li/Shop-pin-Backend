@@ -5,8 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 @RestController
 @RequestMapping(value = "/goods")
 public class AdminProductController {
@@ -14,13 +12,13 @@ public class AdminProductController {
     AdminProductControllerService adminProductControllerService;
 
     @PostMapping("/goods-list")
-    public JSONObject getProducts(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
-        return adminProductControllerService.getProducts(httpServletRequest, requestJSON);
+    public JSONObject getProducts(@RequestBody JSONObject requestJSON) {
+        return adminProductControllerService.getProducts(requestJSON);
     }
 
     @GetMapping("/goods-category")
-    public JSONObject getProductFromSameStore(HttpServletRequest httpServletRequest) {
-        return adminProductControllerService.getProductFromSameStore(httpServletRequest);
+    public JSONObject getProductFromSameStore() {
+        return adminProductControllerService.getProductFromSameStore();
     }
 
     @GetMapping("/category-list")
@@ -34,8 +32,8 @@ public class AdminProductController {
     }
 
     @PostMapping("/create-product")
-    public JSONObject createProduct(HttpServletRequest req, @RequestBody JSONObject requestJSON) {
-        return adminProductControllerService.createProduct(req, requestJSON);
+    public JSONObject createProduct(@RequestBody JSONObject requestJSON) {
+        return adminProductControllerService.createProduct(requestJSON);
     }
 
     @PostMapping("/create-sku-definition")

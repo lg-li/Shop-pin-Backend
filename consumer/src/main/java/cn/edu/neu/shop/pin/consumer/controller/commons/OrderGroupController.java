@@ -5,8 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 @RestController
 @RequestMapping(value = "/commons/order-group")
 public class OrderGroupController {
@@ -14,18 +12,18 @@ public class OrderGroupController {
     OrderGroupControllerService orderGroupControllerService;
 
     @PostMapping("/create")
-    public JSONObject createOrderGroup(HttpServletRequest httpServletRequest, @RequestBody JSONObject jsonObject) {
-        return orderGroupControllerService.createOrderGroup(httpServletRequest, jsonObject);
+    public JSONObject createOrderGroup(@RequestBody JSONObject jsonObject) {
+        return orderGroupControllerService.createOrderGroup(jsonObject);
     }
 
     @PostMapping("/join")
-    public JSONObject joinOrderGroup(HttpServletRequest httpServletRequest, @RequestBody JSONObject jsonObject) {
-        return orderGroupControllerService.joinOrderGroup(httpServletRequest, jsonObject);
+    public JSONObject joinOrderGroup(@RequestBody JSONObject jsonObject) {
+        return orderGroupControllerService.joinOrderGroup(jsonObject);
     }
 
     @PostMapping("/quit")
-    public JSONObject quitOrderGroup(HttpServletRequest httpServletRequest, @RequestBody JSONObject jsonObject) {
-        return orderGroupControllerService.quitOrderGroup(httpServletRequest, jsonObject);
+    public JSONObject quitOrderGroup(@RequestBody JSONObject jsonObject) {
+        return orderGroupControllerService.quitOrderGroup(jsonObject);
     }
 
     @GetMapping("/by-order-group-id/{orderGroupId}")

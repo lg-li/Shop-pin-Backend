@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-
 @RestController
 public class AdminCommentController {
 
@@ -22,8 +20,8 @@ public class AdminCommentController {
     }
 
     @GetMapping("/goods/goods-with-comment")
-    public JSONObject getAllProductWithComment(HttpServletRequest httpServletRequest) {
-        return adminCommentControllerService.getAllProductWithComment(httpServletRequest);
+    public JSONObject getAllProductWithComment() {
+        return adminCommentControllerService.getAllProductWithComment();
     }
 
     @PostMapping("/comment/reply-comment")
