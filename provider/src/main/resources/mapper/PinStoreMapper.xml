@@ -14,6 +14,8 @@
         <result column="logo_url" jdbcType="VARCHAR" property="logoUrl"/>
         <result column="owner_user_id" jdbcType="INTEGER" property="ownerUserId"/>
         <result column="people_limit" jdbcType="INTEGER" property="peopleLimit" />
+        <result column="bonus_max_amount" jdbcType="DECIMAL" property="bonusMaxAmount" />
+        <result column="bonus_max_people_count" jdbcType="INTEGER" property="bonusMaxPeopleCount" />
     </resultMap>
 
     <select id="selectByOwnerId" resultMap="BaseResultMap">

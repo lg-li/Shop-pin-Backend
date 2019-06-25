@@ -1,6 +1,7 @@
 package cn.edu.neu.shop.pin.model;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Table(name = "pin_store")
@@ -52,6 +53,12 @@ public class PinStore {
 
     @Column(name = "people_limit")
     private Integer peopleLimit;
+
+    @Column(name = "bonus_max_amount")
+    private BigDecimal bonusMaxAmount;
+
+    @Column(name = "bonus_max_people_count")
+    private Integer bonusMaxPeopleCount;
 
     /**
      * 获取店铺id
@@ -203,6 +210,22 @@ public class PinStore {
 
     public void setPeopleLimit(Integer peopleLimit) {
         this.peopleLimit = peopleLimit;
+    }
+
+    public BigDecimal getBonusMaxAmount() {
+        return bonusMaxAmount;
+    }
+
+    public void setBonusMaxAmount(BigDecimal bonusMaxAmount) {
+        this.bonusMaxAmount = bonusMaxAmount;
+    }
+
+    public Integer getBonusMaxPeopleCount() {
+        return bonusMaxPeopleCount;
+    }
+
+    public void setBonusMaxPeopleCount(Integer bonusMaxPeopleCount) {
+        this.bonusMaxPeopleCount = bonusMaxPeopleCount;
     }
 
     @Override
