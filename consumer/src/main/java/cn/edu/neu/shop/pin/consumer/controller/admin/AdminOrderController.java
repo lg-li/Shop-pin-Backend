@@ -42,4 +42,9 @@ public class AdminOrderController {
     public JSONObject discountSetting(@RequestBody JSONObject requestJSON) {
         return adminOrderControllerService.discountSetting(requestJSON);
     }
+
+    @PostMapping("/refund-order")
+    public JSONObject refundOrder(@RequestBody JSONObject requestJSON){
+        return adminOrderControllerService.refundOrder(requestJSON);
+    }
 }

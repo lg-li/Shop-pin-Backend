@@ -27,4 +27,7 @@ public interface AdminOrderControllerService {
 
     @RequestMapping(value = "/admin/discount-setting", method = RequestMethod.POST)
     public JSONObject discountSetting(@RequestBody JSONObject requestJSON);
+
+    @RequestMapping(value = "/admin/refund-order", method = RequestMethod.POST)
+    public JSONObject refundOrder(@RequestBody JSONObject requestJSON);
 }
