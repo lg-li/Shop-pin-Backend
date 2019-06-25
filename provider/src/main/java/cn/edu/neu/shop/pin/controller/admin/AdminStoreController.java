@@ -109,7 +109,7 @@ public class AdminStoreController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<JSONObject> uploadStoreInfo(@RequestBody JSONObject uploadingInfo) {
+    public ResponseEntity<JSONObject> uploadStoreImage(@RequestBody JSONObject uploadingInfo) {
         //截掉 "data:image/png;base64,"
         String base64Img = uploadingInfo.getString("image");
         return ImgUtil.upload(base64Img, "https://sm.ms/api/upload");
