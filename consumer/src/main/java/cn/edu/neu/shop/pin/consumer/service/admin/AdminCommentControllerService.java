@@ -7,17 +7,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
-
 @Service
 @FeignClient(value = "Pin-Provider")
 public interface AdminCommentControllerService {
     @RequestMapping(value = "/comment/goods-comment", method = RequestMethod.POST)
-    public JSONObject getCommentByProductId(@RequestBody JSONObject requestJSON);
+    JSONObject getCommentByProductId(@RequestBody JSONObject requestJSON);
 
     @RequestMapping(value = "/goods/goods-with-comment", method = RequestMethod.GET)
-    public JSONObject getAllProductWithComment(HttpServletRequest httpServletRequest);
+    JSONObject getAllProductWithComment();
 
     @RequestMapping(value = "/comment/reply-comment", method = RequestMethod.POST)
-    public JSONObject updateMerchantReplyComment(@RequestBody JSONObject requestJSON);
+    JSONObject updateMerchantReplyComment(@RequestBody JSONObject requestJSON);
 }

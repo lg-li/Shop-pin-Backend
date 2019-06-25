@@ -4,31 +4,31 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @Service
 @FeignClient(value = "Pin-Provider")
 public interface AdminStoreControllerService {
     @RequestMapping(value = "/manager/store/storeList", method = RequestMethod.GET)
-    public JSONObject getProducts(HttpServletRequest req);
+    JSONObject getProducts();
 
     @RequestMapping(value = "/manager/store/storeInfo", method = RequestMethod.POST)
-    public JSONObject addStoreInfo(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON);
+    JSONObject addStoreInfo(@RequestBody JSONObject requestJSON);
 
     @RequestMapping(value = "/manager/store/storeInfo", method = RequestMethod.PUT)
-    public JSONObject updateStoreInfo(@RequestBody JSONObject requestJSON);
+    JSONObject updateStoreInfo(@RequestBody JSONObject requestJSON);
 
     @RequestMapping(value = "/manager/store/close-batch", method = RequestMethod.GET)
-    public JSONObject getGruopCloseBatchTime(HttpServletRequest httpServletRequest);
+    JSONObject getGroupCloseBatchTime();
 
     @RequestMapping(value = "/manager/store/upload", method = RequestMethod.POST)
-    public ResponseEntity<JSONObject> uploadStoreImage(@RequestBody JSONObject uploadingInfo);
+    ResponseEntity<JSONObject> uploadStoreImage(@RequestBody JSONObject uploadingInfo);
 
     @RequestMapping(value = "/manager/store/close-batch", method = RequestMethod.DELETE)
-    public JSONObject deleteGroupCloseBatchTime(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON);
+    JSONObject deleteGroupCloseBatchTime(@RequestBody JSONObject requestJSON);
 
     @RequestMapping(value = "/manager/store/close-batch", method = RequestMethod.POST)
-    public JSONObject addGroupCloseBatchTime(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON);
+    JSONObject addGroupCloseBatchTime(@RequestBody JSONObject requestJSON);
 }

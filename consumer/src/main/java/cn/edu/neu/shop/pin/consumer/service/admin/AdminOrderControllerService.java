@@ -3,31 +3,31 @@ package cn.edu.neu.shop.pin.consumer.service.admin;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 @Service
 @FeignClient(value = "Pin-Provider")
 public interface AdminOrderControllerService {
     @RequestMapping(value = "/admin/order/deliverNameList", method = RequestMethod.GET)
-    public JSONObject getExpressInfo();
+    JSONObject getExpressInfo();
 
     @RequestMapping(value = "/admin/order/query", method = RequestMethod.POST)
-    public JSONObject getOrderByCondition(HttpServletRequest req, @RequestBody JSONObject queryType);
+    JSONObject getOrderByCondition(@RequestBody JSONObject queryType);
 
     @RequestMapping(value = "/admin/order/get-group-order-list", method = RequestMethod.POST)
-    public JSONObject getGroupOrderByCondition(HttpServletRequest req, @RequestBody JSONObject queryType);
+    JSONObject getGroupOrderByCondition(@RequestBody JSONObject queryType);
 
     @RequestMapping(value = "/admin/order/deliver-product", method = RequestMethod.PUT)
-    public JSONObject updateProductStatueToShip(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON);
+    JSONObject updateProductStatueToShip(@RequestBody JSONObject requestJSON);
 
     @RequestMapping(value = "/admin/order/order-remark", method = RequestMethod.PUT)
-    public JSONObject updateMerchantRemark(@RequestBody JSONObject requestJSON);
+    JSONObject updateMerchantRemark(@RequestBody JSONObject requestJSON);
 
     @RequestMapping(value = "/admin/discount-setting", method = RequestMethod.POST)
-    public JSONObject discountSetting(@RequestBody JSONObject requestJSON);
+    JSONObject discountSetting(@RequestBody JSONObject requestJSON);
 
     @RequestMapping(value = "/admin/refund-order", method = RequestMethod.POST)
-    public JSONObject refundOrder(@RequestBody JSONObject requestJSON);
+    JSONObject refundOrder(@RequestBody JSONObject requestJSON);
 }

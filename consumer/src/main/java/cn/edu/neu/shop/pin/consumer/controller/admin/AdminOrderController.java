@@ -5,8 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 @RestController
 @RequestMapping("/admin")
 public class AdminOrderController {
@@ -19,18 +17,18 @@ public class AdminOrderController {
     }
 
     @PostMapping("/order/query")
-    public JSONObject getOrderByCondition(HttpServletRequest req, @RequestBody JSONObject queryType) {
-        return adminOrderControllerService.getOrderByCondition(req, queryType);
+    public JSONObject getOrderByCondition(@RequestBody JSONObject queryType) {
+        return adminOrderControllerService.getOrderByCondition(queryType);
     }
 
     @PostMapping("/order/get-group-order-list")
-    public JSONObject getGroupOrderByCondition(HttpServletRequest req, @RequestBody JSONObject queryType) {
-        return adminOrderControllerService.getGroupOrderByCondition(req, queryType);
+    public JSONObject getGroupOrderByCondition(@RequestBody JSONObject queryType) {
+        return adminOrderControllerService.getGroupOrderByCondition(queryType);
     }
 
     @PutMapping("/order/deliver-product")
-    public JSONObject updateProductStatueToShip(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
-        return adminOrderControllerService.updateProductStatueToShip(httpServletRequest, requestJSON);
+    public JSONObject updateProductStatueToShip(@RequestBody JSONObject requestJSON) {
+        return adminOrderControllerService.updateProductStatueToShip(requestJSON);
     }
 
     @PutMapping("/order/order-remark")
@@ -44,7 +42,7 @@ public class AdminOrderController {
     }
 
     @PostMapping("/refund-order")
-    public JSONObject refundOrder(@RequestBody JSONObject requestJSON){
+    public JSONObject refundOrder(@RequestBody JSONObject requestJSON) {
         return adminOrderControllerService.refundOrder(requestJSON);
     }
 }
