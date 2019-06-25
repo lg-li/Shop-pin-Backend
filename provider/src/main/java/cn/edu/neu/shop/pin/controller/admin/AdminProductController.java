@@ -244,4 +244,15 @@ public class AdminProductController {
         }
     }
 
+    @PostMapping("/rich-text")
+    public JSONObject getProductRichText(@RequestBody JSONObject requestJSON) {
+        try{
+            Integer productId = requestJSON.getInteger("productId");
+            String richText = requestJSON.getString("richText");
+            productService.updateProductRichTextDescription(productId, richText);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
+        } catch (Exception e) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
 }
