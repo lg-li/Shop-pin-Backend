@@ -103,4 +103,14 @@ public class OrderIndividualController {
         }
     }
 
+    @PostMapping("/refund")
+    public JSONObject refundOrder(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
+        try {
+            PinOrderIndividual orderIndividual = new PinOrderIndividual();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
+        } catch (Exception e) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
 }
