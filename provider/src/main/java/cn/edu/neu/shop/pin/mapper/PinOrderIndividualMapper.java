@@ -2,6 +2,7 @@ package cn.edu.neu.shop.pin.mapper;
 
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.util.base.BaseMapper;
+import com.sun.org.apache.bcel.internal.generic.INEG;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
@@ -36,4 +37,6 @@ public interface PinOrderIndividualMapper extends BaseMapper<PinOrderIndividual>
     void updateRefundSuccess(Integer orderIndividualId);
 
     void updateRefundFailure(Integer orderIndividualId, String refundRefuseReason);
+
+    BigDecimal getOrderPrice(Integer orderIndividualId);
 }

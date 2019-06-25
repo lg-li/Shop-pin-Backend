@@ -113,8 +113,13 @@ public class OrderIndividualController {
             String refundReasonExplain = requestJSON.getString("refundReasonExplain");
             Date date = new Date();
             BigDecimal refundPrice = requestJSON.getBigDecimal("refundPrice");
-            orderIndividualService.updateRefundOrder(orderIndividualId, refundReasonImage, refundReasonExplain, date, refundPrice);
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
+
+            Integer code = orderIndividualService.updateRefundOrder(orderIndividualId, refundReasonImage, refundReasonExplain, date, refundPrice);
+            if(code == 0){
+                return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
+            } else {
+                return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, PinConstants.ResponseMessage.INVALID_DATA, null);
+            }
         } catch (Exception e) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }

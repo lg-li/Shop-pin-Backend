@@ -196,8 +196,14 @@
 
     <update id="updateRefundFailure">
         update pin_order_individual
-        set refund_status = 0, status = 5, refund_refuse_reason = #{refundRefuseReason}
+        set refund_status = 2, status = 5, refund_refuse_reason = #{refundRefuseReason}
         where id = #{orderIndividualId}
     </update>
+
+    <select id="getOrderPrice" resultType="BIGDECIMAL">
+        select total_price
+        from pin_order_individual
+        where id = #{orderIndividualId}
+    </select>
 
 </mapper>
