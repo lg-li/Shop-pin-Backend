@@ -22,6 +22,9 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
     public static final int STATUS_CONFIRM_PERMISSION_DENIED = -1;
     public static final int STATUS_CONFIRM_FAILED = -2;
 
+    public static final int STATUS_ORDER_SUCCESS = 0;
+    public static final int STATUS_ORDER_FAILURE = -1;
+
 
     private final UserRoleListTransferService userRoleListTransferService;
 
@@ -368,5 +371,24 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
 
     public void updateMerchantRemark(Integer orderIndividualId, String merchantRemark) {
         pinOrderIndividualMapper.updateMerchantRemark(orderIndividualId, merchantRemark);
+    }
+
+    public Integer updateRefundOrder(Integer orderIndividualId, String refundReasonImage, String refundReasonExplain, Date date, BigDecimal refundPrice){
+        BigDecimal totalPrice = pinOrderIndividualMapper.getOrderPrice(orderIndividualId);
+        if(totalPrice.compareTo(refundPrice) <= 0){
+            pinOrderIndividualMapper.updateRefundOrder(orderIndividualId, refundReasonImage, refundReasonExplain, date, refundPrice);
+            return STATUS_ORDER_SUCCESS;
+        } else {
+            return STATUS_ORDER_FAILURE;
+        }
+
+    }
+
+    public void updateRefundSuccess(Integer orderIndividualId) {
+        pinOrderIndividualMapper.updateRefundSuccess(orderIndividualId);
+    }
+
+    public void updateRefundFailure(Integer orderIndividualId, String refundRefuseReason) {
+        pinOrderIndividualMapper.updateRefundFailure(orderIndividualId, refundRefuseReason);
     }
 }

@@ -182,4 +182,28 @@
         where id = #{orderIndividualId}
     </update>
 
+    <update id="updateRefundPrice">
+        update pin_order_individual
+        set refund_reason_image = #{refundReasonImage}, refund_reason_explain=#{refundReasonExplain}, refund_apply_time = #{date}, refund_price = #{refundPrice}, refund_status = 1
+        where id = #{orderIndividualId}
+    </update>
+
+    <update id="updateRefundSuccess">
+        update pin_order_individual
+        set refund_status = 2, status = 4
+        where id = #{orderIndividualId}
+    </update>
+
+    <update id="updateRefundFailure">
+        update pin_order_individual
+        set refund_status = 2, status = 5, refund_refuse_reason = #{refundRefuseReason}
+        where id = #{orderIndividualId}
+    </update>
+
+    <select id="getOrderPrice" resultType="BIGDECIMAL">
+        select total_price
+        from pin_order_individual
+        where id = #{orderIndividualId}
+    </select>
+
 </mapper>

@@ -156,7 +156,24 @@ public class AdminOrderController {
             orderGroupService.returnBonus(orderGroupId,maximumDiscount,maximumDiscountOrderNum);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
         } catch (Exception e) {
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, e.getMessage(), null);
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
+    @PostMapping("/refund-order")
+    public JSONObject refundOrder(@RequestBody JSONObject requestJSON) {
+        try{
+            Integer orderIndividualId = requestJSON.getInteger("orderIndividualId");
+            boolean agree = requestJSON.getBoolean("agree");
+            if(agree){
+                orderIndividualService.updateRefundSuccess(orderIndividualId);
+            } else {
+                String refundRefuseReason = requestJSON.getString("refundRefuseReason");
+                orderIndividualService.updateRefundFailure(orderIndividualId, refundRefuseReason);
+            }
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
+        } catch (Exception e) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
     }
 }
