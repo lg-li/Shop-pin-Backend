@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 
@@ -100,6 +102,26 @@ public class OrderIndividualController {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_CREDENTIAL, "用户权限不够！", null);
         } else {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, PinConstants.ResponseMessage.INTERNAL_ERROR, null);
+        }
+    }
+
+    @PostMapping("/refund")
+    public JSONObject refundOrder(@RequestBody JSONObject requestJSON) {
+        try {
+            Integer orderIndividualId = requestJSON.getInteger("orderIndividualId");
+            String refundReasonImage = requestJSON.getString("refundReasonImage");
+            String refundReasonExplain = requestJSON.getString("refundReasonExplain");
+            Date date = new Date();
+            BigDecimal refundPrice = requestJSON.getBigDecimal("refundPrice");
+
+            Integer code = orderIndividualService.updateRefundOrder(orderIndividualId, refundReasonImage, refundReasonExplain, date, refundPrice);
+            if(code == 0){
+                return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
+            } else {
+                return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, PinConstants.ResponseMessage.INVALID_DATA, null);
+            }
+        } catch (Exception e) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
     }
 
