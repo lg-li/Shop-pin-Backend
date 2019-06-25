@@ -1,0 +1,19 @@
+#############################
+# Eureka 负载均衡配置
+#############################
+eureka:
+  instance:
+    appname: ${spring.application.name}
+    instanceId: ${spring.application.name}
+    preferIpAddress: true
+    ipAddress: 127.0.0.1
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    enabled: true
+    serviceUrl:
+      defaultZone: http://127.0.0.1:5681/eureka
+
+spring:
+  main:
+    allow-bean-definition-overriding: true

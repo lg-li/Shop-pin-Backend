@@ -248,7 +248,7 @@ public class ProductService extends AbstractService<PinProduct> {
     /**
      * @author LLG
      * 将富文本描述保存到 Mongo DB
-     * 
+     *
      * @param productId 产品ID
      * @param richText 要保存的富文本字符串
      */
