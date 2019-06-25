@@ -369,4 +369,16 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
     public void updateMerchantRemark(Integer orderIndividualId, String merchantRemark) {
         pinOrderIndividualMapper.updateMerchantRemark(orderIndividualId, merchantRemark);
     }
+
+    public void updateRefundOrder(Integer orderIndividualId, String refundReasonImage, String refundReasonExplain, Date date, BigDecimal refundPrice){
+        pinOrderIndividualMapper.updateRefundOrder(orderIndividualId, refundReasonImage, refundReasonExplain, date, refundPrice);
+    }
+
+    public void updateRefundSuccess(Integer orderIndividualId) {
+        pinOrderIndividualMapper.updateRefundSuccess(orderIndividualId);
+    }
+
+    public void updateRefundFailure(Integer orderIndividualId, String refundRefuseReason) {
+        pinOrderIndividualMapper.updateRefundFailure(orderIndividualId, refundRefuseReason);
+    }
 }

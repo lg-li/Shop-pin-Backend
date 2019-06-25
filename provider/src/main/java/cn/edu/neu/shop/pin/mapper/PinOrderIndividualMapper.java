@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -29,4 +30,10 @@ public interface PinOrderIndividualMapper extends BaseMapper<PinOrderIndividual>
     void updateOrderDeliveryTypeIsExpress(Integer orderIndividualId, String deliveryType, String deliveryName, Integer deliveryId, Date deliveryTime);
 
     void updateMerchantRemark(Integer orderIndividualId, String merchantRemark);
+
+    void updateRefundOrder(Integer orderIndividualId,String refundReasonImage, String refundReasonExplain, Date date, BigDecimal refundPrice);
+
+    void updateRefundSuccess(Integer orderIndividualId);
+
+    void updateRefundFailure(Integer orderIndividualId, String refundRefuseReason);
 }
