@@ -70,6 +70,22 @@ public class UserBalanceService extends AbstractService<PinUserBalanceRecord> {
         save(newBalanceRecord);
     }
 
+    @Transactional
+    public void returnRefundBalanceFromIndividualOrder(Integer userId, Integer fromOrderIndividualId, BigDecimal refundAmount) {
+        PinUser userToOperate = userMapper.findById(userId);
+        //增加用户记录的余额
+        userToOperate.setBalance(userToOperate.getBalance().add(refundAmount));
+        //更新数据库记录
+        userMapper.updateByPrimaryKey(userToOperate);
+        //动账操作
+        PinUserBalanceRecord newBalanceRecord = getNewBalanceRecord(userId, fromOrderIndividualId);
+        //返现金额类型
+        newBalanceRecord.setChangedAmount(refundAmount);
+        newBalanceRecord.setType(PinUserBalanceRecord.TYPE_REFUND);
+        save(newBalanceRecord);
+
+    }
+
     private PinUserBalanceRecord getNewBalanceRecord(Integer userId, Integer fromOrderIndividualId) {
         PinUserBalanceRecord newBalanceRecord = new PinUserBalanceRecord();
         newBalanceRecord.setUserId(userId);

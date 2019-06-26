@@ -36,6 +36,4 @@ public interface PinOrderIndividualMapper extends BaseMapper<PinOrderIndividual>
     void updateRefundSuccess(Integer orderIndividualId);
 
     void updateRefundFailure(Integer orderIndividualId, String refundRefuseReason);
-
-    BigDecimal getOrderPrice(Integer orderIndividualId);
 }

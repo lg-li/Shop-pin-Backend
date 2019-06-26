@@ -9,7 +9,6 @@ import cn.edu.neu.shop.pin.service.OrderIndividualService;
 import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -161,12 +160,14 @@ public class AdminOrderController {
     }
 
     @PostMapping("/refund-order")
-    public JSONObject refundOrder(@RequestBody JSONObject requestJSON) {
+    public JSONObject refundOrder(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
         try{
+            PinUser user = userService.whoAmI(httpServletRequest);
             Integer orderIndividualId = requestJSON.getInteger("orderIndividualId");
             boolean agree = requestJSON.getBoolean("agree");
+            PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
             if(agree){
-                orderIndividualService.updateRefundSuccess(orderIndividualId);
+                orderIndividualService.updateRefundSuccess(user.getId(), orderIndividualId);
             } else {
                 String refundRefuseReason = requestJSON.getString("refundRefuseReason");
                 orderIndividualService.updateRefundFailure(orderIndividualId, refundRefuseReason);

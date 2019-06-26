@@ -9,7 +9,7 @@ public class PinUserBalanceRecord {
     public static final int TYPE_RETURN_BONUS = 0;
     public static final int TYPE_DISCOUNT_ON_ORDER = 1;
     public static final int TYPE_TOP_UP = 2;
-
+    public static final int TYPE_REFUND = 3;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -8,6 +8,7 @@ import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.model.PinOrderItem;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.model.PinUserAddress;
+import cn.edu.neu.shop.pin.service.finance.UserBalanceService;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.stereotype.Service;
@@ -36,15 +37,21 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
 
     private final AddressService addressService;
 
+    private final OrderIndividualService orderIndividualService;
+
     private final PinOrderIndividualMapper pinOrderIndividualMapper;
 
-    public OrderIndividualService(UserRoleListTransferService userRoleListTransferService, ProductService productService, StoreService storeService, OrderItemService orderItemService, AddressService addressService, PinOrderIndividualMapper pinOrderIndividualMapper) {
+    private final UserBalanceService userBalanceService;
+
+    public OrderIndividualService(UserRoleListTransferService userRoleListTransferService, ProductService productService, StoreService storeService, OrderItemService orderItemService, AddressService addressService, OrderIndividualService orderIndividualService, PinOrderIndividualMapper pinOrderIndividualMapper, UserBalanceService userBalanceService) {
         this.userRoleListTransferService = userRoleListTransferService;
         this.productService = productService;
         this.storeService = storeService;
         this.orderItemService = orderItemService;
         this.addressService = addressService;
+        this.orderIndividualService = orderIndividualService;
         this.pinOrderIndividualMapper = pinOrderIndividualMapper;
+        this.userBalanceService = userBalanceService;
     }
 
     /**
@@ -374,7 +381,8 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
     }
 
     public Integer updateRefundOrder(Integer orderIndividualId, String refundReasonImage, String refundReasonExplain, Date date, BigDecimal refundPrice){
-        BigDecimal totalPrice = pinOrderIndividualMapper.getOrderPrice(orderIndividualId);
+        PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
+        BigDecimal totalPrice = orderIndividual.getRefundPrice();
         if(totalPrice.compareTo(refundPrice) <= 0){
             pinOrderIndividualMapper.updateRefundOrder(orderIndividualId, refundReasonImage, refundReasonExplain, date, refundPrice);
             return STATUS_ORDER_SUCCESS;
@@ -384,8 +392,10 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
 
     }
 
-    public void updateRefundSuccess(Integer orderIndividualId) {
+    public void updateRefundSuccess(Integer userId, Integer orderIndividualId) {
+        PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
         pinOrderIndividualMapper.updateRefundSuccess(orderIndividualId);
+        userBalanceService.returnRefundBalanceFromIndividualOrder(userId, orderIndividualId, orderIndividual.getRefundPrice());
     }
 
     public void updateRefundFailure(Integer orderIndividualId, String refundRefuseReason) {

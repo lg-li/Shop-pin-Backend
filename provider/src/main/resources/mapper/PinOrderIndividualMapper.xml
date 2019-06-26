@@ -200,10 +200,4 @@
         where id = #{orderIndividualId}
     </update>
 
-    <select id="getOrderPrice" resultType="BIGDECIMAL">
-        select total_price
-        from pin_order_individual
-        where id = #{orderIndividualId}
-    </select>
-
 </mapper>
