@@ -37,19 +37,17 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
 
     private final AddressService addressService;
 
-    private final OrderIndividualService orderIndividualService;
 
     private final PinOrderIndividualMapper pinOrderIndividualMapper;
 
     private final UserBalanceService userBalanceService;
 
-    public OrderIndividualService(UserRoleListTransferService userRoleListTransferService, ProductService productService, StoreService storeService, OrderItemService orderItemService, AddressService addressService, OrderIndividualService orderIndividualService, PinOrderIndividualMapper pinOrderIndividualMapper, UserBalanceService userBalanceService) {
+    public OrderIndividualService(UserRoleListTransferService userRoleListTransferService, ProductService productService, StoreService storeService, OrderItemService orderItemService, AddressService addressService, PinOrderIndividualMapper pinOrderIndividualMapper, UserBalanceService userBalanceService) {
         this.userRoleListTransferService = userRoleListTransferService;
         this.productService = productService;
         this.storeService = storeService;
         this.orderItemService = orderItemService;
         this.addressService = addressService;
-        this.orderIndividualService = orderIndividualService;
         this.pinOrderIndividualMapper = pinOrderIndividualMapper;
         this.userBalanceService = userBalanceService;
     }
@@ -381,7 +379,7 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
     }
 
     public Integer updateRefundOrder(Integer orderIndividualId, String refundReasonImage, String refundReasonExplain, Date date, BigDecimal refundPrice){
-        PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
+        PinOrderIndividual orderIndividual = findById(orderIndividualId);
         BigDecimal totalPrice = orderIndividual.getRefundPrice();
         if(totalPrice.compareTo(refundPrice) <= 0){
             pinOrderIndividualMapper.updateRefundOrder(orderIndividualId, refundReasonImage, refundReasonExplain, date, refundPrice);
@@ -393,7 +391,7 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
     }
 
     public void updateRefundSuccess(Integer userId, Integer orderIndividualId) {
-        PinOrderIndividual orderIndividual = orderIndividualService.findById(orderIndividualId);
+        PinOrderIndividual orderIndividual = findById(orderIndividualId);
         pinOrderIndividualMapper.updateRefundSuccess(orderIndividualId);
         userBalanceService.returnRefundBalanceFromIndividualOrder(userId, orderIndividualId, orderIndividual.getRefundPrice());
     }
