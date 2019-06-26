@@ -226,18 +226,12 @@ public class AdminProductController {
     public JSONObject updateProductIsShownStatus(@RequestBody JSONObject requestJSON) {
         try {
             Integer productId = requestJSON.getInteger("productId");
-            productService.updateProductIsShownStatus(productId);
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
-        } catch (Exception e) {
-            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
-        }
-    }
-
-    @PutMapping("/is-not-shown")
-    public JSONObject updateProductIsNotShownStatus(@RequestBody JSONObject requestJSON) {
-        try {
-            Integer productId = requestJSON.getInteger("productId");
-            productService.updateProductIsNotShownStatus(productId);
+            Integer choice = requestJSON.getInteger("choice");
+            if(choice == 0){
+                productService.updateProductIsShownStatus(productId);
+            } else {
+                productService.updateProductIsNotShownStatus(productId);
+            }
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
         } catch (Exception e) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
