@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/admin")
 public class AdminOrderController {
-    @Autowired
-    AdminOrderControllerService adminOrderControllerService;
+    private AdminOrderControllerService adminOrderControllerService;
 
     @Autowired
     public AdminOrderController(

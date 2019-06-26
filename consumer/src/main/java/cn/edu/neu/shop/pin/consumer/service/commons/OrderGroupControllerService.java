@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Service
-@FeignClient(value = "Pin-Provider")
+//@FeignClient(value = "Pin-Provider")
 public interface OrderGroupControllerService {
     @RequestMapping(value = "/commons/order-group/create", method = RequestMethod.POST)
     JSONObject createOrderGroup(@RequestBody JSONObject jsonObject);

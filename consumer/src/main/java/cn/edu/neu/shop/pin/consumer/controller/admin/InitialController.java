@@ -19,8 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping(value = "/manager")
 public class InitialController {
-    @Autowired
-    InitialControllerService initialControllerService;
+    private InitialControllerService initialControllerService;
 
     @Autowired
     public InitialController(
