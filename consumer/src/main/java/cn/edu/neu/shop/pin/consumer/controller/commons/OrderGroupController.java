@@ -1,8 +1,14 @@
 package cn.edu.neu.shop.pin.consumer.controller.commons;
 
+import cn.edu.neu.shop.pin.consumer.service.admin.InitialControllerService;
 import cn.edu.neu.shop.pin.consumer.service.commons.OrderGroupControllerService;
 import com.alibaba.fastjson.JSONObject;
+import feign.Client;
+import feign.Feign;
+import feign.codec.Decoder;
+import feign.codec.Encoder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.openfeign.support.SpringMvcContract;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -10,6 +16,16 @@ import org.springframework.web.bind.annotation.*;
 public class OrderGroupController {
     @Autowired
     OrderGroupControllerService orderGroupControllerService;
+
+    @Autowired
+    public OrderGroupController(
+            Decoder decoder, Encoder encoder, Client client) {
+        this.orderGroupControllerService = Feign.builder().client(client)
+                .encoder(encoder)
+                .decoder(decoder)
+                .contract(new SpringMvcContract())
+                .target(OrderGroupControllerService.class, "http://Pin-Provider");
+    }
 
     @PostMapping("/create")
     public JSONObject createOrderGroup(@RequestBody JSONObject jsonObject) {
