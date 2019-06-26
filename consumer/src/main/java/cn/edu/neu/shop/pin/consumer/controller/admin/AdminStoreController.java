@@ -8,10 +8,13 @@ import feign.Feign;
 import feign.codec.Decoder;
 import feign.codec.Encoder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.openfeign.FeignClientsConfiguration;
 import org.springframework.cloud.openfeign.support.SpringMvcContract;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@Import(FeignClientsConfiguration.class)
 @RestController
 @RequestMapping(value = "/manager/store")
 public class AdminStoreController {
