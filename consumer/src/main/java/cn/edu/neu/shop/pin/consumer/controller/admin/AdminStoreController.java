@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(value = "/manager/store")
 public class AdminStoreController {
-    @Autowired
-    AdminStoreControllerService adminStoreControllerService;
+    private AdminStoreControllerService adminStoreControllerService;
 
     @Autowired
     public AdminStoreController(

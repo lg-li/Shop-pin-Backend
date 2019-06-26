@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(value = "/goods")
 public class AdminProductController {
-    @Autowired
-    AdminProductControllerService adminProductControllerService;
+    private AdminProductControllerService adminProductControllerService;
 
     @Autowired
     public AdminProductController(

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Service
-@FeignClient(value = "Pin-Provider")
+//@FeignClient(value = "Pin-Provider")
 public interface AdminStoreControllerService {
     @RequestMapping(value = "/manager/store/storeList", method = RequestMethod.GET)
     JSONObject getProducts();

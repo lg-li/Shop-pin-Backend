@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(value = "/commons/order-group")
 public class OrderGroupController {
-    @Autowired
-    OrderGroupControllerService orderGroupControllerService;
+    private OrderGroupControllerService orderGroupControllerService;
 
     @Autowired
     public OrderGroupController(

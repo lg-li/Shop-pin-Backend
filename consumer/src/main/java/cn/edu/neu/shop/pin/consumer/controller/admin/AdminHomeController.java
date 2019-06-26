@@ -18,8 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Import(FeignClientsConfiguration.class)
 @RestController
 public class AdminHomeController {
-    @Autowired
-    AdminHomeControllerService adminHomeControllerService;
+    private AdminHomeControllerService adminHomeControllerService;
 
     @Autowired
     public AdminHomeController(
