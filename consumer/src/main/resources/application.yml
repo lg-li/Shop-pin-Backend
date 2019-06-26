@@ -14,6 +14,6 @@ eureka:
     serviceUrl:
       defaultZone: http://127.0.0.1:5681/eureka
 
-spring:
-  main:
-    allow-bean-definition-overriding: true
+#spring:
+#  main:
+#    allow-bean-definition-overriding: true
