@@ -17,7 +17,7 @@
   <insert id="insertProductAttributeValue" parameterType="PinProductAttributeValue"
           useGeneratedKeys="true" keyProperty="id">
     insert into pin_product_attribute_value (
-        product_id, sku, stock, changedAmount, image_url, cost
+        product_id, sku, stock, price, image_url, cost
     )
     values (
         #{productId}, #{sku}, #{stock}, #{changedAmount}, #{imageUrl}, #{cost}

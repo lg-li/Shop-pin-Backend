@@ -26,12 +26,6 @@
 
   </insert>
 
-  <select id="getUnsubmittedOrderItemByUserIdAndProductId" resultMap="BaseResultMap">
-    select *
-    from order_item
-    where user_id = #{userId} and product_id = #{productId} and is_submitted = 1
-  </select>
-
   <update id="addAmountInExistingOrderItem">
     update pin_order_item
     set amount = amount + #{amount},
