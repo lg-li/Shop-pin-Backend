@@ -1,3 +1,26 @@
+##################################
+# spring cloud stream binders配置
+##################################
+spring:
+  rabbitmq:
+    host: pin.cheelem.com
+    port: 5672
+    username: admin
+    password: pwd
+  cloud:
+    stream:
+      binders:
+        defaultRabbit:
+          type: rabbit
+      bindings:
+        websocketMessageIn:
+          destination: websocketMessage
+          binder: defaultRabbit
+        websocketMessageOut:
+          destination: websocketMessage
+          binder: defaultRabbit
+# 这红的估计是IDE自己有问题
+
 #############################
 # Eureka 负载均衡配置
 #############################
