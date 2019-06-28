@@ -1,6 +1,8 @@
 package cn.edu.neu.shop.pin.consumer.controller.commons;
 
+import cn.edu.neu.shop.pin.consumer.factory.FeignClientFactory;
 import cn.edu.neu.shop.pin.consumer.service.commons.OrderIndividualControllerService;
+import cn.edu.neu.shop.pin.consumer.service.commons.OrderItemControllerService;
 import cn.edu.neu.shop.pin.consumer.service.commons.PaymentControllerService;
 import com.alibaba.fastjson.JSONObject;
 import feign.Client;
@@ -27,11 +29,9 @@ public class PaymentController {
     @Autowired
     public PaymentController(
             Decoder decoder, Encoder encoder, Client client) {
-        this.paymentControllerService = Feign.builder().client(client)
-                .encoder(encoder)
-                .decoder(decoder)
-                .contract(new SpringMvcContract())
-                .target(PaymentControllerService.class, "http://Pin-Provider");
+        this.paymentControllerService = FeignClientFactory.getFeignClient(
+                decoder, encoder, client,
+                PaymentControllerService.class);
     }
 
     @PostMapping(value = "/unified-pay")

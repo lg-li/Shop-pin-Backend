@@ -1,6 +1,8 @@
 package cn.edu.neu.shop.pin.consumer.controller;
 
+import cn.edu.neu.shop.pin.consumer.factory.FeignClientFactory;
 import cn.edu.neu.shop.pin.consumer.service.SignInControllerService;
+import cn.edu.neu.shop.pin.consumer.service.SignUpControllerService;
 import cn.edu.neu.shop.pin.consumer.service.UploadControllerService;
 import cn.edu.neu.shop.pin.consumer.service.security.UserControllerService;
 import com.alibaba.fastjson.JSONObject;
@@ -27,11 +29,9 @@ public class UploadController {
     @Autowired
     public UploadController(
             Decoder decoder, Encoder encoder, Client client) {
-        this.uploadControllerService = Feign.builder().client(client)
-                .encoder(encoder)
-                .decoder(decoder)
-                .contract(new SpringMvcContract())
-                .target(UploadControllerService.class, "http://Pin-Provider");
+        this.uploadControllerService = FeignClientFactory.getFeignClient(
+                decoder, encoder, client,
+                UploadControllerService.class);
     }
 
     @PostMapping("/image/base64")

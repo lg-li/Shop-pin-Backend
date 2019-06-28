@@ -1,5 +1,6 @@
 package cn.edu.neu.shop.pin.consumer.controller.commons;
 
+import cn.edu.neu.shop.pin.consumer.factory.FeignClientFactory;
 import cn.edu.neu.shop.pin.consumer.service.commons.UserAddressControllerService;
 import cn.edu.neu.shop.pin.consumer.service.commons.UserBasicInfoControllerService;
 import com.alibaba.fastjson.JSONObject;
@@ -24,11 +25,9 @@ public class UserBasicInfoController {
     @Autowired
     public UserBasicInfoController(
             Decoder decoder, Encoder encoder, Client client) {
-        this.userBasicInfoControllerService = Feign.builder().client(client)
-                .encoder(encoder)
-                .decoder(decoder)
-                .contract(new SpringMvcContract())
-                .target(UserBasicInfoControllerService.class, "http://Pin-Provider");
+        this.userBasicInfoControllerService = FeignClientFactory.getFeignClient(
+                decoder, encoder, client,
+                UserBasicInfoControllerService.class);
     }
 
     @GetMapping("/info")
