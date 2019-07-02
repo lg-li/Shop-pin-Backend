@@ -47,12 +47,12 @@
         where order_group_id = #{order_group_id}
     </select>
 
-    <!--  查询近三月的OrderIndividual记录  -->
+    <!--  查询近三月的OrderIndividual记录，按时间倒序排列 -->
     <select id="getRecentThreeMonthsOrderIndividuals" resultMap="BaseResultMap">
         select *
         from pin_order_individual
         where create_time > DATE_SUB(CURDATE(), INTERVAL 3 MONTH)
-          and user_id = #{userId}
+          and user_id = #{userId} order by create_time desc
     </select>
 
     <!-- 根据输入日期 获取该店铺这一天的订单数-->

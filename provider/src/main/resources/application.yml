@@ -13,15 +13,12 @@ server:
 eureka:
   instance:
     appname: ${spring.application.name}
-    instanceId: ${spring.application.name}
-    preferIpAddress: true
-    ipAddress: 127.0.0.1
   client:
     fetchRegistry: true
     registerWithEureka: true
     enabled: true
     serviceUrl:
-      defaultZone: http://127.0.0.1:5681/eureka
+      defaultZone: http://pin.cheelem.com:5686/eureka
 
 #############################
 # MyBatis 配置

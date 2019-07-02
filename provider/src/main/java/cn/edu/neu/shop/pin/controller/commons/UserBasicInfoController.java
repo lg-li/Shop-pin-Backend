@@ -147,6 +147,7 @@ public class UserBasicInfoController {
         PinUser user = userService.whoAmI(httpServletRequest);
         JSONArray jsonArray = requestJSON.getJSONArray("comments");
         List<PinUserProductComment> comments = new ArrayList<>();
+        // 预处理数据
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject jo = jsonArray.getJSONObject(i);
             PinUserProductComment comment = new PinUserProductComment();
@@ -160,7 +161,6 @@ public class UserBasicInfoController {
             comment.setImagesUrls(jo.getString("imagesUrls"));
             comments.add(comment);
         }
-//        List<PinUserProductComment> comments = jsonArray.toJavaList(PinUserProductComment.class);
         try {
             productCommentService.addComments(user.getId(), comments);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "评论成功！", null);

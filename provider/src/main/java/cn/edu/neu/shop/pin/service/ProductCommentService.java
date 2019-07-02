@@ -6,6 +6,7 @@ import cn.edu.neu.shop.pin.mapper.PinProductAttributeValueMapper;
 import cn.edu.neu.shop.pin.mapper.PinUserProductCommentMapper;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.model.PinUserProductComment;
+import cn.edu.neu.shop.pin.nlp.NLPUtil;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
@@ -62,10 +63,20 @@ public class ProductCommentService extends AbstractService<PinUserProductComment
             commentSample.setOrderIndividualId(orderIndividualId);
             commentSample.setSkuId(skuId);
             PinUserProductComment checkIfExists = pinUserProductCommentMapper.selectOne(commentSample);
+            // 加入评论观点分析
+            try {
+                comment.setCommentTag(NLPUtil.analyzeCommentTag(comment.getContent()));
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
             if (checkIfExists != null) { // 如果评论已存在，则覆盖更新这条评论
                 comment.setId(checkIfExists.getId());
                 this.update(comment);
-            } else { // 新鲜的评论
+                // 更新订单状态
+                orderIndividual.setStatus(PinOrderIndividual.STATUS_COMMENTED);
+                orderIndividualService.update(orderIndividual);
+            } else {
+                // 新鲜的评论
                 // 由于前端只返回了skuId而没有返回productId，因此需要根据skuId找到其对应的productId
                 comment.setProductId(pinProductAttributeValueMapper.selectByPrimaryKey(skuId).getProductId());
                 comment.setUserId(userId);

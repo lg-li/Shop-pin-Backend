@@ -19,6 +19,7 @@
     <result column="merchant_comment_time" jdbcType="TIMESTAMP" property="merchantCommentTime" />
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
     <result column="images_urls" jdbcType="LONGVARCHAR" property="imagesUrls" />
+    <result column="comment_tag" jdbcType="LONGVARCHAR" property="commentTag" />
   </resultMap>
 
   <resultMap id="PinGetCommentAndUserInfo" type="com.alibaba.fastjson.JSONObject">
@@ -38,6 +39,7 @@
     <result column="merchant_comment_time" jdbcType="TIMESTAMP" property="merchantCommentTime" />
     <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
     <result column="images_urls" jdbcType="LONGVARCHAR" property="imagesUrls" />
+    <result column="comment_tag" jdbcType="LONGVARCHAR" property="commentTag" />
   </resultMap>
 
   <resultMap id="PinGetAllProductWithComment" type="com.alibaba.fastjson.JSONObject">

@@ -241,10 +241,12 @@ public class ProductService extends AbstractService<PinProduct> {
      * @return 富文本字符串
      */
     public String getProductRichTextDescription(Integer productId) {
-        Optional<ProductRichTextDescription> productRichTextDescriptionOptional = productRichTextRepository.findById(productId);
+        Optional<ProductRichTextDescription> productRichTextDescriptionOptional =
+                productRichTextRepository.findById(productId);
         if(productRichTextDescriptionOptional.isPresent()){
             return productRichTextDescriptionOptional.get().getContent();
         } else {
+            // 不存在记录则返回空字符串
             return "";
         }
     }
@@ -257,7 +259,8 @@ public class ProductService extends AbstractService<PinProduct> {
      * @param richText 要保存的富文本字符串
      */
     public void updateProductRichTextDescription(Integer productId, String richText) {
-        Optional<ProductRichTextDescription> productRichTextDescriptionOptional = productRichTextRepository.findById(productId);
+        Optional<ProductRichTextDescription> productRichTextDescriptionOptional =
+                productRichTextRepository.findById(productId);
         Date now = new Date();
         if(productRichTextDescriptionOptional.isPresent()){
             ProductRichTextDescription productRichTextDescription = productRichTextDescriptionOptional.get();

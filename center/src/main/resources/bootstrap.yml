@@ -2,19 +2,17 @@ spring:
   application:
     name: pin-center
 server:
-  port: 5681
+  port: 5686
 
 eureka:
   server:
     enableSelfPreservation: true
     evictionIntervalTimerInMs: 60000
   instance:
-    hostname: 127.0.0.1
+    hostname: pin.cheelem.com
     appname: ${spring.application.name}
-    preferIpAddress: true
     leaseRenewalIntervalInSeconds: 5
     leaseExpirationDurationInSeconds: 15
-    ipAddress: 127.0.0.1
   client:
     serviceUrl:
       defaultZone: http://${eureka.instance.hostname}:5681/eureka
