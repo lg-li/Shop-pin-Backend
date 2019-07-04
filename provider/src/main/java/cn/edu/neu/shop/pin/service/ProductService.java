@@ -10,6 +10,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,11 @@ import java.util.Optional;
  */
 @Component
 public class ProductService extends AbstractService<PinProduct> {
+
+    @Autowired
+    private PinUserProductVisitRecordMapper pinUserProductVisitRecordMapper;
+    @Autowired
+    private PinOrderItemMapper pinOrderItemMapper;
 
     private final PinProductMapper pinProductMapper;
 
@@ -88,7 +94,7 @@ public class ProductService extends AbstractService<PinProduct> {
      */
     public JSONObject getProductByIdWithOneComment(Integer productId) {
         PinProduct product = getProductById(productId);
-        if(product==null){
+        if (product == null) {
             return null;
         }
         PinStore store = storeService.findById(product.getStoreId());
@@ -275,16 +281,15 @@ public class ProductService extends AbstractService<PinProduct> {
     }
 
     /**
-     * @author LLG
-     * 获取来自MongoDB的产品富文描述
-     *
      * @param productId 产品ID
      * @return 富文本字符串
+     * @author LLG
+     * 获取来自MongoDB的产品富文描述
      */
     public String getProductRichTextDescription(Integer productId) {
         Optional<ProductRichTextDescription> productRichTextDescriptionOptional =
                 productRichTextRepository.findById(productId);
-        if(productRichTextDescriptionOptional.isPresent()){
+        if (productRichTextDescriptionOptional.isPresent()) {
             return productRichTextDescriptionOptional.get().getContent();
         } else {
             // 不存在记录则返回空字符串
@@ -293,17 +298,16 @@ public class ProductService extends AbstractService<PinProduct> {
     }
 
     /**
+     * @param productId 产品ID
+     * @param richText  要保存的富文本字符串
      * @author LLG
      * 将富文本描述保存到 Mongo DB
-     *
-     * @param productId 产品ID
-     * @param richText 要保存的富文本字符串
      */
     public void updateProductRichTextDescription(Integer productId, String richText) {
         Optional<ProductRichTextDescription> productRichTextDescriptionOptional =
                 productRichTextRepository.findById(productId);
         Date now = new Date();
-        if(productRichTextDescriptionOptional.isPresent()){
+        if (productRichTextDescriptionOptional.isPresent()) {
             ProductRichTextDescription productRichTextDescription = productRichTextDescriptionOptional.get();
             productRichTextDescription.setContent(richText);
             productRichTextDescription.setEditTime(now);
