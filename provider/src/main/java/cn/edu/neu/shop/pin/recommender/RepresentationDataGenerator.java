@@ -4,9 +4,12 @@ import cn.edu.neu.shop.pin.model.PinProduct;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.mongo.document.UserProductInteraction;
 import cn.edu.neu.shop.pin.mongo.repository.UserProductInteractionRepository;
+import cn.edu.neu.shop.pin.nlp.NLPUtil;
 import cn.edu.neu.shop.pin.service.ProductService;
 import cn.edu.neu.shop.pin.service.security.UserService;
 import com.alibaba.fastjson.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,6 +24,9 @@ import java.util.List;
 @Component
 public class RepresentationDataGenerator {
 
+    private static Logger logger = LoggerFactory.getLogger(RepresentationDataGenerator.class);
+
+
     private final UserService userService;
     private final ProductService productService;
     private final UserProductInteractionRepository userProductInteractionRepository;
@@ -32,6 +38,7 @@ public class RepresentationDataGenerator {
 
     @Autowired
     public RepresentationDataGenerator(UserService userService, ProductService productService, UserProductInteractionRepository userProductInteractionRepository) {
+        logger.info("表征生成器初始化");
         this.userService = userService;
         this.productService = productService;
         this.userProductInteractionRepository = userProductInteractionRepository;
@@ -46,6 +53,7 @@ public class RepresentationDataGenerator {
      * @return 表征数据
      */
     public JSONObject generateAllRepresentation() {
+        logger.info("开始生成推荐表征");
         JSONObject reps = new JSONObject();
         reps.put("interaction", generateInteractionRepresentation());
         reps.put("user", generateUserRepresentation());
@@ -59,11 +67,16 @@ public class RepresentationDataGenerator {
      * @return 用户表征数据
      */
     private JSONObject generateUserRepresentation() {
+        logger.info("生成用户表征...");
         List<PinUser> userList = userService.findAll();
+        List<Integer> userIds = new ArrayList<>();
         List<Integer> userRepRow = new ArrayList<>();
         List<Integer> userRepCol = new ArrayList<>();
         List<Integer> userRepData = new ArrayList<>();
         for (PinUser user : userList) {
+            // 添加 USER ID 便于存储 rank 标记
+            userIds.add(user.getId());
+
             userRepRow.add(user.getId());
             userRepCol.add(USER_GENDER);
             userRepData.add(user.getGender());
@@ -76,7 +89,9 @@ public class RepresentationDataGenerator {
             userRepCol.add(USER_CREDIT_CLASS);
             userRepData.add(user.getCredit());
         }
-        return packRepData(userRepRow, userRepCol, userRepData);
+        JSONObject userReps = packRepData(userRepRow, userRepCol, userRepData);
+        userReps.put("ids", userIds);
+        return userReps;
     }
 
     // 商品表征：分类ID，价格，销量，访问量，好评率，产品得分
@@ -94,6 +109,7 @@ public class RepresentationDataGenerator {
      * @return 商品表征
      */
     private JSONObject generateProductRepresentation() {
+        logger.info("生成商品表征...");
         List<PinProduct> productList = productService.findAll();
         List<Integer> productRepRow = new ArrayList<>();
         List<Integer> productRepCol = new ArrayList<>();
@@ -132,6 +148,7 @@ public class RepresentationDataGenerator {
      * @return 交互表征
      */
     private JSONObject generateInteractionRepresentation() {
+        logger.info("生成交互表征...");
         List<UserProductInteraction> interactionList = userProductInteractionRepository.findAll();
         List<Integer> interactionRepRow = new ArrayList<>();
         List<Integer> interactionRepCol = new ArrayList<>();
