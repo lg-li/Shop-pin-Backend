@@ -39,52 +39,45 @@ public class ImgUtil {
     }
 
     public static String upload(String image) {
-
         Base64.Decoder decoder = Base64.getDecoder();
         byte[] rawBytes = decoder.decode(image.substring(22));
-
-        String fileName = "" + System.currentTimeMillis() + ".png";
-        File file = new File("D://" + fileName);
+        String fileName = "img-" + System.currentTimeMillis() + ".png";
+//        File file = new File("D://" + fileName);
         String filePath = "Upload error";
+//
+//        BufferedOutputStream bos = null;
+//        java.io.FileOutputStream fos = null;
+//        try {
+//            fos = new java.io.FileOutputStream(file);
+//        } catch (FileNotFoundException e) {
+//            e.printStackTrace();
+//        }
+//        bos = new BufferedOutputStream(fos);
+//        try {
+//            bos.write(rawBytes);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
-        BufferedOutputStream bos = null;
-        java.io.FileOutputStream fos = null;
         try {
-            fos = new java.io.FileOutputStream(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        bos = new BufferedOutputStream(fos);
-        try {
-            bos.write(rawBytes);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        try {
-
-            FileInputStream fileReader = new FileInputStream("D://" + fileName);
             String ext = "png";
-            byte[] bytes = new byte[10000000];//10M
-            int length = fileReader.read(bytes);
-            FastDFSFile fastDFSfile = new FastDFSFile(bytes,ext);
+            FastDFSFile fastDFSfile = new FastDFSFile(rawBytes,ext);
+            long length = rawBytes.length;
             NameValuePair[] meta_list = new NameValuePair[4];
             meta_list[0] = new NameValuePair("fileName", fileName);
             meta_list[1] = new NameValuePair("fileLength", String.valueOf(length));
             meta_list[2] = new NameValuePair("fileExt", ext);
             meta_list[3] = new NameValuePair("fileAuthor", "PinMerchant");
             logger.info("开始上传图片"+fileName+" 大小："+length+"bytes");
-            filePath = FileManager.upload(fastDFSfile,meta_list);
+            filePath = FileManager.upload(fastDFSfile, meta_list);
             logger.info("上传完毕"+filePath);
 //            RestTemplate restTemplate = new RestTemplate();
 //            ResponseEntity<JSONObject> responseEntity = restTemplate.postForEntity(url, requestEntity, JSONObject.class);
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            return filePath;
         }
+        return filePath;
+
 
 //        FileSystemResource fileResource = new FileSystemResource(new File("D://" + fileName));
 //
