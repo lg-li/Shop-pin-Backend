@@ -58,6 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/sign-up/**").permitAll()
                 .antMatchers("/pin-websocket/**").permitAll()
                 .antMatchers("/manager/store/**").permitAll()
+                .antMatchers("/sadmin/**").permitAll()
                 .anyRequest().authenticated();
 
         // If a user try to access a resource without having enough permissions

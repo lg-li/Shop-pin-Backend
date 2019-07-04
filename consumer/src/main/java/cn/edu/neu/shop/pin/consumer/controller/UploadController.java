@@ -35,7 +35,7 @@ public class UploadController {
     }
 
     @PostMapping("/image/base64")
-    public ResponseEntity<JSONObject> uploadStoreInfo(@RequestBody JSONObject uploadingInfo) {
+    public JSONObject uploadStoreInfo(@RequestBody JSONObject uploadingInfo) {
         return uploadControllerService.uploadStoreInfo(uploadingInfo);
     }
 }

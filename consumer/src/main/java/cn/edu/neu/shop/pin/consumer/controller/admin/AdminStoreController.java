@@ -50,7 +50,7 @@ public class AdminStoreController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<JSONObject> uploadStoreInfo(@RequestBody JSONObject uploadingInfo) {
+    public JSONObject uploadStoreInfo(@RequestBody JSONObject uploadingInfo) {
         return adminStoreControllerService.uploadStoreImage(uploadingInfo);
     }
 
