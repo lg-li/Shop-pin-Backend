@@ -36,8 +36,10 @@ public class ProductService extends AbstractService<PinProduct> {
 
     private final ProductRichTextRepository productRichTextRepository;
 
+    private final UserProductRecordService userProductRecordService;
+
     @Autowired
-    public ProductService(PinProductMapper pinProductMapper, PinProductAttributeDefinitionMapper pinProductAttributeDefinitionMapper, PinProductAttributeValueMapper pinProductAttributeValueMapper, PinUserProductCollectionMapper pinUserProductCollectionMapper, PinUserProductCommentMapper pinUserProductCommentMapper, StoreService storeService, ProductRichTextRepository productRichTextRepository) {
+    public ProductService(PinProductMapper pinProductMapper, PinProductAttributeDefinitionMapper pinProductAttributeDefinitionMapper, PinProductAttributeValueMapper pinProductAttributeValueMapper, PinUserProductCollectionMapper pinUserProductCollectionMapper, PinUserProductCommentMapper pinUserProductCommentMapper, StoreService storeService, ProductRichTextRepository productRichTextRepository, UserProductRecordService userProductRecordService) {
         this.pinProductMapper = pinProductMapper;
         this.pinProductAttributeDefinitionMapper = pinProductAttributeDefinitionMapper;
         this.pinProductAttributeValueMapper = pinProductAttributeValueMapper;
@@ -45,6 +47,7 @@ public class ProductService extends AbstractService<PinProduct> {
         this.pinUserProductCommentMapper = pinUserProductCommentMapper;
         this.storeService = storeService;
         this.productRichTextRepository = productRichTextRepository;
+        this.userProductRecordService = userProductRecordService;
     }
 
     /**
@@ -64,6 +67,16 @@ public class ProductService extends AbstractService<PinProduct> {
         pinProduct.setProductAttributeDefinitions(defList);
         pinProduct.setProductAttributeValues(valList);
         return pinProduct;
+    }
+
+    public JSONObject getProductByIdWithOneCommentAndSaveVisitRecord(Integer userId, Integer productId, String ipAddress){
+        PinUserProductVisitRecord visitRecord = new PinUserProductVisitRecord();
+        visitRecord.setProductId(productId);
+        visitRecord.setUserId(userId);
+        visitRecord.setVisitTime(new Date());
+        visitRecord.setVisitIp(ipAddress);
+        userProductRecordService.save(visitRecord);
+        return getProductByIdWithOneComment(productId);
     }
 
     /**

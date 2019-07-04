@@ -61,10 +61,11 @@ public class ProductController {
      * @return JSONObject
      */
     @GetMapping("/{productId}")
-    public JSONObject getProductById(@PathVariable(value = "productId") Integer productId) {
+    public JSONObject getProductById(HttpServletRequest httpServletRequest, @PathVariable(value = "productId") Integer productId) {
         try {
+            PinUser user = userService.whoAmI(httpServletRequest);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
-                    productService.getProductByIdWithOneComment(productId));
+                    productService.getProductByIdWithOneCommentAndSaveVisitRecord(user.getId(), productId, httpServletRequest.getRemoteAddr()));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);

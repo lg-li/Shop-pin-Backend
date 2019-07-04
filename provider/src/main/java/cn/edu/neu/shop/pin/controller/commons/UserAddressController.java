@@ -107,7 +107,7 @@ public class UserAddressController {
             if (addressId == null) {
                 return ResponseWrapper.wrap(PinConstants.StatusCode.PERMISSION_DENIED, "无权限删除", null);
             }
-            int code = addressService.deleteAddress(addressId, user.getId());
+            int code = addressService.deleteAddress(user.getId(), addressId);
             if (code == AddressService.STATUS_DELETE_ADDRESS_SUCCESS) {
                 return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
             } else if (code == AddressService.STATUS_DELETE_ADDRESS_INVALID_ID) {

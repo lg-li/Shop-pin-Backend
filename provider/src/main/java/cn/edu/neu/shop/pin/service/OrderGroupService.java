@@ -175,7 +175,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
             // 店铺ID不符，返回ID错误
             return STATUS_INVALID_ID;
         }
-        if (!orderIndividual.getPaid() || orderIndividual.getStatus() != 0) {
+        if (!orderIndividual.getPaid() || !orderIndividual.getStatus().equals(PinOrderIndividual.STATUS_DEPENDING_TO_SHIP)) {
             // 给定的订单不满足加团条件：1.isPaid不是未付款 2.status不是0-待发货
             return STATUS_NOT_ALLOWED;
         }
@@ -183,9 +183,9 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
         sample.setOwnerUserId(userId);
         sample.setStoreId(storeId);
         List<PinOrderGroup> orderGroups = pinOrderGroupMapper.select(sample);
-        for (PinOrderGroup orderGroup1 : orderGroups) {
+        for (PinOrderGroup otherOrderGroupInStore : orderGroups) {
             // 找到了此店铺此人创建的正在可用的团，则无法再用其他订单新建一个团
-            if (orderGroup1.getStatus() == 0) {
+            if (otherOrderGroupInStore.getStatus().equals(PinOrderGroup.STATUS_PINGING)) {
                 return STATUS_NOT_ALLOWED;
             }
         }
@@ -193,7 +193,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
             // orderGroupId不为空，已在某一团单中，返回团单ID
             return orderIndividual.getOrderGroupId();
         }
-        if (orderGroup.getStatus() != 0 || orderGroup.getCloseTime().before(new Date())) {
+        if (!orderGroup.getStatus().equals(PinOrderGroup.STATUS_PINGING) || orderGroup.getCloseTime().before(new Date())) {
             // 指定的团单已结束
             return STATUS_JOIN_ORDER_GROUP_IS_ENDED;
         }
