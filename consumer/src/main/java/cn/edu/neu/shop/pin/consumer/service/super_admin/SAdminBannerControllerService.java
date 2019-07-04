@@ -8,4 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface SAdminBannerControllerService {
     @RequestMapping(value = "/sadmin/save-banner", method = RequestMethod.POST)
     JSONObject saveBanner(JSONObject request);
+
+    @RequestMapping(value = "/sadmin/get-banner", method = RequestMethod.GET)
+    JSONObject getBanner();
 }

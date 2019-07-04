@@ -31,4 +31,8 @@ public class SAdminBannerController {
     public JSONObject saveBanner(JSONObject request) {
         return sAdminBannerControllerService.saveBanner(request);
     }
+
+    @PostMapping("/get-banner")
+    public JSONObject getBanner() { return sAdminBannerControllerService.getBanner();}
+    
 }
