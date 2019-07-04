@@ -24,7 +24,7 @@ public interface AdminStoreControllerService {
     JSONObject getGroupCloseBatchTime();
 
     @RequestMapping(value = "/manager/store/upload", method = RequestMethod.POST)
-    ResponseEntity<JSONObject> uploadStoreImage(@RequestBody JSONObject uploadingInfo);
+    JSONObject uploadStoreImage(@RequestBody JSONObject uploadingInfo);
 
     @RequestMapping(value = "/manager/store/close-batch", method = RequestMethod.DELETE)
     JSONObject deleteGroupCloseBatchTime(@RequestBody JSONObject requestJSON);

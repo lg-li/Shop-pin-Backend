@@ -11,5 +11,5 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Service
 public interface UploadControllerService {
     @RequestMapping(value = "/commons/upload/image/base64", method = RequestMethod.POST)
-    public ResponseEntity<JSONObject> uploadStoreInfo(@RequestBody JSONObject uploadingInfo);
+    public JSONObject uploadStoreInfo(@RequestBody JSONObject uploadingInfo);
 }
