@@ -1,95 +1,110 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.edu.neu.shop.pin.mapper.PinUserProductCommentMapper">
-  <resultMap id="BaseResultMap" type="cn.edu.neu.shop.pin.model.PinUserProductComment">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="order_individual_id" jdbcType="INTEGER" property="orderIndividualId" />
-    <result column="product_id" jdbcType="INTEGER" property="productId" />
-    <result column="sku_id" jdbcType="INTEGER" property="skuId" />
-    <result column="grade" jdbcType="INTEGER" property="grade" />
-    <result column="product_score" jdbcType="INTEGER" property="productScore" />
-    <result column="service_score" jdbcType="INTEGER" property="serviceScore" />
-    <result column="content" jdbcType="VARCHAR" property="content" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="merchant_comment_content" jdbcType="VARCHAR" property="merchantCommentContent" />
-    <result column="merchant_comment_time" jdbcType="TIMESTAMP" property="merchantCommentTime" />
-    <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
-    <result column="images_urls" jdbcType="LONGVARCHAR" property="imagesUrls" />
-    <result column="comment_tag" jdbcType="LONGVARCHAR" property="commentTag" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="cn.edu.neu.shop.pin.model.PinUserProductComment">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="order_individual_id" jdbcType="INTEGER" property="orderIndividualId"/>
+        <result column="product_id" jdbcType="INTEGER" property="productId"/>
+        <result column="sku_id" jdbcType="INTEGER" property="skuId"/>
+        <result column="grade" jdbcType="INTEGER" property="grade"/>
+        <result column="product_score" jdbcType="INTEGER" property="productScore"/>
+        <result column="service_score" jdbcType="INTEGER" property="serviceScore"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="merchant_comment_content" jdbcType="VARCHAR" property="merchantCommentContent"/>
+        <result column="merchant_comment_time" jdbcType="TIMESTAMP" property="merchantCommentTime"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="images_urls" jdbcType="LONGVARCHAR" property="imagesUrls"/>
+        <result column="comment_tag" jdbcType="LONGVARCHAR" property="commentTag"/>
+    </resultMap>
 
-  <resultMap id="PinGetCommentAndUserInfo" type="com.alibaba.fastjson.JSONObject">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
-    <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl"/>
-    <result column="sku" jdbcType="VARCHAR" property="sku"/>
-    <result column="user_id" jdbcType="INTEGER" property="userId" />
-    <result column="order_individual_id" jdbcType="INTEGER" property="orderIndividualId" />
-    <result column="product_id" jdbcType="INTEGER" property="productId" />
-    <result column="grade" jdbcType="INTEGER" property="grade" />
-    <result column="product_score" jdbcType="INTEGER" property="productScore" />
-    <result column="service_score" jdbcType="INTEGER" property="serviceScore" />
-    <result column="content" jdbcType="VARCHAR" property="content" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="merchant_comment_content" jdbcType="VARCHAR" property="merchantCommentContent" />
-    <result column="merchant_comment_time" jdbcType="TIMESTAMP" property="merchantCommentTime" />
-    <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
-    <result column="images_urls" jdbcType="LONGVARCHAR" property="imagesUrls" />
-    <result column="comment_tag" jdbcType="LONGVARCHAR" property="commentTag" />
-  </resultMap>
+    <resultMap id="PinGetCommentAndUserInfo" type="com.alibaba.fastjson.JSONObject">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="nickname" jdbcType="VARCHAR" property="nickname"/>
+        <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl"/>
+        <result column="sku" jdbcType="VARCHAR" property="sku"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="order_individual_id" jdbcType="INTEGER" property="orderIndividualId"/>
+        <result column="product_id" jdbcType="INTEGER" property="productId"/>
+        <result column="grade" jdbcType="INTEGER" property="grade"/>
+        <result column="product_score" jdbcType="INTEGER" property="productScore"/>
+        <result column="service_score" jdbcType="INTEGER" property="serviceScore"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="merchant_comment_content" jdbcType="VARCHAR" property="merchantCommentContent"/>
+        <result column="merchant_comment_time" jdbcType="TIMESTAMP" property="merchantCommentTime"/>
+        <result column="is_deleted" jdbcType="BIT" property="isDeleted"/>
+        <result column="images_urls" jdbcType="LONGVARCHAR" property="imagesUrls"/>
+        <result column="comment_tag" jdbcType="LONGVARCHAR" property="commentTag"/>
+    </resultMap>
 
-  <resultMap id="PinGetAllProductWithComment" type="com.alibaba.fastjson.JSONObject">
-    <id column="id" jdbcType="INTEGER" property="id"/>
-    <result column="image_urls" jdbcType="VARCHAR" property="imageUrls"/>
-    <result column="name" jdbcType="VARCHAR" property="name"/>
-    <result column="info" jdbcType="VARCHAR" property="info"/>
-    <result column="nums" jdbcType="INTEGER" property="nums"/>
-  </resultMap>
+    <resultMap id="PinGetAllProductWithComment" type="com.alibaba.fastjson.JSONObject">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="image_urls" jdbcType="VARCHAR" property="imageUrls"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="info" jdbcType="VARCHAR" property="info"/>
+        <result column="nums" jdbcType="INTEGER" property="nums"/>
+    </resultMap>
 
-  <!-- 根据输入时间 获取该店铺在这个时间的所有商品评论数 -->
-  <select id="getNumberOfComment" resultType="INTEGER">
-    select count(*) as nums
-    from pin_user_product_comment
-    where create_time >= #{fromTime}
-    and #{toTime} >= create_time
-    and product_id in (select product_id from pin_product where store_id = #{storeId})
-  </select>
+    <!-- 根据输入时间 获取该店铺在这个时间的所有商品评论数 -->
+    <select id="getNumberOfComment" resultType="INTEGER">
+        select count(*) as nums
+        from pin_user_product_comment
+        where create_time >= #{fromTime}
+          and #{toTime} >= create_time
+          and product_id in (select product_id from pin_product where store_id = #{storeId})
+    </select>
 
-  <!-- 根据商品ID 得到该商品全部评论和评论用户的基本信息-->
-  <select id="getCommentAndUserInfo" resultMap="PinGetCommentAndUserInfo">
-    select pin_user.nickname, pin_user.avatar_url, pin_product.name, pin_product_attribute_value.sku, pin_user_product_comment.*
-    from pin_user, pin_user_product_comment, pin_product_attribute_value, pin_product
-    where pin_user.id = pin_user_product_comment.user_id
-    and pin_user_product_comment.sku_id = pin_product_attribute_value.id
-    and pin_product.id = pin_user_product_comment.product_id
-    and pin_user_product_comment.product_id = #{product}
-  </select>
+    <!-- 根据商品ID 得到该商品全部评论和评论用户的基本信息-->
+    <select id="getCommentAndUserInfo" resultMap="PinGetCommentAndUserInfo">
+        select pin_user.nickname,
+               pin_user.avatar_url,
+               pin_product.name,
+               pin_product_attribute_value.sku,
+               pin_user_product_comment.*
+        from pin_user,
+             pin_user_product_comment,
+             pin_product_attribute_value,
+             pin_product
+        where pin_user.id = pin_user_product_comment.user_id
+          and pin_user_product_comment.sku_id = pin_product_attribute_value.id
+          and pin_product.id = pin_user_product_comment.product_id
+          and pin_user_product_comment.product_id = #{product}
+    </select>
 
-  <select id="getNumberOfMerchantNotComment" resultType="INTEGER">
-    select count(*) as nums
-    from pin_user_product_comment
-    where merchant_comment_content is null
-    and product_id in (select product_id from pin_product where store_id = #{storeId})
-  </select>
+    <select id="getNumberOfMerchantNotComment" resultType="INTEGER">
+        select count(*) as nums
+        from pin_user_product_comment
+        where merchant_comment_content is null
+          and product_id in (select product_id from pin_product where store_id = #{storeId})
+    </select>
 
-  <!-- 获取所有有评论的商品的信息和评论数-->
-  <select id="getAllProductWithComment" resultMap="PinGetAllProductWithComment">
-    select pin_product.id, pin_product.image_urls, pin_product.name, pin_product.info, count(*) as nums
-    from pin_user_product_comment, pin_product
-    where pin_product.id = pin_user_product_comment.product_id
-    and pin_user_product_comment.content is not null
-    and pin_product.store_id = #{storeId}
-    group by pin_product.name
-  </select>
+    <!-- 获取所有有评论的商品的信息和评论数-->
+    <select id="getAllProductWithComment" resultMap="PinGetAllProductWithComment">
+        select pin_product.id, pin_product.image_urls, pin_product.name, pin_product.info, count(*) as nums
+        from pin_user_product_comment,
+             pin_product
+        where pin_product.id = pin_user_product_comment.product_id
+          and pin_user_product_comment.content is not null
+          and pin_product.store_id = #{storeId}
+        group by pin_product.name
+    </select>
 
-  <!-- 商家回复评论-->
-  <update id="updateMerchantComment">
-    update pin_user_product_comment
-    set merchant_comment_content = #{commentContent}, merchant_comment_time = #{commentTime}
-    where id = #{commentId}
-  </update>
+    <!-- 商家回复评论-->
+    <update id="updateMerchantComment">
+        update pin_user_product_comment
+        set merchant_comment_content = #{commentContent},
+            merchant_comment_time    = #{commentTime}
+        where id = #{commentId}
+    </update>
+
+    <select id="getAvgScore" resultType="Integer">
+        select avg(pin_user_product_comment.product_score)
+        from pin_user_product_comment
+        where pin_user_product_comment.product_id = #{productId}
+    </select>
 </mapper>
