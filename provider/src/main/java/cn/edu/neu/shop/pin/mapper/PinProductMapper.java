@@ -29,6 +29,14 @@ public interface PinProductMapper extends BaseMapper<PinProduct> {
     List<PinProduct> getHotProducts();
 
     /**
+     * 根据推荐排名返回商品内容
+     *
+     * @return 推荐商品 List
+     * @author LLG
+     */
+//    List<PinProduct> getProductsByIdRanks(List<Integer> ranks);
+
+    /**
      * 筛选所有is_new属性为true的商品，显示在"新品"中
      *
      * @return 新品List

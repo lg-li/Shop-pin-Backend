@@ -4,6 +4,7 @@ import cn.edu.neu.shop.pin.mapper.*;
 import cn.edu.neu.shop.pin.model.*;
 import cn.edu.neu.shop.pin.mongo.document.ProductRichTextDescription;
 import cn.edu.neu.shop.pin.mongo.repository.ProductRichTextRepository;
+import cn.edu.neu.shop.pin.recommender.RecommenderCache;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
@@ -38,8 +39,11 @@ public class ProductService extends AbstractService<PinProduct> {
 
     private final UserProductRecordService userProductRecordService;
 
+    // 推荐排名缓存
+    private final RecommenderCache recommenderCache;
+
     @Autowired
-    public ProductService(PinProductMapper pinProductMapper, PinProductAttributeDefinitionMapper pinProductAttributeDefinitionMapper, PinProductAttributeValueMapper pinProductAttributeValueMapper, PinUserProductCollectionMapper pinUserProductCollectionMapper, PinUserProductCommentMapper pinUserProductCommentMapper, StoreService storeService, ProductRichTextRepository productRichTextRepository, UserProductRecordService userProductRecordService) {
+    public ProductService(PinProductMapper pinProductMapper, PinProductAttributeDefinitionMapper pinProductAttributeDefinitionMapper, PinProductAttributeValueMapper pinProductAttributeValueMapper, PinUserProductCollectionMapper pinUserProductCollectionMapper, PinUserProductCommentMapper pinUserProductCommentMapper, StoreService storeService, ProductRichTextRepository productRichTextRepository, UserProductRecordService userProductRecordService, RecommenderCache recommenderCache) {
         this.pinProductMapper = pinProductMapper;
         this.pinProductAttributeDefinitionMapper = pinProductAttributeDefinitionMapper;
         this.pinProductAttributeValueMapper = pinProductAttributeValueMapper;
@@ -48,6 +52,7 @@ public class ProductService extends AbstractService<PinProduct> {
         this.storeService = storeService;
         this.productRichTextRepository = productRichTextRepository;
         this.userProductRecordService = userProductRecordService;
+        this.recommenderCache = recommenderCache;
     }
 
     /**
@@ -70,12 +75,8 @@ public class ProductService extends AbstractService<PinProduct> {
     }
 
     public JSONObject getProductByIdWithOneCommentAndSaveVisitRecord(Integer userId, Integer productId, String ipAddress){
-        PinUserProductVisitRecord visitRecord = new PinUserProductVisitRecord();
-        visitRecord.setProductId(productId);
-        visitRecord.setUserId(userId);
-        visitRecord.setVisitTime(new Date());
-        visitRecord.setVisitIp(ipAddress);
-        userProductRecordService.save(visitRecord);
+        // 保存访问记录
+        userProductRecordService.recordProductVisit(userId, productId, ipAddress);
         return getProductByIdWithOneComment(productId);
     }
 
@@ -146,6 +147,34 @@ public class ProductService extends AbstractService<PinProduct> {
 //        List<PinProduct> list = pinProductMapper.getHotProducts();
 //        return new PageInfo<>(list, pageSize);
         return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(pinProductMapper::getHotProducts);
+    }
+
+
+    /**
+     * 返回推荐商品，支持分页操作
+     *
+     * @param userId  用户 ID
+     * @param pageNum  页面编号
+     * @param pageSize 页面大小
+     * @return 商品分页列表
+     * @author LLG
+     */
+    public PageInfo<PinProduct> getRecommendedProductsByPage(Integer userId, int pageNum, int pageSize) {
+        List<Integer> rankedIds = recommenderCache.getCachedRankByUser(userId);
+        if(rankedIds == null) {
+            return getNewProductsByPage(pageNum, pageSize);
+        }
+        StringBuilder rankStringBuilder = new StringBuilder();
+        int len = rankedIds.size();
+        for(int i = 0; i < len; i ++) {
+            rankStringBuilder.append(rankedIds.get(i));
+            if(i != len - 1) {
+                rankStringBuilder.append(",");
+            }
+        }
+        return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> {
+            mapper.selectByIds(rankStringBuilder.toString());
+        });
     }
 
     /**
