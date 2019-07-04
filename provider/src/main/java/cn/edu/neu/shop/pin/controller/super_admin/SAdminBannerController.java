@@ -4,6 +4,7 @@ import cn.edu.neu.shop.pin.mapper.PinSettingsConstantMapper;
 import cn.edu.neu.shop.pin.model.PinSettingsConstant;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ public class SAdminBannerController {
     PinSettingsConstantMapper pinSettingsConstantMapper;
 
     @PostMapping("/save-banner")
-    public JSONObject saveBanner(@RequestBody JSONObject request) {
+    public JSONObject saveBanner(@RequestBody JSONArray request) {
         try {
             PinSettingsConstant pinSettingsConstant = new PinSettingsConstant();
             pinSettingsConstant.setConstantKey("banner_content");
