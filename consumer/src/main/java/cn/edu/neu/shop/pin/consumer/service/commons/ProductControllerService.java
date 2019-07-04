@@ -26,4 +26,7 @@ public interface ProductControllerService {
 
     @RequestMapping(value = "/commons/product/create-visit-record", method = RequestMethod.POST)
     public JSONObject createVisitRecord(@RequestBody JSONObject requestJSON);
+
+    @RequestMapping(value = "/commons/product/get-product-average-score", method = RequestMethod.POST)
+    public JSONObject returnPraise(@RequestBody JSONObject request);
 }

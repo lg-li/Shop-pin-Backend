@@ -20,4 +20,6 @@ public interface PinUserProductCommentMapper extends BaseMapper<PinUserProductCo
     List<JSONObject> getAllProductWithComment(Integer storeId);
 
     void updateMerchantComment(Integer commentId, String commentContent, Date commentTime);
+
+    Integer getAvgScore(Integer id);
 }
