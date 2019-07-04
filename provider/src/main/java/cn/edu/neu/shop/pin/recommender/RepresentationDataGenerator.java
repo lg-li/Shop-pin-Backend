@@ -1,5 +1,6 @@
 package cn.edu.neu.shop.pin.recommender;
 
+import cn.edu.neu.shop.pin.mapper.PinUserProductCommentMapper;
 import cn.edu.neu.shop.pin.model.PinProduct;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.mongo.document.UserProductInteraction;
@@ -30,6 +31,9 @@ public class RepresentationDataGenerator {
     private final UserService userService;
     private final ProductService productService;
     private final UserProductInteractionRepository userProductInteractionRepository;
+
+    @Autowired
+    private PinUserProductCommentMapper pinUserProductCommentMapper;
 
     // 用户表征：性别，余额数量级，积分数量级
     private final static int USER_GENDER = 0;
@@ -137,7 +141,7 @@ public class RepresentationDataGenerator {
 
             productRepRow.add(product.getId());
             productRepCol.add(PRODUCT_AVERAGE_RATE_SCORE);
-            productRepData.add(1.0);
+            productRepData.add(pinUserProductCommentMapper.getAvgScore(product.getId()));
 
         }
         return packRepData(productRepRow, productRepCol, productRepData);

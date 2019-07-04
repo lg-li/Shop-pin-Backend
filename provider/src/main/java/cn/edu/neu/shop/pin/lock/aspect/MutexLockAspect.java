@@ -75,21 +75,20 @@ public class MutexLockAspect {
         // 分布式锁，如果没有此key，设置此值并返回true；如果有此key，则返回false
         boolean result = redisTemplate.boundValueOps(key).setIfAbsent(value);
         if (!result) {
+            logger.info("[回避] 互斥锁" + key +"已被添加，撤销当前方法的执行。");
             // 其他程序已经获取分布式锁，不再执行此方法
             return resultObject;
         }
-
+        logger.info("[加锁] 互斥锁" + key +"已添加。");
         //设置注解中的过期时间，默认一分钟
         redisTemplate.boundValueOps(key).expire(expire, TimeUnit.SECONDS);
-
         try {
             resultObject = pjp.proceed(); //调用对应方法执行
             redisTemplate.delete(key); // 执行完成后解锁
-
+            logger.info("[解锁] 互斥锁" + key +"已解锁。");
         } catch (Throwable throwable) {
             throwable.printStackTrace();
         }
-
         return resultObject;
     }
 }

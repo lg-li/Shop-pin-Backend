@@ -112,26 +112,6 @@ public class ProductController {
     }
 
     /**
-     * 获取智能推荐的商品信息，支持分页操作
-     *
-     * @param pageNum  分页号
-     * @param pageSize 分页大小
-     * @return 分页的商品规范JSON
-     */
-    @GetMapping(value = "/recommend/{pageNum}/{pageSize}")
-    public JSONObject getRecommendedProducts(HttpServletRequest httpServletRequest, @PathVariable(value = "pageNum") Integer pageNum, @PathVariable(value = "pageSize") Integer pageSize) {
-        try {
-            PinUser user = userService.whoAmI(httpServletRequest);
-            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS,
-                    PinConstants.ResponseMessage.SUCCESS,
-                    productService.getRecommendedProductsByPage(user.getId(), pageNum, pageSize));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
-        }
-    }
-
-    /**
      * 获取全新商品信息，支持分页操作
      *
      * @param pageNum  分页号

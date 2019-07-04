@@ -85,6 +85,6 @@ spring:
   data:
     # Mongo DB 配置
     mongodb:
-      uri: mongodb://pin:F5g2i3o9@5io2.com:28018
+      uri: mongodb://pin:F5g2i3o9@pin.cheelem.com:28018
       authentication-database: pin
       database: pin

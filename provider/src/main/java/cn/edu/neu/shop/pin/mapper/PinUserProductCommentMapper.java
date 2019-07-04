@@ -21,5 +21,5 @@ public interface PinUserProductCommentMapper extends BaseMapper<PinUserProductCo
 
     void updateMerchantComment(Integer commentId, String commentContent, Date commentTime);
 
-    Integer getAvgScore(Integer id);
+    Double getAvgScore(Integer id);
 }

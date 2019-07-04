@@ -10,11 +10,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest
 public class RecommendationTest {
     @Autowired
-    private RepresentationDataGenerator representationDataGenerator;
+    private RecommendEngineCaller caller;
 
     @Test
-    public void testRepresentationGenerator() {
-        System.out.println(representationDataGenerator.generateAllRepresentation());
+    public void testRec() {
+        caller.updateRecommendationModel();
     }
 
 }

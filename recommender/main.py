@@ -11,10 +11,9 @@ try:
 except IOError:
     print("没有保存的模型检查点，初始化模型")
 
-@app.route("/fit-model-and-get-ranks", methods=["POST"])
+@app.route('/ranks', methods=["POST"])
 def fitModelAndUpateRanks():
     input = request.get_json()
-
     print("interaction: \n", input)
     interactions = input['interaction']
     user_features = input['user']
@@ -40,10 +39,10 @@ def fitModelAndUpateRanks():
                                          item_features=item_features)
     print("Predictions: \n" +str(predictions))
     print("Predicted Rank: \n" +str(predicted_ranks))
-    return jsonify(predicted_ranks)
+    return jsonify(predicted_ranks.tolist())
 
 port = 5689
 if __name__ == "__main__":
-    print("启动 Pin 推荐服务")
+    print("启动 Pin 推荐服务...")
+    print("将启动到端口" + str(port))
     app.run(port=port)
-    print("已启动到端口" + str(port))

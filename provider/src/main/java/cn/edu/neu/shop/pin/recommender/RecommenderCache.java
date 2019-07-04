@@ -32,13 +32,16 @@ public class RecommenderCache {
 
     public void updateCache(JSONArray userIds, JSONArray ranks){
         logger.info("预测用户表长度=" + userIds.size() + "\n Rank 长度=" + ranks.size());
-        if(userIds.size() != ranks.size()) {
-            logger.warn("预测用户表和 rank 表长度不一致，可能导致不可预知的错误");
-        }
+        int rankSize = ranks.size();
         for(int i = 0; i < userIds.size(); i++) {
+            Integer userId = userIds.getInteger(i);
+            if(userId >= rankSize) {
+                logger.error("预测用户超出rank表范围，跳过此用户");
+                continue;
+            }
             UserProductRecommendedRank rank = new UserProductRecommendedRank();
-            rank.setUserId(userIds.getInteger(i));
-            rank.setRank(ranks.getJSONArray(i).toJavaList(Integer.class));
+            rank.setUserId(userId);
+            rank.setRank(ranks.getJSONArray(userId).toJavaList(Integer.class));
             userProductRecommendedRankRepository.save(rank);
         }
     }

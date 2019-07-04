@@ -1,5 +1,7 @@
 package cn.edu.neu.shop.pin.recommender;
 
+import cn.edu.neu.shop.pin.lock.annotation.MutexLock;
+import cn.edu.neu.shop.pin.service.SettingsConstantService;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.slf4j.Logger;
@@ -15,24 +17,39 @@ public class RecommendEngineCaller {
 
     private RestTemplate restTemplate =  new RestTemplate();
 
-    @Autowired
-    private RepresentationDataGenerator representationDataGenerator;
+    private final RepresentationDataGenerator representationDataGenerator;
+
+    private final RecommenderCache recommenderCache;
+
+    private final SettingsConstantService settingsConstantService;
 
     @Autowired
-    private RecommenderCache recommenderCache;
+    public RecommendEngineCaller(RepresentationDataGenerator representationDataGenerator, RecommenderCache recommenderCache, SettingsConstantService settingsConstantService) {
+        this.representationDataGenerator = representationDataGenerator;
+        this.recommenderCache = recommenderCache;
+        this.settingsConstantService = settingsConstantService;
+    }
 
     /**
-     * 更新推荐系统缓存 rank
+     * 更新推荐系统缓存 rank 列表
+     * 使用互斥锁防止重入
      */
+    @MutexLock(key = "updateRecommendationModel")
     public void updateRecommendationModel() {
-        JSONObject reps = representationDataGenerator.generateAllRepresentation();
-        JSONArray ids = reps.getJSONObject("user").getJSONArray("ids");
-        JSONArray ranks = restTemplate.postForEntity(
-                 "localhot:5689/fit-model-and-get-ranks",
-                 reps,
-                 JSONArray.class).getBody();
-        logger.info("已接收到模型返回的 rank： \n" + ranks);
-        recommenderCache.updateCache(ids, ranks);
-        logger.info("缓存更新完成");
+        try {
+            String recommenderUrl = settingsConstantService.findByKey("recommender_url");
+            logger.info("推荐服务器 URL="+recommenderUrl);
+            JSONObject reps = representationDataGenerator.generateAllRepresentation();
+            JSONArray ids = reps.getJSONObject("user").getJSONArray("ids");
+            JSONArray ranks = restTemplate.postForEntity(
+                    recommenderUrl,
+                    reps,
+                    JSONArray.class).getBody();
+            logger.info("已接收到模型返回的 rank： \n" + ranks);
+            recommenderCache.updateCache(ids, ranks);
+            logger.info("缓存更新完成");
+        }catch (Exception ex) {
+            logger.error("更新rank时出现错误" + ex.getMessage());
+        }
     }
 }

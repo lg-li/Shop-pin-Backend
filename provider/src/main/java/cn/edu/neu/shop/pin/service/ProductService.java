@@ -149,7 +149,6 @@ public class ProductService extends AbstractService<PinProduct> {
         return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(pinProductMapper::getHotProducts);
     }
 
-
     /**
      * 返回推荐商品，支持分页操作
      *

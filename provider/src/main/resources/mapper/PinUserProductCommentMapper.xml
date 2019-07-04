@@ -102,7 +102,7 @@
         where id = #{commentId}
     </update>
 
-    <select id="getAvgScore" resultType="Integer">
+    <select id="getAvgScore" resultType="Double">
         select avg(pin_user_product_comment.product_score)
         from pin_user_product_comment
         where pin_user_product_comment.product_id = #{productId}
