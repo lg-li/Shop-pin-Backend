@@ -72,5 +72,4 @@ public class PaymentService {
         orderIndividual.setPayType(PinOrderIndividual.PAY_TYPE_BALANCE);
         orderIndividualService.update(orderIndividual);
     }
-
 }

@@ -111,15 +111,15 @@ public class OrderGroupController {
                     null);
         } else if (code == OrderGroupService.STATUS_NOT_ALLOWED) {
             // 给定的团单不满足情况：1.isPaid不是未付款 2.status不是0-待发货
-            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, "加团失败，订单不符合条件！",
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, "无法加入此团，因您在本店仍有一个未结束的团。",
                     null);
         } else if (code == OrderGroupService.STATUS_JOIN_ORDER_GROUP_IS_ENDED) {
             // 加团失败，给定的团单已结束
-            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, "加团失败，团单已结束！",
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, "此团单已结束，无法加入。",
                     null);
         } else if (code == OrderGroupService.STATUS_JOIN_ORDER_GROUP_IS_FULL) {
             // 加团失败，给定的团单人数已满
-            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, "加团失败，参团人数已满！",
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, "很抱歉，此团单人数已满。",
                     null);
         } else if (code > 0) {
             // 加团失败，已经在其他团单中，返回已有团单id

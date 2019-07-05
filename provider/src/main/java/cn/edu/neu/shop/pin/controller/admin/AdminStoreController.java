@@ -66,7 +66,7 @@ public class AdminStoreController {
             String phone = requestJSON.getString("phone");
             String email = requestJSON.getString("email");
             String base64Img = requestJSON.getString("image");
-            String url = Objects.requireNonNull(ImgUtil.upload(base64Img, "https://sm.ms/api/upload").getBody()).getJSONObject("data").getString("url");
+            String url = requestJSON.getString("url");
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
                     storeService.addStoreInfo(storeName, description, phone, email, url, user.getId()));
         } catch (Exception e) {
@@ -109,10 +109,12 @@ public class AdminStoreController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<JSONObject> uploadStoreImage(@RequestBody JSONObject uploadingInfo) {
+    public JSONObject uploadStoreImage(@RequestBody JSONObject uploadingInfo) {
         //截掉 "data:image/png;base64,"
         String base64Img = uploadingInfo.getString("image");
-        return ImgUtil.upload(base64Img, "https://sm.ms/api/upload");
+        JSONObject data = new JSONObject();
+        data.put("url",ImgUtil.upload(base64Img));
+        return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
     }
 
     @DeleteMapping("/close-batch")

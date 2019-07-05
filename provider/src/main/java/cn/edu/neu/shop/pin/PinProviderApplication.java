@@ -1,5 +1,6 @@
 package cn.edu.neu.shop.pin;
 
+import cn.edu.neu.shop.pin.nlp.NLPUtil;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
@@ -14,6 +15,7 @@ public class PinProviderApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(PinProviderApplication.class, args);
+        NLPUtil.init();
     }
 
 }

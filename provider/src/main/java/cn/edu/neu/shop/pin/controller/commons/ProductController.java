@@ -1,6 +1,8 @@
 package cn.edu.neu.shop.pin.controller.commons;
 
+import cn.edu.neu.shop.pin.mapper.PinUserProductCommentMapper;
 import cn.edu.neu.shop.pin.model.PinUser;
+import cn.edu.neu.shop.pin.model.PinUserProductComment;
 import cn.edu.neu.shop.pin.service.ProductCategoryService;
 import cn.edu.neu.shop.pin.service.ProductCommentService;
 import cn.edu.neu.shop.pin.service.ProductService;
@@ -32,6 +34,8 @@ public class ProductController {
     private final ProductVisitRecordService productVisitRecordService;
 
     @Autowired
+    PinUserProductCommentMapper pinUserProductCommentMapper;
+    @Autowired
     public ProductController(UserService userService, ProductService productService, ProductCommentService productCommentService, ProductVisitRecordService productVisitRecordService) {
         this.userService = userService;
         this.productService = productService;
@@ -61,10 +65,11 @@ public class ProductController {
      * @return JSONObject
      */
     @GetMapping("/{productId}")
-    public JSONObject getProductById(@PathVariable(value = "productId") Integer productId) {
+    public JSONObject getProductById(HttpServletRequest httpServletRequest, @PathVariable(value = "productId") Integer productId) {
         try {
+            PinUser user = userService.whoAmI(httpServletRequest);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
-                    productService.getProductByIdWithOneComment(productId));
+                    productService.getProductByIdWithOneCommentAndSaveVisitRecord(user.getId(), productId, httpServletRequest.getRemoteAddr()));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
@@ -160,6 +165,16 @@ public class ProductController {
         try {
             productVisitRecordService.createVisitRecord(user.getId(), productId, visitTime, visitIp);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, null);
+        } catch (Exception e) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
+    @PostMapping("/get-product-average-score")
+    public JSONObject returnPraise(@RequestBody JSONObject request){
+        try {
+            Integer productId = request.getInteger("id");
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, pinUserProductCommentMapper.getAvgScore(productId));
         } catch (Exception e) {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }

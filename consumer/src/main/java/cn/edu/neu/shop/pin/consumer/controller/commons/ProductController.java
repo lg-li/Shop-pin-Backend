@@ -1,5 +1,6 @@
 package cn.edu.neu.shop.pin.consumer.controller.commons;
 
+import cn.edu.neu.shop.pin.consumer.factory.FeignClientFactory;
 import cn.edu.neu.shop.pin.consumer.service.commons.PaymentControllerService;
 import cn.edu.neu.shop.pin.consumer.service.commons.ProductCategoryControllerService;
 import cn.edu.neu.shop.pin.consumer.service.commons.ProductControllerService;
@@ -25,11 +26,9 @@ public class ProductController {
     @Autowired
     public ProductController(
             Decoder decoder, Encoder encoder, Client client) {
-        this.productControllerService = Feign.builder().client(client)
-                .encoder(encoder)
-                .decoder(decoder)
-                .contract(new SpringMvcContract())
-                .target(ProductControllerService.class, "http://Pin-Provider");
+        this.productControllerService = FeignClientFactory.getFeignClient(
+                decoder, encoder, client,
+                ProductControllerService.class);
     }
 
     @GetMapping("/by-category/{categoryId}/{pageNum}/{pageSize}")
@@ -65,5 +64,10 @@ public class ProductController {
     @PostMapping("/create-visit-record")
     public JSONObject createVisitRecord(@RequestBody JSONObject requestJSON) {
         return productControllerService.createVisitRecord(requestJSON);
+    }
+
+    @PostMapping("/get-product-average-score")
+    public JSONObject returnPraise(@RequestBody JSONObject request){
+        return productControllerService.returnPraise(request);
     }
 }

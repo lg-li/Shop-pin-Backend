@@ -1,5 +1,6 @@
 package cn.edu.neu.shop.pin.consumer.controller.admin;
 
+import cn.edu.neu.shop.pin.consumer.factory.FeignClientFactory;
 import cn.edu.neu.shop.pin.consumer.service.admin.AdminStoreControllerService;
 import cn.edu.neu.shop.pin.consumer.service.admin.InitialControllerService;
 import com.alibaba.fastjson.JSONObject;
@@ -24,11 +25,9 @@ public class InitialController {
     @Autowired
     public InitialController(
             Decoder decoder, Encoder encoder, Client client) {
-        this.initialControllerService = Feign.builder().client(client)
-                .encoder(encoder)
-                .decoder(decoder)
-                .contract(new SpringMvcContract())
-                .target(InitialControllerService.class, "http://Pin-Provider");
+        this.initialControllerService = FeignClientFactory.getFeignClient(
+                decoder, encoder, client,
+                InitialControllerService.class);
     }
 
     @GetMapping(value = "/user/info")

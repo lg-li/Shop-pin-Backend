@@ -85,7 +85,7 @@ public class UserCollectionController {
             Integer userId = user.getId();
             Integer productId = requestJSON.getInteger("productId");
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
-                    userProductCollectionService.addProductToCollection(productId, userId));
+                    userProductCollectionService.addProductToCollection(userId, productId));
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);

@@ -1,6 +1,8 @@
 package cn.edu.neu.shop.pin.consumer.controller.commons;
 
+import cn.edu.neu.shop.pin.consumer.factory.FeignClientFactory;
 import cn.edu.neu.shop.pin.consumer.service.admin.AdminStoreControllerService;
+import cn.edu.neu.shop.pin.consumer.service.commons.OrderIndividualControllerService;
 import cn.edu.neu.shop.pin.consumer.service.commons.OrderItemControllerService;
 import com.alibaba.fastjson.JSONObject;
 import feign.Client;
@@ -24,11 +26,9 @@ public class OrderItemController {
     @Autowired
     public OrderItemController(
             Decoder decoder, Encoder encoder, Client client) {
-        this.orderItemControllerService = Feign.builder().client(client)
-                .encoder(encoder)
-                .decoder(decoder)
-                .contract(new SpringMvcContract())
-                .target(OrderItemControllerService.class, "http://Pin-Provider");
+        this.orderItemControllerService = FeignClientFactory.getFeignClient(
+                decoder, encoder, client,
+                OrderItemControllerService.class);
     }
 
     @GetMapping("/order-items")

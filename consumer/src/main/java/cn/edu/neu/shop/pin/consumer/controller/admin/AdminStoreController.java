@@ -1,5 +1,6 @@
 package cn.edu.neu.shop.pin.consumer.controller.admin;
 
+import cn.edu.neu.shop.pin.consumer.factory.FeignClientFactory;
 import cn.edu.neu.shop.pin.consumer.service.admin.AdminHomeControllerService;
 import cn.edu.neu.shop.pin.consumer.service.admin.AdminStoreControllerService;
 import com.alibaba.fastjson.JSONObject;
@@ -23,11 +24,9 @@ public class AdminStoreController {
     @Autowired
     public AdminStoreController(
             Decoder decoder, Encoder encoder, Client client) {
-        this.adminStoreControllerService = Feign.builder().client(client)
-                .encoder(encoder)
-                .decoder(decoder)
-                .contract(new SpringMvcContract())
-                .target(AdminStoreControllerService.class, "http://Pin-Provider");
+        this.adminStoreControllerService = FeignClientFactory.getFeignClient(
+                decoder, encoder, client,
+                AdminStoreControllerService.class);
     }
 
     @GetMapping("/storeList")
@@ -51,7 +50,7 @@ public class AdminStoreController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<JSONObject> uploadStoreInfo(@RequestBody JSONObject uploadingInfo) {
+    public JSONObject uploadStoreInfo(@RequestBody JSONObject uploadingInfo) {
         return adminStoreControllerService.uploadStoreImage(uploadingInfo);
     }
 

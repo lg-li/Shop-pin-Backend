@@ -1,6 +1,8 @@
 package cn.edu.neu.shop.pin.consumer.controller.security;
 
+import cn.edu.neu.shop.pin.consumer.factory.FeignClientFactory;
 import cn.edu.neu.shop.pin.consumer.service.commons.UserAddressControllerService;
+import cn.edu.neu.shop.pin.consumer.service.commons.UserCollectionControllerService;
 import cn.edu.neu.shop.pin.consumer.service.security.UserControllerService;
 import com.alibaba.fastjson.JSONObject;
 import feign.Client;
@@ -27,11 +29,9 @@ public class UserController {
     @Autowired
     public UserController(
             Decoder decoder, Encoder encoder, Client client) {
-        this.userControllerService = Feign.builder().client(client)
-                .encoder(encoder)
-                .decoder(decoder)
-                .contract(new SpringMvcContract())
-                .target(UserControllerService.class, "http://Pin-Provider");
+        this.userControllerService = FeignClientFactory.getFeignClient(
+                decoder, encoder, client,
+                UserControllerService.class);
     }
 
     @GetMapping("/sign-in")

@@ -145,7 +145,7 @@ public class AdminProductController {
     public JSONObject createProduct(HttpServletRequest req, @RequestBody JSONObject requestJSON) {
         try {
             Integer storeId = Integer.parseInt(req.getHeader("Current-Store"));
-            String url = "http://ww1.sinaimg.cn/large/9d167ea7ly1g3hyzea2xdj20a00a0q33.jpg";
+            String url = requestJSON.getString("imageUrls");
             //String url = ImgUtil.upload(base64Img, "https://sm.ms/api/upload").getBody().getJSONObject("data").getString("url");
             String name = requestJSON.getString("name");
             String info = requestJSON.getString("info");
@@ -210,7 +210,7 @@ public class AdminProductController {
                 price = new BigDecimal(object.getString("price"));
                 //base64Img = object.getString("image");
                 //imageUrl = ImgUtil.upload(base64Img, "https://sm.ms/api/upload").getBody().getJSONObject("data").getString("url");
-                imageUrl = "http://ww1.sinaimg.cn/large/9d167ea7ly1g3hyzea2xdj20a00a0q33.jpg";
+                imageUrl = "https://i.loli.net/2019/07/05/5d1ec92eac6cb47889.png";
                 cost = new BigDecimal(object.getString("cost"));
                 attributeValue = new PinProductAttributeValue(storeId, sku, stock, price, imageUrl, cost);
                 valueService.save(attributeValue);

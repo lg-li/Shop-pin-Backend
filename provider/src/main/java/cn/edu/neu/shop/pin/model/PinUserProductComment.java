@@ -89,6 +89,12 @@ public class PinUserProductComment {
     private String imagesUrls;
 
     /**
+     * 评论标签
+     */
+    @Column(name = "comment_tag")
+    private String commentTag;
+
+    /**
      * 获取评论IDID
      *
      * @return id - 评论ID
@@ -328,5 +334,21 @@ public class PinUserProductComment {
 
     public void setSkuId(Integer skuId) {
         this.skuId = skuId;
+    }
+
+    public Boolean getDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public String getCommentTag() {
+        return commentTag;
+    }
+
+    public void setCommentTag(String commentTag) {
+        this.commentTag = commentTag;
     }
 }

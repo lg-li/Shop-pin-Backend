@@ -4,11 +4,13 @@ import cn.edu.neu.shop.pin.mapper.*;
 import cn.edu.neu.shop.pin.model.*;
 import cn.edu.neu.shop.pin.mongo.document.ProductRichTextDescription;
 import cn.edu.neu.shop.pin.mongo.repository.ProductRichTextRepository;
+import cn.edu.neu.shop.pin.recommender.RecommenderCache;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONObject;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +23,11 @@ import java.util.Optional;
  */
 @Component
 public class ProductService extends AbstractService<PinProduct> {
+
+    @Autowired
+    private PinUserProductVisitRecordMapper pinUserProductVisitRecordMapper;
+    @Autowired
+    private PinOrderItemMapper pinOrderItemMapper;
 
     private final PinProductMapper pinProductMapper;
 
@@ -36,8 +43,13 @@ public class ProductService extends AbstractService<PinProduct> {
 
     private final ProductRichTextRepository productRichTextRepository;
 
+    private final UserProductRecordService userProductRecordService;
+
+    // 推荐排名缓存
+    private final RecommenderCache recommenderCache;
+
     @Autowired
-    public ProductService(PinProductMapper pinProductMapper, PinProductAttributeDefinitionMapper pinProductAttributeDefinitionMapper, PinProductAttributeValueMapper pinProductAttributeValueMapper, PinUserProductCollectionMapper pinUserProductCollectionMapper, PinUserProductCommentMapper pinUserProductCommentMapper, StoreService storeService, ProductRichTextRepository productRichTextRepository) {
+    public ProductService(PinProductMapper pinProductMapper, PinProductAttributeDefinitionMapper pinProductAttributeDefinitionMapper, PinProductAttributeValueMapper pinProductAttributeValueMapper, PinUserProductCollectionMapper pinUserProductCollectionMapper, PinUserProductCommentMapper pinUserProductCommentMapper, StoreService storeService, ProductRichTextRepository productRichTextRepository, UserProductRecordService userProductRecordService, RecommenderCache recommenderCache) {
         this.pinProductMapper = pinProductMapper;
         this.pinProductAttributeDefinitionMapper = pinProductAttributeDefinitionMapper;
         this.pinProductAttributeValueMapper = pinProductAttributeValueMapper;
@@ -45,6 +57,8 @@ public class ProductService extends AbstractService<PinProduct> {
         this.pinUserProductCommentMapper = pinUserProductCommentMapper;
         this.storeService = storeService;
         this.productRichTextRepository = productRichTextRepository;
+        this.userProductRecordService = userProductRecordService;
+        this.recommenderCache = recommenderCache;
     }
 
     /**
@@ -66,6 +80,12 @@ public class ProductService extends AbstractService<PinProduct> {
         return pinProduct;
     }
 
+    public JSONObject getProductByIdWithOneCommentAndSaveVisitRecord(Integer userId, Integer productId, String ipAddress){
+        // 保存访问记录
+        userProductRecordService.recordProductVisit(userId, productId, ipAddress);
+        return getProductByIdWithOneComment(productId);
+    }
+
     /**
      * 根据商品Id 获取商品详情信息
      *
@@ -74,7 +94,7 @@ public class ProductService extends AbstractService<PinProduct> {
      */
     public JSONObject getProductByIdWithOneComment(Integer productId) {
         PinProduct product = getProductById(productId);
-        if(product==null){
+        if (product == null) {
             return null;
         }
         PinStore store = storeService.findById(product.getStoreId());
@@ -133,6 +153,33 @@ public class ProductService extends AbstractService<PinProduct> {
 //        List<PinProduct> list = pinProductMapper.getHotProducts();
 //        return new PageInfo<>(list, pageSize);
         return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(pinProductMapper::getHotProducts);
+    }
+
+    /**
+     * 返回推荐商品，支持分页操作
+     *
+     * @param userId  用户 ID
+     * @param pageNum  页面编号
+     * @param pageSize 页面大小
+     * @return 商品分页列表
+     * @author LLG
+     */
+    public PageInfo<PinProduct> getRecommendedProductsByPage(Integer userId, int pageNum, int pageSize) {
+        List<Integer> rankedIds = recommenderCache.getCachedRankByUser(userId);
+        if(rankedIds == null) {
+            return getNewProductsByPage(pageNum, pageSize);
+        }
+        StringBuilder rankStringBuilder = new StringBuilder();
+        int len = rankedIds.size();
+        for(int i = 0; i < len; i ++) {
+            rankStringBuilder.append(rankedIds.get(i));
+            if(i != len - 1) {
+                rankStringBuilder.append(",");
+            }
+        }
+        return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(() -> {
+            mapper.selectByIds(rankStringBuilder.toString());
+        });
     }
 
     /**
@@ -234,32 +281,33 @@ public class ProductService extends AbstractService<PinProduct> {
     }
 
     /**
-     * @author LLG
-     * 获取来自MongoDB的产品富文描述
-     *
      * @param productId 产品ID
      * @return 富文本字符串
+     * @author LLG
+     * 获取来自MongoDB的产品富文描述
      */
     public String getProductRichTextDescription(Integer productId) {
-        Optional<ProductRichTextDescription> productRichTextDescriptionOptional = productRichTextRepository.findById(productId);
-        if(productRichTextDescriptionOptional.isPresent()){
+        Optional<ProductRichTextDescription> productRichTextDescriptionOptional =
+                productRichTextRepository.findById(productId);
+        if (productRichTextDescriptionOptional.isPresent()) {
             return productRichTextDescriptionOptional.get().getContent();
         } else {
+            // 不存在记录则返回空字符串
             return "";
         }
     }
 
     /**
+     * @param productId 产品ID
+     * @param richText  要保存的富文本字符串
      * @author LLG
      * 将富文本描述保存到 Mongo DB
-     *
-     * @param productId 产品ID
-     * @param richText 要保存的富文本字符串
      */
     public void updateProductRichTextDescription(Integer productId, String richText) {
-        Optional<ProductRichTextDescription> productRichTextDescriptionOptional = productRichTextRepository.findById(productId);
+        Optional<ProductRichTextDescription> productRichTextDescriptionOptional =
+                productRichTextRepository.findById(productId);
         Date now = new Date();
-        if(productRichTextDescriptionOptional.isPresent()){
+        if (productRichTextDescriptionOptional.isPresent()) {
             ProductRichTextDescription productRichTextDescription = productRichTextDescriptionOptional.get();
             productRichTextDescription.setContent(richText);
             productRichTextDescription.setEditTime(now);

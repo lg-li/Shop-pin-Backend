@@ -1,5 +1,7 @@
 package cn.edu.neu.shop.pin.controller;
 
+import cn.edu.neu.shop.pin.util.PinConstants;
+import cn.edu.neu.shop.pin.util.ResponseWrapper;
 import cn.edu.neu.shop.pin.util.img.ImgUtil;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 public class UploadController {
     @PostMapping("/image/base64")
-    public ResponseEntity<JSONObject> uploadStoreInfo(@RequestBody JSONObject uploadingInfo) {
+    public JSONObject uploadStoreInfo(@RequestBody JSONObject uploadingInfo) {
         String base64Img = uploadingInfo.getString("image");
-        return ImgUtil.upload(base64Img, "https://sm.ms/api/upload");
+        JSONObject data = new JSONObject();
+        data.put("url",ImgUtil.upload(base64Img));
+        return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS, data);
     }
 }
+

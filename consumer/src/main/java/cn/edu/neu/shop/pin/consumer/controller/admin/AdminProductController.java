@@ -1,5 +1,6 @@
 package cn.edu.neu.shop.pin.consumer.controller.admin;
 
+import cn.edu.neu.shop.pin.consumer.factory.FeignClientFactory;
 import cn.edu.neu.shop.pin.consumer.service.admin.AdminOrderControllerService;
 import cn.edu.neu.shop.pin.consumer.service.admin.AdminProductControllerService;
 import com.alibaba.fastjson.JSONObject;
@@ -22,11 +23,9 @@ public class AdminProductController {
     @Autowired
     public AdminProductController(
             Decoder decoder, Encoder encoder, Client client) {
-        this.adminProductControllerService = Feign.builder().client(client)
-                .encoder(encoder)
-                .decoder(decoder)
-                .contract(new SpringMvcContract())
-                .target(AdminProductControllerService.class, "http://Pin-Provider");
+        this.adminProductControllerService = FeignClientFactory.getFeignClient(
+                decoder, encoder, client,
+                AdminProductControllerService.class );
     }
 
     @PostMapping("/goods-list")

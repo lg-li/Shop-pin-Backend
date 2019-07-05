@@ -2,6 +2,8 @@ package cn.edu.neu.shop.pin.controller.commons;
 
 import cn.edu.neu.shop.pin.exception.CommentFailedException;
 import cn.edu.neu.shop.pin.exception.PermissionDeniedException;
+import cn.edu.neu.shop.pin.mapper.PinSettingsConstantMapper;
+import cn.edu.neu.shop.pin.model.PinSettingsConstant;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.model.PinUserAddress;
 import cn.edu.neu.shop.pin.model.PinUserProductComment;
@@ -31,12 +33,15 @@ public class UserBasicInfoController {
 
     private final UserCreditRecordService userCreditRecordService;
 
+    private final PinSettingsConstantMapper pinSettingsConstantMapper;
+
     @Autowired
-    public UserBasicInfoController(UserService userService, UserProductRecordService userProductRecordService, ProductCommentService productCommentService, UserCreditRecordService userCreditRecordService) {
+    public UserBasicInfoController(UserService userService, UserProductRecordService userProductRecordService, ProductCommentService productCommentService, UserCreditRecordService userCreditRecordService, PinSettingsConstantMapper pinSettingsConstantMapper) {
         this.userService = userService;
         this.userProductRecordService = userProductRecordService;
         this.productCommentService = productCommentService;
         this.userCreditRecordService = userCreditRecordService;
+        this.pinSettingsConstantMapper = pinSettingsConstantMapper;
     }
 
     /**
@@ -53,6 +58,8 @@ public class UserBasicInfoController {
             JSONObject data = new JSONObject();
             data.put("user", user);
             data.put("hasCheckedIn", hasCheckedIn);
+            PinSettingsConstant pinSettingsConstant = pinSettingsConstantMapper.selectByPrimaryKey("banner_content");
+            data.put("banner", pinSettingsConstant.getConstantValue());
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, PinConstants.ResponseMessage.SUCCESS,
                     data);
         } catch (Exception e) {
@@ -60,7 +67,6 @@ public class UserBasicInfoController {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
     }
-
 
     /**
      * @param httpServletRequest HttpServlet请求体
@@ -147,6 +153,7 @@ public class UserBasicInfoController {
         PinUser user = userService.whoAmI(httpServletRequest);
         JSONArray jsonArray = requestJSON.getJSONArray("comments");
         List<PinUserProductComment> comments = new ArrayList<>();
+        // 预处理数据
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject jo = jsonArray.getJSONObject(i);
             PinUserProductComment comment = new PinUserProductComment();
@@ -160,7 +167,6 @@ public class UserBasicInfoController {
             comment.setImagesUrls(jo.getString("imagesUrls"));
             comments.add(comment);
         }
-//        List<PinUserProductComment> comments = jsonArray.toJavaList(PinUserProductComment.class);
         try {
             productCommentService.addComments(user.getId(), comments);
             return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS, "评论成功！", null);

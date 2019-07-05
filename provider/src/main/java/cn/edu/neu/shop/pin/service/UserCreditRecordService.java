@@ -66,7 +66,7 @@ public class UserCreditRecordService {
         Integer limitValue = getLimitValueInDatabase();
         PinUserCreditRecord record;
         PinUser user = pinUserMapper.selectByPrimaryKey(userId);
-        if (list.size() == 0) { // 暂无签到记录
+        if (list == null || list.size() == 0) { // 暂无签到记录
             record = new PinUserCreditRecord(userId, creditValue, PinUserCreditRecord.TYPE_FROM_CHECK_IN, new Date(), 1);
             // 插入一条积分变更记录
             pinUserCreditRecordMapper.insert(record);
@@ -116,13 +116,13 @@ public class UserCreditRecordService {
      */
     private Integer getContinuousCheckInDaysNum(Integer userId) {
         List<PinUserCreditRecord> list = pinUserCreditRecordMapper.getCheckInDaysInfo(userId);
-        if (list.size() == 0) {
+        if (list == null || list.size() == 0) {
             return 0;
         } else {
             PinUserCreditRecord p = list.get(0);
             Date date = p.getCreateTime(), yesterday = this.getYesterday(new Date());
             return (isTheSameDay(date, new Date()) || isTheSameDay(date, yesterday))
-                    ? p.getNote() : 1;
+                    ? p.getNote() : 0;
         }
     }
 

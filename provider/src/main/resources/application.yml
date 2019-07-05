@@ -13,15 +13,14 @@ server:
 eureka:
   instance:
     appname: ${spring.application.name}
-    instanceId: ${spring.application.name}
-    preferIpAddress: true
-    ipAddress: 127.0.0.1
+    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
+    prefer-ip-address: true
   client:
     fetchRegistry: true
     registerWithEureka: true
     enabled: true
     serviceUrl:
-      defaultZone: http://127.0.0.1:5681/eureka
+      defaultZone: http://pin.cheelem.com:5686/eureka
 
 #############################
 # MyBatis 配置
@@ -86,6 +85,6 @@ spring:
   data:
     # Mongo DB 配置
     mongodb:
-      uri: mongodb://pin:F5g2i3o9@5io2.com:28018
+      uri: mongodb://pin:F5g2i3o9@pin.cheelem.com:28018
       authentication-database: pin
       database: pin

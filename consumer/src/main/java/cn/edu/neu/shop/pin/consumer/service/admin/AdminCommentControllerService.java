@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Service
-//@FeignClient(value = "Pin-Provider")
 public interface AdminCommentControllerService {
     @RequestMapping(value = "/comment/goods-comment", method = RequestMethod.POST)
     JSONObject getCommentByProductId(@RequestBody JSONObject requestJSON);
