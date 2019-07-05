@@ -3,11 +3,12 @@ package cn.edu.neu.shop.pin.controller.commons;
 import cn.edu.neu.shop.pin.exception.CommentFailedException;
 import cn.edu.neu.shop.pin.exception.PermissionDeniedException;
 import cn.edu.neu.shop.pin.mapper.PinSettingsConstantMapper;
-import cn.edu.neu.shop.pin.model.PinSettingsConstant;
-import cn.edu.neu.shop.pin.model.PinUser;
-import cn.edu.neu.shop.pin.model.PinUserAddress;
-import cn.edu.neu.shop.pin.model.PinUserProductComment;
-import cn.edu.neu.shop.pin.service.*;
+import cn.edu.neu.shop.pin.model.*;
+import cn.edu.neu.shop.pin.service.ProductCommentService;
+import cn.edu.neu.shop.pin.service.UserCreditRecordService;
+import cn.edu.neu.shop.pin.service.UserProductRecordService;
+import cn.edu.neu.shop.pin.service.WechatUserService;
+import cn.edu.neu.shop.pin.service.message.TemplateMessageService;
 import cn.edu.neu.shop.pin.service.security.UserService;
 import cn.edu.neu.shop.pin.util.PinConstants;
 import cn.edu.neu.shop.pin.util.ResponseWrapper;
@@ -34,6 +35,12 @@ public class UserBasicInfoController {
     private final UserCreditRecordService userCreditRecordService;
 
     private final PinSettingsConstantMapper pinSettingsConstantMapper;
+
+    @Autowired
+    private WechatUserService wechatUserService;
+
+    @Autowired
+    private TemplateMessageService templateMessageService;
 
     @Autowired
     public UserBasicInfoController(UserService userService, UserProductRecordService userProductRecordService, ProductCommentService productCommentService, UserCreditRecordService userCreditRecordService, PinSettingsConstantMapper pinSettingsConstantMapper) {
@@ -86,7 +93,6 @@ public class UserBasicInfoController {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
         }
     }
-
 
 
     /**
@@ -273,5 +279,30 @@ public class UserBasicInfoController {
             return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, PinConstants.ResponseMessage.INTERNAL_ERROR, null);
         }
     }
-}
 
+    @PostMapping("/submit-form-id")
+    public JSONObject submitFormID(HttpServletRequest httpServletRequest, @RequestBody JSONObject requestJSON) {
+        String formId = requestJSON.getString("formId");
+        if (formId == null) {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, PinConstants.ResponseMessage.INTERNAL_ERROR, null);
+        }
+        try {
+            PinUser user = userService.whoAmI(httpServletRequest);
+            PinWechatUser wechatUser = wechatUserService.findWechatUserByUserId(user.getId());
+            if(wechatUser == null) {
+                return ResponseWrapper.wrap(PinConstants.StatusCode.INVALID_DATA, "当前用户没有微信绑定", null);
+            }
+            PinMiniProgramFormIdRecord newRecord = new PinMiniProgramFormIdRecord();
+            newRecord.setCreateTime(new Date());
+            newRecord.setFormId(formId);
+            newRecord.setWechatUserId(wechatUser.getId());
+            return ResponseWrapper.wrap(
+                    PinConstants.StatusCode.SUCCESS,
+                    "Form ID 提交成功",
+                    templateMessageService.save(newRecord));
+        } catch (Exception e) {
+            // 发生未知错误，正常情况下不会进入
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, PinConstants.ResponseMessage.INTERNAL_ERROR, e.getMessage());
+        }
+    }
+}

@@ -131,7 +131,7 @@ public class OrderGroupService extends AbstractService<PinOrderGroup> {
             // 店铺ID不符，返回ID错误
             return STATUS_INVALID_ID;
         }
-        if (orderIndividual.getPaid() || orderIndividual.getStatus() != PinOrderIndividual.STATUS_DEPENDING_TO_SHIP) {
+        if (!orderIndividual.getPaid() || orderIndividual.getStatus() != PinOrderIndividual.STATUS_DEPENDING_TO_SHIP) {
             // 给定的订单不满足创团条件：1.isPaid不是未付款 2.status不是0-待发货
             return STATUS_NOT_ALLOWED;
         }

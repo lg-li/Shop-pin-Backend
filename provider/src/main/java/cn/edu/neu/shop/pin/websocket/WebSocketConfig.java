@@ -6,7 +6,10 @@ import cn.edu.neu.shop.pin.model.PinOrderGroup;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.model.PinRole;
 import cn.edu.neu.shop.pin.model.PinUser;
+import cn.edu.neu.shop.pin.recommender.RepresentationDataGenerator;
 import cn.edu.neu.shop.pin.service.security.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -28,6 +31,9 @@ import java.util.Objects;
 @EnableWebSocketMessageBroker
 // 注解开启STOMP协议来传输基于代理（message broker）的消息，这是控制器支持使用@MessageMaping，就像使用@RequestMapping一样
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+
+    private static Logger logger = LoggerFactory.getLogger(WebSocketConfig.class);
+
 
     private final UserService userService;
 
@@ -60,11 +66,11 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 //解析token获取用户信息
                 Principal user = parseTokenToPrinciple(src, token, orderGroupId, storeId);
                 if (user == null) { //如果token认证失败user为null，返回false拒绝握手
-                    System.out.println("失败连接！！！！");
+                    logger.error("失败连接！！！！");
                     return false;
                 }
                 //保存认证用户
-                System.out.println("连接成功！" + user.toString());
+                logger.info("连接成功！" + user.toString());
                 attributes.put("user", user);
                 return true;
             }
@@ -100,6 +106,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 if (role.equals(PinRole.ROLE_USER)) {
                     PinOrderGroup orderGroup = pinOrderGroupMapper.selectByPrimaryKey(orderGroupId);
                     if (orderGroup == null) {
+                        logger.error("[意外] orderGroup == null");
                         return null;
                     }
                     PinOrderIndividual orderIndividualSample = new PinOrderIndividual();
@@ -107,11 +114,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                     orderIndividualSample.setOrderGroupId(orderGroupId);
                     PinOrderIndividual orderIndividual = pinOrderIndividualMapper.selectOne(orderIndividualSample);
                     if (orderIndividual == null) {
+                        logger.error("[意外] 用户不在此团单中 orderIndividual == null");
                         return null;
                     }
                     return new CustomerPrincipal(user.getId(), orderIndividual.getId(), orderGroupId);
                 }
             }
+            logger.error("[意外] 用户权限不足");
             return null;
         } else if (Objects.equals(src, "merchant")) {
             for (PinRole role : roles) {
@@ -119,6 +128,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                     return new MerchantPrincipal(user.getId(), storeId);
                 }
             }
+            logger.error("[意外] 用户权限不足");
             return null;
         } else if (Objects.equals(src, "admin")) {
             for (PinRole role : roles) {
@@ -126,8 +136,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                     return new AdminPrincipal(user.getId());
                 }
             }
+            logger.error("[意外] 用户权限不足");
             return null;
         } else {
+            logger.error("[意外] 非法src");
             return null;
         }
     }

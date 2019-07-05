@@ -8,7 +8,9 @@ import cn.edu.neu.shop.pin.lock.annotation.LockKeyVariable;
 import cn.edu.neu.shop.pin.lock.annotation.MutexLock;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.service.OrderIndividualService;
+import cn.edu.neu.shop.pin.service.message.TemplateMessageService;
 import cn.edu.neu.shop.pin.util.PinConstants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,9 +28,13 @@ public class PaymentService {
 
     private final OrderIndividualService orderIndividualService;
 
-    public PaymentService(UserBalanceService userBalanceService, OrderIndividualService orderIndividualService) {
+    private final TemplateMessageService templateMessageService;
+
+    @Autowired
+    public PaymentService(UserBalanceService userBalanceService, OrderIndividualService orderIndividualService, TemplateMessageService templateMessageService) {
         this.userBalanceService = userBalanceService;
         this.orderIndividualService = orderIndividualService;
+        this.templateMessageService = templateMessageService;
     }
 
     /**
@@ -71,5 +77,6 @@ public class PaymentService {
         orderIndividual.setPayPrice(orderIndividual.getTotalPrice().subtract(balancePaidPrice));
         orderIndividual.setPayType(PinOrderIndividual.PAY_TYPE_BALANCE);
         orderIndividualService.update(orderIndividual);
+        templateMessageService.sendPaymentSuccessMessageToIndividualOrderOwner(orderIndividual);
     }
 }

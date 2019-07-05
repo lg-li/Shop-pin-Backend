@@ -4,9 +4,11 @@ import cn.edu.neu.shop.pin.model.PinOrderGroup;
 import cn.edu.neu.shop.pin.model.PinOrderIndividual;
 import cn.edu.neu.shop.pin.service.OrderGroupService;
 import cn.edu.neu.shop.pin.service.OrderIndividualService;
+import cn.edu.neu.shop.pin.service.message.TemplateMessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +32,9 @@ public class GroupClosingScheduler {
     private final OrderGroupService orderGroupService;
 
     private final OrderIndividualService orderIndividualService;
+
+    @Autowired
+    private TemplateMessageService templateMessageService;
 
     private ExecutorService executorService = Executors.newCachedThreadPool();
 
@@ -64,11 +69,15 @@ public class GroupClosingScheduler {
         List<PinOrderIndividual> orderIndividuals = orderIndividualService.getOrderIndividualsByOrderGroupId(orderGroup.getId());
         // 计算团单内最终总价
         BigDecimal finalAmountOfMoney = new BigDecimal(0);
+        Integer peopleCount = orderIndividuals.size();
         for (PinOrderIndividual orderIndividual : orderIndividuals) {
             if (!orderIndividual.getPaid()) {
                 logger.error("异常团单 #" + orderGroup.getId() + "。团单中存在未支付的订单");
+                continue;
             }
             finalAmountOfMoney = finalAmountOfMoney.add(orderIndividual.getTotalPrice());
+            // 发送模板消息
+            templateMessageService.sendGroupSuccessfullyClosedMessageToIndividualOrderOwner(peopleCount, orderIndividual, orderGroup);
         }
         orderGroup.setTotalAmountOfMoneyPaid(finalAmountOfMoney);
         orderGroup.setActualFinishTime(new Date());

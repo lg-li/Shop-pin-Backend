@@ -29,6 +29,12 @@ public class WechatUserService extends AbstractService<PinWechatUser> {
         this.pinWechatUserMapper = pinWechatUserMapper;
     }
 
+    public PinWechatUser findWechatUserByUserId (Integer userId) {
+        PinWechatUser example = new PinWechatUser();
+        example.setUserId(userId);
+        return mapper.selectOne(example);
+    }
+
     /**
      * 使用微信小程序登录
      */

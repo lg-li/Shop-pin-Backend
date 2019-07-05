@@ -9,8 +9,10 @@ import cn.edu.neu.shop.pin.model.PinOrderItem;
 import cn.edu.neu.shop.pin.model.PinUser;
 import cn.edu.neu.shop.pin.model.PinUserAddress;
 import cn.edu.neu.shop.pin.service.finance.UserBalanceService;
+import cn.edu.neu.shop.pin.service.message.TemplateMessageService;
 import cn.edu.neu.shop.pin.util.base.AbstractService;
 import com.alibaba.fastjson.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -24,6 +26,7 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
     public static final int STATUS_CONFIRM_FAILED = -2;
 
     public static final int STATUS_ORDER_SUCCESS = 0;
+
     public static final int STATUS_ORDER_FAILURE = -1;
 
 
@@ -37,10 +40,15 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
 
     private final AddressService addressService;
 
-
     private final PinOrderIndividualMapper pinOrderIndividualMapper;
 
     private final UserBalanceService userBalanceService;
+
+    @Autowired
+    private TemplateMessageService templateMessageService;
+
+    @Autowired
+    private OrderIndividualService orderIndividualService;
 
     public OrderIndividualService(UserRoleListTransferService userRoleListTransferService, ProductService productService, StoreService storeService, OrderItemService orderItemService, AddressService addressService, PinOrderIndividualMapper pinOrderIndividualMapper, UserBalanceService userBalanceService) {
         this.userRoleListTransferService = userRoleListTransferService;
@@ -363,6 +371,11 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
         orderIndividual.setStatus(PinOrderIndividual.STATUS_PENDING_COMMENT);
         this.update(orderIndividual);
         // TODO: 给商家推送确认收货
+        try {
+            templateMessageService.sendConfirmReceiptMessageToIndividualOrderOwner(orderIndividual);
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
         return STATUS_CONFIRM_SUCCESS;
     }
 
@@ -372,6 +385,12 @@ public class OrderIndividualService extends AbstractService<PinOrderIndividual> 
 
     public void updateOrderStatusIsExpress(Integer orderIndividualId, String deliveryType, String deliveryName, Integer deliveryId, Date deliveryTime) {
         pinOrderIndividualMapper.updateOrderDeliveryTypeIsExpress(orderIndividualId, deliveryType, deliveryName, deliveryId, deliveryTime);
+        try {
+            // 发送模板消息
+            templateMessageService.sendOrderShippedMessageToIndividualOrderOwner(orderIndividualService.findById(orderIndividualId));
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     public void updateMerchantRemark(Integer orderIndividualId, String merchantRemark) {

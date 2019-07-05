@@ -351,4 +351,9 @@ public class ProductService extends AbstractService<PinProduct> {
     public void updateProductIsNotShownStatus(Integer productId) {
         pinProductMapper.updateIsNotShownStatus(productId);
     }
+
+    public PageInfo<PinProduct> searchByKeyWordByPage(String keyword, Integer pageNum, Integer pageSize) {
+        return PageHelper.startPage(pageNum, pageSize).doSelectPageInfo(
+                ()->pinProductMapper.searchByKeyword(keyword));
+    }
 }

@@ -84,10 +84,11 @@ public class MutexLockAspect {
         redisTemplate.boundValueOps(key).expire(expire, TimeUnit.SECONDS);
         try {
             resultObject = pjp.proceed(); //调用对应方法执行
-            redisTemplate.delete(key); // 执行完成后解锁
             logger.info("[解锁] 互斥锁" + key +"已解锁。");
         } catch (Throwable throwable) {
             throwable.printStackTrace();
+        } finally {
+            redisTemplate.delete(key); // 执行完成后解锁
         }
         return resultObject;
     }

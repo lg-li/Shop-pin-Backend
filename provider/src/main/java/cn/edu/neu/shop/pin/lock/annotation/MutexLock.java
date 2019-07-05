@@ -18,6 +18,6 @@ public @interface MutexLock {
     // redis缓存key中的数据
     String value() default "";
 
-    // 过期时间(秒)，默认为一分钟
-    long expire() default 60;
+    // 过期时间(秒)，默认为10分钟
+    long expire() default 10;
 }

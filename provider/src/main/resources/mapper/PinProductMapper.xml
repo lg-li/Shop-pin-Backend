@@ -194,6 +194,14 @@
         where is_new = 1
     </select>
 
+    <select id="searchByKeyword" resultMap="BaseResultMap">
+        select *
+        from pin_product
+        where name like concat('%',#{keyword},'%')
+           or description like concat('%',#{keyword},'%')
+           or keyword like concat('%',#{keyword},'%')
+    </select>
+
     <select id="getProductFromSameStore" resultMap="PinProductFromSameStoreResultMap">
         select pin_product.id,
                image_urls,

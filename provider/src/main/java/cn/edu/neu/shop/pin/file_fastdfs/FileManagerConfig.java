@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public interface FileManagerConfig extends Serializable {
 
-    public static final String FILE_DEFAULT_AUTHOR = "WangLiang";
+    public static final String FILE_DEFAULT_AUTHOR = "Pin";
 
     public static final String PROTOCOL = "http://";
 
@@ -14,5 +14,5 @@ public interface FileManagerConfig extends Serializable {
 
     public static final String TRACKER_NGNIX_PORT = ":8888";
 
-    public static final String CLIENT_CONFIG_FILE = "fdfs_client.conf";
+    public static final String CLIENT_CONFIG_FILE = "/usr/java/pin/fdfs_client.conf";
 }

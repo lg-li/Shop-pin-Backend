@@ -111,6 +111,18 @@ public class ProductController {
         }
     }
 
+    @GetMapping(value = "/search/{keyword}/{pageNum}/{pageSize}")
+    public JSONObject getHotProducts(@PathVariable(value = "keyword") String keyword, @PathVariable(value = "pageNum") Integer pageNum, @PathVariable(value = "pageSize") Integer pageSize) {
+        try {
+            return ResponseWrapper.wrap(PinConstants.StatusCode.SUCCESS,
+                    PinConstants.ResponseMessage.SUCCESS,
+                    productService.searchByKeyWordByPage(keyword, pageNum, pageSize));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseWrapper.wrap(PinConstants.StatusCode.INTERNAL_ERROR, e.getMessage(), null);
+        }
+    }
+
     /**
      * 获取全新商品信息，支持分页操作
      *

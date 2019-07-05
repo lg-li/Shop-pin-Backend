@@ -141,7 +141,8 @@ public class RepresentationDataGenerator {
 
             productRepRow.add(product.getId());
             productRepCol.add(PRODUCT_AVERAGE_RATE_SCORE);
-            productRepData.add(pinUserProductCommentMapper.getAvgScore(product.getId()));
+            Double avgScore = pinUserProductCommentMapper.getAvgScore(product.getId());
+            productRepData.add(avgScore == null?2.5:avgScore);
 
         }
         return packRepData(productRepRow, productRepCol, productRepData);

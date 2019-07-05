@@ -1,11 +1,11 @@
 import tensorrec
 from flask import Flask, request, jsonify
 from scipy.sparse import csr_matrix
-from tensorrec.representation_graphs import WeightedFeaturePassThroughRepresentationGraph
+from tensorrec.representation_graphs import ReLURepresentationGraph
 
 app = Flask(__name__)
 
-model = tensorrec.TensorRec(item_repr_graph=WeightedFeaturePassThroughRepresentationGraph(), user_repr_graph=WeightedFeaturePassThroughRepresentationGraph())
+model = tensorrec.TensorRec(item_repr_graph=ReLURepresentationGraph(), user_repr_graph=ReLURepresentationGraph())
 try:
     model = model.load_model('./model')
 except IOError:
@@ -14,7 +14,7 @@ except IOError:
 @app.route('/ranks', methods=["POST"])
 def fitModelAndUpateRanks():
     input = request.get_json()
-    print("interaction: \n", input)
+    print("INPUT: \n" + str(input) + "\n")
     interactions = input['interaction']
     user_features = input['user']
     item_features = input['product']
