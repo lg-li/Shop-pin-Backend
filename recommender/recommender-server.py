@@ -1,11 +1,11 @@
 import tensorrec
 from flask import Flask, request, jsonify
 from scipy.sparse import csr_matrix
-from tensorrec.representation_graphs import ReLURepresentationGraph
+from tensorrec.representation_graphs import WeightedFeaturePassThroughRepresentationGraph
 
 app = Flask(__name__)
 
-model = tensorrec.TensorRec(item_repr_graph=ReLURepresentationGraph(), user_repr_graph=ReLURepresentationGraph())
+model = tensorrec.TensorRec(item_repr_graph=WeightedFeaturePassThroughRepresentationGraph(), user_repr_graph=WeightedFeaturePassThroughRepresentationGraph())
 try:
     model = model.load_model('./model')
 except IOError:
@@ -45,4 +45,4 @@ port = 5689
 if __name__ == "__main__":
     print("启动 Pin 推荐服务...")
     print("将启动到端口" + str(port))
-    app.run(port=port)
+    app.run(host='0.0.0.0', port=port)
