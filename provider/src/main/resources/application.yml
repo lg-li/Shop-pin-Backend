@@ -13,6 +13,8 @@ server:
 eureka:
   instance:
     appname: ${spring.application.name}
+    instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}
+    prefer-ip-address: true
   client:
     fetchRegistry: true
     registerWithEureka: true
@@ -83,6 +85,6 @@ spring:
   data:
     # Mongo DB 配置
     mongodb:
-      uri: mongodb://pin:F5g2i3o9@5io2.com:28018
+      uri: mongodb://pin:F5g2i3o9@pin.cheelem.com:28018
       authentication-database: pin
       database: pin

@@ -65,4 +65,9 @@ public class ProductController {
     public JSONObject createVisitRecord(@RequestBody JSONObject requestJSON) {
         return productControllerService.createVisitRecord(requestJSON);
     }
+
+    @PostMapping("/get-product-average-score")
+    public JSONObject returnPraise(@RequestBody JSONObject request){
+        return productControllerService.returnPraise(request);
+    }
 }
