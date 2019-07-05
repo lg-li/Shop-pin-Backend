@@ -159,7 +159,6 @@ public class AdminProductController {
             BigDecimal cost = new BigDecimal(requestJSON.getString("cost"));
             String description = requestJSON.getString("description");
 
-
             PinProduct pinProduct = new PinProduct(storeId, 3, url, name,
                     info, keyword, price, priceBeforeDiscount, unitName, stockCount,
                     0, false, false, true, shippingFee,

@@ -182,7 +182,7 @@
         where id = #{orderIndividualId}
     </update>
 
-    <update id="updateRefundPrice">
+    <update id="updateRefundOrder">
         update pin_order_individual
         set refund_reason_image = #{refundReasonImage}, refund_reason_explain=#{refundReasonExplain}, refund_apply_time = #{date}, refund_price = #{refundPrice}, refund_status = 1
         where id = #{orderIndividualId}
