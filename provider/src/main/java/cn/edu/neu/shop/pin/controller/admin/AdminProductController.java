@@ -160,7 +160,7 @@ public class AdminProductController {
             String description = requestJSON.getString("description");
 
 
-            PinProduct pinProduct = new PinProduct(storeId, 1, url, name,
+            PinProduct pinProduct = new PinProduct(storeId, 3, url, name,
                     info, keyword, price, priceBeforeDiscount, unitName, stockCount,
                     0, false, false, true, shippingFee,
                     false, new Date(), creditToGive, cost, 0, description);
