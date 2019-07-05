@@ -8,7 +8,7 @@
 //import com.alibaba.fastjson.JSONObject;
 //import org.junit.Assert;
 //import org.junit.Before;
-//import org.junit.Test;
+//import org.junit.TestController;
 //import org.junit.runner.RunWith;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -33,7 +33,7 @@
 //@EnableAutoConfiguration
 //public class CollectionControllerTest extends UserCredentialNeededTest{
 //
-//    @Test
+//    @TestController
 //    public void testGetUserProductCollection() throws Exception {
 //        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/user/product-collection")
 //                .header("Authorization", "Bear ", token)
@@ -44,7 +44,7 @@
 //        System.out.println("返回的json=" + result);
 //    }
 //
-//    @Test
+//    @TestController
 //    public void testGetUserStoreCollection() throws Exception {
 //        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/user/user-store-collection/2")
 //                .contentType(MediaType.APPLICATION_JSON))

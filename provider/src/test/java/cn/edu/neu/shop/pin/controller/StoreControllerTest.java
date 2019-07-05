@@ -4,7 +4,7 @@
 //import cn.edu.neu.shop.pin.service.StoreService;
 //import cn.edu.neu.shop.pin.service.security.UserService;
 //import org.junit.Before;
-//import org.junit.Test;
+//import org.junit.TestController;
 //import org.junit.runner.RunWith;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -40,7 +40,7 @@
 //    @Autowired
 //    private StoreService storeService;
 //
-//    @Test
+//    @TestController
 //    public void testGetStoreInfoByStoreId() throws Exception {
 //        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/store/3")
 //                .contentType(MediaType.APPLICATION_JSON))

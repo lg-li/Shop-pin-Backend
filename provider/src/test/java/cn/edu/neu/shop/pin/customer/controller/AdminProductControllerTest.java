@@ -3,7 +3,7 @@
 //import cn.edu.neu.shop.pin.PinApplication;
 //import com.alibaba.fastjson.JSONObject;
 //import org.junit.Before;
-//import org.junit.Test;
+//import org.junit.TestController;
 //import org.junit.runner.RunWith;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -24,12 +24,12 @@
 //@EnableAutoConfiguration
 //public class AdminProductControllerTest extends UserCredentialNeededTest{
 //
-//    @Test
+//    @TestController
 //    public void testGetCategoryByLayer() throws Exception {
 //
 //    }
 //
-//    @Test
+//    @TestController
 //    public void testGetProductInfoByProductId() throws Exception {
 //        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/product/1")
 //                .contentType(MediaType.APPLICATION_JSON))
@@ -45,7 +45,7 @@
 //        assert data.getString("name").equals("NikeAirForce1");
 //    }
 //
-//    @Test
+//    @TestController
 //    public void testGetCommentByProductId() throws Exception {
 //
 //    }
@@ -55,7 +55,7 @@
 //     * @author flyhero
 //     * @throws Exception
 //     */
-//    @Test
+//    @TestController
 //    public void testGetHotProducts() throws Exception {
 //        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/product/hot/0/10")
 //                .contentType(MediaType.APPLICATION_JSON))
@@ -71,7 +71,7 @@
 //     * @author flyhero
 //     * @throws Exception
 //     */
-//    @Test
+//    @TestController
 //    public void testGetNewProducts() throws Exception {
 //        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/product/new/0/10")
 //                .contentType(MediaType.APPLICATION_JSON))
