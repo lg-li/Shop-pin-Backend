@@ -1,7 +1,7 @@
 //package cn.edu.neu.shop.pin.customer.controller;
 //
 //import cn.edu.neu.shop.pin.PinApplication;
-//import org.junit.Test;
+//import org.junit.TestController;
 //import org.junit.runner.RunWith;
 //import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 //import org.springframework.boot.test.context.SpringBootTest;
@@ -18,7 +18,7 @@
 //@EnableAutoConfiguration
 //public class OrderControllerTest extends UserCredentialNeededTest {
 //
-//    @Test
+//    @TestController
 //    public void testGetTopTenOrderGroupsByStoreId() throws Exception {
 //        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/order-group/by-store-id/3")
 //                .contentType(MediaType.APPLICATION_JSON))
@@ -29,7 +29,7 @@
 //        System.out.println("返回的json=" + result);
 //    }
 //
-//    @Test
+//    @TestController
 //    public void testGetAllOrderItems() throws Exception {
 //        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/order/get-order-items/1")
 //                .contentType(MediaType.APPLICATION_JSON))
@@ -40,7 +40,7 @@
 //        System.out.println("返回的json=" + result);
 //    }
 //
-//    @Test
+//    @TestController
 //    public void testAddOrderItem() throws Exception {
 //        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/order-item/add")
 //                .contentType(MediaType.APPLICATION_JSON))
@@ -51,7 +51,7 @@
 //        System.out.println("返回的json=" + result);
 //    }
 //
-//    @Test
+//    @TestController
 //    public void getGroupOrderInfo() throws Exception {
 //        String result;
 //        result = mvc.perform(MockMvcRequestBuilders.get("/commons/order/beg-group-order").param("orderGroupId", "1")

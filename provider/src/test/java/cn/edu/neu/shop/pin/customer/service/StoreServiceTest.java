@@ -2,7 +2,7 @@
 //
 //import cn.edu.neu.shop.pin.PinApplication;
 //import cn.edu.neu.shop.pin.service.StoreService;
-//import org.junit.Test;
+//import org.junit.TestController;
 //import org.junit.runner.RunWith;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -17,11 +17,11 @@
 //    @Autowired
 //    StoreService storeService;
 //
-//    @Test
+//    @TestController
 //    public void getStoreInfo() {
 //    }
 //
-//    @Test
+//    @TestController
 //    public void getStoreListByOwnerId() {
 //        System.out.println(storeService.getStoreListByOwnerId(22));
 //    }

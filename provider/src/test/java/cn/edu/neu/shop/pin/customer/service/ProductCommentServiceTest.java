@@ -1,7 +1,7 @@
 //package cn.edu.neu.shop.pin.customer.service;
 //
 //import cn.edu.neu.shop.pin.service.ProductCommentService;
-//import org.junit.Test;
+//import org.junit.TestController;
 //import org.junit.runner.RunWith;
 //import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@
 //    @Autowired
 //    private ProductCommentService productCommentService;
 //
-//    @Test
+//    @TestController
 //    public void testGetComments() throws Exception {
 //        Integer list[] = productCommentService.getComments(9);
 //        for(Integer i: list) {

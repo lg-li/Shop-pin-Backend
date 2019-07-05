@@ -2,7 +2,7 @@
 //
 //import cn.edu.neu.shop.pin.model.PinProduct;
 //import cn.edu.neu.shop.pin.model.PinProductAttributeDefinition;
-//import org.junit.Test;
+//import org.junit.TestController;
 //import org.junit.runner.RunWith;
 //import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 //import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@
 //    @Autowired
 //    private PinProductMapper pinProductMapper;
 //
-//    @Test
+//    @TestController
 //    @Rollback(false)//防止事务自动回滚
 //    public void testInsertProduct() {
 //        Set<Integer> ss = new HashSet<>();

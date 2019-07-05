@@ -1,7 +1,7 @@
 //package cn.edu.neu.shop.pin.customer.service;
 //
 //import cn.edu.neu.shop.pin.service.OrderIndividualService;
-//import org.junit.Test;
+//import org.junit.TestController;
 //import org.junit.runner.RunWith;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -16,7 +16,7 @@
 //    @Autowired
 //    OrderIndividualService orderIndividualService;
 //
-//    @Test
+//    @TestController
 //    public void testUpdateProductStatusNotExpress() {
 //
 //    }

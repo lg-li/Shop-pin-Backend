@@ -4,7 +4,7 @@
 //import cn.edu.neu.shop.pin.PinApplication;
 //import com.alibaba.fastjson.JSONObject;
 //import org.junit.Before;
-//import org.junit.Test;
+//import org.junit.TestController;
 //import org.junit.runner.RunWith;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.test.context.SpringBootTest;
@@ -21,7 +21,7 @@
 //@SpringBootTest(classes = PinApplication.class)
 //public class AdminStoreControllerTest extends UserCredentialNeededTest{
 //
-//    @Test
+//    @TestController
 //    public void testGetProductByStoreId() throws Exception {
 //        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/store/1/products")
 //                .contentType(MediaType.APPLICATION_JSON))
@@ -32,7 +32,7 @@
 //        System.out.println("返回的json=" + result);
 //    }
 //
-//    @Test
+//    @TestController
 //    public void testGetStoreInfoByStoreId() throws Exception {
 //        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/store/1")
 //                .contentType(MediaType.APPLICATION_JSON))

@@ -2,7 +2,7 @@
 //
 //import cn.edu.neu.shop.pin.PinApplication;
 //import cn.edu.neu.shop.pin.service.security.UserService;
-//import org.junit.Test;
+//import org.junit.TestController;
 //import org.junit.runner.RunWith;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -21,29 +21,29 @@
 //    @Autowired
 //    private UserService userService;
 //
-//    @Test
+//    @TestController
 //    public void signin() {
 //        /*System.out.println(passwordEncoder.encode("liyifei99"));*/
 //        String token = userService.signIn(1, "liyifei99");
 //    }
 //
-//    @Test
+//    @TestController
 //    public void signup() {
 //    }
 //
-//    @Test
+//    @TestController
 //    public void delete() {
 //    }
 //
-//    @Test
+//    @TestController
 //    public void search() {
 //    }
 //
-//    @Test
+//    @TestController
 //    public void whoami() {
 //    }
 //
-//    @Test
+//    @TestController
 //    public void refresh() {
 //    }
 //}

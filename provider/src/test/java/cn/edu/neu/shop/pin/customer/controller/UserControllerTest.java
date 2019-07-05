@@ -2,7 +2,7 @@
 //
 //
 //import cn.edu.neu.shop.pin.PinApplication;
-//import org.junit.Test;
+//import org.junit.TestController;
 //import org.junit.runner.RunWith;
 //import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 //import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +20,7 @@
 //@EnableAutoConfiguration
 //public class UserControllerTest extends UserCredentialNeededTest {
 //
-//    @Test
+//    @TestController
 //    public void testGetAddressByUserId() throws Exception {
 //        String result = mvc.perform(MockMvcRequestBuilders.get("/commons/user/address")
 //                .header("Authorization", "Bearer " + token)
