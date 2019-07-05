@@ -66,7 +66,7 @@
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="info" jdbcType="VARCHAR" property="info"/>
         <result column="keyword" jdbcType="VARCHAR" property="keyword"/>
-        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="price_1" jdbcType="DECIMAL" property="price"/>
         <result column="price_before_discount" jdbcType="DECIMAL" property="priceBeforeDiscount"/>
         <result column="unit_name" jdbcType="VARCHAR" property="unitName"/>
         <result column="stock_count" jdbcType="INTEGER" property="stockCount"/>
@@ -86,7 +86,7 @@
             <result column="product_id" jdbcType="INTEGER" property="productId"/>
             <result column="sku" jdbcType="VARCHAR" property="sku"/>
             <result column="stock" jdbcType="VARCHAR" property="stock"/>
-            <result column="price" jdbcType="DECIMAL" property="price" />
+            <result column="price_2" jdbcType="DECIMAL" property="price"/>
             <result column="image_url" jdbcType="VARCHAR" property="imageUrl"/>
             <result column="cost" jdbcType="DECIMAL" property="cost"/>
         </collection>
@@ -100,7 +100,7 @@
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="info" jdbcType="VARCHAR" property="info"/>
         <result column="keyword" jdbcType="VARCHAR" property="keyword"/>
-        <result column="price" jdbcType="DECIMAL" property="price"/>
+        <result column="price_1" jdbcType="DECIMAL" property="price"/>
         <result column="price_before_discount" jdbcType="DECIMAL" property="priceBeforeDiscount"/>
         <result column="unit_name" jdbcType="VARCHAR" property="unitName"/>
         <result column="stock_count" jdbcType="INTEGER" property="stockCount"/>
@@ -120,7 +120,7 @@
             <result column="product_id" jdbcType="INTEGER" property="productId"/>
             <result column="sku" jdbcType="VARCHAR" property="sku"/>
             <result column="stock" jdbcType="VARCHAR" property="stock"/>
-            <result column="price" jdbcType="DECIMAL" property="price" />
+            <result column="price_2" jdbcType="DECIMAL" property="price"/>
             <result column="image_url" jdbcType="VARCHAR" property="imageUrl"/>
             <result column="cost" jdbcType="DECIMAL" property="cost"/>
         </collection>
@@ -151,19 +151,23 @@
 
     <!-- 根据店铺ID 获取该店铺的所有在售商品-->
     <select id="getProductByStoreIdAndKey" resultMap="productByStoreIdAndKeyResultMap">
-        select P1.*, P1.id as id_1, P2.*, P2.id as id_2
+        select P1.*,
+               P1.id    as id_1,
+               P1.price as price_1,
+               P2.*,
+               P2.id    as id_2,
+               P2.price as price_2
         from pin_product as P1,
              pin_product_attribute_value as P2
         where store_id = #{storeId}
           and P2.product_id = P1.id
-          and
-          (
-                 P1.id LIKE CONCAT('%', #{keyWord}, '%')
-              or P1.name LIKE CONCAT('%', #{keyWord}, '%')
-              or P1.info LIKE CONCAT('%', #{keyWord}, '%')
-              or P1.keyword LIKE CONCAT('%', #{keyWord}, '%')
-              or P1.description LIKE CONCAT('%', #{keyWord}, '%')
-          )
+          and (
+                P1.id LIKE CONCAT('%', #{keyWord}, '%')
+                or P1.name LIKE CONCAT('%', #{keyWord}, '%')
+                or P1.info LIKE CONCAT('%', #{keyWord}, '%')
+                or P1.keyword LIKE CONCAT('%', #{keyWord}, '%')
+                or P1.description LIKE CONCAT('%', #{keyWord}, '%')
+            )
     </select>
 
     <select id="getProductByCategoryId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
@@ -173,9 +177,9 @@
     </select>
 
     <!--<select id="getProductsByIdRanks" parameterType="java.util.List" resultMap="BaseResultMap">-->
-        <!--select *-->
-        <!--from pin_product-->
-        <!--where id in -->
+    <!--select *-->
+    <!--from pin_product-->
+    <!--where id in -->
     <!--</select>-->
 
     <select id="getHotProducts" resultMap="BaseResultMap">
@@ -231,9 +235,11 @@
 
     <select id="getIsShownProductInfo" resultMap="ProductResultMap">
         select pin_product.*,
-               pin_product.id                 as id_1,
+               pin_product.id                    as id_1,
+               pin_product.price                 as price_1,
                pin_product_attribute_value.*,
-               pin_product_attribute_value.id as id_2
+               pin_product_attribute_value.id    as id_2,
+               pin_product_attribute_value.price as price_2
         from pin_product,
              pin_product_attribute_value
         where pin_product.id = pin_product_attribute_value.product_id
@@ -244,9 +250,11 @@
 
     <select id="getIsReadyProductInfo" resultMap="ProductResultMap">
         select pin_product.*,
-               pin_product.id                 as id_1,
+               pin_product.id                    as id_1,
+               pin_product.price                 as price_1,
                pin_product_attribute_value.*,
-               pin_product_attribute_value.id as id_2
+               pin_product_attribute_value.id    as id_2,
+               pin_product_attribute_value.price as price_2
         from pin_product,
              pin_product_attribute_value
         where pin_product.id = pin_product_attribute_value.product_id
@@ -256,9 +264,11 @@
 
     <select id="getIsOutProductInfo" resultMap="ProductResultMap">
         select pin_product.*,
-               pin_product.id                 as id_1,
+               pin_product.id                    as id_1,
+               pin_product.price                 as price_1,
                pin_product_attribute_value.*,
-               pin_product_attribute_value.id as id_2
+               pin_product_attribute_value.id    as id_2,
+               pin_product_attribute_value.price as price_2
         from pin_product,
              pin_product_attribute_value
         where pin_product.id = pin_product_attribute_value.product_id
@@ -268,9 +278,11 @@
 
     <select id="getIsAlarmProductInfo" resultMap="ProductResultMap">
         select pin_product.*,
-               pin_product.id                 as id_1,
+               pin_product.id                    as id_1,
+               pin_product.price                 as price_1,
                pin_product_attribute_value.*,
-               pin_product_attribute_value.id as id_2
+               pin_product_attribute_value.id    as id_2,
+               pin_product_attribute_value.price as price_2
         from pin_product,
              pin_product_attribute_value
         where pin_product.id = pin_product_attribute_value.product_id
