@@ -1,37 +1,14 @@
 # Shop-pin-Backend
- SpringBoot 后端
+Shop Pin 拼团电商 后端代码。
+本项目基于 Spring Boot 基本框架。并使用 Spring Cloud （Eureka\Feign） 搭建分布式架构。
 
-本项目基于 Spring Boot 基本框架。
-
-
-#Backend
-
+#主要使用的框架
 Spring Boot
+Spring Cloud (Distributed)
+Spring Security (RBAC)
+Spring AOP
+Redis (Critical Condition Mutex Lock)
+MongoDB (Rich text and image storage)
 
-Spring Security
-
-    RBAC
-
-AOP + Redis (Critical Condition Mutex Lock)
-
-图片 Base64 => MongoDB
-
-富文本 => MongoDB
-
-SKU / SPU
-
-#Frontend
-
-VI
-
-Uni-app
-    
-    SCSS
-    
-    Stomp
-    
-    $Pin
-
-Vue
-
-    element-ui
+#开源协定
+本项目遵循 MIT 开源协定之规定。
