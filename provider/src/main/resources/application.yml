@@ -1,6 +1,4 @@
-﻿# 以下配置文件已经将MySQL和Redis配置为可用的远程服务器连接
-# 测试时无需本地额外再行部署
-# 东软睿道实训项目
+# 使用前请将下列MySQL和Redis设置配置为可用的服务器
 # “Pin团” 拼团电商平台
 # @author 李林根 李一飞 牛骋 于岱洋 蔡奇峰
 
@@ -56,9 +54,9 @@ spring:
       maximum-pool-size: 15
       minimum-idle: 5
       pool-name: PinHikariCP
-    password: ShopPin!2019
+    password: **YOUR_PASSWORD**
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:mysql://pin.cheelem.com:3306/pin?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&nullCatalogMeansCurrent=true&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://**YOUR_SERVER_ADDR**/pin?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&zeroDateTimeBehavior=convertToNull&nullCatalogMeansCurrent=true&serverTimezone=Asia/Shanghai
     username: pin
   # 远程 Redis 配置
   redis:
@@ -70,11 +68,11 @@ spring:
         max-idle: 8
         max-wait: 8000
         min-idle: 0
-    password: 8a9p23TP6A
+    password: **YOUR_PASSWORD**
     timeout: 1000
     # Redis 集群配置
     cluster:
-      nodes: 47.93.218.67:8001,47.93.218.67:8002,47.93.218.67:8003,39.105.81.94:8001,39.105.81.94:8002,39.105.81.94:8003
+      nodes: **YOUR_SERVER_ADDR**:8001,**YOUR_SERVER_ADDR**:8002,**YOUR_SERVER_ADDR2**:8002,**YOUR_SERVER_ADDR2**:8003
       max-redirects: 6
   # 远程 Rabbit MQ 消息队列 配置
   rabbitmq:
@@ -85,6 +83,6 @@ spring:
   data:
     # Mongo DB 配置
     mongodb:
-      uri: mongodb://pin:F5g2i3o9@pin.cheelem.com:28018
+      uri: mongodb://pin:**YOUR_PASSWORD**@**YOUR_SERVER_ADDR**
       authentication-database: pin
       database: pin
