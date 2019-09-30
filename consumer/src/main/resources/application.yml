@@ -5,8 +5,8 @@ spring:
   rabbitmq:
     host: pin.cheelem.com
     port: 5672
-    username: admin
-    password: pwd
+    username: **YOUR_USERNAME**
+    password: **YOUR_PASSWORD**
   cloud:
     stream:
       binders:
@@ -19,7 +19,6 @@ spring:
         websocketMessageOut:
           destination: websocketMessage
           binder: defaultRabbit
-# 这红的估计是IDE自己有问题
 
 #############################
 # Eureka 负载均衡配置
