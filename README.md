@@ -4,6 +4,15 @@ Shop Pin 拼团电商项目后端代码。本项目仅用于学习交流之目�
 
 本项目主要基于 Spring Boot 基本框架。并使用 Spring Cloud （Eureka\Feign） 搭建分布式架构，并结合了多种技术将原仅适用与单服务器的模块进行分布式架构之适配。同时附带一个自更新的简单的推荐系统，针对用户推荐首页商品。
 
+## Pin 相关仓库链接
+
+[用户前端仓库(Uni-app)](https://github.com/Cheelem/Shop-pin-Frontend)
+
+[商户前端仓库(Vue)](https://github.com/Cheelem/Shop-pin-Admin-Frontend)
+
+[后端仓库(Java)](https://github.com/Cheelem/Shop-pin-Backend)
+
+
 ## 主要使用的框架
 
 ### 后端业务逻辑
