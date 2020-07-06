@@ -13,9 +13,9 @@ public class NLPUtil {
     private static Logger logger = LoggerFactory.getLogger(NLPUtil.class);
 
     // 基本设置
-    private static final String APP_ID = "16690605";
-    private static final String API_KEY = "7isYGtkgxPF0nS4CAv3A9842";
-    private static final String SECRET_KEY = "IaDQPA91676R20FTYB0ylD5Sk501o3Lq";
+    private static final String APP_ID = "YOUR_APP_ID";
+    private static final String API_KEY = "YOUR_API_KEY";
+    private static final String SECRET_KEY = "YOUR_SECRET_KEY";
 
     private static AipNlp client;
 
